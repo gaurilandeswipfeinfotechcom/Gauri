@@ -1,0 +1,6243 @@
+
+@model ERPEntities.PurchaseProcessing
+
+@{
+    ViewBag.Title = "Create1";
+    Layout = "~/Views/Shared/_SwipfeMaster.cshtml";
+}
+
+
+<style>
+
+    .view-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        white-space: nowrap;
+    }
+
+        .view-toggle > span {
+            margin: 0;
+        }
+
+    /* Toggle */
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 40px;
+        height: 22px;
+        flex-shrink: 0;
+    }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    .slider {
+        position: absolute;
+        inset: 0;
+        cursor: pointer;
+        background-color: #ccc;
+        transition: 0.3s;
+        border-radius: 22px;
+    }
+
+        .slider::before {
+            content: "";
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            left: 3px;
+            top: 3px;
+            background: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+    .switch input:checked + .slider {
+        background-color: #2196f3;
+    }
+
+        .switch input:checked + .slider::before {
+            transform: translateX(18px);
+        }
+
+
+    /* =========================================================
+         PAGE
+         ========================================================= */
+
+    .purchase-page {
+        background: #f4f6f9;
+        padding: 0px;
+    }
+
+
+    /* =========================================================
+         COMMON CARD
+         ========================================================= */
+
+    .purchase-card {
+        background: #fff;
+        border: 1px solid #dce1e7;
+        border-radius: 6px;
+        box-shadow: 0 2px 7px rgba(0,0,0,.08);
+        overflow: hidden;
+        padding-top: 2px;
+    }
+
+    .purchase-card-header {
+        height: 30px;
+        padding: 5px 7px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #e1e5ea;
+        color: #172b7a;
+        font-size: 15px;
+        font-weight: 600;
+        background: #fff;
+    }
+
+        .purchase-card-header i {
+            color: #0085c8;
+            font-size: 20px;
+            vertical-align: middle;
+            margin-right: 6px;
+        }
+
+    .purchase-card-body {
+        padding: 5px 15px 5px 15px;
+    }
+
+
+    /* =========================================================
+         TOP PURCHASE INVOICE DETAILS
+         ========================================================= */
+
+    .purchase-invoice-card {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .purchase-search-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 100px;
+        gap: 18px;
+        align-items: end;
+    }
+
+    .purchase-field label {
+        display: block;
+        color: #172b7a;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+
+    .purchase-field select,
+    .purchase-field input {
+        width: 100%;
+        height: 35px;
+        border: 1px solid #ccd3dd;
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-size: 13px;
+        box-sizing: border-box;
+    }
+
+    .search-btn {
+        background: linear-gradient(135deg, #20BED0, #1B247D);
+        height: 35px;
+        border: none;
+        border-radius: 4px;
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+        .search-btn:hover {
+            background: linear-gradient(135deg, #1B247D, #20BED0);
+            color: #ffffff;
+        }
+
+        .search-btn i {
+            font-size: 16px;
+            vertical-align: middle;
+        }
+
+    /* =========================================================
+         VENDOR DETAILS
+         ========================================================= */
+
+    .vendor-card {
+        min-width: 0;
+    }
+
+    .vendor-field {
+        display: flex;
+        gap: 10px;
+        font-size: 11px;
+    }
+
+        .vendor-field label {
+            display: block;
+            color: #172b7a;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .vendor-field input,
+        .vendor-field select,
+        .vendor-field textarea {
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #ccd3dd;
+            border-radius: 4px;
+            font-size: 12px;
+            padding: 5px 7px;
+            background: #fff;
+        }
+
+        .vendor-field input,
+        .vendor-field select {
+            height: 33px;
+        }
+
+        .vendor-field textarea {
+            height: 55px;
+            resize: none;
+        }
+
+            .vendor-field input:disabled,
+            .vendor-field textarea:disabled {
+                background: #f5f6f7;
+                color: #555;
+            }
+
+
+    /* =========================================================
+         ITEM + ACCOUNT GROUP CARD
+         ========================================================= */
+
+    .item-account-card {
+        min-width: 0;
+    }
+
+    .inner-card {
+        border: 1px solid #dce2e8;
+        border-radius: 5px;
+        overflow: hidden;
+        margin-bottom: 12px;
+    }
+
+        .inner-card:last-child {
+            margin-bottom: 0;
+        }
+
+    .inner-card-header {
+        min-height: 38px;
+        padding: 7px 10px;
+        background: #f6f8fa;
+        border-bottom: 1px solid #dce2e8;
+        color: #172b7a;
+        font-size: 13px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+        .inner-card-header i {
+            color: #0085c8;
+            font-size: 17px;
+            vertical-align: middle;
+        }
+
+
+    /* =========================================================
+         ADD ITEM
+         ========================================================= */
+
+
+    .add-item-btn {
+        background: linear-gradient(135deg, #20BED0, #1B247D);
+        color: #ffffff;
+        border: none;
+        border-radius: 4px;
+        padding: 5px 9px;
+        font-size: 11px;
+        cursor: pointer;
+    }
+
+        .add-item-btn:hover {
+            background: linear-gradient(135deg, #1B247D, #20BED0);
+            color: #ffffff;
+        }
+
+
+        .add-item-btn i {
+            color: white;
+            font-size: 14px;
+        }
+
+
+    /* =========================================================
+         ITEM TABLE
+         ========================================================= */
+
+    .item-table-container {
+        max-height: 235px;
+        overflow-y: auto;
+        overflow-x: auto;
+    }
+
+    .item-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 11px;
+    }
+
+        .item-table th {
+            background: #fafbfc;
+            color: #172b7a;
+            font-weight: 600;
+            padding: 7px 5px;
+            border-bottom: 1px solid #ddd;
+            white-space: nowrap;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .item-table td {
+            padding: 7px 5px;
+            border-bottom: 1px solid #eee;
+            color: #333;
+            white-space: nowrap;
+        }
+
+    .no-items {
+        text-align: center;
+        color: #999;
+        padding: 30px 5px !important;
+    }
+
+    .item-action {
+        border: none;
+        background: transparent;
+        padding: 1px;
+        cursor: pointer;
+    }
+
+        .item-action i {
+            font-size: 17px;
+        }
+
+    .edit-item {
+        color: #0085c8;
+    }
+
+    .delete-item {
+        color: #dc3545;
+    }
+
+
+    /* =========================================================
+         ACCOUNT GROUP
+         ========================================================= */
+
+    .account-body {
+        padding: 10px;
+    }
+
+    .account-field {
+        margin-bottom: 8px;
+    }
+
+        .account-field label {
+            display: block;
+            color: #172b7a;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .account-field select,
+        .account-field input {
+            width: 100%;
+            height: 32px;
+            box-sizing: border-box;
+            border: 1px solid #ccd3dd;
+            border-radius: 4px;
+            padding: 4px 7px;
+            font-size: 12px;
+        }
+
+    .account-add-btn {
+        width: 100%;
+        height: 32px;
+        border: none;
+        border-radius: 4px;
+        background: #198754;
+        color: white;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+
+    /* =========================================================
+         COURIER + CALCULATION
+         ========================================================= */
+
+    .courier-card {
+        min-width: 0;
+    }
+
+    .courier-section {
+        padding: 0px;
+    }
+
+    .courier-field {
+        margin-bottom: 10px;
+    }
+
+    .courier-section .vendor-field,
+    .courier-section .courier-field {
+        min-width: 0;
+        margin-bottom: 10px;
+    }
+
+        .courier-section .vendor-field label,
+        .courier-section .courier-field > label {
+            display: block;
+            color: #172B7A;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+    /* Payment Term dropdown uses full width */
+
+    .courier-section .courier-payment-field {
+        display: block !important;
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+        .courier-section .courier-payment-field label {
+            display: block !important;
+            margin-bottom: 5px;
+        }
+
+        .courier-section .courier-payment-field select {
+            display: block;
+            width: 100%;
+        }
+
+    .courier-modes-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-top: 2px;
+    }
+
+        .courier-modes-row .courier-mode-field {
+            min-width: 0;
+            margin-bottom: 0;
+        }
+
+        .courier-modes-row .radio-row {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            gap: 8px;
+        }
+
+            .courier-modes-row .radio-row label {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                margin: 0;
+                white-space: nowrap;
+                font-size: 11px;
+                font-weight: 400;
+                color: #445064;
+                cursor: pointer;
+            }
+
+            .courier-modes-row .radio-row input[type="radio"] {
+                margin: 0;
+                accent-color: #1B247D;
+            }
+
+    .courier-section .form-control {
+        width: 100%;
+        height: 32px !important;
+        box-sizing: border-box;
+        border: 1px solid #CCD6E2;
+        border-radius: 6px;
+        font-size: 12px;
+        margin-top: 0 !important;
+    }
+
+    .courier-field label {
+        display: block;
+        color: #172b7a;
+        font-size: 11px;
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+
+    .courier-field select {
+        width: 100%;
+        height: 33px;
+        border: 1px solid #ccd3dd;
+        border-radius: 4px;
+        padding: 4px 7px;
+        font-size: 12px;
+    }
+
+    .radio-row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+        .radio-row label {
+            font-size: 11px;
+            color: #444;
+            font-weight: normal;
+            cursor: pointer;
+        }
+
+
+    /* =========================================================
+         CALCULATION
+         ========================================================= */
+
+    .calculation-title {
+        color: #172b7a;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+        .calculation-title i {
+            color: #0085c8;
+            font-size: 17px;
+            vertical-align: middle;
+        }
+
+
+    .calculation-row {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 5px;
+        margin-bottom: 12px;
+    }
+
+        .calculation-row label {
+            font-size: 11px;
+            color: #172b7a;
+            white-space: normal;
+            text-align: left;
+        }
+
+        .calculation-row input {
+            width: 100%;
+            height: 30px;
+            box-sizing: border-box;
+            border: 1px solid #ccd3dd;
+            border-radius: 4px;
+            text-align: right;
+            padding: 4px 7px;
+            font-size: 12px;
+        }
+
+
+        .calculation-row.total {
+            border-top: 1px solid #ddd;
+            margin-top: 10px;
+            padding-top: 10px;
+        }
+
+            .calculation-row.total label {
+                color: #172b7a;
+                font-size: 13px;
+                font-weight: 700;
+            }
+
+            .calculation-row.total input {
+                background: #e7e9f4;
+                border-color: #d3d6ee;
+                color: #087f3e;
+                font-size: 14px;
+                font-weight: 700;
+            }
+
+
+    /* =========================================================
+         FOOTER
+         ========================================================= */
+
+    .invoice-footer {
+        margin-top: 15px;
+        padding: 12px 15px;
+        background: #fff;
+        border: 1px solid #dce1e7;
+        border-radius: 6px;
+        box-shadow: 0 2px 7px rgba(0,0,0,.08);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .upload-title {
+        display: block;
+        color: #172b7a;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .create-btn {
+        border: none;
+        background: linear-gradient(135deg, #20BED0, #1B247D);
+        border-radius: 4px;
+        padding: 9px 20px;
+        color: #ffffff;
+        font-weight: 600;
+    }
+
+        .create-btn:hover {
+            background: linear-gradient(135deg, #1B247D, #20BED0);
+            color: #ffffff;
+        }
+
+    /* =========================================================
+         ITEM MODAL
+         ========================================================= */
+
+    .pi-modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 99999;
+        background: rgba(0,0,0,.45);
+        align-items: center;
+        justify-content: center;
+    }
+
+        .pi-modal.show {
+            display: flex;
+        }
+
+    .pi-modal-box {
+        width: 600px;
+        max-width: 95%;
+        background: white;
+        border-radius: 6px;
+        box-shadow: 0 10px 40px rgba(0,0,0,.3);
+    }
+
+    .pi-modal-header {
+        padding: 12px 16px;
+        background: #172b7a;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .pi-modal-header h4 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+    .modal-close {
+        border: none;
+        background: transparent;
+        color: white;
+        font-size: 25px;
+        cursor: pointer;
+    }
+
+    .pi-modal-body {
+        padding: 20px;
+    }
+
+    .modal-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .modal-field.full {
+        grid-column: 1 / -1;
+    }
+
+    .modal-field label {
+        display: block;
+        color: #172b7a;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+
+    .modal-field input,
+    .modal-field select {
+        width: 100%;
+        height: 36px;
+        border: 1px solid #ccd3dd;
+        border-radius: 4px;
+        padding: 5px 8px;
+        box-sizing: border-box;
+    }
+
+    .modal-footer {
+        padding: 12px 20px;
+        border-top: 1px solid #eee;
+        text-align: right;
+    }
+
+    .modal-save {
+        border: none;
+        border-radius: 4px;
+        background: #198754;
+        color: white;
+        padding: 8px 18px;
+    }
+
+
+    /* =========================================================
+         RESPONSIVE
+         ========================================================= */
+
+    @@media (max-width: 1200px) {
+
+        .purchase-three-cards {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .courier-card {
+            grid-column: 1 / -1;
+        }
+    }
+
+
+    @@media (max-width: 800px) {
+
+        .purchase-search-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .purchase-three-cards {
+            grid-template-columns: 1fr;
+        }
+
+        .courier-card {
+            grid-column: auto;
+        }
+
+        .invoice-footer {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 12px;
+        }
+
+        .modal-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .modal-field.full {
+            grid-column: auto;
+        }
+    }
+
+    .erp-input,
+    .erp-select {
+        border: none;
+        border-bottom: 1px solid #bbb;
+        padding: 5px 4px;
+        font-size: 13px;
+        outline: none;
+        background: transparent;
+        min-width: 180px;
+        transition: all 0.2s ease;
+    }
+
+        /* focus highlight */
+        .erp-input:focus,
+        .erp-select:focus {
+            border-bottom: 2px solid #4a90e2;
+        }
+
+
+    /*.small-remove-btn {
+         padding: 3px 8px;
+         font-size: 11px;
+         line-height: 1.2;
+         border: none;
+         border-radius: 4px;
+         background-color: #dc3545;
+         color: #fff;
+         cursor: pointer;
+     }
+
+         .small-remove-btn:hover {
+             background-color: #b02a37;
+         }*/
+
+    .input-error {
+        border: 1px solid #dc3545 !important;
+        background-color: #fff8f8;
+    }
+
+    .field-error {
+        display: block;
+        color: #dc3545;
+        font-size: 12px;
+        margin-top: 4px;
+    }
+
+    /* New CSS*/
+    /* Purchase Order Details - Row 1 */
+    .purchase-search-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 15px;
+        align-items: end;
+    }
+
+    /* Row 1: Vendor Name */
+    .purchase-vendor-row {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    /* Row 2: All purchase details */
+    .invoice-detail-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 0px;
+        padding-top: 12px;
+        border-top: 0;
+    }
+
+        .invoice-detail-grid .purchase-field input,
+        .invoice-detail-grid .purchase-field select {
+            width: 100%;
+            min-width: 0;
+            height: 35px;
+            box-sizing: border-box;
+            border: 0;
+            border-radius: 4px;
+            padding: 5px 8px;
+            font-size: 12px;
+        }
+
+        .invoice-detail-grid .purchase-field label {
+            display: block;
+            color: #172b7a;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+    /* Responsive layout */
+    @@media (max-width: 900px) {
+        .invoice-detail-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+
+    @@media (max-width: 600px) {
+        .invoice-detail-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    .vendor-address-field {
+        width: 100%;
+    }
+
+    .vendor-complete-address {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        align-items: center;
+        min-height: 40px;
+        padding: 10px 12px;
+        border: 1px solid #ccd3dd;
+        border-radius: 5px;
+        background: #fff;
+        color: #333;
+        font-size: 12px;
+        overflow-wrap: anywhere;
+    }
+
+        .vendor-complete-address span:not(:empty)::after {
+            content: ",";
+        }
+
+        .vendor-complete-address span:last-child::after {
+            content: "";
+        }
+
+    .vendor-contact-body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .vendor-contact-field {
+        width: 100%;
+    }
+
+        .vendor-contact-field label {
+            display: block;
+            margin-bottom: 5px;
+            color: #172b7a;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .vendor-contact-field .form-control {
+            width: 100%;
+            height: 35px;
+            min-width: 0;
+            box-sizing: border-box;
+            border: 1px solid #ccd3dd;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+
+    .office-contact-row {
+        display: flex;
+        gap: 8px;
+    }
+
+        .office-contact-row input {
+            flex: 0 0 65px;
+        }
+
+        .office-contact-row select {
+            flex: 1;
+        }
+
+    .purchase-three-cards {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 5px;
+        align-items: start;
+        width: 100%;
+    }
+
+        .purchase-three-cards > .purchase-card {
+            width: 100%;
+            min-width: 0;
+            margin: 0;
+        }
+
+    .item-account-card,
+    .calculation-card {
+        width: 100%;
+        margin-top: 5px;
+        box-sizing: border-box;
+    }
+
+    @@media (max-width: 900px) {
+        .purchase-three-cards {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @@media (max-width: 600px) {
+        .purchase-three-cards {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* All five calculation fields in one row */
+    .calculation-card .purchase-card-body {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1px;
+    }
+
+    .calculation-card .calculation-row-group {
+        display: contents;
+    }
+
+    .calculation-card .calculation-row {
+        display: flex;
+        flex: 1 1 150px;
+        min-width: 0;
+        align-items: center;
+        gap: 0px;
+        margin-bottom: 0;
+    }
+
+        .calculation-card .calculation-row label {
+            white-space: nowrap;
+            margin: 0;
+        }
+
+        .calculation-card .calculation-row input {
+            width: 100%;
+            min-width: 60px;
+            box-sizing: border-box;
+        }
+
+        .calculation-card .calculation-row.total {
+            flex: 1 1 150px;
+            margin-top: 0;
+            padding-top: 0;
+            border-top: none;
+        }
+
+    .vendor-left-column {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        min-width: 0;
+    }
+
+
+
+    .courier-top-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 0px;
+    }
+
+        .courier-top-row .vendor-field {
+            display: block;
+            min-width: 0;
+        }
+
+            .courier-top-row .vendor-field label {
+                margin-bottom: 0px;
+            }
+
+            .courier-top-row .vendor-field input,
+            .courier-top-row .vendor-field select {
+                width: 100%;
+                height: 35px;
+                box-sizing: border-box;
+            }
+
+
+    #accountTableBody td:nth-child(1) {
+        text-align: left;
+    }
+
+    #accountTableBody td:nth-child(3) {
+        text-align: left;
+    }
+
+    #accountTableBody td:nth-child(4) {
+        text-align: left;
+        white-space: nowrap;
+    }
+
+    #accountTableBody td:nth-child(5) {
+        text-align: left;
+    }
+
+    #accountTableBody td:nth-child(6) {
+        text-align: left;
+        white-space: nowrap;
+    }
+    /* Vendor Contact dropdown display */
+    .vendor-contact-card select,
+    .vendor-contact-card .form-control {
+        box-sizing: border-box;
+        min-width: 0;
+        height: 34px;
+        font-size: 13px;
+        line-height: normal;
+        padding: 6px 10px;
+        color: #445064;
+        background-color: #fff;
+    }
+
+        /* Keep dropdown placeholder text visible */
+        .vendor-contact-card select option {
+            color: #445064;
+            background-color: #fff;
+        }
+
+    .vendor-contact-body {
+        gap: 0px;
+    }
+    /*.vendor-contact-card{
+         height:280px;
+     }*/
+    /* Office Contact: country code + phone number */
+    .office-contact-row {
+        display: flex;
+        align-items: stretch;
+        gap: 8px;
+        width: 100%;
+    }
+
+        .office-contact-row .country-code {
+            height: 20px !important;
+            min-height: 0 !important;
+            padding-top: 4px !important;
+            padding-bottom: 4px !important;
+            box-sizing: border-box;
+            align-self: center;
+        }
+
+        .office-contact-row .phone-number {
+            flex: 1 1 auto;
+            min-width: 0;
+            width: 100%;
+            height: 34px;
+            box-sizing: border-box;
+        }
+    /* Address Title dropdown */
+    #AddressTitleID.erp-select {
+        /* display: block;
+     width: 180px;*/
+        height: 24px !important;
+        padding: 1px 1px !important;
+        box-sizing: border-box;
+        font-size: 12px !important;
+        line-height: normal;
+        color: #445064;
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        border-radius: 6px;
+        display: inline-block;
+        width: 180px;
+        min-width: 180px;
+    }
+
+    .erp-inline-field {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .erp-inline-field label {
+            color: #172B7A !important;
+            font-weight: 700 !important;
+            font-size: 10px;
+            margin: 0;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+    /* Reduce bottom padding - Vendor Address */
+    .vendor-address-card .purchase-card-body {
+        padding-bottom: 5px !important;
+    }
+
+    /* Reduce bottom padding - Specific Instructions to Vendor */
+    .specific-instructions-card .purchase-card-body {
+        padding-bottom: 0px !important;
+    }
+
+    .purchase-form-buttons {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        padding: 10px 0;
+    }
+    /* Remove divider below Specific Instructions heading */
+    .vendor-instructions-card .purchase-card-header {
+        border-bottom: none !important;
+    }
+    /* Reduce spacing in Specific Instructions card */
+    .vendor-instructions-card .purchase-card-header {
+        padding-bottom: 0px !important;
+        margin-bottom: 0 !important;
+    }
+
+    .vendor-instructions-card .purchase-card-body {
+        padding-top: 2px !important;
+        padding-bottom: 2px !important;
+    }
+
+    .vendor-instructions-card textarea {
+        margin-top: 0 !important;
+    }
+
+    .vendor-instructions-card textarea {
+        height: 60px !important;
+        min-height: 10px !important;
+    }
+    /* Vendor Contact: keep each label and its fields on the same line */
+    .vendor-contact-card .vendor-contact-field {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+    }
+
+        .vendor-contact-card .vendor-contact-field > label {
+            width: 110px;
+            min-width: 110px;
+            margin: 0;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .vendor-contact-card .vendor-contact-field > select,
+        .vendor-contact-card .office-contact-row {
+            flex: 1;
+            min-width: 0;
+        }
+
+    .vendor-contact-card .office-contact-row {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+        .vendor-contact-card .office-contact-row .form-control {
+            min-width: 0;
+            flex: 1;
+        }
+
+    .vendor-instructions-card {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+        .vendor-instructions-card textarea {
+            width: 100%;
+            min-height: 30px;
+            box-sizing: border-box;
+            resize: vertical;
+            border: 1px solid #ccd3dd;
+            border-radius: 5px;
+            padding: 9px;
+            font-size: 12px;
+        }
+
+            .vendor-instructions-card textarea:focus {
+                border-color: #80bdff;
+                outline: none;
+            }
+
+    .calculation-card #SpecificInstructions {
+        height: 35px !important;
+        min-height: 35px !important;
+        max-height: none !important;
+        box-sizing: border-box;
+        resize: none;
+        overflow-y: hidden;
+    }
+
+    /* Fix Office Email dropdown text clipping */
+    .vendor-contact-card #OfficeEmailId,
+    .vendor-contact-card #ContactPersonName {
+        height: 25px;
+        min-height: 25px;
+        box-sizing: border-box;
+        line-height: normal;
+        padding-top: 2px;
+        padding-bottom: 0px;
+    }
+
+    .vendor-contact-card .vendor-contact-field:last-child {
+        margin-bottom: 3px;
+    }
+
+    /* Item Modal Header */
+    #itemModal .modal-header,
+    #accountGroupModal .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+    }
+
+    /* Close Button - Top Right */
+    #itemModal .item-modal-close,
+    #accountGroupModal .account-group-modal-close {
+        border: none;
+        background: transparent;
+        color: #555;
+        font-size: 30px;
+        line-height: 1;
+        padding: 0 5px;
+        cursor: pointer;
+        margin-left: auto;
+    }
+
+        #itemModal .item-modal-close:hover,
+        #accountGroupModal .account-group-modal-close:hover {
+            color: #dc3545;
+        }
+
+    /* Blue Gradient Buttons - Item and Account Group Modals */
+    #itemModal .modal-footer .btn-primary,
+    #accountGroupModal .modal-footer .btn-primary {
+        background: linear-gradient(135deg, #20BED0, #1B247D);
+        border: none;
+        color: #ffffff;
+        border-radius: 8px;
+        padding: 9px 22px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 3px 8px rgba(37, 99, 235, 0.2);
+    }
+
+        /* Hover Effect */
+        #itemModal .modal-footer .btn-primary:hover,
+        #accountGroupModal .modal-footer .btn-primary:hover {
+            background: linear-gradient(135deg, #1B247D, #20BED0);
+            box-shadow: 0 5px 12px rgba(37, 99, 235, 0.3);
+            transform: translateY(-1px);
+        }
+    /* =========================================
+    ITEM MODAL DROPDOWN FIX
+    ========================================= */
+
+    #itemModal .modal-body label,
+    #accountGroupModal .modal-body label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+        color: #555;
+    }
+
+    #itemModal .modal-body .form-control,
+    #accountGroupModal .modal-body .form-control {
+        width: 100%;
+        height: 38px;
+        box-sizing: border-box;
+        padding: 8px 12px;
+        font-size: 14px;
+        line-height: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #fff;
+        color: #555;
+    }
+
+    /* Fix dropdown text and arrow alignment */
+    #itemModal select.form-control,
+    #accountGroupModal select.form-control {
+        height: 38px;
+        padding: 6px 12px;
+        line-height: 24px;
+        vertical-align: middle;
+        appearance: auto;
+        -webkit-appearance: menulist;
+    }
+
+    /* Consistent spacing between fields */
+    #itemModal .modal-body .row > div,
+    #accountGroupModal .modal-body .form-group {
+        margin-bottom: 10px;
+    }
+
+    /* Keep dropdowns inside their columns */
+    #itemModal .modal-body select,
+    #accountGroupModal .modal-body select {
+        max-width: 100%;
+    }
+
+    /* Narration should remain taller than normal inputs */
+    #accountGroupModal textarea.form-control {
+        height: auto;
+        min-height: 80px;
+        resize: vertical;
+    }
+
+    /* Match Account Group heading with Item modal heading */
+    #accountGroupModal .modal-header {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #accountGroupModal #accountGroupModalTitle {
+        font-family: inherit;
+        font-size: 18px;
+        font-weight: 600;
+        margin: 0;
+        text-align: center;
+        flex: 1;
+    }
+
+    /* Keep close button at the top-right */
+    #accountGroupModal .account-group-modal-close {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .purchase-breadcrumb {
+        display: flex;
+        align-items: center;
+        margin-top: -20px;
+        margin-bottom: 20px;
+    }
+
+        .purchase-breadcrumb .route-path1,
+        .purchase-breadcrumb .route-path2 {
+            font-size: 14px;
+            font-weight: 600;
+            font-family: Helvetica, sans-serif;
+            background-color: #003399;
+            color: #fff;
+            padding: 6px 15px 6px 8px;
+            margin: 0;
+            height: 30px;
+        }
+
+        .purchase-breadcrumb .route-path1 {
+            clip-path: polygon(0 0, 90% 0, 100% 50%, 90% 100%, 0 100%);
+            margin-right: -3px;
+        }
+
+        .purchase-breadcrumb .route-path2 {
+            clip-path: polygon(0 0, 94% 0, 100% 50%, 94% 100%, 0 100%, 6% 50%);
+            padding-left: 18px;
+            cursor: pointer;
+        }
+
+            .purchase-breadcrumb .route-path2:hover {
+                background-color: midnightblue;
+            }
+</style>
+
+<script>
+
+
+    function convertDate1(inputFormat) {
+        function pad(s) { return (s < 10) ? '0' + s : s; }
+        var d = new Date(inputFormat)
+        return [pad(d.getDate()), pad(d.getMonth() + 1), d.getFullYear()].join('/')
+    }
+
+
+/* =========================================================
+   GLOBAL VARIABLES
+   ========================================================= */
+
+var orderItems = [];
+var orderItems1 = [];
+var contactPersonsList = [];
+var addressList = [];
+var GSTRegistrationId = 0;
+
+
+/* =========================================================
+   GET PURCHASE ORDER DETAILS
+   ========================================================= */
+    function GetDetailsByIndentNo() {
+
+    var IndentNo = $("#PurIndentNo").val();
+
+      if (!IndentNo) {
+        alert("No Purchase Indent No. selected. You can add items manually.");
+        return;
+        }
+        console.log('Indent No is', IndentNo);
+
+    $.ajax({
+
+        url: '@Url.Action("GetPOByPurchaseIndent", "PurchaseOrder")',
+
+        type: 'POST',
+
+        data: JSON.stringify({
+            indentNo: IndentNo
+        }),
+
+        dataType: 'json',
+
+        contentType: 'application/json; charset=utf-8',
+
+        success: function (po) {
+
+            console.log("PO RESPONSE:", po);
+
+            // =====================================
+            // CHECK RESPONSE
+            // =====================================
+
+            if (!po) {
+
+                alert("Purchase Order not found.");
+
+                return;
+            }
+
+            // =====================================
+            // PO DETAILS
+            // =====================================
+
+            if (po.PurIndentDate) {
+
+                $("#PurIndentDate").val(
+                    convertDate1(
+                        new Date(
+                            parseInt(
+                                po.PurIndentDate.substr(6)
+                            )
+                        )
+                    )
+                );
+            }
+
+            if (po.MatReqDate) {
+
+                $("#MatReqDate").val(
+                    convertDate1(
+                        new Date(
+                            parseInt(
+                                po.MatReqDate.substr(6)
+                            )
+                        )
+                    )
+                );
+            }
+
+            //$("#StatusId").val(
+            //    po.StatusId || 9
+            //);
+
+            $("#Note").val(
+                po.Note || ""
+            );
+
+
+            // =====================================
+            // ADDRESS
+            // =====================================
+
+            console.log(
+                "BusinessAddressId:",
+                po.BusinessAddressId
+            );
+
+            console.log(
+                "DesignationInfoId:",
+                po.DesignationInfoId
+            );
+
+
+            if (po.BusinessEntityId) {
+
+                GetVendorInfo(
+                    po.BusinessEntityId,
+                    po.BusinessAddressId,
+                    po.DesignationInfoId
+                );
+                $("#LedgerID").val(po.BusinessEntityId);
+            }
+
+
+            // =====================================
+            // ITEMS
+            // =====================================
+
+            orderItems = [];
+            orderItems1 = [];
+
+            $("#itemTableBody").empty();
+            $("#orderItems1").empty();
+
+
+            // =============================
+            // ITEM DETAILS
+            // =============================
+
+            if (po.pro.length > 0) {
+
+                for (var i = 0; i < po.pro.length; i++) {
+
+                    var item = po.pro[i];
+
+                    if ($("#Discount").val() == 0.00) {
+                        apprate = parseFloat(item.RatePerUnit).toFixed(2);
+                    }
+                    else {
+                        apprate = (
+                            parseFloat(item.RatePerUnit) *
+                            (1 - parseFloat($("#Discount").val()) / 100)
+                        ).toFixed(2);
+                    }
+
+                    amt = (
+                        parseFloat(apprate) *
+                        parseFloat(item.Quantity)
+                    ).toFixed(2);
+
+
+                    //// Push into orderItems
+                    if (po.pro.length > 0) {
+
+                        orderItems = [];
+
+                        for (var i = 0; i < po.pro.length; i++) {
+
+                            var item = po.pro[i];
+
+                            var apprate = item.ApplicableRate || item.RatePerUnit;
+
+                            var amt = item.Amount || apprate * item.Quantity;
+
+
+                            // Push into orderItems
+                            orderItems.push({
+
+                                PurOrderNo:
+                                    $('#PurOrderNo').val().trim(),
+
+                                ItemID:
+                                    item.ItemID,
+
+                                ItemName:
+                                    item.ItemName,
+
+                                Quantity:
+                                    item.Quantity,
+
+                                InQty:
+                                    item.Quantity,
+
+                                UnitId:
+                                    item.UnitId,
+
+                                UnitName:
+                                    item.UnitName,
+
+                                ItemCode:
+                                    item.ItemCode,
+
+                                HSNCode:
+                                    item.HSNCode,
+
+                                GSTRate:
+                                    item.GSTRate,
+
+                                RatePerUnit:
+                                    item.RatePerUnit,
+
+                                ApplicableRate:
+                                    apprate,
+
+                                Amount:
+                                    amt
+                            });
+                        }
+
+                        // Render complete table
+                        renderItems();
+                    }
+
+                }
+
+            }
+            else {
+
+                $("#itemTableBody").html(
+                    "<tr>" +
+                    "<td colspan='6' class='no-items'>" +
+                    "No items added." +
+                    "</td>" +
+                    "</tr>"
+                );
+            }
+
+
+            // =============================
+            // ACCOUNT GROUP DETAILS
+            // =============================
+
+            if (po.pro1.length > 0) {
+
+                var accountHtml = "";
+
+                for (var j = 0; j < po.pro1.length; j++) {
+
+                    var account = po.pro1[j];
+
+
+                    // Push into orderItems1
+                    orderItems1.push({
+
+                        PurOrderNo: $('#PurOrderNo').val().trim(),
+                        AccountGroupId: account.GroupId,
+                        GroupName: account.GroupName,
+                        Amount: account.Amount,
+                        GSTRate: account.GSTRate,
+                        Narration: account.Narration
+
+                    });
+
+
+                    // Add directly into account group area
+                    accountHtml +=
+                        "<div class='account-item-row'>" +
+
+                        "<span>" + (j + 1) + "</span>" +
+
+                        "<span>" + (account.GroupName || "") + "</span>" +
+
+                        "<span>" + (account.Amount || 0) + "</span>" +
+
+                        "<span>" + (account.Narration || "") + "</span>" +
+
+
+                        "<button type='button' " +
+                        "class='table-action-btn edit-btn' " +
+                        "onclick='openItemModal(" + i + ")'>" +
+                        "Edit" +
+                        "</button>" +
+
+
+                        "<button type='button' " +
+                        "class='btn btn-danger' " +
+                        "onclick='RemoveOrderItem1(" + j + ")'>" +
+                        "Remove" +
+                        "</button>" +
+
+                        "</div>";
+                }
+
+                $("#orderItems1").html(accountHtml);
+
+            }
+            else {
+
+                $("#orderItems1").html(
+                    "<div style='padding:10px;color:#777;'>" +
+                    "No account groups added." +
+                    "</div>"
+                );
+            }
+
+            // =============================
+            // SUB TOTAL
+            // =============================
+
+            var subtot = 0;
+
+            if (orderItems.length > 0) {
+
+                for (var k = 0; k < orderItems.length; k++) {
+
+                    subtot += parseFloat(
+                        orderItems[k].Amount || 0
+                    );
+                }
+            }
+
+            if (orderItems1.length > 0) {
+
+                for (var l = 0; l < orderItems1.length; l++) {
+
+                    subtot += parseFloat(
+                        orderItems1[l].Amount || 0
+                    );
+                }
+            }
+
+            console.log('Product sub total', subtot);
+
+            $("#ProductSubTotal").val(
+                subtot.toFixed(2)
+            );
+
+
+            //$("#ProductSubTotal").attr(
+            //    "readonly",
+            //    false
+            //);
+
+            // $("#ProductSubTotal").val(subtot);
+
+            $("#ProductSubTotal").attr(
+                "readonly",
+                true
+            );
+
+
+
+            //GetPurchaseItems(
+            //    poNo
+            //);
+
+            // =====================================
+            // ACCOUNT GROUPS
+            // =====================================
+
+            //GetPurchaseGroups(
+            //    poNo
+            //);
+        },
+
+        error: function (xhr) {
+
+            console.log(
+                "PO ERROR:",
+                xhr.responseText
+            );
+
+            alert(
+                "Error loading Purchase Indent."
+            );
+        }
+    });
+}
+
+
+var vendorAddressesList = [];
+var contactPersonsList = [];
+
+
+// =========================================================
+// LOAD VENDOR + ALL ADDRESSES
+// =========================================================
+
+function GetVendorInfo(
+    businessEntityId,
+    selectedAddressId,
+    selectedDesignationInfoId
+) {
+
+    if (!businessEntityId) {
+        return;
+    }
+
+    $.ajax({
+
+        url: '@Url.Action("GetVendorInfo", "PurchaseOrder")',
+
+        type: 'POST',
+
+        data: {
+            businessEntityId: businessEntityId
+        },
+
+        dataType: 'json',
+
+        success: function (addresses) {
+
+            console.log("Vendor Addresses:", addresses);
+
+            vendorAddressesList = addresses || [];
+
+            var ddl = $("#AddressTitleID");
+
+            // Clear dropdown
+            ddl.empty();
+
+            // Default option
+            ddl.append(
+                $("<option>", {
+                    value: "",
+                    text: "Please Select"
+                })
+            );
+
+            // =====================================================
+            // ADD ALL ADDRESSES
+            // =====================================================
+
+            $.each(
+                vendorAddressesList,
+                function (_, address) {
+
+                    ddl.append(
+                        $("<option>", {
+                            value: address.BusinessAddressId,
+                            text: address.AddressTitle
+                        })
+                    );
+                }
+            );
+
+            console.log(
+                "Total vendor addresses:",
+                vendorAddressesList.length
+            );
+
+            // =====================================================
+            // NO ADDRESS
+            // =====================================================
+
+            if (!vendorAddressesList.length) {
+
+                ClearVendorAddress();
+
+                LoadContactPersons([]);
+
+                return;
+            }
+
+            // =====================================================
+            // DETERMINE ADDRESS TO SELECT
+            // =====================================================
+
+            var addressId = selectedAddressId;
+
+            // No saved address -> first address
+            if (!addressId) {
+
+                addressId =
+                    vendorAddressesList[0].BusinessAddressId;
+            }
+
+            // Check selected address belongs to vendor
+            var addressExists =
+                vendorAddressesList.some(function (x) {
+
+                    return String(x.BusinessAddressId) ===
+                           String(addressId);
+                });
+
+            // Invalid address -> first address
+            if (!addressExists) {
+
+                addressId =
+                    vendorAddressesList[0].BusinessAddressId;
+            }
+
+            // =====================================================
+            // SELECT ADDRESS
+            // =====================================================
+
+            ddl.val(addressId);
+
+            // =====================================================
+            // LOAD SELECTED ADDRESS
+            // =====================================================
+
+            LoadSelectedVendorAddress(
+                addressId,
+                selectedDesignationInfoId
+            );
+        },
+
+        error: function (xhr) {
+
+            console.log(
+                "GetVendorInfo Error:",
+                xhr.responseText
+            );
+
+            vendorAddressesList = [];
+
+            $("#AddressTitleID").empty();
+
+            $("#AddressTitleID").append(
+                $("<option>", {
+                    value: "",
+                    text: "Please Select"
+                })
+            );
+
+            ClearVendorAddress();
+
+            LoadContactPersons([]);
+        }
+    });
+}
+
+
+// =========================================================
+// ADDRESS DROPDOWN CHANGE
+// =========================================================
+
+$(document)
+    .off("change.vendorAddress", "#AddressTitleID")
+    .on("change.vendorAddress", "#AddressTitleID", function () {
+
+        var addressId = $(this).val();
+
+        console.log(
+            "User selected Address:",
+            addressId
+        );
+
+        if (!addressId) {
+
+            ClearVendorAddress();
+
+            LoadContactPersons([]);
+
+            return;
+        }
+
+        // ============================================
+        // CLEAR EXISTING ITEMS WHEN ADDRESS CHANGES
+        // ============================================
+        orderItems = [];
+        renderItems();
+        // =====================================================
+        // IMPORTANT:
+        // No GetVendorInfo AJAX call here.
+        // Address is already present in vendorAddressesList.
+        // =====================================================
+
+        LoadSelectedVendorAddress(
+            addressId,
+            null
+        );
+    });
+
+
+// =========================================================
+// LOAD SELECTED ADDRESS
+// =========================================================
+
+function LoadSelectedVendorAddress(
+    addressId,
+    selectedDesignationInfoId
+) {
+
+    if (!addressId) {
+        return;
+    }
+
+    var address =
+        vendorAddressesList.find(function (x) {
+
+            return String(x.BusinessAddressId) ===
+                   String(addressId);
+        });
+
+    if (!address) {
+
+        console.log(
+            "Address not found:",
+            addressId
+        );
+
+        return;
+    }
+
+    console.log(
+        "Selected Address:",
+        address
+    );
+
+    // =====================================================
+    // ADDRESS DETAILS
+    // =====================================================
+
+    $("#Address").text(
+        address.Address || ""
+    );
+
+    $("#Locality").text(
+        address.Locality || ""
+    );
+
+    $("#Taluka").text(
+        address.Taluka || ""
+    );
+
+    $("#District").text(
+        address.District || ""
+    );
+
+    $("#State").text(
+        address.State || ""
+    );
+
+    $("#Country").val(
+        address.Country || ""
+    );
+
+    $("#Pincode1").text(
+        address.Pincode || ""
+    );
+
+    $("#CountryCode").val(
+        address.CountryCode || "+91"
+    );
+
+    // =====================================================
+    // VENDOR SETTINGS
+    // =====================================================
+
+    $("#Discount").val(
+        address.PurDiscountPercent || 0
+    );
+
+    $("#TermsOfDeliveryID").val(
+        address.PurTermsOfDeliveryID || ""
+    );
+
+    $("#PaymentTermID").val(
+        address.PurPaymentTermID || ""
+    );
+
+    $("#CourierID").val(
+        address.PurCourierID || ""
+    );
+
+    // =====================================================
+    // LOAD CONTACTS
+    // =====================================================
+
+    GetVendorContacts(
+        addressId,
+        selectedDesignationInfoId
+    );
+
+    // =====================================================
+    // LOAD ITEMS
+    // =====================================================
+
+    loadSupplierItems(
+        addressId
+    );
+
+    // =====================================================
+    // LOAD ACCOUNT GROUPS
+    // =====================================================
+
+    loadAccountGroups(
+        addressId
+    );
+}
+
+
+// =========================================================
+// GET CONTACT PERSONS
+// =========================================================
+
+
+
+
+// ============================================================
+// GET VENDOR CONTACTS
+// ============================================================
+
+function GetVendorContacts(
+    businessAddressId,
+    selectedDesignationInfoId
+) {
+
+    if (!businessAddressId) {
+
+        contactPersonsList = [];
+
+        LoadContactPersons([]);
+
+        $("#ContactPersonName").val("");
+        $("#DesignationInfoId").val("");
+
+        return;
+    }
+
+    $.ajax({
+
+        url: '@Url.Action("GetVendorContacts", "PurchaseOrder")',
+
+        type: 'POST',
+
+        data: {
+            businessAddressId: businessAddressId
+        },
+
+        dataType: 'json',
+
+        success: function (contacts) {
+
+            console.log("Contacts:", contacts);
+
+            contactPersonsList = contacts || [];
+
+            // Load contacts into dropdown
+            LoadContactPersons(contactPersonsList);
+
+            // ==================================================
+            // FIND CONTACT TO SELECT
+            // ==================================================
+
+            var selectedCP = null;
+
+            // 1. PO already contains a saved contact
+            if (selectedDesignationInfoId) {
+
+                selectedCP =
+                    contactPersonsList.find(function (x) {
+
+                        return String(
+                            x.DesignationInfoId
+                        ) === String(
+                            selectedDesignationInfoId
+                        );
+                    });
+            }
+
+            // 2. No saved contact -> find default person
+            if (!selectedCP) {
+
+                selectedCP =
+                    contactPersonsList.find(function (x) {
+
+                        return x.DefaultPerson === true ||
+                               x.DefaultPerson === 1 ||
+                               x.DefaultPerson === "1";
+                    });
+            }
+
+            // 3. No default -> select first contact
+            if (!selectedCP &&
+                contactPersonsList.length > 0) {
+
+                selectedCP =
+                    contactPersonsList[0];
+            }
+
+            // ==================================================
+            // SELECT CONTACT
+            // ==================================================
+
+            if (selectedCP) {
+
+                console.log(
+                    "Selected Contact:",
+                    selectedCP
+                );
+
+                $("#ContactPersonName").val(
+                    selectedCP.ContactPersonInfoId
+                );
+
+                $("#DesignationInfoId").val(
+                    selectedCP.DesignationInfoId
+                );
+
+                GetCPDetails(
+                    selectedCP.ContactPersonInfoId
+                );
+
+            } else {
+
+                console.log(
+                    "No contact found for address:",
+                    businessAddressId
+                );
+
+                $("#ContactPersonName").val("");
+
+                $("#DesignationInfoId").val("");
+            }
+        },
+
+        error: function (xhr) {
+
+            console.log(
+                "GetVendorContacts Error:",
+                xhr.responseText
+            );
+
+            contactPersonsList = [];
+
+            LoadContactPersons([]);
+
+            $("#ContactPersonName").val("");
+            $("#DesignationInfoId").val("");
+        }
+    });
+}
+
+
+
+
+
+/* =========================================================
+   DATE FORMAT
+   ========================================================= */
+
+function formatDate(value) {
+
+    if (!value) return "";
+
+    var match = /\/Date\((\d+)\)\//.exec(value);
+
+    if (!match) return value;
+
+    var date = new Date(
+        parseInt(match[1])
+    );
+
+    return date.getFullYear() +
+        "-" +
+        String(date.getMonth() + 1).padStart(2, "0") +
+        "-" +
+        String(date.getDate()).padStart(2, "0");
+}
+
+
+/* =========================================================
+   COURIER / SEND TYPE
+   ========================================================= */
+
+function setCourierType(type, courierId) {
+
+    if (type === "By Hand") {
+
+        $("#CourierID")
+            .val(9)
+            .prop("disabled", true);
+
+        $('input[name="SendType"][value="By Hand"]')
+            .prop("checked", true);
+
+        $('input[name="RateType"][value="Surface Rate"]')
+            .prop("checked", true);
+
+    } else {
+
+        $("#CourierID")
+            .val(courierId || "")
+            .prop("disabled", false);
+
+        $('input[name="SendType"][value="By Courier"]')
+            .prop("checked", true);
+
+        $('input[name="RateType"][value="Surface Rate"]')
+            .prop("checked", true);
+    }
+}
+
+
+    function checksendtype(code) {
+        if (code == "By Hand") {
+
+            $("#CourierID").attr("disabled", true);
+            $("#CourierID").val('');
+
+            $("input:radio[name=RateType]").attr("disabled", false);
+            $('input:radio[name="RateType"]').filter('[value="Surface Rate"]').prop('checked', false);
+
+        }
+        else if (code == "By Courier") {
+            $("#CourierID").attr("disabled", false);
+            $("#CourierID").val('');
+            $("input:radio[name=RateType]").attr("disabled", false);
+        }
+    }
+
+//function checksendtype(type) {
+
+//    if (type === "By Hand") {
+
+//        $("#CourierID")
+//            .val(9)
+//            .prop("disabled", true);
+
+//    } else {
+
+//        $("#CourierID")
+//            .val("")
+//            .prop("disabled", false);
+//    }
+//}
+
+
+    $(document).ready(function () {
+        $('#TaxInvoiceDate').change(function () {
+            var taxInvoiceDate = new Date($(this).val());
+            var selectedDate = new Date($(this).val());
+            var currentDate = new Date();
+
+            // Check if the selected date is in the future
+            if (selectedDate > currentDate) {
+                alert('Please select a date that is not in the future.');
+                // Optionally, you can reset the date to the current date or do something else.
+                $(this).val(currentDate.toISOString().split('T')[0]);
+                return;
+            }
+            var month = (taxInvoiceDate.getMonth() + 1).toString().padStart(2, '0');
+            var year = taxInvoiceDate.getFullYear();
+
+            // Send an Ajax request to the server to get the last used number for the selected month and year
+            $.ajax({
+                type: 'GET',
+                url: '/PurchaseInvoice/GetLastInvoiceNumberForMonthAndYear?month=' + month + '&year=' + year,
+                success: function (response) {
+                    var purchaseInvoiceNo = response;
+
+                    // If the response is a number, format it to PIYYMMXX format
+                    if (!isNaN(response)) {
+                        var yearStr = year.toString().substr(-2);
+                        purchaseInvoiceNo = 'PI' + yearStr + month + response.toString().padStart(4, '0');
+                    }
+
+                    $('#PurInvoiceNo').val(purchaseInvoiceNo);
+                },
+                error: function (xhr, status, error) {
+                    // Handle error
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+    });
+
+
+
+    function loadSupplierItems(businessAddressId) {
+
+    if (!businessAddressId) {
+        return;
+    }
+
+    $.ajax({
+        url: '@Url.Action("getSupplierItem", "PurchaseOrder")',
+
+        type: "POST",
+
+        data: JSON.stringify({
+            LedgerID: businessAddressId
+        }),
+
+        dataType: "json",
+
+        contentType: "application/json; charset=utf-8",
+
+        success: function (data) {
+
+            console.log("Supplier Items:", data);
+
+            var itemDropdown = $("#modalItem");
+
+            itemDropdown.empty();
+
+            itemDropdown.append(
+                $("<option>", {
+                    value: "",
+                    text: "Please Select"
+                })
+            );
+
+            if (!data || data.length === 0) {
+                return;
+            }
+
+            $.each(data, function (i, item) {
+
+                itemDropdown.append(
+                    $("<option>", {
+                        value: item.ItemID,
+                        text: item.ItemName
+                    })
+                );
+            });
+        },
+
+        error: function (xhr) {
+
+            console.log(
+                "Supplier Item Error:",
+                xhr.responseText
+            );
+        }
+    });
+}
+
+
+/* =========================================================
+   RENDER ITEMS
+   ========================================================= */
+
+    function renderItems() {
+
+        var html = "";
+
+        if (!orderItems || orderItems.length === 0) {
+
+            html =
+                "<tr>" +
+                "<td colspan='11' class='no-items'>" +
+                "No items added." +
+                "</td>" +
+                "</tr>";
+
+        } else {
+
+            $.each(orderItems, function (i, item) {
+
+                html +=
+                    "<tr>" +
+
+                    "<td>" + (i + 1) + "</td>" +
+
+                    "<td>" + (item.ItemName || "") + "</td>" +
+
+                    "<td>" + (item.Quantity || 0) + "</td>" +
+
+                    "<td>" +
+                    (item.UnitName || "") +
+                    "</td>" +
+
+                    "<td>" +
+                    (item.ItemCode || "") +
+                    "</td>" +
+
+                    "<td>" +
+                    (item.HSNCode || "") +
+                    "</td>" +
+
+                    "<td>" +
+                    (item.GSTRate || 0) +
+                    "</td>" +
+
+                    "<td>" +
+                    (parseFloat(item.RatePerUnit) || 0).toFixed(2) +
+                    "</td>" +
+
+                    "<td>" +
+                    (parseFloat(item.ApplicableRate) || 0).toFixed(2) +
+                    "</td>" +
+
+                    "<td>" +
+                    (parseFloat(item.Amount) || 0).toFixed(2) +
+                    "</td>" +
+
+                    "<td>" +
+
+                    "<button type='button' " +
+                    "class='table-action-btn edit-btn' " +
+                    "onclick='openItemModal(" + i + ")'>" +
+                    "Edit" +
+                    "</button> " +
+
+                    "<button type='button' " +
+                    "class='small-remove-btn' " +
+                    "onclick='RemoveOrderItem(" + i + ")'>" +
+                    "Remove" +
+                    "</button>" +
+
+                    "</td>" +
+
+                    "</tr>";
+            });
+        }
+
+        $("#itemTableBody").html(html);
+
+        calculation();
+
+    }
+    //function calculateItemAmount() {
+
+    //    var qty =
+    //        parseFloat($("#modalQty").val()) || 0;
+
+    //    var rate =
+    //        parseFloat($("#modalApplicableRate").val()) || 0;
+
+    //    var amount = qty * rate;
+
+    //    $("#modalAmount").val(amount.toFixed(2));
+    //}
+
+    //$(document).on(
+    //    "input",
+    //    "#modalQty, #modalApplicableRate",
+    //    function () {
+
+    //        calculateItemAmount();
+
+    //    }
+    //);
+
+/* =========================================================
+   ITEM MODAL
+   ========================================================= */
+
+    function openItemModal(index) {
+
+        $("#editIndex").val(
+            index === undefined ? -1 : index
+        );
+
+        if (index === undefined) {
+
+            $("#itemModalTitle").text("Add Item");
+
+            $("#modalItem").val("");
+            $("#modalQty").val(1);
+            $("#modalItemCode").val("");
+            $("#modalUnit").val("");
+            $("#modalHSNCode").val("");
+            $("#modalGSTRate").val("");
+            $("#modalRatePerUnit").val("");
+            $("#modalApplicableRate").val("");
+            $("#modalAmount").val("");
+
+        } else {
+
+            var item = orderItems[index];
+
+            if (!item) return;
+
+            $("#itemModalTitle").text("Edit Item");
+
+            $("#modalItem").val(item.ItemID);
+            $("#modalQty").val(item.Quantity || 1);
+            $("#modalItemCode").val(item.ItemCode || "");
+            $("#modalUnit").val(item.UnitId || "");
+            $("#modalHSNCode").val(item.HSNCode || "");
+            $("#modalGSTRate").val(item.GSTRate || 0);
+            $("#modalRatePerUnit").val(item.RatePerUnit || 0);
+            $("#modalApplicableRate").val(item.ApplicableRate || 0);
+            $("#modalAmount").val(
+                (item.Amount || 0).toFixed(2)
+            );
+        }
+
+        $("#itemModal").addClass("show");
+    }
+
+
+function closeItemModal() {
+
+    $("#itemModal")
+        .removeClass("show");
+
+    $("#editIndex")
+        .val(-1);
+}
+
+
+/* =========================================================
+   SAVE ITEM
+   ========================================================= */
+
+    function saveItemFromModal() {
+
+        var index = parseInt($("#editIndex").val());
+
+        var itemId = $("#modalItem").val();
+
+        if (!itemId) {
+            alert("Please select Item.");
+            return;
+        }
+
+        var qty = parseFloat($("#modalQty").val()) || 0;
+
+        if (qty <= 0) {
+            alert("Please enter valid Quantity.");
+            return;
+        }
+
+
+        // ==========================================
+        // CHECK DUPLICATE ITEM
+        // ==========================================
+
+        for (var i = 0; i < orderItems.length; i++) {
+
+            // If editing, don't compare with itself
+            if (index >= 0 && i === index) {
+                continue;
+            }
+
+            if (
+                orderItems[i].ItemID != null &&
+                orderItems[i].ItemID.toString() === itemId.toString()
+            ) {
+
+                alert("Item Already Exist In List");
+
+                $("#modalItem").focus();
+
+                return;
+            }
+        }
+
+
+        // ==========================================
+        // GET VALUES
+        // ==========================================
+
+        var applicableRate =
+            parseFloat($("#modalApplicableRate").val()) || 0;
+
+
+        var item = {
+
+            PurOrderNo: $("#PurOrderNo").val().trim(),
+
+            ItemID: itemId,
+
+            ItemName:
+                $("#modalItem option:selected").text().trim(),
+
+            Quantity: qty,
+
+            InQty: qty,
+
+            UnitId:
+                $("#modalUnit").val(),
+
+            UnitName:
+                $("#modalUnit option:selected").text().trim(),
+
+            ItemCode:
+                $("#modalItemCode").val().trim(),
+
+            HSNCode:
+                $("#modalHSNCode").val().trim(),
+
+            GSTRate:
+                parseFloat($("#modalGSTRate").val()) || 0,
+
+            RatePerUnit:
+                parseFloat($("#modalRatePerUnit").val()) || 0,
+
+            ApplicableRate:
+                applicableRate,
+
+            Amount:
+                parseFloat((qty * applicableRate).toFixed(2))
+        };
+
+
+        // ==========================================
+        // UPDATE OR ADD
+        // ==========================================
+
+        if (index >= 0) {
+
+            // UPDATE EXISTING ITEM
+            orderItems[index] = item;
+
+        } else {
+
+            // ADD NEW ITEM
+            orderItems.push(item);
+        }
+
+
+        // ==========================================
+        // REFRESH
+        // ==========================================
+
+        renderItems();
+
+        calculation();
+
+        closeItemModal();
+    }
+
+
+/* =========================================================
+   ITEM AMOUNT
+   ========================================================= */
+
+    function calculateItemAmount() {
+
+        var qty = parseFloat($("#modalQty").val()) || 0;
+        var rate = parseFloat($("#modalApplicableRate").val()) || 0;
+
+        var amount = qty * rate;
+
+        $("#modalAmount").val(amount.toFixed(2));
+    }
+
+
+    // =========================================================
+    // QUANTITY / RATE CHANGE
+    // =========================================================
+    $(document).on(
+        "input",
+        "#modalQty, #modalApplicableRate",
+        calculateItemAmount
+    );
+
+
+
+/* =========================================================
+   REMOVE ITEM
+   ========================================================= */
+
+    function RemoveOrderItem(index) {
+
+        if (!confirm("Are you sure you want to remove this item?"))
+            return;
+
+        orderItems.splice(index, 1);
+
+        renderItems();
+
+        calculation();
+    }
+
+
+    function GetModalItemDetails(itemId) {
+
+    if (!itemId || itemId === "") {
+
+        $("#modalItemCode").val("");
+        $("#modalHSNCode").val("");
+        $("#modalGSTRate").val("");
+        $("#modalRatePerUnit").val("");
+        $("#modalApplicableRate").val("");
+        $("#modalAmount").val("");
+
+        return;
+    }
+
+    $.ajax({
+        url: '@Url.Action("GetCode")',
+        type: "POST",
+        dataType: "json",
+        data: {
+            ItemID: itemId,
+            AddressTitleId: $("#AddressTitleID").val()
+        },
+        success: function (data) {
+
+            if (data && data.length > 0) {
+
+                var item = data[0];
+
+                // Item details
+                $("#modalItemCode").val(item.ItemCode || "");
+                $("#modalHSNCode").val(item.HSNCode || "");
+                $("#modalGSTRate").val(item.GSTRate || "");
+                $("#modalRatePerUnit").val(
+                    parseFloat(item.RatePerUnit || 0).toFixed(2)
+                );
+                $("#modalUnit").val(item.unit );
+
+                $("#modalQty").val(item.MinimumOrderQuantity || 1);
+                // Get discount
+                var discount = parseFloat($("#Discount").val()) || 0;
+
+                var rate = parseFloat(item.RatePerUnit) || 0;
+
+                // Calculate applicable rate
+                var applicableRate = rate;
+
+                if (discount > 0) {
+                    applicableRate = rate * (1 - discount / 100);
+                }
+
+                applicableRate = parseFloat(applicableRate.toFixed(2));
+
+                $("#modalApplicableRate").val(
+                    applicableRate.toFixed(2)
+                );
+
+                // Calculate amount
+                calculateModalAmount();
+            }
+            else {
+
+                $("#modalItemCode").val("");
+                $("#modalHSNCode").val("");
+                $("#modalGSTRate").val("");
+                $("#modalRatePerUnit").val("");
+                $("#modalApplicableRate").val("");
+                $("#modalAmount").val("");
+
+                alert("Item details not found.");
+            }
+        },
+        error: function (xhr, status, error) {
+
+            console.log("GetCode Error:", error);
+
+            alert("Unable to fetch item details.");
+        }
+    });
+}
+
+
+function calculateModalAmount() {
+
+    var qty = parseFloat($("#modalQty").val()) || 0;
+    var applicableRate = parseFloat($("#modalApplicableRate").val()) || 0;
+
+    var amount = qty * applicableRate;
+
+    $("#modalAmount").val(amount.toFixed(2));
+}
+
+
+// Recalculate amount when quantity changes
+$(document).on("input", "#modalQty", function () {
+    calculateModalAmount();
+});
+
+
+// If discount changes while modal is open,
+// recalculate applicable rate and amount
+$(document).on("input change", "#Discount", function () {
+
+    var itemId = $("#modalItem").val();
+
+    if (itemId) {
+        GetModalItemDetails(itemId);
+    }
+});
+
+
+
+/* =========================================================
+   ACCOUNT GROUP
+   ========================================================= */
+function loadAccountGroups(accounts) {
+
+    orderItems1 = [];
+
+    $.each(accounts, function (_, account) {
+
+        orderItems1.push({
+
+            PurOrderNo:
+                $("#PurOrderNo").val().trim(),
+
+            AccountGroupId:
+                account.GroupId,
+
+            GroupName:
+                account.GroupName,
+
+            Amount:
+                parseFloat(account.Amount) || 0,
+
+            GSTRate:
+                parseFloat(account.GSTRate) || 0,
+
+            Narration:
+                account.Narration || ""
+        });
+    });
+
+    renderAccountGroups();
+}
+
+
+function renderAccountGroups() {
+
+    var tbody =
+        $("#accountTableBody");
+
+    if (orderItems1.length === 0) {
+
+        tbody.html(
+            '<tr>' +
+            '<td colspan="5" class="no-items">' +
+            'No account groups added.' +
+            '</td>' +
+            '</tr>'
+        );
+
+        return;
+    }
+
+    var html = "";
+
+    $.each(orderItems1, function (i, account) {
+
+        html +=
+            "<tr>" +
+
+            "<td style='text-align:center'>" +
+            (i + 1) +
+            "</td>" +
+
+            "<td>" +
+            (account.GroupName || "") +
+            "</td>" +
+
+            "<td style='text-align:right'>" +
+            money(account.Amount) +
+            "</td>" +
+
+            "<td>" +
+            (account.Narration || "") +
+            "</td>" +
+
+            "<td style='text-align:center'>" +
+
+            "<button type='button' " +
+            "class='table-action-btn edit-btn' " +
+            "onclick='openAccountGroupModal(" + i + ")'>" +
+            "Edit" +
+            "</button> " +
+
+            "<button type='button' " +
+            "class='small-remove-btn' " +
+            "onclick='RemoveOrderItem1(" + i + ")'>" +
+            "Remove" +
+            "</button>" +
+
+            "</td>" +
+
+            "</tr>";
+    });
+
+    tbody.html(html);
+}
+
+
+function openAccountGroupModal(index) {
+
+    console.log('account modal calling');
+    // ADD
+    if (index === undefined || index === null) {
+
+        $("#accountGroupEditIndex").val(-1);
+
+        $("#accountGroupModalTitle")
+            .text("Add Account Group");
+
+        $("#accountGroupSaveText")
+            .text("Add");
+
+        $("#modalAccountGroup").val("");
+
+        $("#modalAccountAmount").val("");
+
+        $("#modalAccountGSTRate").val("");
+
+        $("#modalAccountNarration").val("");
+
+    }
+
+    // EDIT
+    else {
+
+        var account = orderItems1[index];
+
+        if (!account) {
+            return;
+        }
+
+        $("#accountGroupEditIndex").val(index);
+
+        $("#accountGroupModalTitle")
+            .text("Edit Account Group");
+
+        $("#accountGroupSaveText")
+            .text("Update");
+
+        $("#modalAccountGroup")
+            .val(account.AccountGroupId);
+
+        $("#modalAccountAmount")
+            .val(account.Amount);
+
+        $("#modalAccountGSTRate")
+            .val(account.GSTRate);
+
+        $("#modalAccountNarration")
+            .val(account.Narration || "");
+    }
+
+    $("#accountGroupModal")
+        .addClass("show");
+}
+
+
+// =====================================================
+// CLOSE MODAL
+// =====================================================
+
+function closeAccountGroupModal() {
+
+    $("#accountGroupModal")
+        .removeClass("show");
+
+    $("#accountGroupEditIndex").val(-1);
+
+    $("#modalAccountGroup").val("");
+
+    $("#modalAccountAmount").val("");
+
+    $("#modalAccountGSTRate").val("");
+
+    $("#modalAccountNarration").val("");
+}
+
+
+// =====================================================
+// ACCOUNT GROUP CHANGE
+// Fetch GST Rate
+// =====================================================
+    $(document).ready(function () {
+        $("#modalAccountGroup").on("change", function () {
+
+            var Accid = $(this).val();
+
+            if (!Accid) {
+
+                $("#modalAccountGSTRate").val("");
+
+                return;
+            }
+
+
+            $.ajax({
+
+                url: '@Url.Action("GetIAccountGroupName")',
+
+                data: {
+                    AccountGroupId: Accid
+                },
+
+                type: "POST",
+
+                dataType: "json",
+
+                success: function (data) {
+
+                    if (data && data.length > 0) {
+
+                        $("#modalAccountGSTRate")
+                            .val(data[0].GSTRate || 0);
+                    }
+                    else {
+
+                        $("#modalAccountGSTRate")
+                            .val(0);
+                    }
+                },
+
+                error: function () {
+
+                    alert("Unable to get GST Rate.");
+
+                    $("#modalAccountGSTRate")
+                        .val("");
+                }
+
+            });
+
+        })
+    });
+
+
+// =====================================================
+// SAVE / UPDATE
+// =====================================================
+
+function saveAccountGroup() {
+
+    var editIndex =
+        parseInt(
+            $("#accountGroupEditIndex").val()
+        );
+
+
+    var Accid =
+        $("#modalAccountGroup").val();
+
+
+    var Accnm =
+        $("#modalAccountGroup option:selected")
+            .text()
+            .trim();
+
+
+    var Am =
+        parseFloat(
+            $("#modalAccountAmount").val()
+        ) || 0;
+
+
+    var GstRate =
+        parseFloat(
+            $("#modalAccountGSTRate").val()
+        ) || 0;
+
+
+    var Desc =
+        $("#modalAccountNarration")
+            .val()
+            .trim();
+
+
+    // ---------------------------------------------
+    // VALIDATION
+    // ---------------------------------------------
+
+    if (!Accid) {
+
+        alert("Please select Account Group.");
+
+        $("#modalAccountGroup").focus();
+
+        return;
+    }
+
+
+    if (Am <= 0) {
+
+        alert("Please enter Amount.");
+
+        $("#modalAccountAmount").focus();
+
+        return;
+    }
+
+
+    // ---------------------------------------------
+    // DUPLICATE CHECK
+    // ---------------------------------------------
+
+    var duplicate = false;
+
+    $.each(orderItems1, function (i, item) {
+
+        if (
+            i !== editIndex &&
+            parseInt(item.AccountGroupId) ===
+            parseInt(Accid)
+        ) {
+
+            duplicate = true;
+
+            return false;
+        }
+
+    });
+
+
+    if (duplicate) {
+
+        alert(
+            "This Account Group has already been added."
+        );
+
+        return;
+    }
+
+
+    // ---------------------------------------------
+    // IMPORTANT:
+    // Get GST Rate again from server
+    // ---------------------------------------------
+
+    $.ajax({
+
+        url: '@Url.Action("GetIAccountGroupName")',
+
+        data: {
+            AccountGroupId: Accid
+        },
+
+        type: "POST",
+
+        dataType: "json",
+
+        success: function (data) {
+
+            if (!data || data.length === 0) {
+
+                alert(
+                    "Account Group details not found."
+                );
+
+                return;
+            }
+
+
+            var gstRate =
+                parseFloat(data[0].GSTRate) || 0;
+
+
+            var accountObject = {
+
+                PurOrderNo:
+                    $("#PurOrderNo")
+                        .val()
+                        .trim(),
+
+                GroupName:
+                    Accnm,
+
+                GSTRate:
+                    gstRate,
+
+                Amount:
+                    Am,
+
+                AccountGroupId:
+                    parseInt(Accid),
+
+                Narration:
+                    Desc
+            };
+
+
+            // -----------------------------------------
+            // ADD
+            // -----------------------------------------
+
+            if (editIndex === -1) {
+
+                orderItems1.push(
+                    accountObject
+                );
+            }
+
+            // -----------------------------------------
+            // UPDATE
+            // -----------------------------------------
+
+            else {
+
+                orderItems1[editIndex] =
+                    accountObject;
+            }
+
+
+            // -----------------------------------------
+            // UPDATE TOTAL
+            // -----------------------------------------
+
+            updateProductSubTotal();
+
+
+            // -----------------------------------------
+            // REFRESH TABLE
+            // -----------------------------------------
+
+            GeneratedItemsTable1();
+
+
+            // -----------------------------------------
+            // EXISTING CALCULATION LOGIC
+            // -----------------------------------------
+
+            if (
+                $("#TermsOfDeliveryID").val() == 2
+            ) {
+
+                $("#FreightCharges").val(0);
+
+                calculation();
+
+            }
+            else {
+
+                $("#FreightCharges").val('');
+
+            }
+
+
+            // -----------------------------------------
+            // CLOSE MODAL
+            // -----------------------------------------
+
+            closeAccountGroupModal();
+
+        },
+
+        error: function () {
+
+            alert(
+                "Unable to get Account Group details."
+            );
+        }
+
+    });
+}
+
+
+// =====================================================
+// UPDATE PRODUCT SUBTOTAL
+// =====================================================
+
+function updateProductSubTotal() {
+
+    var subtot = 0;
+
+
+    // Account Groups
+    for (
+        var i = 0;
+        i < orderItems1.length;
+        i++
+    ) {
+
+        subtot +=
+            parseFloat(
+                orderItems1[i].Amount
+            ) || 0;
+    }
+
+
+    // Products / Items
+    for (
+        var k = 0;
+        k < orderItems.length;
+        k++
+    ) {
+
+        subtot +=
+            parseFloat(
+                orderItems[k].Amount
+            ) || 0;
+    }
+
+
+    $("#ProductSubTotal")
+        .prop("readonly", false)
+        .val(subtot.toFixed(2))
+        .prop("readonly", true);
+}
+
+
+// =====================================================
+// REMOVE
+// =====================================================
+
+function RemoveOrderItem1(index) {
+
+    if (!orderItems1[index]) {
+        return;
+    }
+
+
+    if (!confirm(
+        "Are you sure you want to remove this account group?"
+    )) {
+        return;
+    }
+
+
+    orderItems1.splice(index, 1);
+
+
+    GeneratedItemsTable1();
+
+
+    updateProductSubTotal();
+
+
+    if (
+        $("#TermsOfDeliveryID").val() == 2
+    ) {
+
+        $("#FreightCharges").val(0);
+
+        calculation();
+
+    }
+    else {
+
+        $("#FreightCharges").val('');
+
+    }
+    }
+
+
+
+function GeneratedItemsTable1() {
+
+    var tbody = $("#accountTableBody");
+
+    if (orderItems1.length === 0) {
+
+        tbody.html(
+            '<tr>' +
+            '<td colspan="6" class="no-items">' +
+            'No account groups added.' +
+            '</td>' +
+            '</tr>'
+        );
+
+        return;
+    }
+
+    var html = "";
+
+    $.each(orderItems1, function (i, account) {
+
+        html +=
+            "<tr>" +
+
+            // SrNo
+            "<td style='text-align:center'>" +
+            (i + 1) +
+            "</td>" +
+
+            // Account Group
+            "<td>" +
+            (account.GroupName || "") +
+            "</td>" +
+
+            // Amount
+            "<td style='text-align:right'>" +
+            money(account.Amount) +
+            "</td>" +
+
+            // GST Rate - ADDED
+            "<td style='text-align:center'>" +
+            (account.GSTRate != null ? account.GSTRate + "%" : "") +
+            "</td>" +
+
+            // Narration
+            "<td>" +
+            (account.Narration || "") +
+            "</td>" +
+
+            // Action
+            "<td style='text-align:center'>" +
+
+            "<button type='button' " +
+            "class='table-action-btn edit-btn' " +
+            "onclick='openAccountGroupModal(" + i + ")'>" +
+            "Edit" +
+            "</button> " +
+
+            "<button type='button' " +
+            "class='small-remove-btn' " +
+            "onclick='RemoveOrderItem1(" + i + ")'>" +
+            "Remove" +
+            "</button>" +
+
+            "</td>" +
+
+            "</tr>";
+    });
+
+    tbody.html(html);
+}
+
+
+/* =========================================================
+   CONTACT PERSONS
+   ========================================================= */
+
+    function LoadContactPersons(list) {
+
+        contactPersonsList = list || [];
+
+        var name = $("#ContactPersonName");
+        var mobile = $("#OfficeMobileNo");
+        var email = $("#OfficeEmailId");
+
+        name.empty();
+        mobile.empty();
+        email.empty();
+
+        name.append(
+            '<option value="">Please Select</option>'
+        );
+
+        mobile.append(
+            '<option value="">Please Select</option>'
+        );
+
+        email.append(
+            '<option value="">Please Select</option>'
+        );
+
+        $.each(contactPersonsList, function (_, cp) {
+
+            var fullName = [
+                cp.Title,
+                cp.FirstName,
+                cp.MiddleName,
+                cp.LastName
+            ]
+                .filter(Boolean)
+                .join(" ");
+
+            name.append(
+                $("<option>", {
+                    value: cp.ContactPersonInfoId,
+                    text: fullName
+                })
+            );
+
+            if (cp.OfficeMobileNo) {
+
+                mobile.append(
+                    $("<option>", {
+                        value: cp.OfficeMobileNo,
+                        text: cp.OfficeMobileNo
+                    })
+                );
+            }
+
+            if (cp.OfficeEmailId) {
+
+                email.append(
+                    $("<option>", {
+                        value: cp.OfficeEmailId,
+                        text: cp.OfficeEmailId
+                    })
+                );
+            }
+        });
+
+        if (contactPersonsList.length) {
+
+            var cp = contactPersonsList[0];
+
+            name.val(cp.ContactPersonInfoId);
+
+            mobile.val(cp.OfficeMobileNo || "");
+            email.val(cp.OfficeEmailId || "");
+        }
+    }
+
+
+    function GetCPDetails(id) {
+
+        if (!id) {
+
+            $("#OfficeMobileNo").val("");
+            $("#OfficeEmailId").val("");
+
+            return;
+        }
+
+        var cp =
+            contactPersonsList.find(
+                function (x) {
+
+                    return x.ContactPersonInfoId == id;
+                }
+            );
+
+        if (!cp) return;
+
+        $("#OfficeMobileNo")
+            .val(cp.OfficeMobileNo || "");
+
+        $("#OfficeEmailId")
+            .val(cp.OfficeEmailId || "");
+
+        $("#CPDesignation").val(cp.CPDesignation || "");
+    }
+
+
+    $("#BusinessAddressId").change(function () {
+
+        var businessAddressId = $(this).val();
+
+        if (!businessAddressId) {
+
+            LoadContactPersons([]);
+
+            return;
+        }
+
+        GetVendorAddress(
+            businessAddressId
+        );
+
+        GetVendorContacts(
+            businessAddressId
+        );
+    });
+
+
+
+/* =========================================================
+   BUSINESS ADDRESS
+   ========================================================= */
+
+//function GetBusinessAddress(
+//    entityId,
+//    selectedAddressId
+//) {
+
+//    if (!entityId) return;
+
+//    $.ajax({
+
+//        url:
+//            '/PurchaseInvoice/GetBusinessAddress',
+
+//        type:
+//            'POST',
+
+//        data: {
+//            entityid: entityId
+//        },
+
+//        dataType:
+//            'json',
+
+//        success: function (result) {
+
+//            addressList =
+//                result || [];
+
+//            var dropdown =
+//                $("#AddressTitleID");
+
+//            dropdown.empty();
+
+//            dropdown.append(
+//                '<option value="">Please Select</option>'
+//            );
+
+//            $.each(
+//                addressList,
+//                function (_, item) {
+
+//                    dropdown.append(
+//                        $("<option>", {
+//                            value:
+//                                item.BusinessAddressId,
+//                            text:
+//                                item.AddressTitle ||
+//                                "Address " +
+//                                item.BusinessAddressId
+//                        })
+//                    );
+//                }
+//            );
+
+//            if (selectedAddressId) {
+
+//                dropdown.val(
+//                    String(selectedAddressId)
+//                );
+//            }
+//        },
+
+//        error: function (xhr) {
+
+//            console.log(
+//                "Address Error:",
+//                xhr.responseText
+//            );
+//        }
+//    });
+//}
+
+
+/* =========================================================
+   ADDRESS CHANGE
+   ========================================================= */
+
+$(document).on(
+    "change",
+    "#AddressTitleID",
+    function () {
+
+        var id =
+            $(this).val();
+
+        if (!id) return;
+
+        var title =
+            $("#AddressTitleID option:selected")
+                .text();
+
+        $.ajax({
+
+            url:
+                '/PurchaseOrder/GetBusinessData',
+
+            type:
+                'POST',
+
+            data: {
+
+                businessAddressId:
+                    id,
+
+                addressTitle:
+                    title,
+
+                //enquiryNo:
+                //    $("#EnquiryNo").val().trim()
+            },
+
+            success: function (res) {
+
+                if (res) {
+                    BusinessAddressData(res);
+                }
+            }
+        });
+    }
+);
+
+
+/* =========================================================
+   CALCULATION
+   ========================================================= */
+
+    function calculation() {
+
+        var subtotal = 0;
+        var totalGST = 0;
+
+        var freight =
+            parseFloat($("#FreightCharges").val()) || 0;
+
+
+        // ---------------------------------------------
+        // PRODUCT + ACCOUNT GROUP SUBTOTAL
+        // ---------------------------------------------
+
+        $.each(orderItems || [], function (i, item) {
+
+            var amount =
+                parseFloat(item.Amount) || 0;
+
+            var gstRate =
+                parseFloat(item.GSTRate) || 0;
+
+            subtotal += amount;
+
+            // GST on product amount
+            totalGST +=
+                (amount * gstRate) / 100;
+        });
+
+
+        $.each(orderItems1 || [], function (i, item) {
+
+            var amount =
+                parseFloat(item.Amount) || 0;
+
+            var gstRate =
+                parseFloat(item.GSTRate) || 0;
+
+            subtotal += amount;
+
+            totalGST +=
+                (amount * gstRate) / 100;
+        });
+
+
+        // ---------------------------------------------
+        // PRODUCT SUB TOTAL
+        // IMPORTANT:
+        // Freight is NOT added here
+        // ---------------------------------------------
+
+        $("#ProductSubTotal").val(
+            subtotal.toFixed(2)
+        );
+
+
+        // ---------------------------------------------
+        // GST ON FREIGHT
+        // ---------------------------------------------
+
+        var freightGST = 0;
+
+        if (freight > 0 && orderItems.length > 0) {
+
+            // Use first item's GST rate
+            var freightGSTRate =
+                parseFloat(orderItems[0].GSTRate) || 0;
+
+            freightGST =
+                (freight * freightGSTRate) / 100;
+        }
+
+        totalGST += freightGST;
+
+
+        // ---------------------------------------------
+        // GST REGISTRATION
+        // ---------------------------------------------
+
+        var sgst = 0;
+        var cgst = 0;
+        var igst = 0;
+
+        if (GSTRegistrationId == 4) {
+
+            sgst = 0;
+            cgst = 0;
+            igst = 0;
+
+        } else {
+
+            var state =
+                ($("#State").text() || "")
+                    .trim()
+                    .toUpperCase();
+
+            if (state === "MAHARASHTRA") {
+
+                sgst = totalGST / 2;
+                cgst = totalGST / 2;
+
+            } else {
+
+                igst = totalGST;
+            }
+        }
+
+
+        // ---------------------------------------------
+        // SHOW GST
+        // ---------------------------------------------
+
+        $("#GSTTotal").val(
+            totalGST.toFixed(2)
+        );
+
+        $("#SGST").val(
+            sgst.toFixed(2)
+        );
+
+        $("#CGST").val(
+            cgst.toFixed(2)
+        );
+
+        $("#IGST").val(
+            igst.toFixed(2)
+        );
+
+
+        // ---------------------------------------------
+        // TOTAL
+        // ---------------------------------------------
+
+        var total =
+            subtotal +
+            freight +
+            sgst +
+            cgst +
+            igst;
+
+
+        // ---------------------------------------------
+        // ROUND OFF
+        // ---------------------------------------------
+
+        var roundedTotal =
+            Math.floor(total + 0.5);
+
+        var roundOff =
+            roundedTotal - total;
+
+
+        $("#TotalAmount").val(
+            roundedTotal.toFixed(2)
+        );
+
+        $("#RoundOffAmount").val(
+            roundOff.toFixed(2)
+        );
+    }
+
+
+/* =========================================================
+   ROUNDING
+   ========================================================= */
+
+function customRound(value) {
+
+    value =
+        parseFloat(value) || 0;
+
+    var floor =
+        Math.floor(value);
+
+    var decimal =
+        value - floor;
+
+    return decimal > 0.5
+        ? floor + 1
+        : floor;
+}
+
+
+/* =========================================================
+   NUMBER FORMAT
+   ========================================================= */
+
+function money(value) {
+
+    return (
+        parseFloat(value) || 0
+    ).toFixed(2);
+}
+
+
+/* =========================================================
+   CALCULATE WHEN FREIGHT CHANGES
+   ========================================================= */
+
+$(document).on(
+    "input",
+    "#FreightCharges",
+    calculation
+);
+
+
+/* =========================================================
+   DELIVERY TERM CHANGE
+   ========================================================= */
+
+$(document).on(
+    "change",
+    "#TermsOfDeliveryID",
+    function () {
+
+        if ($(this).val() == "2") {
+            $("#FreightCharges").val(0);
+        }
+
+        calculation();
+    }
+);
+
+    function showFieldError(selector, message) {
+
+        var field = $(selector);
+
+        field.addClass("input-error");
+
+        field.after(
+            '<span class="field-error">' +
+            message +
+            '</span>'
+        );
+    }
+
+    function validatePurchaseInvoice() {
+
+        var isValid = true;
+
+
+        // =====================================================
+        // CLEAR OLD VALIDATION
+        // =====================================================
+
+        $(".field-error").remove();
+
+        $(".form-control, .erp-select").removeClass("input-error");
+
+
+        // =====================================================
+        // VENDOR
+        // =====================================================
+
+        var ledgerId = $("#LedgerID").val();
+
+        if (!ledgerId) {
+
+            showFieldError(
+                "#LedgerID",
+                "Please select Vendor Name."
+            );
+
+            isValid = false;
+        }
+
+
+        // =====================================================
+        // PURCHASE ORDER
+        // =====================================================
+
+        //var purOrderNo = $("#PurOrderNo").val();
+
+        //if (!purOrderNo) {
+
+        //    showFieldError(
+        //        "#PurOrderNo",
+        //        "Please select Purchase Order No."
+        //    );
+
+        //    isValid = false;
+        //}
+
+
+        // =====================================================
+        // PURCHASE INVOICE NO
+        // =====================================================
+
+        var PurOrderNo =
+            $("#PurOrderNo").val().trim();
+
+        if (!PurOrderNo) {
+
+            showFieldError(
+                "#PurOrderNo",
+                "Purchase Invoice No. is required."
+            );
+
+            isValid = false;
+        }
+
+
+        // =====================================================
+        // PURCHASE ORDER DATE
+        // =====================================================
+
+        var PurOrderDate =
+            $("#PurOrderDate").val();
+
+        if (!PurOrderDate) {
+
+            showFieldError(
+                "#PurOrderDate",
+                "Purchase Invoice Date is required."
+            );
+
+            isValid = false;
+        }
+
+
+        // =====================================================
+        // SUPPLIER INVOICE NO
+        // =====================================================
+
+        //var supplierInvoiceNo =
+        //    $("#SupplierInvoiceNo").val().trim();
+
+        //if (!supplierInvoiceNo) {
+
+        //    showFieldError(
+        //        "#SupplierInvoiceNo",
+        //        "Supplier Invoice No. is required."
+        //    );
+
+        //    isValid = false;
+        //}
+
+
+        // =====================================================
+        // SUPPLIER INVOICE DATE
+        // =====================================================
+
+        //var supplierInvoiceDate =
+        //    $("#TaxInvoiceDate").val();
+
+        //if (!supplierInvoiceDate) {
+
+        //    showFieldError(
+        //        "#TaxInvoiceDate",
+        //        "Supplier Invoice Date is required."
+        //    );
+
+        //    isValid = false;
+        //}
+
+
+        // =====================================================
+        // MATERIAL REQUEST DATE
+        // =====================================================
+
+        var matReqDate =
+            $("#MatReqDate").val();
+
+        if (!matReqDate) {
+
+            showFieldError(
+                "#MatReqDate",
+                "Material Request Date is required."
+            );
+
+            isValid = false;
+        }
+
+
+        // =====================================================
+        // ADDRESS TITLE
+        // =====================================================
+
+        var addressTitle =
+            $("#AddressTitleID").val();
+
+        if (!addressTitle) {
+
+            showFieldError(
+                "#AddressTitleID",
+                "Please select Address Title."
+            );
+
+            isValid = false;
+        }
+
+
+        // =====================================================
+        // CONTACT PERSON
+        // =====================================================
+
+        var contactPerson =
+            $("#ContactPersonName").val();
+
+        if (!contactPerson) {
+
+            showFieldError(
+                "#ContactPersonName",
+                "Please select Contact Person."
+            );
+
+            isValid = false;
+        }
+
+
+        // =====================================================
+        // OFFICE MOBILE
+        // =====================================================
+
+        var officeMobile =
+            $("#OfficeMobileNo").val();
+
+        if (!officeMobile) {
+
+            showFieldError(
+                "#OfficeMobileNo",
+                "Please select Office Contact."
+            );
+
+            isValid = false;
+        }
+
+
+        // =====================================================
+        // OFFICE EMAIL
+        // =====================================================
+
+        var officeEmail =
+            $("#OfficeEmailId").val();
+
+        if (!officeEmail) {
+
+            showFieldError(
+                "#OfficeEmailId",
+                "Please select Office Email."
+            );
+
+            isValid = false;
+        }
+
+
+        // =====================================================
+        // TERMS OF DELIVERY
+        // =====================================================
+
+        var termsOfDelivery =
+            $("#TermsOfDeliveryID").val();
+
+        if (!termsOfDelivery) {
+
+            showFieldError(
+                "#TermsOfDeliveryID",
+                "Please select Terms Of Delivery."
+            );
+
+            isValid = false;
+        }
+
+
+        // =====================================================
+        // PAYMENT TERM
+        // =====================================================
+
+        var paymentTerm =
+            $("#PaymentTermID").val();
+
+        if (!paymentTerm) {
+
+            showFieldError(
+                "#PaymentTermID",
+                "Please select Payment Term."
+            );
+
+            isValid = false;
+        }
+        // =====================================================
+        // FREIGHT CHARGES-Gauri
+        // =====================================================
+
+        var freightcharge = $("#FreightCharges").val();
+
+        if (freightcharge === "") {
+
+            showFieldError(
+                "#FreightCharges",
+                "Please enter Freight Charges."
+            );
+
+            isValid = false;
+        }
+
+        // =====================================================
+        // ITEMS
+        // =====================================================
+
+        if (
+            typeof orderItems === "undefined" ||
+            orderItems.length === 0
+        ) {
+
+            alert(
+                "Please add at least one Item or Account Group."
+            );
+
+            isValid = false;
+        }
+
+
+        // =====================================================
+        // VALIDATE ITEMS
+        // =====================================================
+
+        if (
+            typeof orderItems !== "undefined" &&
+            orderItems.length > 0
+        ) {
+
+            $.each(orderItems, function (i, item) {
+
+                if (!item.ItemID) {
+
+                    alert(
+                        "Item " + (i + 1) +
+                        ": Item is required."
+                    );
+
+                    isValid = false;
+
+                    return false;
+                }
+
+
+                var qty =
+                    parseFloat(item.Quantity) || 0;
+
+                if (qty <= 0) {
+
+                    alert(
+                        "Item " + (i + 1) +
+                        ": Quantity must be greater than 0."
+                    );
+
+                    isValid = false;
+
+                    return false;
+                }
+
+
+                var rate =
+                    parseFloat(item.RatePerUnit) || 0;
+
+                if (rate < 0) {
+
+                    alert(
+                        "Item " + (i + 1) +
+                        ": Rate cannot be negative."
+                    );
+
+                    isValid = false;
+
+                    return false;
+                }
+
+            });
+        }
+
+
+        // =====================================================
+        // VALIDATE ACCOUNT GROUPS
+        // =====================================================
+
+        if (
+            typeof orderItems1 !== "undefined" &&
+            orderItems1.length > 0
+        ) {
+
+            $.each(orderItems1, function (i, account) {
+
+                if (!account.AccountGroupId) {
+
+                    alert(
+                        "Account Group " + (i + 1) +
+                        ": Account Group is required."
+                    );
+
+                    isValid = false;
+
+                    return false;
+                }
+
+
+                var amount =
+                    parseFloat(account.Amount) || 0;
+
+                if (amount <= 0) {
+
+                    alert(
+                        "Account Group " + (i + 1) +
+                        ": Amount must be greater than 0."
+                    );
+
+                    isValid = false;
+
+                    return false;
+                }
+
+            });
+        }
+
+        //var pdfInput = $('#pdfInput');
+        //if (pdfInput.get(0).files.length === 0) {
+        //    $('#pdfInput').siblings('p').html('<span style="color:red;">Please select a file for invoice copy</span>');
+        //    return;
+        //} else {
+        //    // If a file is selected, clear any previous error messages
+        //    $('#pdfInput').siblings('p').html('');
+        //}
+
+        // =====================================================
+        // TOTAL
+        // =====================================================
+
+        var totalAmount =
+            parseFloat(
+                $("#TotalAmount").val()
+            ) || 0;
+
+        if (totalAmount <= 0) {
+
+            alert(
+                "Total Amount must be greater than 0."
+            );
+
+            isValid = false;
+        }
+
+
+        // =====================================================
+        // RETURN
+        // =====================================================
+
+        return isValid;
+    }
+
+
+    function SavePI() {
+
+        // =====================================================
+        // VALIDATE EVERYTHING FIRST
+        // =====================================================
+
+        if (!validatePurchaseInvoice()) {
+
+            // Scroll to first error
+            var firstError =
+                $(".input-error").first();
+
+            if (firstError.length) {
+
+                $("html, body").animate({
+                    scrollTop:
+                        firstError.offset().top - 100
+                }, 400);
+            }
+
+            return false;
+        }
+
+
+
+        if (!validatePurchaseInvoice()) {
+
+        var firstError = $(".input-error").first();
+
+        if (firstError.length) {
+            $("html, body").animate({
+                scrollTop: firstError.offset().top - 100
+            }, 400);
+        }
+
+        return false;
+    }
+
+
+    // =====================================================
+    // GET DESIGNATION INFO ID
+    // =====================================================
+
+    designinfoid = "";
+
+    $.ajax({
+        url: '@Url.Action("GetDesignInfoId", "PurchaseOrder")',
+        type: "POST",
+        dataType: "json",
+
+        data: {
+            ContactPerson: $("#ContactPersonName option:selected").text() || "",
+            OffEmail: $("#OfficeEmailId").val() || "",
+            OffMobile: $("#OfficeMobileNo").val() || "",
+            Lid: $("#LedgerID").val() || 0,
+            AddID: $("#AddressTitleID").val() || 0
+        },
+
+        async: false,
+
+        success: function (data) {
+
+            console.log("GetDesignInfoId SUCCESS:", data);
+
+            if (data && data.length > 0) {
+
+                designinfoid =
+                    data[0].DesignationInfoID;
+
+                console.log(
+                    "DesignationInfoID:",
+                    designinfoid
+                );
+
+                // Set HiddenFor
+                $("#DesignationInfoId").val(
+                    designinfoid
+                );
+            }
+        },
+
+        error: function (xhr, status, error) {
+
+            console.log("GetDesignInfoId ERROR");
+            console.log("Status:", status);
+            console.log("Error:", error);
+            console.log("Response:", xhr.responseText);
+        }
+    });
+
+
+    console.log(
+        "FINAL designinfoid:",
+        designinfoid
+    );
+
+
+        // =====================================================
+        // PREVENT DOUBLE CLICK
+        // =====================================================
+
+        var saveButton =
+            $(".create-btn");
+
+        if (saveButton.prop("disabled")) {
+
+            return false;
+        }
+
+        saveButton.prop("disabled", true);
+
+        saveButton.html(
+            '<i class="material-icons" ' +
+            'style="font-size:16px;vertical-align:middle">' +
+            'hourglass_empty' +
+            '</i> Saving...'
+        );
+
+
+        // =====================================================
+        // CALCULATE FINAL TOTAL
+        // =====================================================
+
+        if (typeof calculation === "function") {
+
+            calculation();
+        }
+
+
+        // =====================================================
+        // BUILD MAIN DATA
+        // =====================================================
+
+        var purchaseInvoice = {
+
+            // =====================================================
+            // PURCHASE INVOICE
+            // =====================================================
+
+            //PurInvoiceNo:
+            //    $("#PurInvoiceNo").val().trim(),
+
+            //PurIndentDate:
+            //    $("#PurIndentDate").val(),
+
+            LedgerID:
+                parseInt($("#LedgerID").val()) || 0,
+
+            EntityName: $("#LedgerID option:selected").text() || "",
+
+            PurOrderNo:
+                $("#PurOrderNo").val(),
+
+            PurOrderDate:
+                $("#PurOrderDate").val(),
+
+            //SupplierInvoiceNo:
+            //    $("#SupplierInvoiceNo").val().trim(),
+
+            //SupplierInvoiceDate:
+            //    $("#TaxInvoiceDate").val(),
+
+            MatReqDate:
+                $("#MatReqDate").val(),
+
+
+            // =====================================================
+            // ADDRESS
+            // =====================================================
+
+            AddressTitleID:
+                parseInt($("#AddressTitleID").val()) || 0,
+
+            AddressTitle: $("#AddressTitleID option:selected").text() || "",
+
+            //AddressTitle:
+            //    $("#AddressTitle").text().trim() || "",
+
+            Address:
+                $("#Address").text().trim() || "",
+
+            LandMark:
+                $("#LandMark").text().trim() || "",
+
+            Locality:
+                $("#Locality").text().trim() || "",
+
+            Taluka:
+                $("#Taluka").text().trim() || "",
+
+            District:
+                $("#District").text().trim() || "",
+
+            Pincode:
+                $("#Pincode1").text().trim() || "",
+
+            State:
+                $("#State").text().trim() || "",
+
+            Country:
+                $("#Country").val().trim() || "",
+
+            CountryCode:
+                $("#CountryCode").val().trim() || "",
+
+
+            // =====================================================
+            // CONTACT
+            // =====================================================
+
+            //ContactPersonName:
+            //    $("#ContactPersonName").val() || "",
+
+            ContactPersonName: $("#ContactPersonName option:selected").text() || "",
+
+            OfficeMobileNo:
+                $("#OfficeMobileNo").val() || "",
+
+            OfficeEmailId:
+                $("#OfficeEmailId").val() || "",
+
+            CPDesignation:
+                $("#CPDesignation").val() || "",
+
+
+            // =====================================================
+            // OTHER DETAILS
+            // =====================================================
+
+            Discount:
+                parseFloat($("#Discount").val()) || 0,
+
+            TermsOfDeliveryID:
+                parseInt($("#TermsOfDeliveryID").val()) || 0,
+
+            TermsOfDelivery: $("#TermsOfDeliveryID option:selected").text() || "",
+
+            PaymentTermID:
+                parseInt($("#PaymentTermID").val()) || 0,
+
+            PaymentTerm: $("#PaymentTermID option:selected").text() || "",
+            // =====================================================
+            // CALCULATION
+            // =====================================================
+
+            ProductSubTotal:
+                parseFloat($("#ProductSubTotal").val()) || 0,
+            /*Gauri*/
+
+            FreightCharges:
+                parseFloat($("#FreightCharges").val()) || 0,
+            GSTTotal:
+                parseFloat($("#GSTTotal").val()) || 0,
+
+            IGST:
+                parseFloat($("#IGST").val()) || 0,
+
+            CGST:
+                parseFloat($("#CGST").val()) || 0,
+
+            SGST:
+                parseFloat($("#SGST").val()) || 0,
+
+            TotalAmount:
+                parseFloat($("#TotalAmount").val()) || 0,
+
+            RoundOffTotalAmount:
+                parseFloat($("#RoundOffAmount").val()) || 0,
+
+            // =====================================================
+            // ITEMS
+            // =====================================================
+
+            Items:
+                orderItems,
+
+            AccountGroups:
+                orderItems1
+        };
+        console.log('item list:', purchaseInvoice.Items);
+
+        // =====================================================
+        // FORM DATA
+        // =====================================================
+
+        var formData = new FormData();
+
+
+        // =====================================================
+        // MAIN PURCHASE INVOICE
+        // =====================================================
+
+        //formData.append(
+        //    "PurInvoiceNo",
+        //    purchaseInvoice.PurInvoiceNo
+        //);
+
+        //formData.append(
+        //    "PurInvoiceDate",
+        //    purchaseInvoice.PurInvoiceDate
+        //);
+
+        formData.append(
+            "BusinessEntityId",
+            purchaseInvoice.LedgerID
+        );
+
+        formData.append(
+            "EntityName",
+            purchaseInvoice.EntityName
+        );
+
+        formData.append(
+            "PurOrderNo",
+            purchaseInvoice.PurOrderNo
+        );
+
+        formData.append(
+            "PurOrderDate",
+            purchaseInvoice.PurOrderDate
+        );
+
+        //formData.append(
+        //    "SupplierInvoiceNo",
+        //    purchaseInvoice.SupplierInvoiceNo
+        //);
+
+        //formData.append(
+        //    "SupplierInvoiceDate",
+        //    purchaseInvoice.SupplierInvoiceDate
+        //);
+
+        formData.append(
+            "MatReqDate",
+            purchaseInvoice.MatReqDate
+        );
+
+
+        // =====================================================
+        // COMPLETE ADDRESS
+        // =====================================================
+
+        formData.append(
+            "BusinessAddressId",
+            purchaseInvoice.AddressTitleID
+        );
+
+        formData.append(
+            "AddressTitle",
+            purchaseInvoice.AddressTitle
+        );
+
+        //formData.append('AddressTitle', $('#AddressTitleID option:selected').text().trim());
+
+        formData.append(
+            "Address",
+            purchaseInvoice.Address
+        );
+
+        formData.append(
+            "LandMark",
+            purchaseInvoice.LandMark
+        );
+
+        formData.append(
+            "Locality",
+            purchaseInvoice.Locality
+        );
+
+        formData.append(
+            "Taluka",
+            purchaseInvoice.Taluka
+        );
+
+        formData.append(
+            "District",
+            purchaseInvoice.District
+        );
+
+        formData.append(
+            "Pincode",
+            purchaseInvoice.Pincode
+        );
+
+        formData.append(
+            "State",
+            purchaseInvoice.State
+        );
+
+        formData.append(
+            "Country",
+            purchaseInvoice.Country
+        );
+
+        formData.append(
+            "CountryCode",
+            purchaseInvoice.CountryCode
+        );
+
+
+        // =====================================================
+        // CONTACT
+        // =====================================================
+
+        formData.append(
+            "ContactPersonName",
+            purchaseInvoice.ContactPersonName
+        );
+
+        formData.append(
+                "DesignationInfoId",
+            designinfoid
+            );
+
+
+        formData.append(
+            "OfficeMobileNo",
+            purchaseInvoice.OfficeMobileNo
+        );
+
+        formData.append(
+            "OfficeEmailId",
+            purchaseInvoice.OfficeEmailId
+        );
+
+        formData.append(
+            "CPDesignation",
+            purchaseInvoice.CPDesignation
+        );
+
+
+        // =====================================================
+        // OTHER DETAILS
+        // =====================================================
+
+        formData.append(
+            "Discount",
+            purchaseInvoice.Discount
+        );
+
+        formData.append(
+            "TermsOfDeliveryId",
+            purchaseInvoice.TermsOfDeliveryID
+        );
+
+        formData.append(
+            "PaymentTermId",
+            purchaseInvoice.PaymentTermID
+        );
+
+
+        // =====================================================
+        // CALCULATION
+        // =====================================================
+
+        formData.append(
+            "ProductSubTotal",
+            purchaseInvoice.ProductSubTotal
+        );
+        /*Gauri*/
+        formData.append(
+            "FreightCharges",
+            purchaseInvoice.FreightCharges
+        );
+        formData.append(
+            "GSTTotal",
+            purchaseInvoice.GSTTotal
+        );
+
+        formData.append(
+            "IGST",
+            purchaseInvoice.IGST
+        );
+
+        formData.append(
+            "CGST",
+            purchaseInvoice.CGST
+        );
+
+        formData.append(
+            "SGST",
+            purchaseInvoice.SGST
+        );
+
+        formData.append(
+            "TotalAmount",
+            purchaseInvoice.TotalAmount
+        );
+
+        formData.append(
+            "RoundOffTotalAmount", purchaseInvoice.RoundOffTotalAmount
+        );
+
+        // =====================================================
+        // ITEMS JSON
+        // =====================================================
+
+        //formData.append(
+        //    "ItemMovement",
+        //    JSON.stringify(purchaseInvoice.Items)
+        //);
+
+        for (var i = 0; i < orderItems.length; i++) {
+            for (var key in orderItems[i]) {
+                formData.append('ItemMovement[' + i + '].' + key, orderItems[i][key]);
+            }
+        }
+        // =====================================================
+        // PURCHASE ITEM-Gauri
+        // =====================================================
+        for (var i = 0; i < orderItems.length; i++) {
+            for (var key in orderItems[i]) {
+                formData.append(
+                    'PurchaseItem[' + i + '].' + key,
+                    orderItems[i][key]
+                );
+            }
+        }
+
+        // =====================================================
+        // PURCHASE ITEM GROUP-Gauri
+        // =====================================================
+        for (var i = 0; i < orderItems1.length; i++) {
+            for (var key in orderItems1[i]) {
+                formData.append(
+                    'PurchaseItemGroup[' + i + '].' + key,
+                    orderItems1[i][key]
+                );
+            }
+        }
+        // =====================================================
+        // ACCOUNT GROUP JSON
+        // =====================================================
+
+        formData.append(
+            "PurInvoiceAccGroupDetails",
+            JSON.stringify(purchaseInvoice.AccountGroups)
+        );
+
+        formData.append('StatusId', 18);
+
+        formData.append("UserId", '@Session["LoginUserId"]');
+        // =====================================================
+        // FILE
+        // =====================================================
+
+        //var fileInput = $("#pdfInput")[0];
+
+        //if (
+        //    fileInput &&
+        //    fileInput.files &&
+        //    fileInput.files.length > 0
+        //) {
+        //    formData.append(
+        //        "CustomPhotoFile",
+        //        fileInput.files[0]
+        //    );
+        //}
+
+        //var pdfInput = $('#pdfInput')[0];
+        //if (pdfInput.files.length > 0) {
+        //    formData.append('CustomPhotoFile', pdfInput.files[0]);
+        //}
+
+        // =====================================================
+        // DEBUG - CHECK EVERYTHING BEFORE AJAX
+        // =====================================================
+
+        for (var pair of formData.entries()) {
+            console.log(pair[0] + ":", pair[1]);
+        }
+
+
+        // =====================================================
+        // AJAX INSERT
+        // =====================================================
+
+        $.ajax({
+
+            url: '@Url.Action("SavePO")',
+
+            type: "POST",
+
+            data: formData,
+
+            processData: false,
+
+            contentType: false,
+
+            success: function (response) {
+
+                if (
+                    response &&
+                    response.status
+                ) {
+
+                    alert(
+                        response.message ||
+                        "Successfully done."
+                    );
+
+                    var b = '@Session["LoginUserId"]';
+                        var app = "PurchaseOrderApproval";
+                        $.ajax({
+                            url: '@Url.Action("GetInfo")',
+                            data: { "userId": b, "aprroval": app },
+                            type: "POST",
+                            dataType: "json",
+                            async: false,
+                            success: function (data) {
+
+                                if (data.length > 0) {
+
+                                    for (var i = 0; i < data.length; i++) {
+
+                                        if (data[i].FormName == "PurchaseOrderApproval") {
+
+                                            if (data[i].Create == "Y") {
+
+                                                if (confirm("Do you want to approve?") == true) {
+                                                    $.ajax({
+                                                        url: '/PurchaseOrder/Approval',
+                                                        data: JSON.stringify(data1),
+                                                        type: "POST",
+                                                        dataType: "JSON",
+                                                        contentType: "application/json",
+                                                        success: function (d) {
+                                                            if (d.status == true) {
+
+                                                                //alert('Successfully done');
+                                                                //window.location.href = '/SalesOrder/Index';
+                                                                window.location.href = '/PurchaseOrderReport.aspx';
+                                                            }
+                                                            else {
+                                                                alert('Failed');
+                                                            }
+                                                        }
+                                                    })
+
+                                                    break;
+
+                                                } else {
+
+                                                    window.location.href = '/PurchaseOrder/Index'
+                                                    break;
+                                                }
+                                                break;
+
+                                            }
+                                            else {
+
+                                                window.location.href = '/PurchaseOrder/Index';
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                }
+                                else {
+
+                                    window.location.href = '/PurchaseOrder/Index';
+                                }
+                            }
+                        });
+                    //window.location.href = '/PurchaseOrder/Index';
+
+                    //if (response.redirectUrl) {
+
+                    //    window.location.href =
+                    //        response.redirectUrl;
+
+                    //}
+                    //else {
+
+                    //    location.reload();
+                    //}
+
+                }
+                else {
+
+                    alert(
+                        response.message ||
+                        "Unable to save Purchase Invoice."
+                    );
+
+                    resetSaveButton();
+                }
+            },
+
+            error: function (xhr) {
+
+                console.error(
+                    xhr.responseText
+                );
+
+                alert(
+                    "An error occurred while saving Purchase Invoice."
+                );
+
+                resetSaveButton();
+            }
+
+        });
+    };
+
+
+    //function handleFileChange() {
+    //    var fileInput = document.getElementById('pdfInput');
+    //    var previewButtonContainer = document.getElementById('previewButtonContainer');
+
+    //    // Check if a file is selected
+    //    if (fileInput.files.length > 0) {
+    //        var fileSize = fileInput.files[0].size; // in bytes
+
+    //        // Check if the file size is within the specified limits (10 KB to 300 KB)
+    //        if (fileSize >= 10 * 1024 && fileSize <= 300 * 1024) {
+    //            previewButtonContainer.style.display = 'block';
+    //        } else {
+    //            alert('File size must be between 10 KB and 300 KB.');
+    //            // Clear the file input to prevent submission
+    //            fileInput.value = '';
+    //            previewButtonContainer.style.display = 'none';
+    //        }
+    //    } else {
+    //        previewButtonContainer.style.display = 'none';
+    //    }
+    //}
+
+
+    ///for bill upload
+    //function handleFileChange() {
+    //    var fileInput = document.getElementById('pdfInput');
+    //    var previewButtonContainer = document.getElementById('previewButtonContainer');
+
+    //    if (fileInput.files.length > 0) {
+    //        // Show the preview button container
+    //        previewButtonContainer.style.display = 'block';
+    //    } else {
+    //        // Hide the preview button container if no file is selected
+    //        previewButtonContainer.style.display = 'none';
+    //    }
+    //}
+
+    //function previewPdf() {
+    //    var fileInput = document.getElementById('pdfInput');
+    //    var file = fileInput.files[0];
+
+    //    if (file) {
+    //        // Create a URL for the PDF file
+    //        var pdfUrl = URL.createObjectURL(file);
+
+    //        // Open the PDF in a new window
+    //        window.open(pdfUrl, '_blank');
+    //    } else {
+    //        alert('Please select a PDF file.');
+    //    }
+    //}
+
+$(document).on("change", "#viewToggle", function () {
+    if ($(this).is(":checked")) {
+        localStorage.setItem("viewMode", "old");
+        window.location.href = "/PurchaseOrder/Create";
+    }
+});
+    function autoResizeVendorInstructions(textarea) {
+        textarea.style.setProperty("height", "35px", "important");
+        textarea.style.setProperty(
+            "height",
+            Math.max(35, textarea.scrollHeight) + "px",
+            "important"
+        );
+    }
+
+
+</script>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="purchase-breadcrumb">
+            <h4 class="route-path1">Purchase</h4>
+
+
+            <h4 class="route-path2"
+                onclick="location.href='@Url.Action("Index", "PurchaseOrder")'">
+                Purchase Order
+            </h4>
+            <h4 class="route-path2">
+                 Create
+            </h4>
+        </div>
+    </div>
+   
+</div>
+
+
+<div class="purchase-page">
+
+    <!-- =====================================================
+       1. PURCHASE INVOICE DETAILS - TOP HORIZONTAL CARD
+    -->
+    @Html.HiddenFor(model => model.CPDesignation)
+    @Html.HiddenFor(model => model.Country)
+    @*@Html.HiddenFor(model => model.CountryCode)*@
+    @Html.HiddenFor(model => model.DesignationInfoId)
+    <div class="col-lg-2 col-sm-6">
+        @Html.TextBox("RoundOffAmount", null, new { @class = "form-control", style = "display: none;" })
+    </div>
+    @*Gauri*@
+    <div class="col-lg-2 col-sm-6">
+        @Html.EditorFor(model => model.GSTTotal, new { htmlAttributes = new { @class = "form-control", style = "display: none;" } })
+        @Html.ValidationMessageFor(model => model.GSTTotal, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="purchase-card purchase-invoice-card">
+
+        <div class="purchase-card-header">
+            <span>
+                <i class="material-icons">receipt_long</i>
+                Purchase Order Details
+            </span>
+            <div class="view-toggle">
+                <span>Switch to Form</span>
+
+                <label class="switch">
+                    <input type="checkbox" id="viewToggle">
+                    <span class="slider round"></span>
+                </label>
+
+                @*<span>Old</span>*@
+            </div>
+        </div>
+
+
+
+        <div class="purchase-card-body">
+
+            <!-- ROW 1: VENDOR NAME -->
+            <div class="purchase-vendor-row">
+                <div class="purchase-field">
+                    <label>Vendor Name</label>
+
+                    @Html.DropDownList(
+                        "LedgerID",
+                        (IEnumerable<SelectListItem>)ViewBag.LedgerID,
+                        "Please Select",
+                        new
+                        {
+                            @class = "form-control",
+                            onchange = "GetVendorInfo(this.value);"
+                        })
+                </div>
+            </div>
+
+            <!-- ROW 2: PURCHASE INDENT / ORDER DETAILS -->
+            <div class="invoice-detail-grid">
+
+                <div class="purchase-field">
+                    <label>Pur. Indent No.</label>
+
+                    <div style="display:flex; gap:6px;">
+                        @Html.DropDownList(
+                            "PurIndentNo",
+                            (IEnumerable<SelectListItem>)ViewBag.PurIndentNo,
+                            "Please Select",
+                            new
+                            {
+                                @class = "form-control",
+                                style = "flex:1; min-width:0;"
+                            })
+
+                        <button type="button"
+                                class="search-btn"
+                                onclick="GetDetailsByIndentNo();"
+                                style="padding:0 10px;">
+                            <i class="material-icons">search</i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="purchase-field">
+                    <label>Pur. Indent Date</label>
+
+                    @Html.TextBoxFor(
+                        model => model.PurIndentDate,
+                        new
+                        {
+                            @class = "form-control",
+                            @readonly = "readonly"
+                        })
+                </div>
+
+                <div class="purchase-field">
+                    <label>Pur. Order No.</label>
+
+                    @Html.EditorFor(
+                        model => model.PurOrderNo,
+                        new
+                        {
+                            htmlAttributes = new
+                            {
+                                @class = "form-control",
+                                @readonly = "readonly"
+                            }
+                        })
+                </div>
+                <div class="purchase-field">
+                    <label>Pur. Order Date</label>
+
+                    @Html.TextBox(
+                        "PurOrderDate",
+                        null,
+                        new
+                        {
+                            @class = "form-control",
+                            @readonly = "readonly"
+                        })
+                </div>
+
+                <div class="purchase-field">
+                    <label>Material Req. Date</label>
+
+                    @Html.EditorFor(
+                        model => model.MatReqDate,
+                        new
+                        {
+                            htmlAttributes = new
+                            {
+                                @class = "form-control",
+                                type = "date"
+                            }
+                        })
+
+                    <span id="reqmrd"></span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <!-- =====================================================
+    2 / 3 / 4. THREE MAIN CARDS
+    ===================================================== -->
+
+    <div class="purchase-three-cards">
+
+        <!-- =================================================
+        CARD 2 - VENDOR ADDRESS
+        ================================================= -->
+
+        <div class="vendor-left-column">
+
+            <div class="purchase-card vendor-card">
+
+                <div class="purchase-card-header">
+
+                    <span>
+                        <i class="material-icons">location_on</i>
+                        Vendor Address
+                    </span>
+
+                </div>
+
+
+                <div class="purchase-card-body">
+                    <div class="erp-inline-field">
+                        <label>Address Title</label>
+
+                        <select id="AddressTitleID"
+                                name="AddressTitleID"
+                                class="erp-select"
+                                @*onchange="OnAddressChange(this.value);"*@>
+
+                            <option value="">Please Select</option>
+
+                        </select>
+                    </div>
+                    <div class="vendor-field vendor-address-field">
+                        <label>Address:</label>
+
+                        <div class="vendor-complete-address">
+                            <span id="Address"></span>
+                            <span id="Locality"></span>
+                            <span id="Taluka"></span>
+                            <span id="District"></span>
+                            <span id="State"></span>
+                            <span id="Pincode1"></span>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="purchase-card vendor-contact-card">
+
+                <!--CARD 3 - VENDOR CONTACT -->
+
+                <div class="purchase-card-header">
+                    <span>
+                        <i class="material-icons">contacts</i>
+                        Vendor Contact
+                    </span>
+                </div>
+
+                <div class="purchase-card-body vendor-contact-body">
+
+                    <!-- Contact Person -->
+                    <div class="vendor-contact-field">
+                        <label for="ContactPersonName">Contact Person</label>
+
+                        <select id="ContactPersonName"
+                                name="ContactPersonName"
+                                class="form-control"
+                                onchange="GetCPDetails(this.value);">
+                            <option value="">Please Select</option>
+                        </select>
+                    </div>
+
+                    <!-- Office Contact -->
+                    <div class="vendor-contact-field">
+                        <label for="OfficeMobileNo">Office Contact</label>
+
+                        <div class="office-contact-row">
+                            @Html.TextBox(
+                                "CountryCode",
+                                null,
+                                new
+                                     {
+                                    @class = "form-control",
+                                    disabled = "disabled"
+                                })
+
+                            <select id="OfficeMobileNo"
+                                    name="OfficeMobileNo"
+                                    class="form-control">
+                                <option value="">Please Select</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Office Email -->
+                    <div class="vendor-contact-field">
+                        <label for="OfficeEmailId">Office Email</label>
+
+                        <select id="OfficeEmailId"
+                                name="OfficeEmailId"
+                                class="form-control">
+                            <option value="">Please Select</option>
+                        </select>
+                    </div>
+
+
+                </div>
+            </div>
+
+
+        </div>
+        <!-- END VENDOR LEFT COLUMN -->
+
+
+
+        <div class="purchase-card courier-card">
+
+
+            <div class="purchase-card-header">
+
+                <span>
+
+                    <i class="material-icons">
+                        local_shipping
+                    </i>
+
+                    Delivery Instructions
+                </span>
+
+            </div>
+
+
+            <div class="purchase-card-body">
+
+                <!-- =========================================
+                COURIER SERVICES
+                ========================================= -->
+
+                <div class="courier-section">
+                    <!-- Discount + Terms of Delivery: Same Row --> <div class="courier-top-row">
+                        @*<div class="vendor-field">
+                                <label id="label">Discount :</label>
+                                @Html.TextBox("Discount", null, new { @class = "form-control fs-4 pl-3 input-text-box mt-1", @Value = "0", style = "height:25px" })
+                                <span id="RegDiscount"></span>
+                            </div>*@
+                        <div class="vendor-field">
+                            <label id="label">Terms Of Delivery :</label>
+                            @Html.DropDownList("TermsOfDeliveryID", ViewBag.TermsOfDeliveryID as SelectList, "Please Select", new { @class = "form-control fs-4 pl-3 input-text-box mt-1" })
+                            <span id="RegTermsOfDeliveryID"></span>
+                        </div>
+                    </div>
+                    <div class="vendor-field courier-payment-field">
+                        <label>Payment Term :</label>
+                        @Html.DropDownList("PaymentTermID", ViewBag.PaymentTermID as SelectList, "Please Select", new { @class = "form-control fs-4 pl-3 input-text-box mt-1" })
+                        <span id="RegPaymentTermID"></span>
+                    </div>
+                    <div class="courier-field">
+                        <label>
+                            Courier Name
+                        </label>
+
+                        @Html.DropDownList(
+                            "CourierID",
+                            (IEnumerable<SelectListItem>)
+                            ViewBag.CourierID,
+                            "Please Select",
+                            new
+                            {
+                                @class = "form-control",
+                                onchange = "OtherCourier();"
+                            })
+
+                    </div>
+
+                    <div class="courier-modes-row">
+                        <div class="courier-field courier-mode-field">
+                            <label>
+                                Dispatch Mode
+                            </label>
+
+                            <div class="radio-row">
+
+                                <label>
+
+                                    <input type="radio"
+                                           name="SendType"
+                                           value="By Hand"
+                                           onchange="checksendtype(this.value);" />
+
+                                    By Hand
+
+                                </label>
+
+
+                                <label>
+
+                                    <input type="radio"
+                                           name="SendType"
+                                           value="By Courier"
+                                           onchange="checksendtype(this.value);" />
+
+                                    By Courier
+
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="courier-field courier-mode-field">
+
+                            <label>
+                                Transport Mode
+                            </label>
+
+                            <div class="radio-row">
+
+                                <label>
+
+                                    <input type="radio"
+                                           name="RateType"
+                                           value="Air Rate"
+                                           onchange="checkratetype(this.value);" />
+
+                                    By Air
+
+                                </label>
+
+
+                                <label>
+
+                                    <input type="radio"
+                                           name="RateType"
+                                           value="Surface Rate"
+                                           onchange="checkratetype(this.value);" />
+
+                                    By Surface
+
+                                </label>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- CARD 6 - CALCULATION -->
+        <div class="purchase-card calculation-card">
+
+            <div class="purchase-card-header">
+                <span>
+                    <i class="material-icons">calculate</i>
+                    Calculation
+                </span>
+            </div>
+
+            <div class="purchase-card-body">
+
+                <!-- Product Sub Total & Freight Charges -->
+                <div class="calculation-row-group">
+
+                    <div class="calculation-row">
+                        <label for="ProductSubTotal">Product Sub Total</label>
+                        <input type="number"
+                               id="ProductSubTotal"
+                               name="ProductSubTotal" />
+                    </div>
+
+                    <div class="calculation-row">
+                        <label for="FreightCharges">Freight Charges</label>
+                        <input type="number"
+                               id="FreightCharges"
+                               name="FreightCharges"
+                               onkeyup="calculation();" />
+                    </div>
+
+                </div>
+
+                <!-- IGST, CGST & SGST -->
+                <div class="calculation-row-group">
+
+
+
+                    <div class="calculation-row">
+                        <label for="CGST">CGST</label>
+                        <input type="number"
+                               id="CGST"
+                               name="CGST" />
+                    </div>
+
+                    <div class="calculation-row">
+                        <label for="SGST">SGST</label>
+                        <input type="number"
+                               id="SGST"
+                               name="SGST" />
+                    </div>
+                    <div class="calculation-row">
+                        <label for="IGST">IGST</label>
+                        <input type="number"
+                               id="IGST"
+                               name="IGST" />
+                    </div>
+                </div>
+
+                <!-- Total Amount -->
+                <div class="calculation-row total">
+                    <label for="TotalAmount">Total Amount</label>
+                    <input type="number"
+                           id="TotalAmount"
+                           name="TotalAmount" />
+                </div>
+
+            </div>
+
+            <!-- SPECIFIC INSTRUCTIONS TO VENDOR -->
+            @*<div class="purchase-card vendor-instructions-card">*@
+
+            <div class="purchase-card-header ">
+                <span>
+                    <i class="material-icons">description</i>
+                    Specific Instructions to Vendor :
+                </span>
+            </div>
+
+            <div class="purchase-card-body ">
+                <textarea id="SpecificInstructions"
+                          name="SpecificInstructions"
+                          class="form-control"
+                          rows="3"
+                          placeholder="Enter specific instructions to vendor..."
+                          oninput="autoResizeVendorInstructions(this);"></textarea>
+            </div>
+
+            @*</div>*@
+
+
+
+        </div>
+
+    </div>
+
+</div>
+<!-- =================================================
+ CARD 2 - ITEM + ACCOUNT GROUP
+ ================================================= -->
+
+<div class="purchase-card item-account-card">
+
+
+
+    <div class="purchase-card-body">
+
+
+        <!-- =========================================
+        ITEM DETAILS
+        ========================================= -->
+
+        <div class="inner-card">
+
+            <div class="inner-card-header">
+
+                <span>
+
+                    <i class="material-icons">
+                        inventory_2
+                    </i>
+
+                    Item Details
+
+                </span>
+
+
+                <button type="button"
+                        class="add-item-btn"
+                        onclick="openItemModal();">
+
+                    <i class="material-icons">
+                        add
+                    </i>
+
+                    Add Item
+
+                </button>
+
+            </div>
+
+
+            <div class="item-table-container">
+
+                <table class="item-table">
+
+                    <thead>
+                        <tr>
+                            <th>SrNo</th>
+                            <th>Item</th>
+                            <th>Qty</th>
+                            <th>Unit</th>
+                            <th>Item Code</th>
+                            <th>HSN Code</th>
+                            <th>GST Rate</th>
+                            <th>Rate Per Unit</th>
+                            <th>Applicable Rate</th>
+                            <th>Amount</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+
+                    <tbody id="itemTableBody">
+
+                        <tr>
+                            <td colspan="11" class="no-items" style="text-align: center">
+                                No items added.
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =========================================
+        ACCOUNT GROUP
+        ========================================= -->
+
+        <div class="inner-card">
+
+            <div class="inner-card-header">
+
+                <span>
+
+                    <i class="material-icons">
+                        account_balance
+                    </i>
+
+                    Account Group Details
+
+                </span>
+
+                <button type="button"
+                        class="add-item-btn"
+                        onclick="openAccountGroupModal();">
+
+                    <i class="material-icons">
+                        add
+                    </i>
+
+                    Add Group
+
+                </button>
+
+            </div>
+
+
+
+            <div class="item-table-container">
+
+
+                <table class="item-table account-group-table">
+                    <colgroup>
+                        <col style="width: 7%;">
+                        <col style="width: 20%;">
+                        <col style="width: 13%;">
+                        <col style="width: 12%;">
+                        <col style="width: 30%;">
+                        <col style="width: 18%;">
+                    </colgroup>
+
+                    <thead>
+                        <tr>
+                            <th>SrNo</th>
+                            <th>Account Group</th>
+                            <th style="text-align: right;">Amount</th>
+                            <th style="text-align: center;">GST Rate</th>
+                            <th>Narration</th>
+                            <th style="text-align: center;">Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="accountTableBody">
+
+                        <tr>
+                            <td colspan="6" class="no-items" style="text-align: center;">
+                                No account groups added.
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <div class="purchase-form-buttons">
+
+        <button type="button"
+                class="create-btn"
+                onclick="SavePI();">
+            <i class="material-icons"
+               style="font-size:16px; vertical-align:middle;">save</i>
+            Create
+        </button>
+
+        <button type="button"
+                class="create-btn"
+                onclick="window.history.back();">
+            <i class="material-icons"
+               style="font-size:16px; vertical-align:middle;">close</i>
+            Close
+        </button>
+
+    </div>
+</div>
+
+<!-- =========================================
+CALCULATION
+========================================= -->
+<!-- =========================================================
+     ITEM ADD / EDIT MODAL
+     ========================================================= -->
+<div id="itemModal" class="modal">
+
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+
+            <div class="modal-header">
+
+                <h4 class="modal-title" id="itemModalTitle">
+                    Add Item
+                </h4>
+
+                <button type="button"
+                        class="item-modal-close"
+                        onclick="closeItemModal();"
+                        aria-label="Close">
+                    &times;
+                </button>
+
+            </div>
+
+
+
+            <div class="modal-body">
+
+                <input type="hidden"
+                       id="editIndex"
+                       value="-1" />
+
+
+                <div class="row">
+
+                    <!-- ITEM -->
+
+                    <div class="col-md-6">
+
+                        <label>Item</label>
+
+                        @Html.DropDownList(
+                            "modalItem",
+                            (IEnumerable<SelectListItem>)ViewBag.ItemID,
+                            "Please Select",
+                            new
+                            {
+                                @class = "form-control",
+                                onchange = "GetModalItemDetails(this.value);"
+                            })
+
+                    </div>
+
+
+                    <!-- ITEM CODE -->
+
+                    <div class="col-md-6">
+
+                        <label>Item Code</label>
+
+                        <input type="text"
+                               id="modalItemCode"
+                               class="form-control" />
+
+                    </div>
+
+
+                    <!-- QUANTITY -->
+
+                    <div class="col-md-4">
+
+                        <label>Quantity</label>
+
+                        <input type="number"
+                               id="modalQty"
+                               class="form-control"
+                               value="1"
+                               min="1" />
+
+                    </div>
+
+
+                    <!-- UNIT -->
+
+                    <div class="col-md-4">
+
+                        <label>Unit</label>
+
+                        @Html.DropDownList(
+                            "modalUnit",
+                            (IEnumerable<SelectListItem>)ViewBag.Unit,
+                            "Please Select",
+                            new
+                            {
+                                @class = "form-control"
+                            })
+
+                    </div>
+
+
+                    <!-- HSN -->
+
+                    <div class="col-md-4">
+
+                        <label>HSN Code</label>
+
+                        <input type="text"
+                               id="modalHSNCode"
+                               class="form-control" />
+
+                    </div>
+
+
+                    <!-- GST RATE -->
+
+                    <div class="col-md-4">
+
+                        <label>GST Rate (%)</label>
+
+                        <input type="number"
+                               id="modalGSTRate"
+                               class="form-control"
+                               step="0.01" />
+
+                    </div>
+
+
+                    <!-- RATE PER UNIT -->
+
+                    <div class="col-md-4">
+
+                        <label>Rate Per Unit</label>
+
+                        <input type="number"
+                               id="modalRatePerUnit"
+                               class="form-control"
+                               step="0.01" />
+
+                    </div>
+
+
+                    <!-- APPLICABLE RATE -->
+
+                    <div class="col-md-4">
+
+                        <label>Applicable Rate</label>
+
+                        <input type="number"
+                               id="modalApplicableRate"
+                               class="form-control"
+                               step="0.01" />
+
+                    </div>
+
+
+                    <!-- AMOUNT -->
+
+                    <div class="col-md-4">
+
+                        <label>Amount</label>
+
+                        <input type="number"
+                               id="modalAmount"
+                               class="form-control"
+                               step="0.01"
+                               readonly />
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-primary"
+                        onclick="saveItemFromModal();">
+                    Add Item
+                </button>
+
+                <button type="button"
+                        class="btn btn-default"
+                        onclick="closeItemModal();">
+                    Close
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Account Group Modal -->
+<div id="accountGroupModal" class="modal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+
+            <div class="modal-header">
+
+                <h3 id="accountGroupModalTitle">
+                    Add Account Group
+                </h3>
+
+                <button type="button"
+                        class="account-group-modal-close"
+                        onclick="closeAccountGroupModal();"
+                        aria-label="Close">
+                    &times;
+                </button>
+
+            </div>
+
+
+            <div class="modal-body">
+
+                <input type="hidden"
+                       id="accountGroupEditIndex"
+                       value="-1" />
+
+                <div class="form-group">
+
+                    <label>
+                        Account Group
+                        <span class="required">*</span>
+                    </label>
+                    @Html.DropDownList(
+                           "modalAccountGroup",
+                           (IEnumerable<SelectListItem>)ViewBag.AccGroupId,
+                           "Please Select",
+                           new
+                           {
+                               @class = "form-control"
+                           })
+                    <!--<select id="modalAccountGroup"
+                        class="form-control">
+
+                    <option value="">
+                        -- Select Account Group --
+                    </option>
+                    Html.DropDownList("AccGroupId", (IEnumerable<SelectListItem>)ViewBag.AccGroupId, "Please Select", new { onchange = "GetCode(this.value);", class = "form-control fs-4 pl-3 dropdown-textbox", style = "height:35px" })-->
+                    <!-- Your existing account group options -->
+                    <!--</select>-->
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label>
+                            Amount
+                            <span class="required">*</span>
+                        </label>
+
+                        <input type="number"
+                               id="modalAccountAmount"
+                               class="form-control"
+                               step="0.01"
+                               min="0"
+                               placeholder="Enter amount" />
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            GST Rate (%)
+                        </label>
+
+                        <input type="text"
+                               id="modalAccountGSTRate"
+                               class="form-control"
+                               readonly />
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Narration
+                    </label>
+
+                    <textarea id="modalAccountNarration"
+                              class="form-control"
+                              rows="3"
+                              placeholder="Enter narration"></textarea>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+
+                <button type="button"
+                        class="btn btn-primary"
+                        onclick="saveAccountGroup();">
+
+                    <span id="accountGroupSaveText">
+                        Add Group
+                    </span>
+
+                </button>
+                <button type="button"
+                        class="btn btn-secondary"
+                        onclick="closeAccountGroupModal();">
+                    Close
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>

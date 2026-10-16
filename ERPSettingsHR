@@ -1,0 +1,3408 @@
+
+@model ERPEntities.Settings
+@using ERPEntities
+@using System.Collections.Generic
+
+@using System.Web
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_SwipfeMaster.cshtml";
+    var settingsList = ViewBag.SettingsList as List<Settings>;
+
+    bool isEdit = Model != null && Model.SettingsId > 0;
+    var pfCard = ViewBag.PFCard as ErpSettingCard;
+    var esicCard = ViewBag.ESICCard as ErpSettingCard;
+    var ptCard = ViewBag.PTCard as ErpSettingCard;
+    var tdsCard = ViewBag.TDSCard as ErpSettingCard;
+
+}
+<style>
+     .settings-container {
+         display: flex;
+         background: white;
+         border: 1px solid #ccc;
+         min-height: 600px;
+     }
+
+     .left-menu {
+         width: 220px;
+         background: #f7f7f7;
+         border-right: 1px solid #ddd;
+         color: #000000;
+     }
+
+         .left-menu ul {
+             list-style: none;
+             padding: 0;
+             margin: 0;
+         }
+
+         .left-menu li {
+             padding: 12px;
+             cursor: pointer;
+             border-bottom: 1px solid #ddd;
+         }
+
+             .left-menu li:hover {
+                 background: #e9f0ff;
+             }
+
+     .menu-list {
+         list-style: none;
+         padding: 15px;
+         margin: 0;
+     }
+
+         .menu-list li {
+             display: flex;
+             align-items: center;
+             gap: 12px;
+             padding: 14px 16px;
+             margin-bottom: 10px;
+             border-radius: 10px;
+             cursor: pointer;
+             color: #444;
+             font-weight: 500;
+             transition: all 0.3s ease;
+         }
+
+             .menu-list li i {
+                 color: #4376c0;
+                 font-size: 16px;
+                 width: 20px;
+             }
+
+             .menu-list li:hover {
+                 background: #eef4ff;
+                 transform: translateX(4px);
+             }
+
+             .menu-list li.active {
+                 background: linear-gradient(90deg, #052a5f,#83cdc6 /*#4a90ff*/ );
+                 color: white;
+                 box-shadow: 0px 4px 10px rgba(13,110,253,0.2);
+             }
+
+                 .menu-list li.active i {
+                     color: white;
+                 }
+
+     .right-panel {
+         flex: 1;
+         padding: 20px;
+     }
+
+     .settings-section {
+         display: none;
+     }
+
+     .active-section {
+         display: block;
+     }
+     /* ===========================
+             HR Settings Card Design
+          ===========================*/
+
+     .hr-card {
+         display: flex;
+         flex-direction: column;
+         background: #ffffff;
+         border-radius: 1px;
+         border: 1px solid #e9eef5;
+         box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+         overflow: hidden;
+         transition: all 0.3s ease;
+         height: 100%;
+     }
+
+         .hr-card:hover {
+             transform: translateY(-4px);
+             box-shadow: 0 16px 36px rgba(15, 23, 42, 0.12);
+         }
+
+
+     .hr-card-body {
+         padding: 4px 8px;
+         flex: 1;
+     }
+
+     /* =========================================
+         PF CARD
+         ========================================= */
+     .pf-card,
+     .esic-card,
+     .pt-card,
+     .tds-card,
+     .salary-table-head {
+         box-shadow: 0 0 12px rgba(196, 166, 235, 0.45), inset 0 0 8px rgba(196, 166, 235, 0.12);
+     }
+
+         .salary-table-head th {
+             padding: 10px 12px;
+             font-weight: 600;
+             white-space: nowrap;
+             font-size: 15px !important;
+         }
+
+     .settings-table td {
+         padding: 10px 12px;
+         vertical-align: middle;
+     }
+
+     /* SALARY HEAD ACTION BUTTONS */
+
+     .edit-btn {
+         border: none;
+         padding: 6px 12px;
+         border-radius: 5px;
+         cursor: pointer;
+         font-size: 13px;
+     }
+
+     .delete-btn {
+         border: none;
+         padding: 6px 10px;
+         border-radius: 5px;
+         cursor: pointer;
+         margin-left: 5px;
+         font-size: 13px;
+     }
+
+     /* SALARY HEAD ADD BUTTON */
+
+     .add-btn,
+     .cancel-btn,
+     #esic .add-btn {
+         padding: 7px 18px;
+         border-radius: 5px;
+         font-size: 13px;
+         font-weight: 600;
+         white-space: nowrap;
+         height: 32px;
+         background-image: linear-gradient(to right, #35d3e1, midnightblue);
+         box-shadow: -4px -4px 8px rgba(255,255,255,0.7), 4px 4px 8px rgba(128,128,128,0.7);
+     }
+
+     /* ================================
+         STATUTORY DEDUCTION CARDS
+         PF / ESIC / PT
+         ================================ */
+
+     .settings-form > .d-flex {
+         width: 100%;
+         gap: 12px;
+     }
+
+         .settings-form > .d-flex > div[style*="flex: 1"] {
+             min-width: 0;
+             flex: 1 1 0 !important;
+         }
+
+
+     /* =========================================
+         PF / ESIC / PT - FIRST ROW
+         ========================================= */
+
+     .statutory-cards-row {
+         display: grid;
+         grid-template-columns: repeat(3, minmax(0, 1fr));
+         gap: 12px;
+         width: 100%;
+         max-width: 100%;
+         box-sizing: border-box;
+     }
+
+     .statutory-card-item {
+         width: 100%;
+         min-width: 0;
+         max-width: 100%;
+         box-sizing: border-box;
+     }
+
+         .statutory-card-item .hr-card {
+             width: 100%;
+             max-width: 100%;
+             min-width: 0;
+             box-sizing: border-box;
+             margin: 0;
+         }
+
+
+     /* TDS SECOND ROW */
+
+     .tds-row {
+         display: flex;
+         width: 100%;
+         gap: 12px;
+         margin-top: 12px;
+     }
+
+     .tds-card-item {
+         flex: 1 1 0;
+         min-width: 0;
+     }
+
+         .tds-card-item .hr-card {
+             width: 100%;
+         }
+
+
+     /* =====================================================
+         TDS CARD - INNER FIELD SPACING
+         ===================================================== */
+
+     .tds-card {
+         width: 100%;
+         height: 230px;
+         box-sizing: border-box;
+     }
+
+         .tds-card .hr-card-body {
+             width: 100%;
+             padding: 8px 12px 10px;
+             box-sizing: border-box;
+         }
+
+
+         /* TDS setting rows */
+
+         .tds-card .setting-row {
+             display: flex;
+             align-items: center;
+             width: 100%;
+             min-height: 30px;
+             margin: 0 0 3px 0;
+             padding: 0;
+             box-sizing: border-box;
+         }
+
+
+         /* TDS labels */
+
+         .tds-card .setting-label {
+             display: block;
+             flex: 0 0 120px;
+             width: 120px;
+             margin: 0;
+             padding: 0;
+             font-size: 11px;
+             font-weight: 600;
+             color: #344054;
+             white-space: nowrap;
+         }
+
+
+         /* TDS value fields */
+
+         .tds-card .card-value {
+             flex: 0 0 85px;
+             width: 85px;
+             height: 27px;
+             margin-left: 4px;
+             padding: 3px 6px;
+             border: 1px solid #D7DFEA;
+             border-radius: 8px;
+             font-size: 11px;
+             text-align: right;
+             box-sizing: border-box;
+         }
+
+
+         /* =====================================================
+         TDS TOGGLE
+         ===================================================== */
+
+         .tds-card .card-toggle {
+             display: none;
+         }
+
+         .tds-card .toggle-label {
+             flex: 0 0 auto;
+             margin: 0 6px 0 4px;
+             padding: 0;
+             cursor: pointer;
+         }
+
+         .tds-card .toggle-switch {
+             display: block;
+             position: relative;
+             width: 36px;
+             height: 19px;
+             background: #ccc;
+             border-radius: 20px;
+             transition: .3s;
+         }
+
+             .tds-card .toggle-switch:before {
+                 content: "";
+                 position: absolute;
+                 width: 15px;
+                 height: 15px;
+                 left: 2px;
+                 top: 2px;
+                 background: #fff;
+                 border-radius: 50%;
+                 transition: .3s;
+             }
+
+         .tds-card .card-toggle:checked + .toggle-label .toggle-switch {
+             background: #4376c0;
+         }
+
+             .tds-card .card-toggle:checked + .toggle-label .toggle-switch:before {
+                 transform: translateX(17px);
+             }
+
+
+
+     /* Center Submit & Close buttons in Salary Head */
+     /* Salary Head - keep common buttons at bottom center */
+     /* =========================================
+    SALARY HEAD - 0px EDGE-TO-EDGE
+    ========================================= */
+
+
+     #esic .button-container {
+         position: absolute;
+         bottom: 0px;
+         left: 50%;
+         transform: translateX(-50%);
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         gap: 15px;
+         width: max-content;
+         min-height: 1px;
+     }
+
+     .body-panel {
+         border: 1px solid black;
+         margin-top: -10px;
+         border-radius: 5px;
+         background-color: floralwhite;
+         position: relative;
+         min-height: 600px; /* or your existing height */
+     }
+
+     .submit-btn {
+         display: inline-flex;
+         padding: 7px;
+     }
+
+         .submit-btn button {
+             border-radius: 30px;
+             padding: 5px 5px;
+         }
+
+     .save-btn input {
+         font-size: 14px;
+     }
+
+     fieldset {
+         border: 1px solid #ddd !important;
+         margin: 10px;
+         padding: 5px;
+         padding-left: 10px !important;
+         padding-right: 10px !important;
+         background-color: white;
+     }
+
+     .button {
+         padding: 20px;
+         font-size: 16px;
+         cursor: pointer;
+         text-align: center;
+         text-decoration: none;
+         outline: none;
+         border: none;
+         box-shadow: 0 9px #999;
+         height: 3px;
+         margin: 4px 2px;
+     }
+
+         .button:hover {
+             background-color: cyan;
+         }
+
+         .button:active {
+             background-color: cyan;
+             box-shadow: 0 5px #666;
+             transform: translateY(4px);
+         }
+
+     .button1 {
+         border-radius: 50%;
+     }
+
+     span.error {
+         display: block;
+         visibility: hidden;
+         color: red;
+         font-size: 60px;
+     }
+
+     .tablecontainer table {
+         width: 100%;
+         border-collapse: collapse;
+         border-top: 1px solid #fff;
+         border-right: 1px solid #fff;
+     }
+
+     .tablecontainer th {
+         border-bottom: 2px solid #fff !important;
+         background-color: lightblue;
+         font-size: small;
+         color: midnightblue;
+         text-align: center;
+         height: 30px;
+     }
+
+     .tablecontainer th, .tablecontainer td {
+         border-left: 2px solid #fff;
+         padding: 5px;
+         border-bottom: 2px solid #fff;
+         font-size: small;
+     }
+
+     .ui-widget {
+         font-size: 12px !important;
+     }
+
+     .reqError {
+         color: #ff0000; /*Red Color*/
+         font-weight: bold;
+         font-size: 16px;
+     }
+
+     .backsubmitbtn {
+         background-image: linear-gradient(to right, #35d3e1, midnightblue);
+         color: white !important;
+         font-family: Helvetica, Arial, sans-serif;
+         border: none;
+         border-radius: 30px;
+         padding: 8px 30px;
+         min-width: 120px;
+         box-shadow: -4px -4px 8px rgba(255,255,255,0.7), 4px 4px 8px rgba(128,128,128,0.7);
+         transition: all .3s ease;
+     }
+
+         .backsubmitbtn:hover {
+             transform: translateY(-2px);
+         }
+
+         .backsubmitbtn:focus {
+             outline: none;
+             box-shadow: -4px -4px 8px rgba(255,255,255,0.7), 4px 4px 8px rgba(128,128,128,0.7);
+         }
+
+     .dshapefieldset {
+         background-color: #e5e6e7;
+         border: 2px solid #ddd;
+         border-radius: 0px 25px 25px 0px;
+         margin-bottom: 25px;
+     }
+
+     .field-heading {
+         font-size: 18px;
+         color: midnightblue;
+         font-family: Helvetica;
+         font-weight: bold;
+         display: flex;
+     }
+
+     .route-path1 {
+         clip-path: polygon(0% 0%, 90% 0%, 100% 50%, 90% 100%, 0% 100%);
+         background-color: #003399;
+         color: white;
+         padding: 5px 15px 5px 5px
+     }
+
+     .route-path2 {
+         cursor: pointer;
+         color: white;
+         clip-path: polygon(93% 0%, 100% 50%, 93% 100%, 0% 100%, 7% 50%, 0% 0%);
+         background-color: #003399;
+         padding: 5px 15px 5px 15px;
+     }
+
+     .route-path3 {
+         cursor: pointer;
+         color: white;
+         clip-path: polygon(94% 0%, 100% 50%, 94% 100%, 0% 100%, 5% 50%, 0% 0%);
+         background-color: #003399;
+         padding: 5px 15px 5px 15px;
+     }
+
+     .cross-btn {
+         font-size: 30px;
+         cursor: pointer;
+         color: midnightblue;
+         position: absolute;
+         top: 35px;
+         right: 15px
+     }
+     /* ===========================
+             HR Settings Card Design
+          ===========================*/
+
+     .hr-card {
+         display: flex;
+         flex-direction: column;
+         background: #ffffff;
+         border-radius: 1px;
+         border: 1px solid #e9eef5;
+         box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+         overflow: hidden;
+         transition: all 0.3s ease;
+         height: 100%;
+     }
+
+         .hr-card:hover {
+             transform: translateY(-4px);
+             box-shadow: 0 16px 36px rgba(15, 23, 42, 0.12);
+         }
+
+     .hr-card-header {
+         display: flex;
+         align-items: center;
+         gap: 12px;
+         padding: 5px 7px;
+         background: #fff;
+         border-bottom: 1px solid #eef2f7;
+     }
+
+         .hr-card-header i {
+             width: 36px;
+             height: 36px;
+             border-radius: 50%;
+             background: #e8f1ff;
+             color: #2563eb;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             font-size: 15px;
+             flex-shrink: 0;
+             transition: all 0.3s ease;
+         }
+
+         .hr-card-header h5 {
+             margin: 0;
+             font-size: 15px;
+             font-weight: 700;
+             color: #1E2F8A;
+             line-height: 1.2;
+         }
+
+     .form-label {
+         white-space: nowrap;
+         font-size: 10px;
+         font-weight: 600;
+         color: #374151;
+         /* margin-bottom: 0 !important;*/
+         letter-spacing: 0.2px;
+         /* line-height: 1 !important;*/
+     }
+
+     .salary-head-label {
+         white-space: nowrap;
+     }
+
+     .hr-card:hover .hr-card-header i {
+         transform: scale(1.08);
+     }
+
+     .hr-card-body {
+         padding: 4px 8px;
+         flex: 1;
+     }
+
+     .hr-card .form-label {
+         font-weight: 600;
+         color: #344054;
+         margin-bottom: 1px;
+         font-size: 12px;
+     }
+
+
+     .hr-card .form-control:focus,
+     .hr-card .form-select:focus {
+         border-color: #2563eb;
+         box-shadow: 0 0 0 .15rem rgba(37,99,235,.15);
+         height: 40px;
+         font-size: 14px;
+         border-radius: 8px;
+     }
+
+     .hr-card-body .form-select {
+         min-width: 120px;
+     }
+
+     .form-control,
+     .form-select {
+         height: 20px;
+         border: 1px solid #D9E2EF;
+         border-radius: 8px;
+         background: #FFFFFF;
+         font-size: 10px;
+         transition: all .3s ease;
+         box-shadow: none;
+         padding: 2px 4px;
+     }
+
+         .form-control:focus,
+         .form-select:focus {
+             border-color: #2563EB;
+             box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+         }
+
+         .form-control::placeholder {
+             color: #9CA3AF;
+         }
+
+     .hr-card-body .col-12,
+     .hr-card-body .col-md-6 {
+         margin-bottom: 2px;
+     }
+     /* Professional compact PT card */
+     .pt-card {
+         min-height: 230px !important;
+         height: 230px !important;
+         background: #fff;
+         border: 1px solid #E8EDF5;
+         border-radius: 14px;
+         box-shadow: 0 6px 18px rgba(0,0,0,.08);
+         transition: .3s;
+     }
+
+         .pt-card .form-label {
+             font-size: 10px;
+         }
+
+         .pt-card:hover {
+             box-shadow: 0 10px 24px rgba(0,0,0,.12);
+         }
+
+         .pt-card .form-label {
+             display: block;
+             line-height: 1.3;
+             margin-bottom: 6px;
+             white-space: normal;
+             word-break: break-word;
+         }
+
+         .pt-card .col-12,
+         .pt-card .col-md-6,
+         .pt-card .col-lg-6 {
+             margin-bottom: 12px;
+         }
+
+         .pt-card .form-control,
+         .pt-card .form-select {
+             border: 1px solid #D7DFEA;
+             border-radius: 8px;
+             box-shadow: none;
+             transition: .25s;
+         }
+
+             .pt-card .form-control:focus,
+             .pt-card .form-select:focus {
+                 border-color: #F97316;
+                 box-shadow: 0 0 0 3px rgba(249,115,22,.12);
+             }
+
+         .pt-card .row {
+             margin-bottom: 1px;
+             --bs-gutter-x: .35rem;
+             --bs-gutter-y: .0rem;
+         }
+
+         .pt-card .pt-section {
+             padding-top: 2px;
+             padding-bottom: 2px;
+             margin-top: 0 !important;
+             margin-bottom: 0 !important;
+             border-top: 1px solid #ececec;
+         }
+
+         .pt-card h6 {
+             margin: 0;
+             padding-bottom: 2px 0;
+             font-size: 10px;
+             line-height: 1;
+             font-size: 10px;
+         }
+
+     .pt-section {
+         border-top: 1px solid #e5e7eb;
+         padding-top: 2px;
+         margin-top: 0px;
+         margin-bottom: 0;
+     }
+
+     .pt-card .hr-card-header {
+         background: #fff;
+         border-bottom: 1px solid #EDF2F7;
+     }
+
+     .save-btn-modern,
+     .save-btn-esic,
+     .save-btn-pt {
+         display: inline-flex;
+         align-items: center;
+         justify-content: center;
+         gap: 5px;
+         width: 100px;
+         height: 32px;
+         background-image: linear-gradient(to right, #35d3e1, midnightblue);
+         box-shadow: -4px -4px 8px rgba(255,255,255,0.7), 4px 4px 8px rgba(128,128,128,0.7);
+         border: none;
+         border-radius: 8px;
+         color: #fff;
+         font-size: 12px;
+         font-weight: 600;
+         cursor: pointer;
+         box-shadow: 0 3px 8px rgba(249,115,22,.25);
+         transition: .3s;
+     }
+
+         .save-btn-pt i {
+             font-size: 12px;
+             color: #fff;
+         }
+
+         .save-btn-pt:hover {
+             transform: translateY(-1px);
+         }
+
+     .hr-card-body hr {
+         margin: 10px 0;
+     }
+
+
+     /* PT top fields */
+     .pt-top-fields .form-label {
+         margin-bottom: 1px !important;
+         line-height: 1.1;
+         font-size: 12px;
+     }
+
+     .pt-top-fields .form-control {
+         height: 28px;
+         min-height: 28px;
+         padding: 2px 8px;
+     }
+
+     .pt-top-fields .col-md-4 {
+         padding-top: 0 !important;
+         padding-bottom: 0 !important;
+     }
+
+     .pt-top-fields {
+         margin-bottom: 2px;
+     }
+
+
+
+     .save-btn-esic i {
+         font-size: 12px;
+         color: #fff;
+     }
+
+     .save-btn-esic:hover {
+         /* background: linear-gradient(135deg, #C084FC, #A855F7);*/
+         transform: translateY(-1px);
+         /* box-shadow: 0 6px 14px rgba(168, 85, 247, 0.30);*/
+     }
+
+     .esic-card .form-label {
+         font-size: 11px;
+         white-space: nowrap;
+     }
+
+
+
+
+
+
+     .empty-table {
+         text-align: center;
+         color: #6B7280;
+         padding: 40px 0;
+     }
+
+     .pf-card,
+     .esic-card {
+         background: #fff;
+         border: 1px solid #E8EDF5;
+         border-radius: 14px;
+         box-shadow: 0 6px 18px rgba(0,0,0,.08);
+         transition: .3s;
+     }
+
+         esic-card .hr-card-header,
+         .pf-card .hr-card-header {
+             background: #fff;
+             border-bottom: 1px solid #EDF2F7;
+         }
+
+             esic-card .hr-card-header i,
+             .pf-card .hr-card-header i {
+                 background: #EEF5FF;
+                 color: #2563EB;
+                 border-radius: 50%;
+             }
+
+     .form-switch .form-check-input {
+         width: 2.8em !important;
+         height: 1.4em !important;
+     }
+
+     .pf-switch {
+         width: 3rem;
+         height: 1.6rem;
+         cursor: pointer;
+     }
+
+         .pf-switch:checked {
+             background-color: #4F6BFF;
+             border-color: #4F6BFF;
+         }
+
+         .pf-switch:focus {
+             box-shadow: none;
+         }
+
+     .hr-card.pf-card,
+     .hr-card.esic-card {
+         height: 230px;
+     }
+
+     .pf-card input,
+     .pf-card select
+     .esic-card input,
+     .esic-card select {
+         border: 1px solid #D7DFEA;
+         border-radius: 8px;
+         transition: .25s;
+     }
+
+         .pf-card input:focus,
+         .pf-card select:focus
+         .esic-card input:focus,
+         .esic-card select:focus {
+             border-color: #3B82F6;
+             box-shadow: 0 0 0 3px rgba(59,130,246,.12);
+         }
+
+     .pf-card .save-btn-modern,
+     .esic-card .save-btn-modern,
+     .pt-card .save-btn-modern {
+         border-radius: 10px;
+         background-image: linear-gradient(to right, #35d3e1, midnightblue);
+         box-shadow: -4px -4px 8px rgba(255,255,255,0.7), 4px 4px 8px rgba(128,128,128,0.7);
+     }
+
+     .pf-card:hover,
+     .esic-card:hover {
+         transform: translateY(-2px);
+     }
+
+     .hr-card.esic .hr-card-header i {
+         background: #ede9fe;
+         color: #7c3aed;
+     }
+
+
+     /* PT top fields */
+     .pt-top-fields .form-label {
+         margin-bottom: 1px !important;
+         line-height: 1.1;
+         font-size: 12px;
+     }
+
+     .pt-top-fields .form-control {
+         height: 28px;
+         min-height: 28px;
+         padding: 2px 8px;
+     }
+
+     .pt-top-fields .col-md-4 {
+         padding-top: 0 !important;
+         padding-bottom: 0 !important;
+     }
+
+     .pt-top-fields {
+         margin-bottom: 2px;
+     }
+
+     .salary-card {
+         border-radius: 16px;
+         box-shadow: 0 8px 24px rgba(15,23,42,.08);
+         border: 1px solid #e9eef5;
+     }
+
+         .salary-card .hr-card-header {
+             padding: 12px 16px;
+             border-bottom: 1px solid #eef2f7;
+         }
+
+         .salary-card .hr-card-body {
+             padding: 4px 8px;
+         }
+
+         .salary-card .hr-card-header i {
+             background: #E8F7E8;
+             color: #43A047;
+         }
+     /* Common Button Style */
+     .submit-close-section {
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         gap: 12px;
+         margin-top: 12px; /* Reduce this to move them up */
+     }
+
+     .save-btn-salary {
+         width: 100%;
+         height: 20px;
+         border: none;
+         border-radius: 10px;
+         color: #fff;
+         font-size: 15px;
+         font-weight: 600;
+         cursor: pointer;
+         transition: all .3s ease;
+         box-shadow: 0 6px 16px rgba(0,0,0,.12);
+     }
+
+
+
+     .save-btn-modern i {
+         font-size: 12px;
+         color: #fff;
+         line-height: 1;
+     }
+
+     .save-btn-modern span {
+         color: #fff;
+         line-height: 1;
+     }
+
+     .save-btn-modern:hover {
+         transform: translateY(-1px);
+     }
+
+     .save-btn-modern:active {
+         transform: translateY(0);
+     }
+
+     .save-btn-modern:focus {
+         outline: none;
+     }
+
+     .save-btn-container {
+         display: flex;
+         justify-content: center;
+         margin-top: 15px;
+     }
+
+     .save-btn-modern:hover,
+     .save-btn-esic:hover,
+     .save-btn-pt:hover {
+         transform: translateY(-2px);
+         filter: brightness(1.05);
+     }
+
+     .save-btn-salary {
+         background: linear-gradient(135deg,#8B5CF6,#7C3AED);
+     }
+
+
+
+         .save-btn-modern:active,
+         .save-btn-esic:active,
+         .save-btn-pt:active,
+         .save-btn-salary:active {
+             transform: scale(.98);
+         }
+
+     .settings-sidebar {
+         background: #fff;
+         border-radius: 16px;
+         border: 1px solid #e8edf5;
+         box-shadow: 0 8px 24px rgba(0,0,0,.08);
+         overflow: hidden;
+         position: sticky;
+         top: 20px;
+     }
+
+     .settings-sidebar-header {
+         display: flex;
+         align-items: center;
+         gap: 10px;
+         padding: 18px 20px;
+         font-size: 17px;
+         font-weight: 600;
+         color: #173E8F;
+         background: #f8fbff;
+         border-bottom: 1px solid #e8edf5;
+     }
+
+         .settings-sidebar-header i {
+             font-size: 22px;
+         }
+
+     .settings-link {
+         display: flex;
+         align-items: center;
+         gap: 12px;
+         padding: 15px 20px;
+         text-decoration: none;
+         color: #4b5563;
+         font-size: 14px;
+         font-weight: 500;
+         transition: .25s;
+         border-left: 4px solid transparent;
+     }
+
+         .settings-link i {
+             font-size: 20px;
+             color: #6b7280;
+             transition: .25s;
+         }
+
+         .settings-link:hover {
+             background: #f5f9ff;
+             color: #173E8F;
+         }
+
+             .settings-link:hover i {
+                 color: #173E8F;
+             }
+
+         .settings-link.active {
+             background: linear-gradient(90deg,#1e4db7,#29b6c8);
+             color: #fff;
+             border-left: 4px solid #0d2d7d;
+         }
+
+             .settings-link.active i {
+                 color: #fff;
+             }
+
+         .settings-link + .settings-link {
+             border-top: 1px solid #f1f3f7;
+         }
+
+     .btn-add-head {
+         background: #fff;
+         color: #22b573;
+         border: 2px solid #22b573;
+         border-radius: 10px;
+         padding: 8px 18px;
+         font-weight: 600;
+         display: flex;
+         align-items: center;
+         gap: 6px;
+     }
+
+         .btn-add-head:hover {
+             background: #22b573;
+             color: #fff;
+         }
+
+     .salary-table-head {
+         background: #f5f1ff;
+     }
+
+         .salary-table-head th {
+             color: #233a8b;
+             font-weight: 600;
+             border: none;
+         }
+
+     .empty-state i {
+         font-size: 30px;
+         color: #9ca3af;
+         margin-bottom: 4px;
+     }
+
+
+     .empty-state {
+         height: 90px;
+         display: flex;
+         flex-direction: column;
+         justify-content: center;
+         align-items: center;
+     }
+
+         .empty-state i {
+             font-size: 36px;
+             color: #9ca3af;
+             margin-bottom: 8px;
+         }
+
+         .empty-state p {
+             margin: 0;
+             font-size: 13px;
+             color: #6b7280;
+         }
+
+     .empty-row td {
+         height: 50px;
+         padding: 5px 0 !important;
+         text-align: center;
+         vertical-align: middle;
+     }
+
+     .empty-row i {
+         font-size: 15px;
+         margin-bottom: 2px;
+     }
+
+     .empty-row p {
+         margin: 0;
+     }
+
+     #salaryHeadTable {
+         width: 100% !important;
+         border-collapse: separate !important;
+         border-spacing: 0 !important;
+         margin: 0 !important;
+         background: #ffffff !important;
+         border: 1px solid #e5e7eb !important;
+         border-radius: 14px !important;
+         overflow: hidden !important;
+         box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08) !important;
+     }
+
+
+         #salaryHeadTable thead tr {
+             height: 55px !important;
+             background: #f7f3ff !important;
+         }
+
+         #salaryHeadTable thead th {
+             height: 55px !important;
+             padding: 0 14px !important;
+             background: #f7f3ff !important;
+             color: #172b75 !important;
+             font-size: 15px !important;
+             font-weight: 600 !important;
+             line-height: 1 !important;
+             vertical-align: middle !important;
+             border: none !important;
+             border-bottom: 1px solid #ddd8ec !important;
+             white-space: nowrap !important;
+         }
+
+             #salaryHeadTable thead th:first-child {
+                 border-top-left-radius: 12px !important;
+             }
+
+             #salaryHeadTable thead th:last-child {
+                 border-top-right-radius: 12px;
+             }
+         /* =========================================================
+    TABLE BODY ROWS
+    ========================================================= */
+
+         #salaryHeadTable tbody tr {
+             height: 84px !important;
+             background: #ffffff !important;
+         }
+
+
+             /* Row separator */
+
+             #salaryHeadTable tbody tr:not(:last-child) td {
+                 border-bottom: 1px solid #e5e7eb !important;
+             }
+
+         #salaryHeadTable tbody td {
+             height: 84px !important;
+             padding: 0 14px !important;
+             vertical-align: middle !important;
+             background: #ffffff !important;
+             color: #173b68 !important;
+             font-size: 16px !important;
+             font-weight: 400 !important;
+             border-top: none !important;
+             border-left: none !important;
+             border-right: none !important;
+             white-space: nowrap !important;
+         }
+         /* =========================================================
+    COLUMN WIDTHS
+    ========================================================= */
+
+         /* Module */
+         #salaryHeadTable th:nth-child(1),
+         #salaryHeadTable td:nth-child(1) {
+             width: 15% !important;
+             text-align: left !important;
+         }
+
+         /* Display Name */
+         #salaryHeadTable th:nth-child(2),
+         #salaryHeadTable td:nth-child(2) {
+             width: 29% !important;
+             text-align: left !important;
+         }
+
+         /* Value */
+         #salaryHeadTable th:nth-child(3),
+         #salaryHeadTable td:nth-child(3) {
+             width: 14% !important;
+             text-align: left !important;
+         }
+
+         /* IsApplicable */
+         #salaryHeadTable th:nth-child(4),
+         #salaryHeadTable td:nth-child(4) {
+             width: 15% !important;
+             text-align: left !important;
+         }
+
+         /* Apply Date */
+         #salaryHeadTable th:nth-child(5),
+         #salaryHeadTable td:nth-child(5) {
+             width: 14% !important;
+             text-align: left !important;
+         }
+
+         /* Action */
+         #salaryHeadTable th:nth-child(6),
+         #salaryHeadTable td:nth-child(6) {
+             width: 13% !important;
+             text-align: center !important;
+         }
+
+         /* =========================================================
+    EDIT BUTTON
+    ========================================================= */
+
+         #salaryHeadTable .edit-btn,
+         #salaryHeadTable .btn-edit,
+         #salaryHeadTable .edit-button {
+             height: 42px !important;
+             min-width: 94px !important;
+             padding: 0 16px !important;
+             display: inline-flex !important;
+             align-items: center !important;
+             justify-content: center !important;
+             gap: 7px !important;
+             background: #f5f2ff !important;
+             color: #173b68 !important;
+             border: none !important;
+             border-radius: 6px !important;
+             font-size: 15px !important;
+             font-weight: 400 !important;
+             cursor: pointer !important;
+             margin: 0 8px 0 0 !important;
+         }
+
+
+             /* Edit icon */
+             #salaryHeadTable .edit-btn i,
+             #salaryHeadTable .btn-edit i,
+             #salaryHeadTable .edit-button i {
+                 font-size: 17px !important;
+                 color: #173b68 !important;
+             }
+
+
+         /* =========================================================
+    DELETE BUTTON
+    ========================================================= */
+
+         #salaryHeadTable .delete-btn,
+         #salaryHeadTable .btn-delete,
+         #salaryHeadTable .delete-button {
+             width: 48px !important;
+             height: 42px !important;
+             padding: 0 !important;
+             display: inline-flex !important;
+             align-items: center !important;
+             justify-content: center !important;
+             background: #fff0f0 !important;
+             color: #173b68 !important;
+             border: none !important;
+             border-radius: 6px !important;
+             font-size: 16px !important;
+             cursor: pointer !important;
+             margin: 0 !important;
+         }
+
+
+             /* Delete icon */
+             #salaryHeadTable .delete-btn i,
+             #salaryHeadTable .btn-delete i,
+             #salaryHeadTable .delete-button i {
+                 font-size: 17px !important;
+                 color: #173b68 !important;
+             }
+
+
+         /* =========================================================
+    HOVER
+    ========================================================= */
+
+         #salaryHeadTable tbody tr:hover td {
+             background: #fcfbff !important;
+         }
+
+
+         /* Edit hover */
+
+         #salaryHeadTable .edit-btn:hover,
+         #salaryHeadTable .btn-edit:hover,
+         #salaryHeadTable .edit-button:hover {
+             background: #eeeaff !important;
+         }
+
+
+         /* Delete hover */
+
+         #salaryHeadTable .delete-btn:hover,
+         #salaryHeadTable .btn-delete:hover,
+         #salaryHeadTable .delete-button:hover {
+             background: #ffe5e5 !important;
+         }
+
+
+         /* =========================================================
+    LAST ROW
+    ========================================================= */
+
+         #salaryHeadTable tbody tr:last-child td:first-child {
+             border-bottom-left-radius: 14px !important;
+         }
+
+         #salaryHeadTable tbody tr:last-child td:last-child {
+             border-bottom-right-radius: 14px !important;
+         }
+
+     .create-bttn {
+         min-width: 110px;
+     }
+
+     .d-flex.gap-3 {
+         gap: 15px !important;
+     }
+
+     #btnAdd {
+         margin-right: -12px; /* Adjust as needed */
+     }
+
+     .pf-card,
+     .esic-card,
+     .pt-card,
+     .salary-table-head {
+         box-shadow: 0 0 12px rgba(196, 166, 235, 0.45), inset 0 0 8px rgba(196, 166, 235, 0.12);
+     }
+
+     .btn-sm {
+         padding: 4px 12px !important;
+         font-size: 12px !important;
+         border-radius: 10px;
+     }
+
+
+     .switch {
+         position: relative;
+         display: inline-block;
+         width: 45px;
+         height: 22px;
+     }
+
+         .switch input {
+             opacity: 0;
+             width: 0;
+             height: 0;
+         }
+
+     .slider {
+         position: absolute;
+         cursor: pointer;
+         top: 0;
+         left: 0;
+         right: 0;
+         bottom: 0;
+         background: #ccc;
+         transition: .4s;
+         border-radius: 34px;
+     }
+
+         .slider:before {
+             position: absolute;
+             content: "";
+             height: 18px;
+             width: 18px;
+             left: 2px;
+             bottom: 2px;
+             background: white;
+             transition: .4s;
+             border-radius: 50%;
+         }
+
+     input:checked + .slider {
+         background: #4376c0;
+     }
+
+         input:checked + .slider:before {
+             transform: translateX(22px);
+         }
+
+     /* =========================================
+        TDS CARD - SAME DESIGN AS PF CARD
+     ========================================= */
+
+     .tds-card {
+         background: #fff;
+         border: 1px solid #E8EDF5;
+         border-radius: 14px;
+         box-shadow: 0 6px 18px rgba(0,0,0,.08);
+         transition: .3s;
+     }
+
+         .tds-card .hr-card-header {
+             background: #fff;
+             border-bottom: 1px solid #EDF2F7;
+         }
+
+             .tds-card .hr-card-header i {
+                 background: #EEF5FF;
+                 color: #2563EB;
+                 border-radius: 50%;
+             }
+
+     /* Same height as PF */
+     .hr-card.tds-card {
+         height: 260px;
+     }
+
+     /* Same input design as PF */
+     .tds-card input,
+     .tds-card select {
+         border: 1px solid #D7DFEA;
+         border-radius: 8px;
+         transition: .25s;
+     }
+
+         .tds-card input:focus,
+         .tds-card select:focus {
+             border-color: #3B82F6;
+             box-shadow: 0 0 0 3px rgba(59,130,246,.12);
+         }
+
+     /* Same row spacing */
+     .tds-card .row {
+         --bs-gutter-x: .25rem;
+         --bs-gutter-y: 0;
+     }
+
+     /* Same field design */
+     .tds-card .pf-field {
+         width: 100%;
+     }
+
+     .tds-card .form-label {
+         font-size: 10px;
+         font-weight: 600;
+         color: #344054;
+         margin-bottom: 1px;
+         line-height: 1.1;
+     }
+
+     /* Same input height */
+     .tds-card .form-control {
+         height: 28px;
+         min-height: 28px;
+         padding: 2px 8px;
+     }
+
+     /* Same Apply Date design */
+     .tds-card .pf-date {
+         height: 28px;
+         min-height: 28px;
+         padding: 2px 8px;
+     }
+
+     /* Same toggle size as PF */
+     .tds-card .switch {
+         position: relative;
+         display: inline-block;
+         width: 45px;
+         height: 22px;
+     }
+
+         .tds-card .switch input {
+             opacity: 0;
+             width: 0;
+             height: 0;
+         }
+
+     .tds-card .slider {
+         position: absolute;
+         cursor: pointer;
+         top: 0;
+         left: 0;
+         right: 0;
+         bottom: 0;
+         background: #ccc;
+         transition: .4s;
+         border-radius: 34px;
+     }
+
+         .tds-card .slider:before {
+             position: absolute;
+             content: "";
+             height: 18px;
+             width: 18px;
+             left: 2px;
+             bottom: 2px;
+             background: white;
+             transition: .4s;
+             border-radius: 50%;
+         }
+
+     .tds-card input:checked + .slider {
+         background: #4376c0;
+     }
+
+         .tds-card input:checked + .slider:before {
+             transform: translateX(22px);
+         }
+
+     /* Same Save button as PF */
+     .tds-card .save-btn-modern {
+         border-radius: 10px;
+         background-image: linear-gradient(to right, #35d3e1, midnightblue);
+         box-shadow: -4px -4px 8px rgba(255,255,255,0.7), 4px 4px 8px rgba(128,128,128,0.7);
+     }
+
+     /* Same hover effect */
+     .tds-card:hover {
+         transform: translateY(-2px);
+     }
+
+     /* Same save button positioning */
+     .tds-card .save-btn-container {
+         display: flex;
+         justify-content: center;
+         margin-top: 15px;
+     }
+
+     .settings-container .row > [class*="col-"] {
+         padding-left: 3px !important;
+         padding-right: 3px !important;
+     }
+
+     .tds-card {
+         width: 100% !important;
+         max-width: none !important;
+     }
+     /* =========================================
+        PF CARD - EXACT FIELD ARRANGEMENT
+        ========================================= */
+
+     .pf-card .pf-card-body,
+     .esic-card .esic-card-body {
+         padding: 6px 8px;
+         box-sizing: border-box;
+         overflow: hidden;
+     }
+
+         .pf-card .pf-card-body > .row,
+         .esic-card .esic-card-body > .row {
+             display: flex !important;
+             flex-wrap: wrap !important;
+             margin-left: 0 !important;
+             margin-right: 0 !important;
+             width: 100% !important;
+         }
+
+             /* All PF columns */
+             .pf-card .pf-card-body > .row > [class*="col-"],
+             .esic-card .esic-card-body > .row > [class*="col-"] {
+                 box-sizing: border-box;
+                 padding-left: 3px !important;
+                 padding-right: 3px !important;
+                 margin-bottom: 4px;
+                 min-width: 0;
+             }
+
+                 /* =========================================
+        ROW 1
+        Is PF Applicable + Toggle + Date
+        ========================================= */
+
+                 .pf-card .pf-card-body > .row > [class*="col-"]:nth-child(1),
+                 .esic-card .esic-card-body > .row > [class*="col-"]:nth-child(1) {
+                     flex: 0 0 100% !important;
+                     width: 100% !important;
+                     max-width: 100% !important;
+                     order: 1 !important;
+                 }
+
+                 /* =========================================
+        ROW 2
+        Registration No. + Amount Limit
+        ========================================= */
+
+                 .pf-card .pf-card-body > .row > [class*="col-"]:nth-child(2),
+                 .esic-card .esic-card-body > .row > [class*="col-"]:nth-child(2) {
+                     flex: 0 0 50% !important;
+                     width: 50% !important;
+                     max-width: 50% !important;
+                     order: 2 !important;
+                 }
+
+                 .pf-card .pf-card-body > .row > [class*="col-"]:nth-child(5),
+                 .esic-card .esic-card-body > .row > [class*="col-"]:nth-child(5) {
+                     flex: 0 0 50% !important;
+                     width: 50% !important;
+                     max-width: 50% !important;
+                     order: 3 !important;
+                 }
+
+                 /* =========================================
+        ROW 3
+        Employee % + Employer %
+        ========================================= */
+
+                 .pf-card .pf-card-body > .row > [class*="col-"]:nth-child(3),
+                 .esic-card .esic-card-body > .row > [class*="col-"]:nth-child(3) {
+                     flex: 0 0 50% !important;
+                     width: 50% !important;
+                     max-width: 50% !important;
+                     order: 4 !important;
+                 }
+
+                 .pf-card .pf-card-body > .row > [class*="col-"]:nth-child(4),
+                 .esic-card .esic-card-body > .row > [class*="col-"]:nth-child(4) {
+                     flex: 0 0 50% !important;
+                     width: 50% !important;
+                     max-width: 50% !important;
+                     order: 5 !important;
+                 }
+
+     /* =========================================
+        PF FIELDS
+        ========================================= */
+
+     .pf-card .pf-field,
+     .esic-card .esic-field {
+         width: 100%;
+         min-width: 0;
+         box-sizing: border-box;
+     }
+
+         .pf-card .pf-field .form-label,
+         .esic-card .esic-field .form-label {
+             display: block;
+             width: 100%;
+             margin-bottom: 2px !important;
+             white-space: nowrap;
+         }
+
+         .pf-card .pf-field .form-control,
+         .esic-card .esic-field .form-control {
+             width: 100%;
+             max-width: 100%;
+             box-sizing: border-box;
+         }
+
+     /* =========================================
+        FIRST FIELD - APPLICABLE
+        ========================================= */
+
+     .pf-card .pf-card-body > .row > [class*="col-"]:nth-child(1) .pf-field,
+     .esic-card .esic-card-body > .row > [class*="col-"]:nth-child(1) .esic-field {
+         display: flex;
+         align-items: center;
+         width: 100%;
+         gap: 8px;
+     }
+
+     .pf-card .pf-card-body > .row > [class*="col-"]:nth-child(1) .form-label,
+     .esic-card .esic-card-body > .row > [class*="col-"]:nth-child(1) .form-label {
+         width: auto;
+         flex: 0 0 auto;
+         margin: 0 !important;
+     }
+
+     .pf-card .pf-card-body > .row > [class*="col-"]:nth-child(1) .switch,
+     .esic-card .esic-card-body > .row > [class*="col-"]:nth-child(1) .switch {
+         flex: 0 0 auto;
+         margin: 0;
+     }
+
+     .pf-card .pf-card-body > .row > [class*="col-"]:nth-child(1) .pf-date,
+     .esic-card .esic-card-body > .row > [class*="col-"]:nth-child(1) .esic-date {
+         width: 100px !important;
+         flex: 0 0 100px !important;
+         margin-left: auto;
+     }
+
+     /* Save button */
+     .pf-card .save-btn-container
+     .esic-card .save-btn-container {
+         width: 100%;
+         display: flex;
+         justify-content: center;
+         margin-top: 6px;
+     }
+     /* ==========================================
+        PT CARD - TOP FIELD LABELS
+        CSS ONLY - NO HTML/BACKEND CHANGE
+        ========================================== */
+
+     /* Hide the original DisplayName text */
+     /* Hide original names ONLY for first 3 fields */
+     .pt-card .row > .col-12.col-md-4:nth-child(1) .pt-field > .form-label,
+     .pt-card .row > .col-12.col-md-4:nth-child(2) .pt-field > .form-label,
+     .pt-card .row > .col-12.col-md-4:nth-child(3) .pt-field > .form-label {
+         font-size: 0 !important;
+         white-space: normal !important;
+         display: block !important;
+         height: 25px !important;
+         min-height: 25px !important;
+         margin-bottom: 3px !important;
+         line-height: 12px !important;
+     }
+
+         /* PT Registration No. */
+         .pt-card .row > .col-12.col-md-4:nth-child(1) .pt-field > .form-label::after {
+             content: "PT Registration No.";
+             font-size: 10px;
+             font-weight: 600;
+             color: #344054;
+             line-height: 12px;
+             white-space: normal;
+         }
+
+         /* Amount Limit Below */
+         .pt-card .row > .col-12.col-md-4:nth-child(2) .pt-field > .form-label::after {
+             content: "Amount Limit Below";
+             font-size: 10px;
+             font-weight: 600;
+             color: #344054;
+             line-height: 12px;
+             white-space: normal;
+         }
+
+         /* Deduct Amount Below */
+         .pt-card .row > .col-12.col-md-4:nth-child(3) .pt-field > .form-label::after {
+             content: "Deduct Amount Below";
+             font-size: 10px;
+             font-weight: 600;
+             color: #344054;
+             line-height: 12px;
+             white-space: normal;
+         }
+
+
+     /* Keep all three input boxes aligned */
+     .pt-card .row > .col-12.col-md-4 .pt-field {
+         display: flex;
+         flex-direction: column;
+         align-items: stretch;
+     }
+
+         .pt-card .row > .col-12.col-md-4 .pt-field > .form-control {
+             width: 78px !important;
+             height: 20px !important;
+             min-height: 20px !important;
+             font-size: 10px !important;
+             padding: 2px 2px !important;
+             border-radius: 8px !important;
+         }
+
+     .pt-card .hr-card-body > .row {
+         margin-left: 0 !important;
+         margin-right: 0 !important;
+     }
+     /* ================================
+    SETTINGS PAGE - FULL WIDTH
+    ================================ */
+
+     .settings-container {
+         display: flex;
+         width: 100% !important;
+         max-width: none !important;
+         margin-left: 0 !important;
+         margin-right: 0 !important;
+     }
+
+     /* Remove Bootstrap container limitation */
+     .container.body-content {
+         width: 100% !important;
+         max-width: none !important;
+         padding-left: 0 !important;
+         padding-right: 0 !important;
+         margin-left: 0 !important;
+         margin-right: 0 !important;
+     }
+
+     /* Left menu */
+     .settings-container .left-menu {
+         flex: 0 0 220px !important;
+         width: 220px !important;
+         min-width: 220px !important;
+         max-width: 220px !important;
+     }
+
+     /* Right panel */
+     .settings-container .right-panel {
+         flex: 1 1 auto !important;
+         min-width: 0 !important;
+     }
+
+     /* Align PF, ESIC, PT and TDS save buttons upward */
+
+     /*.settings-section .save-btn-pt {
+         transform: translateY(-12px);
+     }*/
+     /* Move PF, ESIC and TDS buttons downward */
+     .pf-card .save-btn-container,
+     .esic-card .save-btn-container {
+         width: 100%;
+         display: flex;
+         justify-content: center;
+         margin-top: 18px !important;
+     }
+     /* Move only TDS save button downward */
+     .tds-card .save-btn-container {
+         margin-top: 18px !important;
+     }
+
+     /* =========================================
+    SALARY HEAD - COMPACT SIZE
+    ========================================= */
+
+
+
+     /* Header */
+     #esic .hr-card-header {
+         min-height: 30px !important;
+         height: 30px !important;
+         padding: 2px 2px !important;
+     }
+
+         #esic .hr-card-header i {
+             font-size: 10px !important;
+             width: 24px !important;
+             height: 24px !important;
+             line-height: 24px !important;
+         }
+
+         #esic .hr-card-header h5 {
+             font-size: 14px !important;
+             margin: 0 0 0 4px !important;
+         }
+
+     /* Body */
+     #esic .hr-card-body {
+         padding: 9px 10px 7px !important;
+     }
+
+     /* Add/settings row */
+     #esic .settings-header {
+         margin: 0 !important;
+         padding: 0 !important;
+     }
+
+         #esic .settings-header .form-group {
+             margin-bottom: 0 !important;
+         }
+
+         #esic .settings-header label {
+             font-size: 10px !important;
+             margin-bottom: 2px !important;
+         }
+
+         #esic .settings-header label,
+         #esic .settings-header .form-label {
+             color: #25345f !important;
+             font-size: 16px !important;
+             font-weight: 600 !important;
+         }
+         /* Inputs */
+         #esic .settings-header .form-control {
+             height: 36px !important;
+             min-height: 36px !important;
+             padding: 5px 10px !important;
+             font-size: 14px !important;
+             border-radius: 7px !important;
+         }
+
+     /* Keep the checkbox compact */
+     #esic #IsApplicableToggle {
+         width: 18px !important;
+         height: 18px !important;
+     }
+
+
+
+     /* Reduce spacing between columns */
+     #esic .settings-header > [class*="col-md-"] {
+         padding-left: 6px !important;
+         padding-right: 6px !important;
+     }
+
+     #salaryHeadTable td:last-child {
+         white-space: nowrap !important;
+         text-align: center !important;
+         vertical-align: middle !important;
+     }
+
+         #salaryHeadTable td:last-child .edit-btn,
+         #salaryHeadTable td:last-child .delete-btn {
+             display: inline-flex !important;
+             vertical-align: middle !important;
+         }
+
+         #salaryHeadTable td:last-child .delete-btn {
+             margin-left: 8px !important;
+         }
+
+     /* Salary Head - Compact Form */
+     /*#esic .salary-head-form {
+         transform: scale(0.90);
+         transform-origin: top center;
+         margin-bottom: -90px !important;
+     }*/
+     /* Salary Head - Compact Table */
+     /*#esic .settings-table {
+         transform: scale(0.90);
+         transform-origin: top center;
+         width: 111.11% !important;
+         margin-bottom: -90px !important;
+     }*/
+     /* Salary Head - Keep Edit & Delete Side by Side */
+
+     #esic .settings-table td:last-child {
+         white-space: nowrap !important;
+         vertical-align: middle !important;
+     }
+
+         #esic .settings-table td:last-child .edit-btn,
+         #esic .settings-table td:last-child form {
+             display: inline-block !important;
+             vertical-align: middle !important;
+         }
+
+         #esic .settings-table td:last-child form {
+             margin: 0 !important;
+             padding: 0 !important;
+         }
+
+         #esic .settings-table td:last-child .delete-btn {
+             display: inline-flex !important;
+             vertical-align: middle !important;
+             margin-left: 6px !important;
+         }
+
+     .statutary-deduction-title {
+         color: #1E2F8A !important;
+     }
+
+     .pf-fields-hidden,
+     .esic-fields-hidden {
+         display: none !important;
+     }
+
+     .settings-header .form-control {
+         height: 34px;
+         border-radius: 8px;
+         border: 1px solid #d8d8e8;
+         box-shadow: none;
+         font-size: 13px;
+     }
+
+         .settings-header .form-control:focus {
+             border-color: #337ab7;
+             box-shadow: none;
+         }
+
+     /* Reduce space inside PT fields */
+     .pt-card .pt-field {
+         margin-bottom: 0 !important;
+         padding: 0 !important;
+     }
+     /* Reduce label height */
+     /* .pt-card .row > .col-12.col-md-4 .pt-field > .form-label {
+         height: 20px !important;
+         min-height: 20px !important;
+         margin-bottom: 1px !important;
+     }*/
+     /* Remove extra spacing between rows */
+     .pt-card .row {
+         margin-bottom: 0 !important;
+         --bs-gutter-y: 0 !important;
+     }
+         /* Reduce column bottom spacing */
+         .pt-card .row > .col-12.col-md-4 {
+             margin-bottom: 3px !important;
+         }
+
+             .pt-card .row > .col-12.col-md-4:nth-child(n+4) .pt-field > .form-label {
+                 font-size: 9px !important;
+             }
+     /* Reduce custom first-row label size */
+     .pt-card .pt-field .form-label::after {
+         font-size: 9px !important;
+     }
+     /* Reduce gap between PT label and input */
+     .pt-card .pt-field .form-label {
+         margin-bottom: 0 !important;
+     }
+
+     .pt-card .pt-field .form-control {
+         margin-top: 0 !important;
+     }
+     /* Reduce label-to-input gap for FIRST ROW */
+     .pt-card .row > .col-12.col-md-4:nth-child(1) .pt-field > .form-label,
+     .pt-card .row > .col-12.col-md-4:nth-child(2) .pt-field > .form-label,
+     .pt-card .row > .col-12.col-md-4:nth-child(3) .pt-field > .form-label {
+         height: 16px !important;
+         min-height: 16px !important;
+         margin-bottom: 0 !important;
+         line-height: 8px !important;
+     }
+
+     /* Keep first-row inputs directly below labels */
+     .pt-card .row > .col-12.col-md-4:nth-child(1) .pt-field .form-control,
+     .pt-card .row > .col-12.col-md-4:nth-child(2) .pt-field .form-control,
+     .pt-card .row > .col-12.col-md-4:nth-child(3) .pt-field .form-control {
+         margin-top: 0 !important;
+     }
+     /* ==========================================
+    PT SAVE BUTTON - FIXED AT CARD BOTTOM
+    ========================================== */
+
+     /* PT CARD BODY */
+     .pt-card .hr-card-body {
+         display: flex !important;
+         flex-direction: column !important;
+     }
+
+         /* PT settings section */
+         .pt-card .hr-card-body > .row {
+             flex: 0 0 auto !important;
+         }
+
+         /* SAVE PT wrapper */
+         .pt-card .hr-card-body > .col-12.text-center {
+             margin-top: auto !important;
+             padding-top: 0 !important;
+             padding-bottom: 0 !important;
+             position: static !important;
+         }
+
+     /* SAVE PT BUTTON */
+     .pt-card .save-btn-pt {
+         position: static !important;
+         transform: none !important;
+         margin: 12px auto 0 !important;
+         box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15) !important;
+     }
+
+         .pt-card .save-btn-pt:hover {
+             transform: translateY(-1px) !important;
+         }
+
+     /* Salary Head form layout */
+     .salary-head-form {
+         width: 100%;
+         padding: 15px;
+         box-sizing: border-box;
+     }
+
+         .salary-head-form .row {
+             margin-left: -8px;
+             margin-right: -8px;
+         }
+
+             .salary-head-form .row > div {
+                 padding-left: 8px;
+                 padding-right: 8px;
+             }
+
+         .salary-head-form .form-group {
+             width: 100%;
+             margin-bottom: 0;
+         }
+
+         .salary-head-form label {
+             display: block;
+             margin-bottom: 7px;
+         }
+
+         .salary-head-form .form-control {
+             width: 100%;
+             max-width: 100%;
+             box-sizing: border-box;
+         }
+
+         .salary-head-form .salary-add-col {
+             display: flex;
+             align-items: flex-end;
+         }
+
+         .salary-head-form .add-btn {
+             max-width: 100%;
+         }
+
+     /* Keep the table within the card */
+     #esic .table-responsive {
+         width: 100%;
+         max-width: 100%;
+         overflow-x: auto;
+     }
+
+     #esic .settings-table {
+         width: 100%;
+         min-width: 700px;
+     }
+
+     #esic {
+         position: relative;
+         width: 100% !important;
+         min-height: 0;
+         margin: 0 !important;
+         padding: 0 !important;
+         box-sizing: border-box;
+     }
+
+         #esic .hr-card {
+             width: 100%;
+             margin: 0 !important;
+             border-radius: 12px;
+             box-sizing: border-box;
+         }
+         /* SALARY HEAD - FORM LAYOUT */
+         #esic .salary-head-form {
+             width: 100%;
+             margin: 0;
+             padding: 20px;
+             box-sizing: border-box;
+             transform: none !important;
+         }
+
+             #esic .salary-head-form .row {
+                 margin-left: -8px;
+                 margin-right: -8px;
+             }
+
+                 #esic .salary-head-form .row > div {
+                     padding-left: 8px;
+                     padding-right: 8px;
+                 }
+
+             #esic .salary-head-form .form-group {
+                 width: 100%;
+                 margin-bottom: 12px;
+             }
+
+             #esic .salary-head-form label {
+                 display: block;
+                 margin-bottom: 6px;
+                 color: #25345f;
+                 font-size: 13px;
+                 font-weight: 600;
+             }
+
+             #esic .salary-head-form .form-control {
+                 width: 100%;
+                 height: 38px;
+                 min-height: 38px;
+                 padding: 6px 10px;
+                 font-size: 13px;
+                 box-sizing: border-box;
+             }
+
+         #esic .salary-add-col {
+             display: flex;
+             align-items: flex-end;
+         }
+
+             #esic .salary-add-col .add-btn {
+                 min-height: 38px;
+                 margin-bottom: 12px;
+             }
+
+         /* SALARY HEAD - TABLE */
+         #esic .table-responsive {
+             width: 100%;
+             max-width: 100%;
+             overflow-x: auto;
+         }
+
+         #esic .settings-table {
+             width: 100% !important;
+             min-width: 700px;
+             margin: 0 !important;
+             transform: none !important;
+             table-layout: auto;
+         }
+
+             #esic .settings-table thead th {
+                 padding: 12px;
+                 font-size: 13px !important;
+                 white-space: nowrap;
+             }
+
+             #esic .settings-table tbody td {
+                 height: auto !important;
+                 padding: 12px;
+                 font-size: 13px !important;
+                 vertical-align: middle;
+             }
+
+             /* KEEP ACTION BUTTONS ALIGNED */
+             #esic .settings-table td:last-child {
+                 white-space: nowrap;
+                 text-align: center;
+             }
+
+                 #esic .settings-table td:last-child form {
+                     display: inline-block;
+                     margin: 0;
+                     vertical-align: middle;
+                 }
+
+             #esic .settings-table .edit-btn,
+             #esic .settings-table .delete-btn {
+                 margin: 0 3px;
+                 vertical-align: middle;
+             }
+         /* Salary Head - Update and Cancel buttons */
+         #esic .salary-add-col {
+             display: flex;
+             align-items: flex-end;
+             gap: 8px;
+             flex-wrap: wrap;
+         }
+
+             #esic .salary-add-col #saveButton,
+             #esic .salary-add-col #cancelButton {
+                 min-height: 38px;
+                 margin: 0 0 12px 0 !important;
+                 padding: 8px 14px;
+                 white-space: nowrap;
+                 flex: 1 1 auto;
+             }
+
+             #esic .salary-add-col #cancelButton {
+                 position: static !important;
+                 transform: none !important;
+             }
+
+     @@media (max-width: 1200px) {
+         #esic .salary-add-col {
+             align-items: stretch;
+         }
+
+             #esic .salary-add-col #saveButton,
+             #esic .salary-add-col #cancelButton {
+                 flex: 1 1 100%;
+             }
+     }
+     /* Salary Head - Slightly Larger Update and Cancel Buttons */
+     /* Salary Head - Update and Cancel vertically stacked */
+     #esic .salary-add-col {
+         display: flex;
+         flex-direction: column;
+         align-items: flex-start;
+         justify-content: flex-end;
+         gap: 6px;
+     }
+
+         #esic .salary-add-col #saveButton,
+         #esic .salary-add-col #cancelButton {
+             width: 100px !important;
+             min-width: 100px !important;
+             height: 34px !important;
+             min-height: 34px !important;
+             padding: 6px 10px !important;
+             margin: 0 !important;
+             font-size: 12px !important;
+             line-height: 1.2 !important;
+             white-space: nowrap;
+             box-sizing: border-box;
+             border-radius: 5px;
+         }
+
+         #esic .salary-add-col #cancelButton {
+             position: static !important;
+             transform: none !important;
+         }
+</style>
+
+
+
+<div class="settings-container">
+
+    <!-- LEFT MENU -->
+
+    <div class="left-menu">
+
+        <ul class="menu-list">
+
+            <li class="active" onclick="showSection('pf',this)">
+                <i class="fa fa-building"></i>
+                Statutary deduction
+            </li>
+
+            <li onclick="showSection('esic',this)">
+                <i class="fa fa-briefcase"></i>
+                Salary Head
+            </li>
+
+
+
+        </ul>
+
+    </div>
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+
+
+        @*---VISHAKHA MAAM---*@
+
+        <div id="pf" class="settings-section active-section">
+
+            <h4 class="statutary-deduction-title">
+                <i class="fa fa-building"></i>
+                Statutary deduction
+            </h4>
+            <div class="settings-form">
+                <!-- FIRST ROW -->
+
+                <div class="row g-0">
+
+                    <!-- PF CARD -->
+                    <div class="col-lg-4 col-md-6">
+
+                        <div class="hr-card pf-card">
+
+                            <!-- PF CARD HEADER -->
+                            <div class="hr-card-header">
+                                <i class="material-icons">account_balance</i>
+                                <h5>@pfCard.Heading</h5>
+                            </div>
+
+                            @using (Html.BeginForm(
+                                "UpdateCardSettings",
+                                "ErpSettings",
+                                FormMethod.Post,
+                                new { @class = "card-settings-form" }))
+                            {
+                                @Html.AntiForgeryToken()
+
+                                <div class="hr-card-body pf-card-body">
+
+                                    <div class="row gx-1 gy-0">
+
+                                        @for (int i = 0; i < pfCard.Settings.Count; i++)
+                                        {
+                                            var setting = pfCard.Settings[i];
+
+                                            <div class="col-12 col-md-6">
+
+                                                <div class="pf-field pf-dependent-field">
+
+                                                    <!-- SETTING NAME -->
+                                                    <label class="form-label d-block">
+                                                        @setting.DisplayName
+                                                    </label>
+
+                                                    <!-- SETTINGS ID -->
+                                                    <input type="hidden"
+                                                           name="settings[@i].SettingsId"
+                                                           value="@setting.SettingsId" />
+
+                                                    @if (setting.IsApplicable != null)
+                                                    {
+                                                        <!-- IS APPLICABLE -->
+                                                        <input type="hidden"
+                                                               name="settings[@i].IsApplicable"
+                                                               id="pfApplicable_@setting.SettingsId"
+                                                               value="@setting.IsApplicable" />
+
+                                                        <!-- PF TOGGLE -->
+                                                        <label class="switch">
+
+                                                            <input type="checkbox"
+                                                                   id="pfToggle_@setting.SettingsId"
+                                                                   class="toggle-checkbox card-toggle"
+                                                                   data-target="pfApplicable_@setting.SettingsId"
+                                                                   @(setting.IsApplicable == "Yes" ? "checked" : "") />
+
+                                                            <span class="slider"></span>
+
+                                                        </label>
+
+                                                        <!-- APPLY DATE -->
+                                                        <input type="date"
+                                                               name="settings[@i].ApplyDate"
+                                                               class="form-control pf-date"
+                                                               value="@(setting.ApplyDate.HasValue
+                                                ? setting.ApplyDate.Value.ToString("yyyy-MM-dd")
+                                                : "")" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <!-- IS APPLICABLE EMPTY -->
+                                                        <input type="hidden"
+                                                               name="settings[@i].IsApplicable"
+                                                               value="" />
+
+                                                        <!-- VALUE -->
+                                                        <input type="number"
+                                                               step="0.01"
+                                                               class="form-control card-value pf-value text-end"
+                                                               name="settings[@i].Value"
+                                                               value="@(setting.Value.HasValue
+                                                ? setting.Value.Value.ToString("0.##")
+                                                : "")" />
+                                                    }
+
+                                                </div>
+
+                                            </div>
+                                        }
+
+                                    </div>
+
+                                    <!-- SAVE PF -->
+                                    <div class="col-12 save-btn-container">
+
+                                        <button type="submit"
+                                                class="btn save-btn-modern">
+
+                                            <i class="material-icons">save</i>
+                                            Save PF
+
+                                        </button>
+
+                                    </div>
+
+                                </div>
+                            }
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ESIC CARD -->
+                    <div class="col-lg-4 col-md-6">
+
+                        <div class="hr-card esic-card">
+
+                            <!-- ESIC CARD HEADER -->
+                            <div class="hr-card-header">
+                                <i class="material-icons">health_and_safety</i>
+                                <h5>@esicCard.Heading</h5>
+                            </div>
+
+                            @using (Html.BeginForm(
+                                "UpdateCardSettings",
+                                "ErpSettings",
+                                FormMethod.Post,
+                                new { @class = "card-settings-form" }))
+                            {
+                                @Html.AntiForgeryToken()
+
+                                <div class="hr-card-body esic-card-body">
+
+                                    <div class="row gx-1 gy-0">
+
+                                        @for (int i = 0; i < esicCard.Settings.Count; i++)
+                                        {
+                                            var setting = esicCard.Settings[i];
+
+                                            <div class="col-12 col-md-6">
+
+                                                <div class="esic-field esic-dependent-field">
+
+                                                    <!-- SETTING NAME -->
+                                                    <label class="form-label d-block">
+                                                        @setting.DisplayName
+                                                    </label>
+
+                                                    <!-- SETTINGS ID -->
+                                                    <input type="hidden"
+                                                           name="settings[@i].SettingsId"
+                                                           value="@setting.SettingsId" />
+
+                                                    @if (setting.IsApplicable != null)
+                                                    {
+                                                        <!-- IS APPLICABLE -->
+                                                        <input type="hidden"
+                                                               name="settings[@i].IsApplicable"
+                                                               id="esicApplicable_@setting.SettingsId"
+                                                               value="@setting.IsApplicable" />
+
+                                                        <!-- ESIC TOGGLE -->
+                                                        <label class="switch">
+
+                                                            <input type="checkbox"
+                                                                   id="esicToggle_@setting.SettingsId"
+                                                                   class="toggle-checkbox card-toggle"
+                                                                   data-target="esicApplicable_@setting.SettingsId"
+                                                                   @(setting.IsApplicable == "Yes" ? "checked" : "") />
+
+                                                            <span class="slider"></span>
+
+                                                        </label>
+
+                                                        <!-- APPLY DATE -->
+                                                        <input type="date"
+                                                               name="settings[@i].ApplyDate"
+                                                               class="form-control pf-date"
+                                                               value="@(setting.ApplyDate.HasValue
+                                                ? setting.ApplyDate.Value.ToString("yyyy-MM-dd")
+                                                : "")" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <!-- IS APPLICABLE EMPTY -->
+                                                        <input type="hidden"
+                                                               name="settings[@i].IsApplicable"
+                                                               value="" />
+
+                                                        <!-- VALUE -->
+                                                        <input type="number"
+                                                               step="0.01"
+                                                               class="form-control card-value pf-value text-end"
+                                                               name="settings[@i].Value"
+                                                               value="@(setting.Value.HasValue
+                                                ? setting.Value.Value.ToString("0.##")
+                                                : "")" />
+                                                    }
+
+                                                </div>
+
+                                            </div>
+                                        }
+
+                                    </div>
+
+                                    <!-- SAVE ESIC -->
+                                    <div class="col-12 save-btn-container">
+
+                                        <button type="submit"
+                                                class="btn save-btn-modern">
+
+                                            <i class="material-icons">save</i>
+                                            Save ESIC
+
+                                        </button>
+
+                                    </div>
+
+                                </div>
+                            }
+
+                        </div>
+
+                    </div>
+
+                    <!-- PT CARD -->
+                    <div class="col-lg-4 col-md-6">
+
+                        <div class="hr-card pt-card">
+
+                            <!-- HEADER -->
+                            <div class="hr-card-header">
+                                <i class="material-icons">receipt_long</i>
+                                <h5>@ptCard.Heading</h5>
+                            </div>
+
+                            @using (Html.BeginForm(
+                                "UpdateCardSettings",
+                                "ErpSettings",
+                                FormMethod.Post,
+                                new { @class = "card-settings-form" }))
+                            {
+                                @Html.AntiForgeryToken()
+
+                                <div class="hr-card-body">
+
+                                    <!-- PT SETTINGS -->
+                                    <div class="row gx-0 gy-0">
+
+                                        @for (int i = 0; i < ptCard.Settings.Count; i++)
+                                        {
+                                            var setting = ptCard.Settings[i];
+
+                                            <div class="col-12 col-md-4">
+
+                                                <div class="pt-field">
+
+                                                    <span class="setting-label form-label">
+                                                        @setting.DisplayName
+                                                    </span>
+
+                                                    <!-- SETTINGS ID -->
+                                                    <input type="hidden"
+                                                           name="settings[@i].SettingsId"
+                                                           value="@setting.SettingsId" />
+
+                                                    @if (setting.IsApplicable != null)
+                                                    {
+                                                        <!-- IS APPLICABLE -->
+                                                        <input type="hidden"
+                                                               name="settings[@i].IsApplicable"
+                                                               id="ptApplicable_@setting.SettingsId"
+                                                               value="@setting.IsApplicable" />
+
+                                                        <!-- TOGGLE -->
+                                                        <input type="checkbox"
+                                                               id="ptToggle_@setting.SettingsId"
+                                                               class="toggle-checkbox card-toggle"
+                                                               data-target="ptApplicable_@setting.SettingsId"
+                                                               @(setting.IsApplicable == "Yes" ? "checked" : "") />
+
+                                                        <label for="ptToggle_@setting.SettingsId"
+                                                               class="toggle-label">
+
+                                                            <span class="toggle-switch"></span>
+
+                                                        </label>
+                                                    }
+                                                    else
+                                                    {
+                                                        <!-- IS APPLICABLE EMPTY -->
+                                                        <input type="hidden"
+                                                               name="settings[@i].IsApplicable"
+                                                               value="" />
+
+                                                        <!-- VALUE -->
+                                                        <input type="number"
+                                                               step="0.01"
+                                                               class="form-control card-value text-end"
+                                                               name="settings[@i].Value"
+                                                               value="@(setting.Value.HasValue
+                                           ? setting.Value.Value.ToString("0.##")
+                                           : "")" />
+                                                    }
+
+                                                </div>
+
+                                            </div>
+                                        }
+
+                                    </div>
+
+                                    <!-- SAVE PT -->
+                                    <div class="col-12 text-center mt-1">
+
+                                        <button type="submit"
+                                                name="submitType"
+                                                value="pt"
+                                                class="btn save-btn-pt">
+
+                                            <i class="material-icons">save</i>
+                                            Save PT
+
+                                        </button>
+
+                                    </div>
+
+                                </div>
+                            }
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- TDS CARD -->
+                <div class="row g-0 mt-2">
+
+                    <div class="col-lg-4 col-md-6">
+
+                        <div class="hr-card pf-card tds-card">
+
+                            <!-- TDS CARD HEADER -->
+                            <div class="hr-card-header">
+                                <i class="material-icons">account_balance_wallet</i>
+                                <h5>@tdsCard.Heading</h5>
+                            </div>
+
+                            @using (Html.BeginForm(
+                                "UpdateCardSettings",
+                                "ErpSettings",
+                                FormMethod.Post,
+                                new { @class = "card-settings-form" }))
+                            {
+                                @Html.AntiForgeryToken()
+
+                                <div class="hr-card-body pf-card-body">
+
+                                    <div class="row gx-1 gy-0">
+
+                                        @for (int i = 0; i < tdsCard.Settings.Count; i++)
+                                        {
+                                            var setting = tdsCard.Settings[i];
+
+                                            <div class="col-12 col-md-6">
+
+                                                <div class="pf-field">
+
+                                                    <!-- SETTING NAME -->
+                                                    <label class="form-label d-block">
+                                                        @setting.DisplayName
+                                                    </label>
+
+                                                    <!-- SETTINGS ID -->
+                                                    <input type="hidden"
+                                                           name="settings[@i].SettingsId"
+                                                           value="@setting.SettingsId" />
+
+                                                    @if (setting.IsApplicable != null)
+                                                    {
+                                                        <!-- IS APPLICABLE -->
+                                                        <input type="hidden"
+                                                               name="settings[@i].IsApplicable"
+                                                               id="tdsApplicable_@setting.SettingsId"
+                                                               value="@setting.IsApplicable" />
+
+                                                        <!-- TDS TOGGLE -->
+                                                        <label class="switch">
+
+                                                            <input type="checkbox"
+                                                                   id="tdsToggle_@setting.SettingsId"
+                                                                   class="toggle-checkbox card-toggle"
+                                                                   data-target="tdsApplicable_@setting.SettingsId"
+                                                                   @(setting.IsApplicable == "Yes" ? "checked" : "") />
+
+                                                            <span class="slider"></span>
+
+                                                        </label>
+
+                                                        <!-- APPLY DATE -->
+                                                        <input type="date"
+                                                               name="settings[@i].ApplyDate"
+                                                               class="form-control pf-date"
+                                                               value="@(setting.ApplyDate.HasValue
+                                                    ? setting.ApplyDate.Value.ToString("yyyy-MM-dd")
+                                                    : "")" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <!-- IS APPLICABLE EMPTY -->
+                                                        <input type="hidden"
+                                                               name="settings[@i].IsApplicable"
+                                                               value="" />
+
+                                                        <!-- VALUE -->
+                                                        <input type="number"
+                                                               step="0.01"
+                                                               class="form-control card-value pf-value text-end"
+                                                               name="settings[@i].Value"
+                                                               value="@(setting.Value.HasValue
+                                                    ? setting.Value.Value.ToString("0.##")
+                                                    : "")" />
+                                                    }
+
+                                                </div>
+
+                                            </div>
+                                        }
+
+                                    </div>
+
+                                    <!-- SAVE TDS -->
+                                    <div class="col-12 save-btn-container">
+
+                                        <button type="submit"
+                                                class="btn save-btn-modern">
+
+                                            <i class="material-icons">save</i>
+                                            Save TDS
+
+                                        </button>
+
+                                    </div>
+
+                                </div>
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Salary Head -->
+    <div id="esic" class="settings-section">
+
+
+        <div class="settings-form">
+
+            <!-- ADD PAGE 1 CARD START HERE -->
+            <div class="hr-card">
+                <div class="hr-card-header d-flex align-items-center">
+                    <i class="material-icons">payments</i>
+                    <h5 class="mb-0">Salary Head</h5>
+                </div>
+                <div class="hr-card-body">
+                    <div class="settings-header salary-head-form">
+
+                        @using (Html.BeginForm("Save", "ErpSettings", FormMethod.Post, new { id = "settingsForm" }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            @Html.HiddenFor(m => m.SettingsId)
+
+
+                            <div class="row align-items-end">
+                                <!-- MODULE -->
+                                <div class="col-12 col-sm-6 col-lg-2 mb-3">
+                                    <div class="form-group">
+
+                                        <label>Module</label>
+                                        <div class="form-control bg-light">HR</div>
+                                        <input type="hidden" id="Module" name="Module" value="HR" />
+                                    </div>
+                                </div>
+
+                                @*<label>Module</label>*@
+                                @*<div class="form-group row">
+                                        @Html.DropDownListFor(
+                                            m => m.Module,
+                                            (IEnumerable<SelectListItem>)ViewBag.ModuleList,
+                                            "Select",
+                                            new { @class = "form-control", id = "Module" }
+                                        )
+
+                                        @Html.ValidationMessageFor(
+                                            m => m.Module,
+                                            "",
+                                            new { @class = "validation-error" }
+                                        )
+                                    </div>*@
+
+
+                                <!-- DISPLAY NAME -->
+                                <div class="col-12 col-sm-6 col-lg-2 mb-3">
+                                    <div class="form-group">
+                                        <label>Display Name</label>
+
+                                        @Html.TextBoxFor(
+                                            m => m.DisplayName,
+                                            new
+                                            {
+                                                @class = "form-control",
+                                                placeholder = "Display Name",
+                                                id = "DisplayName"
+                                            }
+                                        )
+
+                                        @Html.ValidationMessageFor(
+                                            m => m.DisplayName,
+                                            "",
+                                            new { @class = "validation-error" }
+                                        )
+
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>Salary Head Type</label>
+                                        <div class="form-group row">
+                                            @Html.DropDownListFor(
+                                                m => m.Formula,
+                                                new List<SelectListItem>
+                                                {
+                                                    new SelectListItem { Text = "Fixed", Value = "Fixed" },
+                                                    new SelectListItem { Text = "Variable", Value = "Variable" }
+                                                },
+                                                "Select Formula",
+                                                new { @class = "form-control", id = "Formula" }
+                                            )
+
+                                            @Html.ValidationMessageFor(
+                                                m => m.Formula,
+                                                "",
+                                                new { @class = "validation-error" }
+                                            )
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- IS APPLICABLE -->
+                                <div class="col-12 col-sm-6 col-lg-2 mb-3">
+                                    <div class="form-group">
+                                        <label>Is Applicable</label>
+
+                                        @Html.HiddenFor(m => m.IsApplicable, new { id = "IsApplicable" })
+                                        <div>
+                                            <input type="checkbox"
+                                                   id="IsApplicableToggle"
+                                                   class="toggle-checkbox" />
+
+                                            <label for="IsApplicableToggle" class="toggle-label">
+                                                <span class="toggle-switch"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- VALUE -->
+                                <div class="col-12 col-sm-6 col-lg-2 mb-3">
+                                    <div class="form-group">
+                                        <label>Value</label>
+
+                                        @Html.TextBoxFor(
+                                            m => m.Value,
+                                            new
+                                            {
+                                                @class = "form-control",
+                                                placeholder = "Value",
+                                                id = "Value"
+                                            }
+                                        )
+
+                                    </div>
+                                </div>
+                                <!-- APPLY DATE -->
+                                <div class="col-12 col-sm-6 col-lg-2 mb-3">
+                                    <div class="form-group">
+                                        <label>Apply Date</label>
+
+                                        @Html.TextBoxFor(
+                                            m => m.ApplyDate,
+                                            "{0:yyyy-MM-dd}",
+                                            new
+                                            {
+                                                @class = "form-control",
+                                                type = "date",
+                                                id = "ApplyDate"
+                                            }
+                                        )
+
+                                    </div>
+                                </div>
+
+                                <!-- ADD BUTTON -->
+                                <div class="col-12 col-sm-6 col-lg-2 mb-3 salary-add-col">
+
+                                    <button type="submit"
+                                            class="btn add-btn"
+                                            id="saveButton">
+
+                                        + ADD
+                                    </button>
+                                </div>
+
+                            </div>}
+                    </div>
+
+                    <!-- BUTTON -->
+                    <!--<div class="col-md-4">
+
+                        <button type="submit"
+                                class="btn add-btn"
+                                id="saveButton">
+
+                            @if (isEdit)
+                            {
+                                <span>✓ UPDATE</span> }
+                            else
+                            {
+                                <span>+ ADD</span>}
+
+                        </button>
+
+
+                        @if (isEdit)
+                        {
+                            <button type="button"
+                                    class="btn btn-default cancel-btn"
+                                    onclick="clearForm()">
+
+                                Cancel
+
+                            </button>}
+
+                    </div>-->
+                    <!-- LIST -->
+
+                    <div class="table-responsive">
+
+
+                        <table class="table table-hover align-middle mb-0 settings-table">
+                            <thead class="salary-table-head">
+
+                                <tr>
+                                    <th style="width: 15%;">Module</th>
+                                    <th style="width: 30%;">Display Name</th>
+                                    <th style="width: 30%;">Salary Head Type</th>
+                                    <th style="width: 10%;">Value</th>
+                                    <th style="width: 10%;">IsApplicable</th>
+                                    <th style="width: 15%;">Apply Date</th>
+                                    <th style="width: 10%;">Action</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                @if (settingsList != null && settingsList.Count > 0)
+                                {
+                                    foreach (var item in settingsList)
+                                    {
+                                        <tr>
+
+                                            <td>
+                                                @item.Module
+                                            </td>
+
+                                            <td>
+                                                @item.DisplayName
+                                            </td>
+                                            <td>
+                                                @item.Formula
+                                            </td>
+                                            <td>
+                                                @item.Value
+                                            </td>
+                                            <td>
+                                                @item.IsApplicable
+                                            </td>
+                                            <td>
+                                                @(item.ApplyDate.HasValue
+        ? item.ApplyDate.Value.ToString("dd/MM/yyyy")
+        : "")
+                                            </td>
+                                            <td>
+                                                <button type="button"
+                                                        class="edit-btn"
+                                                        onclick="editSetting(this)"
+                                                        data-id="@item.SettingsId"
+                                                        data-module="@item.Module"
+                                                        data-displayname="@item.DisplayName"
+                                                        data-formula="@item.Formula"
+                                                        data-value="@item.Value"
+                                                        data-isapplicable="@item.IsApplicable"
+                                                        data-applydate="@(item.ApplyDate.HasValue
+    ? item.ApplyDate.Value.ToString("yyyy-MM-dd") : "")">
+
+                                                    <span class="glyphicon glyphicon-pencil"></span>
+                                                    Edit
+
+                                                </button>
+                                                @*<button type="button"
+                                                            class="edit-btn"
+                                                            onclick="editSetting(
+                                                                '@item.SettingsId',
+                                                                '@HttpUtility.JavaScriptStringEncode(item.Module ?? "")',
+                                                                '@HttpUtility.JavaScriptStringEncode(item.DisplayName ?? "")',
+                                                                '@HttpUtility.JavaScriptStringEncode(item.Value ?? "")'
+                                                            )">
+
+                                                        <span class="glyphicon glyphicon-pencil"></span>
+                                                        Edit
+
+                                                    </button>*@
+
+
+                                                @using (Html.BeginForm(
+                                                    "Delete",
+                                                    "ErpSettings",
+                                                    FormMethod.Post,
+                                                    new
+                                                    {
+                                                        style = "display:inline;"
+                                                    }))
+                                                {
+                                                    @Html.AntiForgeryToken()
+
+                                                    <input type="hidden" name="id" value="@item.SettingsId" />
+
+
+
+                                                    <button type="submit"
+                                                            class="delete-btn"
+                                                            onclick="return confirm('Are you sure you want to delete this setting?');">
+
+                                                        <span class="glyphicon glyphicon-trash"></span>
+
+                                                    </button>}
+
+                                            </td>
+
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+
+                                        <td colspan="6"
+                                            style="text-align:center; padding:20px; color:#999;">
+
+                                            No settings found.
+
+                                        </td>
+
+                                    </tr>
+                                }
+
+                            </tbody>
+
+                        </table>
+                    </div> <!-- table-responsive -->
+
+                </div> <!-- hr-card-body -->
+
+            </div> <!-- hr-card -->
+
+        </div> <!-- settings-form -->
+
+    </div> <!-- Salary Head / esic -->
+    <!--</div>-->  <!--right-panel  -->
+    <!--</div>-->
+    <!--settings-container -->
+
+    <script>
+        $(document).on("change", ".card-toggle", function () {
+
+            var targetId = $(this).data("target");
+
+            var value = $(this).is(":checked")
+                ? "Yes"
+                : "No";
+
+            $("#" + targetId).val(value);
+        });
+        function editSetting(button) {
+
+            var id = button.getAttribute("data-id");
+            var module = button.getAttribute("data-module");
+            var displayName = button.getAttribute("data-displayname");
+            var formula = button.getAttribute("data-formula");
+            var value = button.getAttribute("data-value");
+            var isApplicable = button.getAttribute("data-isapplicable");
+            var applyDate = button.getAttribute("data-applydate");
+            // Put values into form
+            document.getElementById("SettingsId").value = id;
+            document.getElementById("Module").value = module;
+            document.getElementById("DisplayName").value = displayName;
+            document.getElementById("Formula").value = formula;
+            document.getElementById("Value").value = value;
+            // APPLY DATE
+            document.getElementById("ApplyDate").value = applyDate;
+            // Set Yes/No
+            document.getElementById("IsApplicable").value = isApplicable;
+            // Set toggle
+            document.getElementById("IsApplicableToggle").checked =
+                isApplicable === "Yes";
+            // Change ADD button to UPDATE
+            document.getElementById("saveButton").innerHTML = "✓ UPDATE";
+
+            // Add Cancel button
+            if (!document.getElementById("cancelButton")) {
+
+                var cancelButton = document.createElement("button");
+
+                cancelButton.type = "button";
+                cancelButton.id = "cancelButton";
+                cancelButton.className = "btn cancel-btn";
+                cancelButton.innerHTML = "Cancel";
+
+                cancelButton.onclick = function () {
+                    clearForm();
+                };
+
+                document.getElementById("saveButton")
+                    .parentNode
+                    .appendChild(cancelButton);
+            }
+
+            // Scroll to top
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        }
+
+
+        function clearForm() {
+
+            document.getElementById("SettingsId").value = "0";
+
+            document.getElementById("Module").value = "";
+
+            document.getElementById("DisplayName").value = "";
+            document.getElementById("Formula").value = "";
+            document.getElementById("Value").value = "";
+            document.getElementById("IsApplicable").value = "No";
+            document.getElementById("IsApplicableToggle").checked = false;
+            document.getElementById("saveButton").innerHTML = "+ ADD";
+
+            var cancelButton = document.getElementById("cancelButton");
+
+            if (cancelButton) {
+                cancelButton.remove();
+            }
+
+            // Clear validation messages
+            var errors = document.getElementsByClassName("validation-error");
+
+            for (var i = 0; i < errors.length; i++) {
+                errors[i].innerHTML = "";
+            }
+        }
+        $("#IsApplicableToggle").on("change", function () {
+
+            if ($(this).is(":checked")) {
+                $("#IsApplicable").val("Yes");
+            }
+            else {
+                $("#IsApplicable").val("No");
+            }
+
+        });
+    </script>
+
+
+    <script>
+        function showSection(sectionId, element) {
+
+            // Hide all sections
+            document.querySelectorAll(".settings-section")
+                .forEach(function (section) {
+                    section.style.display = "none";
+                });
+
+            // Show selected section
+            document.getElementById(sectionId)
+                .style.display = "block";
+
+            // Remove active class
+            document.querySelectorAll(".menu-list li")
+                .forEach(function (item) {
+                    item.classList.remove("active");
+                });
+
+            // Add active class
+            element.classList.add("active");
+        }
+
+        // default load
+        document.addEventListener("DOMContentLoaded", function () {
+
+            document.querySelectorAll(".settings-section")
+                .forEach(function (section) {
+                    section.style.display = "none";
+                });
+
+            document.getElementById("pf").style.display = "block";
+
+        });
+
+        $(document).on("change", ".card-toggle", function () {
+            var targetId = $(this).data("target");
+
+            if (targetId) {
+                $("#" + targetId).val(
+                    $(this).is(":checked") ? "Yes" : "No"
+                );
+            }
+        });
+
+        //$(document).ready(function () {
+
+        //    function toggleCardFields(cardSelector) {
+
+        //        var $card = $(cardSelector);
+        //        var $toggle = $card.find(".card-toggle").first();
+
+        //        if (!$toggle.length) {
+        //            return;
+        //        }
+
+        //        var isOn = $toggle.is(":checked");
+
+        //        $card.find(".pf-dependent-field").each(function (index) {
+
+        //            // Keep Is Applicable visible
+        //            if (index === 0) {
+        //                $(this).show();
+        //            }
+        //            else {
+        //                $(this).toggle(isOn);
+        //            }
+
+        //        });
+
+        //        // Hide Save button when OFF
+        //        $card.find(".save-btn-container").toggle(isOn);
+        //    }
+
+
+        //    // PF
+        //    $(".pf-card .card-toggle").on("change", function () {
+        //        toggleCardFields(".pf-card");
+        //    });
+
+
+        //    // ESIC
+        //    $(".esic-card .card-toggle").on("change", function () {
+        //        toggleCardFields(".esic-card");
+        //    });
+
+
+        //    // Initial state
+        //    toggleCardFields(".pf-card");
+        //    toggleCardFields(".esic-card");
+
+        //});
+        //$(document).ready(function () {
+
+        //    function toggleESICFields() {
+
+        //        var $card = $(".esic-card");
+        //        var $toggle = $card.find(".card-toggle").first();
+
+        //        if (!$toggle.length) {
+        //            return;
+        //        }
+
+        //        var isOn = $toggle.is(":checked");
+
+        //        $card.find(".esic-dependent-field").each(function (index) {
+
+        //            // Keep Is ESIC Applicable visible
+        //            if (index === 0) {
+        //                $(this).show();
+        //            } else {
+        //                $(this).toggle(isOn);
+        //            }
+
+        //        });
+
+        //        $card.find(".save-btn-container").toggle(isOn);
+        //    }
+
+        //    // ESIC toggle
+        //    $(".esic-card .card-toggle").on("change", function () {
+        //        toggleESICFields();
+        //    });
+
+        //    // Initial state
+        //    toggleESICFields();
+
+        //});
+    </script>

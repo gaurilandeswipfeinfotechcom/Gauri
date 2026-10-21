@@ -1,0 +1,2226 @@
+@*@model ERPEntities.PurchaseProcessing
+
+    @{
+    //ViewBag.Title = "Create";
+    //Layout = "~/Views/Shared/_SwipfeMaster.cshtml";
+    }*@
+
+
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+<link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css"
+      rel="Stylesheet" type="text/css" />
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>
+    ///First Letter Uppercase
+    //function myFunction(id) {
+    //    var txt = document.getElementById(id);
+    //    txt.value = txt.value.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1); });
+    //}
+
+    //function GoDirectPurchaseIndent() {
+    //    window.location.href = '/PurchaseIndent/DirectIndent';
+    //}
+    //function AddAccProduct(nm) {
+
+    //    var Accnm, Am;
+
+    //    Accid = $('#AccGroupId').val().trim();
+    //    Desc = $('#Narration').val().trim();
+    //    Accnm = $('#AccGroupId option:selected').text().trim();
+    //    Am = parseInt($('#Amount').val().trim());
+
+    //    if (nm == "Add") {
+
+
+    //        //Check validation of order item
+    //        var isAllValid = true;
+
+    //        if ($('#AccGroupId').val().trim() == '') {
+    //            $('#AccGroupId').siblings('span.error').css('visibility', 'visible');
+    //            $('#AccGroupId').focus();
+    //            isAllValid = false;
+    //            $("#reqAgroupId").html('<span style="color:red">Item Name Required</span>');
+    //            $("#reqAgroupId").show();
+
+
+    //        }
+    //        else {
+    //            $('#AccGroupId').siblings('span.error').css('visibility', 'hidden');
+    //            $("#reqAgroupId").html("");
+    //            $("#reqAgroupId").hide();
+    //        }
+    //        if ($('#Amount').val().trim() == '') {
+    //            $('#Amount').siblings('span.error').css('visibility', 'visible');
+    //            $('#Amount').focus();
+    //            isAllValid = false;
+    //            $("#reqAm").html('<span style="color:red">Amount Required</span>');
+    //            $("#reqAm").show();
+
+    //        }
+    //        else {
+    //            $('#Amount').siblings('span.error').css('visibility', 'hidden');
+    //            $("#reqAm").html("");
+    //            $("#reqAm").hide();
+
+    //        }
+
+    //        if (isAllValid) {
+    //            var k;
+    //            for (k = 0; k < orderItems1.length; k++) {
+
+    //                if (orderItems1[k].AccountGroupId.toString() == $('#AccGroupId').val().trim()) {
+    //                    alert("Group Already Exist In List");
+    //                    $('#Accid').val('').focus();
+    //                    //$('#ItemCode').val('');
+    //                    $('#Amount').val('');
+    //                    isAllValid = false;
+    //                }
+    //            }
+    //        }
+    //        //Add item to list if valid
+    //        if (isAllValid) {
+
+    //            orderItems1.push({
+    //                PurIndentNo: $('#PurIndentNo').val().trim(),
+    //                GroupName: Accnm,
+
+    //                Amount: Am,
+    //                AccountGroupId: parseInt(Accid),
+    //                Narration: Desc,
+
+    //            });
+
+    //            GeneratedItemsTable1();
+
+
+    //            //Clear fields
+    //            $('#AccGroupId').val('').focus();
+    //            $('#Amount').val('');
+    //            $('#Narration').val('');
+    //        }
+
+    //    }
+    //    else {
+
+
+    //        if (nm == "Update") {
+
+    //            var orderItemsnew1 = [];
+    //            orderItemsnew1 = orderItems1;
+
+
+    //            orderItemsnew1[index]["AccountGroupId"] = $('#AccGroupId').val().trim();
+    //            orderItemsnew1[index]["Amount"] = $('#Amount').val().trim();
+    //            orderItemsnew1[index]["Narration"] = Desc;
+    //            orderItems1 = orderItemsnew1;
+    //            GeneratedItemsTable1();
+
+
+    //            $("#add1").attr('value', 'Add');
+    //            $('#AccGroupId').val('');
+    //            $('#Amount').val('');
+    //            $('#Narration').val(1);
+
+
+    //        }
+
+
+    //    }
+
+
+    //}
+
+    function GeneratedItemsTable1() {
+
+        if (orderItems1.length > 0) {
+
+            var k = 1;
+            var $table = $('<table/>');
+            $table.append('<thead><tr><th>Sr.No.</th> <th>Account Group Name</th><th>Amount</th><th>Narration</th><th>Actions</th></tr></thead>');
+            var $tbody = $('<tbody/>');
+            var Accname;
+            $.each(orderItems1, function (i, val) {
+
+
+                $.ajax({
+                    url: '@Url.Action("GetIAccountGroupName")',
+                    data: { "AccountGroupId": val.AccountGroupId },
+                    type: "POST",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+
+                        if (data.length > 0) {
+
+                            Gname = data[0].GroupName;
+                        }
+                    }
+                });
+
+                var $row = $('<tr/>');
+                $row.append($('<td style="text-align:center"/>').html(k));
+                $row.append($('<td style="text-align:left"/>').html(Gname));
+                $row.append($('<td style="text-align:right"/>').html(val.Amount));
+                $row.append($('<td style="text-align:left"/>').html(val.Narration));
+
+                var $remove = $('<a href="#" title="Remove"><i class="material-icons text-danger">close</i></a>');
+                $remove.click(function (e) {
+                    e.preventDefault();
+                    orderItems1.splice(i, 1);
+                    GeneratedItemsTable1();
+
+                });
+                var $Edit = $('<a href="#" title="Edit"><i class="material-icons">edit_note</i></a>');
+                $Edit.click(function (e) {
+
+                    $.ajax({
+                        url: '@Url.Action("GetCodeByAccGroupName")',
+                        data: { "AGName": $(this).parent().parent().children(':nth-child(2)').text() },
+                        type: "POST",
+                        dataType: "json",
+
+                        success: function (data) {
+
+                            if (data.length > 0) {
+
+
+                                $('#AccGroupId').val(data[0].GroupId);
+
+
+
+                            }
+                        }
+                    });
+                    $('#Amount').val($(this).parent().parent().children(':nth-child(3)').text());
+                    $('#Narration').val($(this).parent().parent().children(':nth-child(4)').text());
+                    $("#add1").attr('value', 'Update');
+
+                    index = $(this).closest("tr").index();
+                });
+
+                var $actionTd = $('<td style="text-align:center" />');
+                $actionTd.append($Edit).append(' ').append($remove);
+                $row.append($actionTd);
+                $tbody.append($row);
+                k++;
+            });
+            console.log("current", orderItems1);
+            $table.append($tbody);
+            $('#orderItems1').html($table);
+        }
+        else {
+            $('#orderItems1').html('');
+        }
+    }
+
+    var orderItems = [];
+    var orderItems1 = [];
+    var index;
+    var tempScrollTop;
+    function convertDate(inputFormat) {
+        function pad(s) { return (s < 10) ? '0' + s : s; }
+        var d = new Date(inputFormat)
+        return [pad(d.getDate()), pad(d.getMonth() + 1), d.getFullYear()].join('/')
+    }
+    function SearchDet() {
+
+
+        $.ajax({
+            url: '/PurchaseIndent/GetDetailsByPurReqNo/',
+            data: "{ prno: '" + $('#PurRequisitionNo').val().trim() + "'}",
+            dataType: "json",
+            type: "POST",
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            success: function (result) {
+                $('#orderItems').empty();
+
+                orderItems = [];
+
+               var date = new Date(parseInt(result[0].PurRequisitionDate.substr(6)));
+
+                var formattedDate = date.toISOString().split('T')[0];
+                //$("#PurRequisitionDate").val(convertDate(formattedDate));
+                $("#PurRequisitionDate").val(formattedDate);
+                $("#PurRequisitionDate").attr("disabled", true);
+
+              // $("#LedgerID").html("");
+
+              // $("#ItemID").append('<option value=Please Select>Please Select</option>');
+
+               for (i = 0; i < result[0].pro.length; i++) {
+                   orderItems.push({
+                       PurIndentNo: $('#PurIndentNo').val().trim(),
+                       ItemID: result[0].pro[i].ItemID,
+                       Quantity: result[0].pro[i].Quantity,
+                       ItemName: result[0].pro[i].ItemName,
+
+                   });
+                  // getsupplier(result[0].pro[i].ItemID);
+               }
+
+               GeneratedItemsTable();
+               for (i = 0; i < result[0].pro1.length; i++) {
+                   orderItems1.push({
+                       PurIndentNo: $('#PurIndentNo').val().trim(),
+                       AccountGroupId: result[0].pro1[i].GroupId,
+                       Amount: result[0].pro1[i].Amount,
+                       Narration: result[0].pro1[i].Narration,
+
+                   });
+                   // getsupplier(result[0].pro[i].ItemID);
+               }
+
+               GeneratedItemsTable1();
+            }
+        });
+    }
+    function getsupplier( itemid)
+    {
+         $.ajax({
+             url: '@Url.Action("getSupplier")',
+             data: '{ItemID: "' + itemid + '"}',
+             type: "POST",
+             dataType: "json",
+             async: false,
+             contentType: "application/json; charset=utf-8",
+             success: function (data) {
+                 if (data.length > 0) {
+
+                     $.each(data, function (i, data2) {  // bind the dropdown list using json result
+
+
+                         $('<option>',
+                            {
+                                value: data2.ItemID,
+                                text: data2.ItemName
+                            }).html(data2.ItemName).appendTo("#ItemID");
+
+                     });
+                 }
+
+             },
+             failure: function (response) {
+                 alert(response.responseText);
+             },
+             error: function (response) {
+                 alert(response.responseText);
+             }
+
+         });
+    }
+    function GetCompanyInfo(code) {
+
+        $.ajax({
+            url: '@Url.Action("GetCompanyInfo")',
+            data: { "LedgerID": code },
+            type: "POST",
+            dataType: "json",
+            async: false,
+
+            success: function (result) {
+
+                $("#AddressTitleID").html("");
+
+                //$("#AddressTitleID").append('<option value="Please Select">Please Select</option>');
+                $.each(result.d1, function (i, data) {      // bind the dropdown list using json result
+                    $('<option>',
+                       {
+                           value: data.AddressTitleID,
+                           text: data.AddressTitleID
+                       }).html(data.AddressTitle).appendTo("#AddressTitleID");
+
+                });
+
+                //$("#AddressTitleID").empty();
+
+                //$.each(result.d1, function (i, data) {
+                //    $("#AddressTitleID").append(
+                //        $('<option>', {
+                //            value: data.AddressTitleID,
+                //            text: data.AddressTitle
+                //        })
+                //    );
+                //});
+
+                GetAddrCPInfo($("#AddressTitleID").val());
+                $.ajax({
+                    url: '@Url.Action("getSupplierItem")',
+                    data: '{LedgerID: "' + $("#AddressTitleID").val() + '"}',
+                    type: "POST",
+                    dataType: "json",
+                    async: false,
+                    contentType: "application/json; charset=utf-8",
+
+                    success: function (data) {
+                        if (data.length > 0) {
+                            $("#ItemID").html(""); // Clear existing options
+                            $("#ItemID").append('<option value="">Please Select</option>');
+                            $.each(data, function (i, data2) {
+                                $('<option>', {
+                                    value: data2.ItemID,
+                                    text: data2.ItemName
+                                }).appendTo("#ItemID");
+                            });
+                        } else {
+                            // Optional: handle case where no items were returned
+                            $("#ItemID").html('<option value="">No items found</option>');
+                        }
+                    },
+                    failure: function (response) {
+                        alert("Failure: " + response.responseText);
+                    },
+                    error: function (response) {
+                        alert("Error: " + response.responseText);
+                    }
+
+
+                });
+
+                $("#TermsOfDeliveryID").val(result.d1[0].PurTermsOfDeliveryID);
+                $("#TermsOfDeliveryID").attr("disabled", true);
+
+                $("#CourierID").val(result.d1[0].PurCourierID);
+                $("#CourierID").attr("disabled", true);
+
+                $("#Note").val(result.d1[0].DefaultNote);
+
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+    }
+    function GetAddrCPInfo(code) {
+
+        var a = $("#AddressTitleID").val();
+
+        $.ajax({
+            url: '@Url.Action("getAddressInfo")',
+            data: '{add: "' + a + '"}',
+            type: "POST",
+            dataType: "json",
+            async: false,
+            contentType: "application/json; charset=utf-8",
+
+            success: function (result1) {
+
+                if (result1.length > 0) {
+
+                    var vdata = result1;
+
+                    $("#Address").val(vdata[0].Address);
+
+                    $("#AddressTitle").val(vdata[0].AddressTitle);
+                    $("#LandMark").val(vdata[0].LandMark);
+
+                    $("#Locality").val(vdata[0].Locality);
+
+                    $("#Taluka").val(vdata[0].Taluka);
+
+                    $("#District").val(vdata[0].District);
+                    $("#Pincode1").val(vdata[0].Pincode);
+
+
+                    $("#State").val(vdata[0].State);
+                    $("#Country").val(vdata[0].Country);
+                }
+
+            },
+            failure: function (response) {
+                alert(response.responseText);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+
+        });
+        //CP INFO
+
+             $.ajax({
+        url: '@Url.Action("GetCPInfo")',
+        data: { "AddressTitleID": code },
+        type: "POST",
+        dataType: "json",
+        success: function (result) {
+            const vdata1 = result.d1; // Contact person data
+            const vdata2 = result.d2; // Address
+
+            console.log("Contact data:", vdata1);
+
+            $("#Address").prop("disabled", false).val(vdata2[0]?.Address || "").prop("disabled", true);
+
+            // Clear dropdowns
+            $("#ContactPersonName").empty();
+            $("#OfficeMobileNo").empty();
+            $("#OfficeEmailId").empty();
+
+            const addedMobiles = new Set();
+            const addedEmails = new Set();
+
+            let defaultMobile = "";
+            let defaultEmail = "";
+            let defaultCountryCode = "";
+            let defaultPersonalEmail = "";
+
+            $.each(vdata1, function (i, data) {
+                const fullName = `${data.Title} ${data.FirstName} ${data.MiddleName ? data.MiddleName + ' ' : ''}${data.LastName}`;
+
+                // Append contact person
+                $("#ContactPersonName").append($('<option>', {
+                    value: fullName,
+                    text: fullName,
+                    selected: data.DefaultPerson === "Y"
+                }));
+
+                if (data.DefaultPerson === "Y") {
+                    defaultMobile = data.OfficeMobileNo;
+                    defaultEmail = data.OfficeEmailId;
+                    defaultCountryCode = data.CountryCode;
+                    defaultPersonalEmail = data.PersonalEmailID;
+                }
+
+                // Add Office Mobile
+                if (data.OfficeMobileNo && !addedMobiles.has(data.OfficeMobileNo)) {
+                    $("#OfficeMobileNo").append($('<option>', {
+                        value: data.OfficeMobileNo,
+                        text: data.OfficeMobileNo
+                    }));
+                    addedMobiles.add(data.OfficeMobileNo);
+                }
+
+                // Add Office Email
+                if (data.OfficeEmailId && !addedEmails.has(data.OfficeEmailId)) {
+                    $("#OfficeEmailId").append($('<option>', {
+                        value: data.OfficeEmailId,
+                        text: data.OfficeEmailId
+                    }));
+                    addedEmails.add(data.OfficeEmailId);
+                }
+            });
+
+            // Set default values
+            if (defaultMobile) $("#OfficeMobileNo").val(defaultMobile);
+            if (defaultEmail) $("#OfficeEmailId").val(defaultEmail);
+            if (defaultCountryCode) {
+                $("#CountryCode1").val(defaultCountryCode);
+                $("#CountryCode2").val(defaultCountryCode);
+            }
+            if (defaultPersonalEmail) {
+                $("#PersonalEmailID").val(defaultPersonalEmail);
+            }
+        },
+        error: function (response) {
+            alert("Error: " + response.responseText);
+        }
+    });
+
+
+
+    }
+
+    //CP
+
+
+    function GetCPDetails(code) {
+
+        $.ajax({
+            url: '@Url.Action("GetCPDetails")',
+            data: { "ContactPersonName": code, "LedgerID": $("#LedgerID").val(), "AddressTitleID": $("#AddressTitleID").val() },
+            type: "POST",
+            dataType: "json",
+            async: false,
+
+            success: function (result) {
+
+                $("#OfficeMobileNo").val("Please Select");
+                $("#OfficeEmailId").val("Please Select");
+                $("#PersonalMobileNo").val("Please Select");
+                $("#PersonalEmailID").val("Please Select");
+
+
+                $("#OfficeMobileNo").val(result[0].OfficeMobileNo);
+
+
+                $("#OfficeEmailId").val(result[0].OfficeEmailId);
+
+
+                $("#PersonalMobileNo").val(result[0].PersonalMobileNo);
+
+
+                $("#PersonalEmailID").val(result[0].PersonalEmailID);
+
+                $("#CPDesignation").val(result[0].CPDesignation);
+
+
+            },
+            error: function (reponse) {
+
+                alert("error : " + reponse);
+            }
+        });
+    }
+    function GetCPDetailsByOffmobno(code) {
+
+        $.ajax({
+            url: '@Url.Action("GetCPDetailsByOffmobno")',
+            data: { "OffMobile": code },
+            type: "POST",
+            dataType: "json",
+            async: false,
+
+            success: function (result) {
+
+                $("#ContactPersonName").val("Please Select");
+                $("#OfficeEmailId").val("Please Select");
+                $("#PersonalMobileNo").val("Please Select");
+                $("#PersonalEmailID").val("Please Select");
+                if (result.d2 == true) {
+
+                    $("#OfficeEmailId").val(result.d1[0].OfficeEmailId);
+
+
+
+                    if (result.d1[0].MiddleName != null)
+                        $("#ContactPersonName").val(result.d1[0].Title + " " + result.d1[0].FirstName + " " + result.d1[0].MiddleName + " " + result.d1[0].LastName);
+                    else
+                        $("#ContactPersonName").val(result.d1[0].Title + " " + result.d1[0].FirstName + " " + result.d1[0].LastName);
+
+
+
+                    $("#PersonalMobileNo").val(result.d1[0].PersonalMobileNo);
+
+
+                    $("#PersonalEmailID").val(result.d1[0].PersonalEmailID);
+
+                }
+                else {
+                    $("#OfficeEmailId").val(result.d1[0].OfficeEmailId);
+
+                }
+                $("#CPDesignation").val(result[0].CPDesignation);
+
+            },
+            error: function (reponse) {
+
+                alert("error : " + reponse);
+            }
+        });
+    }
+    function GetCPDetailsByOffemail(code) {
+
+
+        $.ajax({
+            url: '@Url.Action("GetCPDetailsByOffemail")',
+            data: { "OffEmail": code },
+            type: "POST",
+            dataType: "json",
+
+            success: function (result) {
+
+                $("#ContactPersonName").val("Please Select");
+                $("#OfficeMobileNo").val("Please Select");
+                $("#PersonalMobileNo").val("Please Select");
+                $("#PersonalEmailID").val("Please Select");
+
+                if (result.d2 == true) {
+
+                    if (result.d1[0].MiddleName != null)
+                        $("#ContactPersonName").val(result.d1[0].Title + " " + result.d1[0].FirstName + " " + result.d1[0].MiddleName + " " + result.d1[0].LastName);
+                    else
+                        $("#ContactPersonName").val(result.d1[0].Title + " " + result.d1[0].FirstName + " " + result.d1[0].LastName);
+
+                    $("#OfficeMobileNo").val(result.d1[0].OfficeMobileNo);
+
+                    $("#PersonalMobileNo").val(result.d1[0].PersonalMobileNo);
+
+                    $("#PersonalEmailID").val(result.d1[0].PersonalEmailID);
+
+
+                }
+                else {
+
+                    $("#OfficeMobileNo").val(result.d1[0].OfficeMobileNo);
+
+
+                }
+                $("#CPDesignation").val(result[0].CPDesignation);
+
+            },
+            error: function (reponse) {
+
+                alert("error : " + reponse);
+            }
+        });
+    }
+
+
+    function GetCPDetailsByPermobno(code) {
+
+        $.ajax({
+            url: '@Url.Action("GetCPDetailsByPermobno")',
+            data: { "PerMobile": code },
+            type: "POST",
+            dataType: "json",
+
+            success: function (result) {
+
+                $("#ContactPersonName").val("Please Select");
+                $("#OfficeMobileNo").val("Please Select");
+                $("#OfficeEmailId").val("Please Select");
+                $("#PersonalEmailID").val("Please Select");
+
+                if (result[0].MiddleName != null)
+                    $("#ContactPersonName").val(result[0].Title + " " + result[0].FirstName + " " + result[0].MiddleName + " " + result[0].LastName);
+                else
+                    $("#ContactPersonName").val(result[0].Title + " " + result[0].FirstName + " " + result[0].LastName);
+
+                $("#OfficeMobileNo").val(result[0].OfficeMobileNo);
+
+
+                $("#OfficeEmailId").val(result[0].OfficeEmailId);
+
+
+
+                $("#PersonalEmailID").val(result[0].PersonalEmailID);
+                $("#CPDesignation").val(result[0].CPDesignation);
+
+            },
+            error: function (reponse) {
+
+                alert("error : " + reponse);
+            }
+        });
+    }
+    function GetCPDetailsByPeremail(code) {
+
+        $.ajax({
+            url: '@Url.Action("GetCPDetailsByPeremail")',
+            data: { "PerEmail": code },
+            type: "POST",
+            dataType: "json",
+            // contentType: "application/json; charset=utf-8",
+            success: function (result) {
+
+                $("#ContactPersonName").val("Please Select");
+                $("#OfficeMobileNo").val("Please Select");
+                $("#OfficeEmailId").val("Please Select");
+                $("#PersonalMobileNo").val("Please Select");
+
+
+                if (result[0].MiddleName != null)
+                    $("#ContactPersonName").val(result[0].Title + " " + result[0].FirstName + " " + result[0].MiddleName + " " + result[0].LastName);
+                else
+                    $("#ContactPersonName").val(result[0].Title + " " + result[0].FirstName + " " + result[0].LastName);
+
+                $("#OfficeMobileNo").val(result[0].OfficeMobileNo);
+
+
+                $("#OfficeEmailId").val(result[0].OfficeEmailId);
+
+
+                $("#PersonalMobileNo").val(result[0].PersonalMobileNo);
+
+                $("#CPDesignation").val(result[0].CPDesignation);
+
+            },
+            error: function (reponse) {
+
+                alert("error : " + reponse);
+            }
+        });
+    }
+
+    //Get Minimum Order Quantity
+    function GetMOQ(code) {
+
+
+
+        $.ajax({
+            url: '@Url.Action("GetMOQ")',
+            data: '{Itemid: "' + code + '"}',
+            type: "POST",
+            dataType: "json",
+            async: false,
+            contentType: "application/json; charset=utf-8",
+
+            success: function (result1) {
+
+                if (result1.length > 0) {
+
+                    $("#Quantity").val(result1[0].MinimumOrderQuantity);
+
+                }
+
+            },
+            failure: function (response) {
+                alert(response.responseText);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+
+        });
+
+    }
+         function AddProduct( nm) {
+
+            if (nm == "Add")
+            {
+                //Check validation of order item
+                var isAllValid = true;
+
+                if ($('#ItemID').val().trim() == '') {
+                    $('#ItemID').siblings('span.error').css('visibility', 'visible');
+                    $('#ItemID').focus();
+                    isAllValid = false;
+                    $("#reqitem").html('<span style="color:red">Item Name Required</span>');
+                    $("#reqitem").show();
+
+
+                }
+                else {
+                    $('#ItemID').siblings('span.error').css('visibility', 'hidden');
+                    $("#reqitem").html("");
+                    $("#reqitem").hide();
+                }
+                if ($('#Quantity').val().trim() == '') {
+                    $('#Quantity').siblings('span.error').css('visibility', 'visible');
+                    $('#Quantity').focus();
+                    isAllValid = false;
+                    $("#reqqty").html('<span style="color:red">Quantity Required</span>');
+                    $("#reqqty").show();
+
+                }
+                else {
+                    $('#Quantity').siblings('span.error').css('visibility', 'hidden');
+                    $("#reqqty").html("");
+                    $("#reqqty").hide();
+                    var qty = /^[0-9]*$/;
+                    if ($('#Quantity').val().match(qty)) {
+                        $('#Quantity').siblings('span.error').css('visibility', 'hidden');
+                        $("#regqty").html("");
+                        $("#regqty").hide();
+                        $("#reqqty").html("");
+                        $("#reqqty").hide();
+
+                    }
+                    else {
+                        $('#Quantity').siblings('span.error').css('visibility', 'visible');
+
+                        $("#regqty").html('<span style="color:red">Enter Valid Quantity</span>');
+                        isAllValid = false;
+                        $("#regqty").show();
+                        $("#reqqty").html("");
+                        $("#reqqty").hide();
+
+                    }
+
+                }
+
+                if (isAllValid) {
+                    var k;
+                    for (k = 0; k < orderItems.length; k++) {
+                        if (orderItems[k].ItemID.toString() == $('#ItemID').val().trim()) {
+                            alert("Item Already Exist In List");
+                            $('#ItemID').val('').focus();
+                            //$('#ItemCode').val('');
+                            $('#Quantity').val('');
+                            isAllValid = false;
+                        }
+                    }
+                }
+                //Add item to list if valid
+                if (isAllValid) {
+                    orderItems.push({
+                        PurIndentNo: $('#PurIndentNo').val().trim(),
+                        ItemID: parseInt($('#ItemID').val().trim()),
+                        Quantity: parseInt($('#Quantity').val().trim()),
+                        ItemName: $('#ItemID option:selected').text().trim(),
+
+                    });
+
+                    //Clear fields
+                    $('#ItemID').val('').focus();
+                    //$('#ItemCode').val('');
+                    $('#Quantity').val(1);
+
+
+                //populate order items
+                    GeneratedItemsTable();
+
+                }
+
+
+
+            }
+            else {
+                if (nm == "Update") {
+                    var orderItemsnew = [];
+                    orderItemsnew = orderItems;
+
+
+                    orderItemsnew[index]["ItemID"] = $('#ItemID').val().trim();
+                    orderItemsnew[index]["Quantity"] = $('#Quantity').val().trim();
+                    orderItemsnew[index]["ItemName"] = $('#ItemID option:selected').text().trim(),
+                    orderItems = orderItemsnew;
+                    GeneratedItemsTable();
+
+
+                    $("#add").attr('value', 'Add');
+                    $('#ItemID').val('');
+                    //$('#ItemCode').val('');
+                    $('#Quantity').val(1);
+
+                    //var Qun = 1;
+                    //$('#Quantity').val() = Qun;
+
+                }
+
+
+            }
+
+
+         }
+
+         function GeneratedItemsTable() {
+
+             if (orderItems.length > 0) {
+                 var k = 1;
+                 var $table = $('<table/>');
+                 $table.append('<thead><tr><th>Sr. No.</th> <th>Item Name</th><th>Quantity</th><th>Actions</th></tr></thead>');
+                 var $tbody = $('<tbody/>');
+                 var iname;
+                 $.each(orderItems, function (i, val) {
+
+
+                     $.ajax({
+                         url: '@Url.Action("GetIName")',
+                         data: { "ItmID": val.ItemID },
+                         type: "POST",
+                         dataType: "json",
+                         async: false,
+                         success: function (data) {
+
+                             if (data.length > 0) {
+
+                                 iname = data[0].ItemName;
+
+
+                             }
+                         }
+                     });
+
+                     var $row = $('<tr/>');
+                     $row.append($('<td style="text-align:center"/>').html(k));
+                     $row.append($('<td style="text-align:left"/>').html(iname));
+
+                     $row.append($('<td style="text-align:center"/>').html(val.Quantity));
+                     var $remove = $('<a href="#" title="Remove"><i class="material-icons text-danger">close</i></a>');
+                     $remove.click(function (e) {
+                         e.preventDefault();
+                         orderItems.splice(i, 1);
+                         GeneratedItemsTable();
+                     });
+                     var $Edit = $('<a href="#" title="Edit"><i class="material-icons">edit_note</i></a>');
+                     $Edit.click(function (e) {
+                         e.preventDefault();
+                         $.ajax({
+                             url: '@Url.Action("GetCodeByName")',
+                             data: { "ItemName": $(this).parent().parent().children(':nth-child(2)').text() },
+                             type: "POST",
+                             dataType: "json",
+
+                             success: function (data) {
+
+                                 if (data.length > 0) {
+
+                                     $('#ItemID').val(data[0].ItemID);
+                                     //  $('#ItemCode').val(data[0].ItemCode);
+
+
+                                 }
+                             }
+                         });
+
+                         $('#Quantity').val($(this).parent().parent().children(':nth-child(3)').text());
+                         $("#add").attr('value', 'Update');
+
+                         index = $(this).closest("tr").index();
+
+
+                     });
+
+                     var $actionTd = $('<td style="text-align:center" />');
+                     $actionTd.append($Edit).append(' ').append($remove);
+                     $row.append($actionTd);
+                     $tbody.append($row);
+                     k++;
+                 });
+                 console.log("current", orderItems);
+                 $table.append($tbody);
+                 $('#orderItems').html($table);
+             }
+             else {
+                 $('#orderItems').html('');
+             }
+
+             //var Qun = 1;
+             //$('#Quantity').val() = Qun;
+         }
+
+    //function SavePurInd() {
+    //    //validation of order
+    //    var isAllValid = true;
+
+    //    if (orderItems.length == 0 && orderItems1.length == 0) {
+    //        $('#orderItems').html('<span style="color:red;">Please add order items</span>');
+    //        $('#orderItems1').html('<span style="color:red;">Please add Group</span>');
+    //        isAllValid = false;
+
+    //    }
+
+        //if ($('#PurRequisitionNo').val().trim() == '') {
+        //    $('#PurRequisitionNo').siblings('span.error').css('visibility', 'visible');
+        //    $('#PurRequisitionNo').focus();
+        //    //isAllValid = false;
+        //    //$("#reqreqno").html('<span style="color:red">Company Name Required</span>');
+        //    //$("#reqreqno").show();
+
+
+        //}
+        //else {
+        //    $('#PurRequisitionNo').siblings('span.error').css('visibility', 'hidden');
+        //    $("#reqreqno").html("");
+        //    $("#reqreqno").hide();
+        //}
+        //if ($('#LedgerID').val().trim() == '') {
+        //    $('#LedgerID').siblings('span.error').css('visibility', 'visible');
+        //    $('#LedgerID').focus();
+        //    isAllValid = false;
+        //    $("#reqcomp").html('<span style="color:red">Company Name Required</span>');
+        //    $("#reqcomp").show();
+
+
+        //}
+        //else {
+        //    $('#LedgerID').siblings('span.error').css('visibility', 'hidden');
+        //    $("#reqcomp").html("");
+        //    $("#reqcomp").hide();
+        //}
+
+        //if ($('#AddressTitleID').val().trim() == '') {
+        //    $('#AddressTitleID').siblings('span.error').css('visibility', 'visible');
+        //    $('#AddressTitleID').focus();
+        //    isAllValid = false;
+        //    $("#reqaddr").html('<span style="color:red">Address Title Required</span>');
+        //    $("#reqaddr").show();
+
+
+        //}
+        //else {
+        //    $('#AddressTitleID').siblings('span.error').css('visibility', 'hidden');
+        //    $("#reqaddr").html("");
+        //    $("#reqaddr").hide();
+        //}
+
+        //if ( $('#OfficeMobileNo').val().trim() == "") {
+        //    $('#OfficeMobileNo').siblings('span.error').css('visibility', 'visible');
+
+        //    isAllValid = false;
+        //    $('#OfficeMobileNo').focus();
+        //    $("#errorPMobile11").html('<span style="color:red">Enter Office MobileNo</span>');
+        //    $("#errorPMobile11").show();
+
+        //}
+        //else {
+        //        $('#OfficeMobileNo').siblings('span.error').css('visibility', 'hidden');
+        //        $("#errorOMobile11").html("");
+        //        $("#errorOMobile11").hide();
+        //        $("#errorPMobile11").html("");
+        //        $("#errorPMobile11").hide();
+        //}
+
+
+        //if (($('#OfficeEmailId').val().trim() == "Please Select")  || (($('#OfficeEmailId').val().trim() == "") )) {
+        //    $('#OfficeEmailId').siblings('span.error').css('visibility', 'visible');
+        //    $('#OfficeEmailId').focus();
+        //    isAllValid = false;
+        //    $("#reqEm").html('<span style="color:red">Required OfficeEmailId </span>');
+        //    $("#reqEm").show();
+
+
+        //}
+        //else {
+        //    $('#OfficeEmailId').siblings('span.error').css('visibility', 'hidden');
+        //    $("#reqEm").html("");
+        //    $("#reqEm").hide();
+        //}
+
+        //Save if valid
+        if (isAllValid) {
+
+            var designinfoid;
+            $.ajax({
+                url: '@Url.Action("GetDesignInfoId")',
+                data: { "ContactPerson": $('#ContactPersonName').val(), "OffEmail": $('#OfficeEmailId').val(), "OffMobile": $('#OfficeMobileNo').val(), "Lid": $('#LedgerID').val(), "AddID": $('#AddressTitleID').val() },
+
+                type: "POST",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+
+                    if (data.length > 0) {
+
+                        designinfoid = data[0].DesignationInfoID;
+
+                    }
+                }
+            });
+
+
+
+            var pdate = new Date();
+
+            var data = {
+                //PurProcessId: $('#PurProcessId').val().trim(),
+                PurIndentNo: $('#PurIndentNo').val().trim(),
+
+                PurIndentDate: pdate.toDateString(),
+                PurRequisitionNo: $('#PurRequisitionNo').val().trim(),
+                //LedgerID: $('#LedgerID').val().trim(),
+                BusinessAddressId: $('#AddressTitleID').val().trim(),
+                DesignationInfoId: designinfoid,
+                TermsOfDeliveryId: $('#TermsOfDeliveryID').val().trim(),
+                TransporterId: $('#CourierID').val().trim(),
+                EntityName: $('#LedgerID option:selected').text().trim(),
+                AddressTitle: $('#AddressTitle').val().trim(),
+                Address: $('#Address').val().trim(),
+                LandMark: $('#LandMark').val().trim(),
+                Locality: $('#Locality').val().trim(),
+                Taluka: $('#Taluka').val().trim(),
+                District: $('#District').val().trim(),
+                Pincode: $('#Pincode1').val().trim(),
+                State: $('#State').val().trim(),
+                Country: $('#Country').val().trim(),
+                CountryCode: $('#CountryCode1').val().trim(),
+                TermsOfDelivery: $('#TermsOfDeliveryID option:selected').text().trim(),
+                CourierName: $('#CourierID option:selected').text().trim(),
+                ContactPersonName: $('#ContactPersonName').val().trim(),
+                OfficeMobileNo: $('#OfficeMobileNo').val().trim(),
+                OfficeEmailId: $('#OfficeEmailId').val().trim(),
+                //PersonalMobileNo: $('#PersonalMobileNo').val().trim(),
+                //PersonalEmailID: $('#PersonalEmailID').val().trim(),
+                CPDesignation: $('#CPDesignation').val().trim(),
+                UserId: $('#UserId').val().trim(),
+                StatusId: 7,
+                Note: $('#Note').val().trim(),
+
+                PurchaseItem: orderItems,
+                PurchaseItemGroup: orderItems1
+            }
+
+
+            $(this).val('Please wait...');
+
+            $.ajax({
+                url: '/PurchaseIndent/SaveIndent',
+                type: "POST",
+                data: JSON.stringify(data),
+                dataType: "JSON",
+                contentType: "application/json",
+                success: function (d) {
+
+                    //check is successfully save to database
+                    if (d.status == true) {
+                        //will send status from server side
+                        alert('Successfully done');
+                        //clear form
+                        orderItems = [];
+                        orderItems1 = [];
+                        $('#PurProcessId').val('');
+                        $('#PurIndentNo').val('');
+                        $('#LedgerID').val('');
+
+                        $('#AddressTitleID').val('');
+
+                        $('#TermsOfDeliveryID').val('');
+                        $('#CourierID').val('');
+
+                        $('#UserId').val('');
+
+
+                        $('#AddressTitle').val();
+                        $('#Address').val();
+                        $('#LandMark').val();
+                        $('#Locality').val();
+                        $('#Taluka').val();
+                        $('#District').val();
+                        $('#Pincode1').val();
+                        $('#State').val();
+                        $('#Country').val();
+
+                        $('#ContactPersonName').val("");
+                        $('#OfficeMobileNo').val("");
+                        $('#OfficeEmailId').val("");
+                        $('#PersonalMobileNo').val("");
+                        $('#PersonalEmailID').val("");
+                        $('#CPDesignation').val("");
+                        //$('#Status').val('');
+                        $('#orderItems').empty();
+                        $('#orderItems1').empty();
+                        $('#Note').empty();
+                        //QUOItems = null;
+                        window.location.href = '/PurchaseIndentReport.aspx';
+                        //window.location.href = '/PurchaseIndent/Index';
+                    }
+                    else {
+                        alert('Failed');
+                    }
+                    $('#submit').val('Save');
+                },
+                error: function () {
+                    alert('Error. Please try again.');
+                    $('#submit').val('Save');
+                }
+            });
+
+        }
+
+    }
+
+</script>
+<style>
+/* =========================================================
+   PURCHASE INDENT - MAIN PAGE LAYOUT
+   ========================================================= */
+
+.purchase-page {
+    background: #f4f6f9;
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.purchase-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    gap: 6px;
+    align-items: start;
+    width: 100%;
+}
+
+.purchase-layout-left,
+.purchase-layout-right {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+    width: 100%;
+}
+
+.purchase-layout * {
+    box-sizing: border-box;
+}
+
+/* =========================================================
+   COMMON CARDS
+   ========================================================= */
+
+.purchase-card {
+    background: #fff;
+    border: 1px solid #dce1e7;
+    border-radius: 6px;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    padding-top: 2px;
+    min-width: 0;
+    width: 100%;
+}
+
+.purchase-card-header {
+    min-height: 32px;
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #172b7a;
+    font-size: 15px;
+    font-weight: 600;
+    background: #fff;
+}
+
+.purchase-card-header i {
+    color: #0085c8;
+    font-size: 20px;
+    vertical-align: middle;
+    margin-right: 6px;
+}
+
+.purchase-card-body {
+    padding: 6px;
+}
+
+.purchase-field {
+    min-width: 0;
+    width: 100%;
+}
+
+.purchase-field label {
+    display: block;
+    color: #172b7a;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 3px;
+}
+
+.purchase-field input,
+.purchase-field select,
+.purchase-field textarea,
+.purchase-field .form-control {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    border: 1px solid #ccd3dd;
+    border-radius: 4px;
+    padding: 5px 8px;
+    font-size: 12px;
+    box-sizing: border-box;
+}
+
+.purchase-field input,
+.purchase-field select,
+.purchase-field .form-control {
+    height: 34px;
+}
+
+.purchase-field textarea {
+    min-height: 55px;
+    resize: vertical;
+}
+
+.field-error {
+    display: block;
+    color: #dc3545;
+    font-size: 11px;
+    margin-top: 3px;
+    overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   PURCHASE INDENT DETAILS
+   ========================================================= */
+
+.purchase-invoice-card {
+    width: 100%;
+    min-width: 0;
+    margin-bottom: 0;
+}
+
+.invoice-vendor-indent-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(85px, 1fr);
+    gap: 8px;
+    align-items: end;
+    margin-bottom: 6px;
+}
+
+.invoice-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: 4px;
+    padding-top: 0;
+    border-top: 0;
+}
+
+.invoice-detail-grid .purchase-field,
+.invoice-vendor-indent-grid .purchase-field {
+    min-width: 0;
+}
+
+.invoice-detail-grid .purchase-field input,
+.invoice-detail-grid .purchase-field select {
+    width: 100%;
+    height: 34px;
+    border: 1px solid #ccd3dd;
+    padding: 5px 6px;
+    font-size: 12px;
+}
+
+.search-btn {
+    width: 100%;
+    height: 34px;
+    border: none;
+    border-radius: 4px;
+    background: linear-gradient(135deg, #20BED0, #1B247D);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.search-btn:hover {
+    background: linear-gradient(135deg, #1B247D, #20BED0);
+}
+
+/* =========================================================
+   ITEM AND ACCOUNT GROUP CARDS
+   ========================================================= */
+
+.item-account-card {
+    width: 100%;
+    min-width: 0;
+    margin-top: 0;
+    padding: 5px;
+    height: fit-content;
+}
+
+.inner-card {
+    width: 100%;
+    min-width: 0;
+    border: 1px solid #dce2e8;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 6px;
+    background: #fff;
+}
+
+.inner-card:last-child {
+    margin-bottom: 0;
+}
+
+.inner-card-header {
+    min-height: 34px;
+    padding: 6px 9px;
+    background: #f6f8fa;
+    border-bottom: 1px solid #dce2e8;
+    color: #172b7a;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.inner-card-header i {
+    color: #0085c8;
+    font-size: 17px;
+    margin-right: 5px;
+}
+
+/* Item entry row */
+
+.item-entry-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(75px, 0.7fr) auto;
+    gap: 8px;
+    align-items: end;
+}
+
+.item-add-field {
+    width: auto;
+    min-width: 90px;
+}
+
+.add-item-btn {
+    height: 34px;
+    padding: 0 12px;
+    border: none;
+    border-radius: 4px;
+    background: linear-gradient(135deg, #20BED0, #1B247D);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.add-item-btn:hover {
+    background: linear-gradient(135deg, #1B247D, #20BED0);
+}
+
+/* Account group entry row */
+
+.account-entry-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(75px, 0.7fr)
+                           minmax(0, 1.5fr) auto;
+    gap: 8px;
+    align-items: end;
+}
+
+/* Item/account lists */
+
+.item-cards-container,
+.account-cards-container {
+    max-height: 235px;
+    overflow-y: auto;
+    overflow-x: auto;
+    padding: 7px;
+    box-sizing: border-box;
+}
+
+.purchase-item-card,
+.purchase-account-card {
+    width: 100%;
+    min-width: 0;
+    background: #f8fbff;
+    border: 1px solid #e0e0e0;
+    border-radius: 7px;
+    padding: 8px;
+    margin-bottom: 7px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    font-size: 12px;
+    color: #222;
+    overflow-wrap: anywhere;
+}
+
+.no-items {
+    text-align: center;
+    color: #999;
+    padding: 20px 5px;
+    font-size: 12px;
+}
+
+/* =========================================================
+   VENDOR DETAILS
+   ========================================================= */
+
+.vendor-card {
+    width: 100%;
+    min-width: 0;
+}
+
+.vendor-main-field {
+    margin-bottom: 7px;
+}
+
+.vendor-address-title-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 7px;
+    margin-bottom: 7px;
+}
+
+.vendor-card .purchase-field {
+    margin-bottom: 6px;
+}
+
+.vendor-card .purchase-field:last-child {
+    margin-bottom: 0;
+}
+
+.vendor-card textarea {
+    width: 100%;
+    min-height: 48px;
+    resize: vertical;
+}
+
+.vendor-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+    margin: 7px 0;
+}
+
+.vendor-detail-grid .purchase-field {
+    min-width: 0;
+    margin-bottom: 0;
+}
+
+/* Contact details */
+
+.vendor-contact-section {
+    margin-top: 7px;
+}
+
+.contact-fields-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    align-items: start;
+}
+
+.office-contact-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    width: 100%;
+    min-width: 0;
+}
+
+.purchase-page .country-code {
+    flex: 0 0 65px;
+    width: 65px;
+    min-width: 0;
+}
+
+.office-contact-row select {
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+}
+
+/* Delivery and instruction cards */
+
+.vendor-card .inner-card {
+    margin-top: 7px;
+}
+
+.vendor-instructions-card {
+    margin-top: 6px;
+}
+
+.vendor-instructions-card .purchase-card-header {
+    border-bottom: none;
+    padding-bottom: 2px;
+}
+
+.vendor-instructions-card .purchase-card-body {
+    padding-top: 3px;
+}
+
+.vendor-instructions-card textarea {
+    width: 100%;
+    min-height: 60px;
+}
+
+/* =========================================================
+   CREATE / CLOSE BUTTONS
+   ========================================================= */
+
+.purchase-form-buttons {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 12px;
+    width: 100% !important;
+    margin: 16px auto !important;
+    padding: 0 !important;
+    float: none !important;
+}
+
+.purchase-form-buttons .create-btn {
+    float: none !important;
+    margin: 0 !important;
+}
+
+.create-btn {
+    border: none;
+    border-radius: 4px;
+    padding: 9px 20px;
+    background: linear-gradient(135deg, #20BED0, #1B247D);
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.create-btn:hover {
+    background: linear-gradient(135deg, #1B247D, #20BED0);
+    color: #fff;
+}
+
+/* =========================================================
+   RESPONSIVE LAYOUT
+   ========================================================= */
+
+@@media (max-width: 1100px) {
+    .purchase-layout {
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    }
+
+    .account-entry-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@@media (max-width: 768px) {
+    .purchase-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .invoice-detail-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .vendor-detail-grid,
+    .contact-fields-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .item-entry-grid {
+        grid-template-columns: minmax(0, 1fr) minmax(75px, 0.6fr);
+    }
+
+    .item-entry-grid .item-add-field {
+        grid-column: 1 / -1;
+        width: 100%;
+    }
+
+    .item-entry-grid .item-add-field .add-item-btn {
+        width: 100%;
+    }
+
+    .account-entry-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .account-entry-grid .item-add-field,
+    .account-entry-grid .item-add-field .add-item-btn {
+        width: 100%;
+    }
+}
+
+@@media (max-width: 480px) {
+    .invoice-detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .invoice-vendor-indent-grid {
+        grid-template-columns: minmax(0, 1fr) 90px;
+        gap: 6px;
+    }
+}
+</style>
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="Stylesheet" type="text/css" />
+@*AP external CSS*@
+<link href="~/Content/ERPStyle.css" rel="stylesheet" type="text/css" />
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="purchase-breadcrumb">
+            <h4 class="route-path1">Purchase</h4>
+
+
+            <h4 class="route-path2"
+                onclick="location.href='@Url.Action("Index", "PurchaseIndent")'">
+                Purchase Indent
+            </h4>
+
+            <h4 class="route-path2">
+                Create
+            </h4>
+            <div class="view-toggle">
+                <span>Switch to Form</span>
+
+                <label class="switch">
+                    <input type="checkbox" id="viewToggle">
+                    <span class="slider round"></span>
+                </label>
+
+                @*<span>Old</span>*@
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+@*@using (Html.BeginForm("Create", "PurchaseIndent", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(model => model.PurProcessId)
+    @Html.HiddenFor(model => model.AddressTitle)
+    @Html.HiddenFor(model => model.LandMark)
+    @Html.HiddenFor(model => model.CPDesignation)
+    @Html.HiddenFor(model => model.Country)
+    @Html.EditorFor(model => model.UserId,
+        new { htmlAttributes = new { @class = "form-control", style = "display:none;" } })*@
+
+    <!-- BREADCRUMB -->
+    <!--<div class="purchase-breadcrumb">
+        <h4 class="route-path1">Purchase</h4>
+        <h4 class="route-path2"-->
+            @*onclick="location.href='@Url.Action("Index", "PurchaseIndent")'"*@<!-->
+            Purchase Indent
+        </h4>
+    </div>-->
+
+    <!-- MAIN PAGE -->
+    <div class="purchase-page">
+        <div class="purchase-layout">
+
+            <!-- LEFT COLUMN -->
+            <div class="purchase-layout-left">
+
+                <!-- PURCHASE INDENT DETAILS -->
+                <div class="purchase-card purchase-invoice-card">
+                    <div class="purchase-card-header">
+                        <span>
+                            <i class="material-icons">receipt_long</i>
+                            Purchase Indent Details
+                        </span>
+                    </div>
+
+                    <div class="purchase-card-body">
+
+                        <!-- Requisition and Search -->
+                        <div class="invoice-vendor-indent-grid">
+                            <div class="purchase-field">
+                                <label>Pur. Requisit. No.</label>
+
+                                @*@Html.DropDownList(
+                                    "PurRequisitionNo",
+                                    (IEnumerable<SelectListItem>)ViewBag.PurRequisitionNo,
+                                    "Please Select",
+                                    new { @class = "form-control" })*@
+                            @*</div>
+
+                            <div class="purchase-field">*@
+                                <label>&nbsp;</label>
+                                <button type="button"
+                                        id="btnsearch"
+                                        class="search-btn"
+                                        onclick="SearchDet();"
+                                        style="padding:0 10px;">
+                                    <i class="material-icons">search</i>
+                                    Search
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Indent Fields -->
+                        <div class="invoice-detail-grid">
+
+                            <div class="purchase-field">
+                                <label>Pur. Indent No.</label>
+                                @*@Html.EditorFor(model => model.PurIndentNo,
+                                    new
+                                         {
+                                             htmlAttributes = new
+                                             {
+                                        @class = "form-control",
+                                        @readonly = "readonly"
+                                    }
+                                         })*@
+                            </div>
+
+                            <div class="purchase-field">
+                                <label>Pur. Indent Date</label>
+                                @*@Html.TextBox("PurIndentDate", null,
+                                    new
+                                         {
+                                        @class = "form-control",
+                                        @readonly = "readonly"
+                                    })*@
+                            </div>
+
+                            <div class="purchase-field">
+                                <label>Pur. Requisit. Date</label>
+                                @*@Html.TextBox("PurRequisitionDate", null,
+                                    new
+                                         {
+                                        @class = "form-control",
+                                        type = "date",
+                                        id = "PurRequisitionDate"
+                                    })*@
+                            </div>
+
+                        </div>
+
+                        @*<span id="reqreqno" class="field-error"></span>*@
+                    </div>
+                </div>
+
+                <!-- ITEM + ACCOUNT GROUP -->
+                <div class="purchase-card item-account-card">
+
+                    <!-- ITEM DETAILS -->
+                    <div class="inner-card">
+                        <div class="inner-card-header">
+                            <span>
+                                <i class="material-icons">inventory_2</i>
+                                Item Details
+                            </span>
+
+                        </div>
+
+                        <div class="purchase-card-body">
+                            <div class="item-entry-grid">
+
+                                <div class="purchase-field">
+                                    <label>Item Name</label>
+                                    @*@Html.DropDownList(
+                                        "ItemID",
+                                        (IEnumerable<SelectListItem>)ViewBag.ItemID,
+                                        "Please Select",
+                                        new
+                                             {
+                                            @class = "form-control",
+                                            onchange = "GetMOQ(this.value);"
+                                        })*@
+                                    <span id="reqitem" class="field-error"></span>
+                                </div>
+
+                                <div class="purchase-field">
+                                    <label>Quantity</label>
+                                    @*@Html.TextBox("Quantity", "1",
+                                        new
+                                             {
+                                            @class = "form-control",
+                                            type = "number"
+                                        })*@
+                                    <span id="reqqty" class="field-error"></span>
+                                    <span id="regqty" class="field-error"></span>
+                                </div>
+
+                                <div class="purchase-field item-add-field">
+                                    <label>&nbsp;</label>
+                                    <button type="button"
+                                            id="add"
+                                            class="add-item-btn"
+                                            onclick="AddProduct(this.value);"
+                                            value="Add">
+                                        <i class="material-icons">add</i>
+                                        Add Item
+                                    </button>
+                                </div>
+
+                            </div>
+
+                            <div id="orderItems"
+                                 class="item-cards-container">
+                                <div class="no-items">No items added.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ACCOUNT GROUP DETAILS -->
+                    <div class="inner-card account-group-card">
+                        <div class="inner-card-header">
+                            <span>
+                                <i class="material-icons">account_balance</i>
+                                Account Group Details
+                            </span>
+                        </div>
+
+                        <div class="purchase-card-body">
+                            <div class="account-entry-grid">
+
+                                <div class="purchase-field">
+                                    <label>Account Group</label>
+                                    @*@Html.DropDownList(
+                                        "AccGroupId",
+                                        (IEnumerable<SelectListItem>)ViewBag.AccGroupId,
+                                        "Please Select",
+                                        new { @class = "form-control" })*@
+                                    <span id="reqAgroupId" class="field-error"></span>
+                                </div>
+
+                                <div class="purchase-field">
+                                    <label>Amount</label>
+                                    @*@Html.TextBox("Amount", null,
+                                        new
+                                             {
+                                            @class = "form-control",
+                                            type = "number"
+                                        })*@
+                                    <span id="reqAm" class="field-error"></span>
+                                </div>
+
+                                <div class="purchase-field">
+                                    <label>Narration</label>
+                                    @*@Html.TextBox("Narration", null,
+                                        new { @class = "form-control" })*@
+                                </div>
+
+                                <div class="purchase-field item-add-field">
+                                    <label>&nbsp;</label>
+                                    <button type="button"
+                                            id="add1"
+                                            class="add-item-btn"
+                                            onclick="AddAccProduct(this.value);"
+                                            value="Add">
+                                        <i class="material-icons">add</i>
+                                        Add Group
+                                    </button>
+                                </div>
+
+                            </div>
+
+                            <div id="orderItems1"
+                                 class="account-cards-container">
+                                <div class="no-items">No account groups added.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN -->
+            <div class="purchase-layout-right">
+
+                <!-- VENDOR DETAILS -->
+                <div class="purchase-card vendor-card">
+
+                    <div class="purchase-card-header">
+                        <span>
+                            <i class="material-icons">business</i>
+                            Vendor Details
+                        </span>
+                    </div>
+
+                    <div class="purchase-card-body">
+
+                        <div class="purchase-field vendor-main-field">
+                            <label>Vendor Name</label>
+                            @*@Html.DropDownList(
+            "LedgerID",
+            (IEnumerable<SelectListItem>)ViewBag.LedgerID,
+            "Please Select",
+            new
+                 {
+                @class = "form-control",
+                onchange = "GetCompanyInfo(this.value);"
+            })*@
+                            <span id="reqcomp" class="field-error"></span>
+                        </div>
+
+                        <div class="vendor-address-title-row">
+                            <div class="purchase-field">
+                                <label>Address Title</label>
+                                <select id="AddressTitleID"
+                                        name="AddressTitleID"
+                                        class="form-control"
+                                        onchange="GetAddrCPInfo(this.value);">
+                                    <option value="">Please Select</option>
+                                </select>
+                                <span id="reqaddr" class="field-error"></span>
+                            </div>
+                        </div>
+
+                        <div class="purchase-field">
+                            <label>Address</label>
+                            <textarea id="Address"
+                                      rows="2"
+                                      maxlength="56"
+                                      class="form-control"
+                                      onkeyup="myFunction(this.id)"
+                                      readonly></textarea>
+                        </div>
+
+                        <!--<div class="vendor-detail-grid">
+        <div class="purchase-field">
+            <label>Locality / Village</label>-->
+                        @*@Html.TextBox("Locality", null,
+        new { @class = "form-control", disabled = "disabled" })*@
+                        <!--</div>
+
+    <div class="purchase-field">
+        <label>Taluka / City</label>-->
+                        @*@Html.TextBox("Taluka", null,
+        new { @class = "form-control", disabled = "disabled" })*@
+                        <!--</div>
+
+    <div class="purchase-field">
+        <label>Pincode</label>-->
+                        @*@Html.TextBox("Pincode1", null,
+        new { @class = "form-control", disabled = "disabled" })*@
+                        <!--</div>
+
+    <div class="purchase-field">
+        <label>District</label>-->
+                        @*@Html.TextBox("District", null,
+        new { @class = "form-control", disabled = "disabled" })*@
+                        <!--</div>
+
+    <div class="purchase-field">
+        <label>State</label>-->
+                        @*@Html.TextBox("State", null,
+        new { @class = "form-control", disabled = "disabled" })*@
+                        <!--</div>
+    </div>-->
+                        <!-- CONTACT -->
+                        <!--<div class="inner-card vendor-contact-section">
+        <div class="inner-card-header">
+            <span>
+                <i class="material-icons">contacts</i>
+                Contact Details
+            </span>
+        </div>-->
+                        <div class="vendor-field vendor-address-field">
+                            @*<label>Address:</label>*@
+
+                            <div class="vendor-complete-address">
+                                <span id="Address"></span>
+                                <span id="Locality"></span>
+                                <span id="Taluka"></span>
+                                <span id="District"></span>
+                                <span id="State"></span>
+                                <span id="Pincode1"></span>
+
+                            </div>
+                        </div>
+
+                        <div class="purchase-card-body">
+                            <div class="purchase-field">
+                                <label>Contact Person</label>
+                                <select id="ContactPersonName"
+                                        name="ContactPersonName"
+                                        class="form-control"
+                                        onchange="GetCPDetails(this.value);">
+                                    <option value="Please Select">Please Select</option>
+                                </select>
+                                <span id="reqcp" class="field-error"></span>
+                            </div>
+
+                            <div class="contact-fields-grid">
+
+                                <div class="purchase-field">
+                                    <label>Office Contact</label>
+                                    <div class="office-contact-row">
+                                        @*@Html.TextBox("CountryCode1", null,
+                        new
+                             {
+                            @class = "form-control country-code",
+                            Value = "+91",
+                            disabled = "disabled"
+                        })*@
+
+                                        <select id="OfficeMobileNo"
+                                                name="OfficeMobileNo"
+                                                class="form-control"
+                                                onchange="GetCPDetailsByOffmobno(this.value);">
+                                            <option value="Please Select">Please Select</option>
+                                        </select>
+                                    </div>
+                                    <span id="errorOMobile" class="field-error"></span>
+                                    <span id="errorPMobile11" class="field-error"></span>
+                                </div>
+
+                                <div class="purchase-field">
+                                    <label>Office Email</label>
+                                    <select id="OfficeEmailId"
+                                            name="OfficeEmailId"
+                                            class="form-control"
+                                            onchange="GetCPDetailsByOffemail(this.value);">
+                                        <option value="Please Select">Please Select</option>
+                                    </select>
+                                    <span id="reqEm" class="field-error"></span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                        <!-- DELIVERY -->
+                        <div class="inner-card">
+                            <div class="inner-card-header">
+                                <span>
+                                    <i class="material-icons">local_shipping</i>
+                                    Delivery Details
+                                </span>
+                            </div>
+
+                            <div class="purchase-card-body">
+                                <div class="purchase-field">
+                                    <label>Terms of Delivery</label>
+                                    @*@Html.DropDownList(
+                                        "TermsOfDeliveryID",
+                                        (IEnumerable<SelectListItem>)ViewBag.TermsOfDeliveryID,
+                                        "Please Select",
+                                        new { @class = "form-control" })*@
+                                </div>
+
+                                <div class="purchase-field">
+                                    <label>Courier Name</label>
+                                    @*@Html.DropDownList(
+                                        "CourierID",
+                                        (IEnumerable<SelectListItem>)ViewBag.CourierID,
+                                        "Please Select",
+                                        new
+                                             {
+                                            @class = "form-control",
+                                            onchange = "OtherCourier();"
+                                        })*@
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- INTERNAL NOTE -->
+                <div class="purchase-card vendor-instructions-card">
+                    <div class="purchase-card-header">
+                        <span>
+                            <i class="material-icons">description</i>
+                            Internal Note
+                        </span>
+                    </div>
+
+                    <div class="purchase-card-body">
+                        @*@Html.TextAreaFor(model => model.Note,
+                            new
+                                 {
+                                rows = 2,
+                                @class = "form-control"
+                            })
+                        @Html.ValidationMessageFor(model => model.Note,
+                            "", new { @class = "text-danger" })*@
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- FOOTER BUTTONS -->
+        <div class="purchase-form-buttons">
+            <button type="button"
+                    id="submit"
+                    class="create-btn"
+                    onclick="SavePurInd();">
+                <i class="material-icons">save</i>
+                Create
+            </button>
+
+            <button type="button"
+                    class="create-btn"
+                    onclick="window.history.back();">
+                <i class="material-icons">close</i>
+                Close
+            </button>
+        </div>
+    
+}
+
+
+
+
+@*<script>
+    $(document).ready(function () {
+
+        /*module button*/
+        $.ajax({
+            url: '/Settings/GetAllColors',
+            type: 'GET',
+            success: function (colors) {
+                // Example: Apply Inner Button colors
+                var bgColor5 = colors.InnerButtonColor; // inner
+                var fontColor5 = colors.InnerButtonFontColor; // inner text
+
+                // Example for all preview boxes (optional)
+                $('.custo-inner').css('background', bgColor5);//  inner
+                $('.custo-inner').css('color', fontColor5);// inner text
+            },
+            error: function () {
+                console.error("Failed to load color settings.");
+            }
+        });
+
+    });
+</script>*@

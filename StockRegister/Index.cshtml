@@ -1,0 +1,262 @@
+﻿@model List<ERPModels.StockRegisterSearch>
+
+@{
+    ViewBag.Title = "Stock Journal Register";
+    Layout = "~/Views/Shared/_SwipfeMaster.cshtml";
+
+    int selectedYear = ViewBag.SelectedYear != null
+        ? Convert.ToInt32(ViewBag.SelectedYear)
+        : DateTime.Now.Year;
+
+    decimal runningBalance = 0;
+    decimal totalDebit = 0;
+    decimal totalCredit = 0;
+}
+
+<link href="~/Content/ERPStyle.css" rel="stylesheet" />
+
+<style>
+
+    .stock-header {
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
+        color: white;
+        text-align: center;
+        font-size: 22px;
+        font-weight: bold;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        padding: 15px;
+    }
+
+    .table th {
+        background: linear-gradient(135deg, #0f4c75, #3282b8);
+        color: white;
+        text-align: center;
+    }
+
+    .table td {
+        font-size: 14px;
+        vertical-align: middle;
+    }
+
+    .amount {
+        text-align: right;
+        font-weight: 600;
+    }
+
+    .current-month {
+        background: #fff4cc !important;
+        font-weight: bold;
+    }
+
+    .grand-total {
+        background: #d1ecf1;
+        font-weight: bold;
+    }
+
+    .search-box {
+        margin-bottom: 15px;
+    }
+</style>
+
+<div class="container-fluid">
+
+    <!-- HEADER -->
+    <div class="stock-header">
+        Stock Journal Register
+        <br />
+        <small>
+            Financial Year @selectedYear-@((selectedYear + 1).ToString().Substring(2))
+        </small>
+    </div>
+
+    <br />
+
+    <!-- FILTER -->
+    <div class="filter-box">
+
+        <form method="get"
+              action="@Url.Action("Index","StockRegister")"
+              class="row">
+
+            <!-- FINANCIAL YEAR -->
+            <div class="col-md-3">
+
+                <label><b>Financial Year</b></label>
+
+                <select name="selectedYear"
+                        id="selectedYear"
+                        class="form-control">
+
+                    @{
+                        int currentYear = DateTime.Now.Month >= 4
+                            ? DateTime.Now.Year
+                            : DateTime.Now.Year - 1;
+
+                        for (int y = currentYear; y >= 2024; y--)
+                        {
+                            <option value="@y"
+                                    @(y == selectedYear ? "selected" : "")>
+                                FY @y-@((y + 1).ToString().Substring(2))
+                            </option>
+                        }
+                    }
+
+                </select>
+
+            </div>
+
+            <!-- FROM DATE -->
+            <div class="col-md-3">
+
+                <label><b>From Date</b></label>
+
+                <input type="date"
+                       id="fromDate"
+                       name="fromDate"
+                       value="@ViewBag.FromDate"
+                       class="form-control" />
+
+            </div>
+
+            <!-- TO DATE -->
+            <div class="col-md-3">
+
+                <label><b>To Date</b></label>
+
+                <input type="date"
+                       id="toDate"
+                       name="toDate"
+                       value="@ViewBag.ToDate"
+                       class="form-control" />
+
+            </div>
+
+            <!-- BUTTONS -->
+            <div class="col-md-3 d-flex align-items-end">
+
+                <button type="submit"
+                        class="btn btn-success btn-round create-bttn custo-inner mr-2">
+                    Search
+                </button>
+
+                <a href="@Url.Action("Index","StockRegister")"
+                   class="btn btn-success btn-round create-bttn custo-inner">
+                    Reset
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    <!-- TABLE -->
+    <table class="table table-bordered table-hover">
+
+        <thead>
+            <tr>
+                <th>Particulars</th>
+                <th>Debit (In Qty)</th>
+                <th>Credit (Out Qty)</th>
+                <th>Amount</th>
+                <th>Closing Balance</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                decimal debit = item.InQty;
+                decimal credit = item.OutQty;
+                decimal amount = item.Amount;
+
+                runningBalance += (debit - credit);
+
+                totalDebit += debit;
+                totalCredit += credit;
+
+                <tr>
+
+                    <td>
+                        <a href="@Url.Action("MonthDetails","StockRegister", new {
+                            month = item.VoucherDate.Month,
+                            selectedYear = selectedYear
+                        })"
+                           style="text-decoration:none;font-weight:bold;color:#003399;">
+                            @item.MonthName
+                        </a>
+                    </td>
+
+                    <td class="amount">
+                        @debit.ToString("N2")
+                    </td>
+
+                    <td class="amount">
+                        @credit.ToString("N2")
+                    </td>
+
+                    <td class="amount">
+                        ₹ @amount.ToString("N2")
+                    </td>
+
+                    <td class="amount">
+                        ₹ @runningBalance.ToString("N2")
+                    </td>
+
+                </tr>
+            }
+
+        </tbody>
+
+        <tfoot>
+
+            <tr class="grand-total">
+
+                <td>Grand Total</td>
+
+                <td class="amount">
+                    @totalDebit.ToString("N2")
+                </td>
+
+                <td class="amount">
+                    @totalCredit.ToString("N2")
+                </td>
+
+                <td class="amount">
+                    ₹ @Model.Sum(x => x.Amount).ToString("N2")
+                </td>
+
+                <td class="amount">
+                    ₹ @runningBalance.ToString("N2")
+                </td>
+
+            </tr>
+
+        </tfoot>
+
+    </table>
+
+</div>
+
+
+<script>
+
+    document.getElementById("selectedYear")
+        .addEventListener("change", function () {
+
+            var year = this.value;
+
+            // Financial Year Start
+            var fromDate = year + "-04-01";
+
+            // Financial Year End
+            var toDate = (parseInt(year) + 1) + "-03-31";
+
+            document.getElementById("fromDate").value = fromDate;
+
+            document.getElementById("toDate").value = toDate;
+        });
+
+</script>

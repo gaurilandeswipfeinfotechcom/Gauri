@@ -1,0 +1,1397 @@
+<<<<<<< Updated upstream
+﻿@model ERPEntities.ValidationsSettingDetails
+
+@{
+    ViewBag.Title = "LayOutSettings";
+    Layout = "~/Views/Shared/_SwipfeMaster.cshtml";
+}
+<!-- Add these links in your layout or view -->
+=======
+﻿<!-- Add these links in your layout or view -->
+>>>>>>> Stashed changes
+<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>-->
+<!-- Bootstrap CSS -->
+<<<<<<< Updated upstream
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" integrity="sha384-MF2HRB1IaWcndU1UqCmzSTLPFudY0Qbimz2o12J4R5rY4tUcAr6QQ6hJHd1oVSk1" crossorigin="anonymous">
+
+<!-- Bootstrap Icons CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.18.0/font/bootstrap-icons.css" integrity="sha384-oNlhP6aNAqFkztDjAdqf9FHc2L5rjsrrV5AgBjkjhlfC5I1dDgqTfHUcrMHfL3tx" crossorigin="anonymous">
+=======
+<!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" integrity="sha384-MF2HRB1IaWcndU1UqCmzSTLPFudY0Qbimz2o12J4R5rY4tUcAr6QQ6hJHd1oVSk1" crossorigin="anonymous">-->
+<!-- Bootstrap Icons CSS -->
+<!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.18.0/font/bootstrap-icons.css" integrity="sha384-oNlhP6aNAqFkztDjAdqf9FHc2L5rjsrrV5AgBjkjhlfC5I1dDgqTfHUcrMHfL3tx" crossorigin="anonymous">
+>>>>>>> Stashed changes
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.18.0/font/bootstrap-icons.css" rel="stylesheet">
+
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        /*  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
+        /*    margin-top: 50px;*/
+    }
+
+    h2 {
+        color: #28a745;
+<<<<<<< Updated upstream
+    }
+
+    label {
+        margin-top: 10px;
+        display: block;
+        font-weight: bold;
+        color: darkcyan;
+    }
+
+    input,
+    select {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        box-sizing: border-box;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+    }
+
+    button {
+        background-color: #28a745;
+        color: #fff;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+=======
+    }
+
+    label {
+        margin-top: 10px;
+        display: block;
+        font-weight: bold;
+        color: darkcyan;
+    }
+
+    input,
+    select {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        box-sizing: border-box;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+    }
+
+    button {
+        background-color: #28a745;
+        color: #fff;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+    input[type="file"] {
+        margin-top: 5px;
+    }
+
+    .non-bold-link {
+        font-weight: normal;
+        font-size: 12px; /* You can adjust the value to the desired size */
+    }
+
+    .modal-body {
+        text-align: center;
+        padding: 0;
+    }
+
+        .modal-body img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+    .modal-body {
+        text-align: center;
+        padding: 20px; /* Add padding for better appearance */
+    }
+
+        .modal-body img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto; /* Allow images to scale */
+            height: auto; /* Allow images to scale */
+            margin: 0 auto; /* Center the image horizontally */
+        }
+</style>-->
+<!--<h2 class="text-center">Layout Settings</h2>
+
+
+    <div class="row">
+        <div class="col-6">
+            <label for="ERPName">OTP Regards Name: <a href="#" id="showImageLink" class="non-bold-link"><span class="glyphicon glyphicon-info-sign"></span></a></label>
+
+            <div id="imageModal" class="modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Regards Name Image</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img id="companyImage" src="" class="img-fluid" alt="Company Image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input type="text" id="ERPName" name="ERPName" class="form-control" placeholder="Enter ERP Name" />
+        </div>
+
+
+        <div class="col-6">
+            <label for="existingERPNames">Select Regards Name:</label>
+            <select id="existingERPNames" name="existingERPNames" class="form-control" style="height:35px;">
+                <option value="">Select an Regards Name</option>-->
+<!-- Populate the dropdown options with existing ERP names from the ViewBag -->
+<!--@foreach (var existingERPName in ViewBag.ExistingERPNames)
+            {
+                if (!string.IsNullOrWhiteSpace(existingERPName))
+                {
+                    <option value="@existingERPName">@existingERPName</option>
+                }
+            }
+        </select>
+    </div>
+</div>
+<div class="row">
+
+    <div class="col-6">
+        <label>
+            SMTP UserName:
+            <a href="#" class="non-bold-link showImageLink"
+               data-target="#otpEmailImageModal"
+               data-src="@Url.Content("~/Image/OTPEmail.JPG")"><span class="glyphicon glyphicon-info-sign"></span></a>
+        </label>
+        <input type="text" id="OTPEmail" name="OTPEmail" class="form-control" placeholder="SMTP UserName" />
+        <div id="otpEmailImageModal" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">SMTP UserName</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <img id="otpEmailImage" src="" class="img-fluid" alt="OTP Email Image">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <label for="existingOTPEmail">Select SMTP UserName:</label>
+        <select id="existingOTPEmail" name="existingOTPEmail" class="form-control" style="height:35px;">
+            <option value="">Select an SMTP UserName</option>-->
+<!-- Populate the dropdown options with existing ERP names from the ViewBag -->
+<!--@foreach (var existingOTPEmail in ViewBag.ExistingOTPEmail)
+            {
+                if (!string.IsNullOrWhiteSpace(existingOTPEmail))
+                {
+                    <option value="@existingOTPEmail">@existingOTPEmail</option>
+                }
+            }
+        </select>
+    </div>
+</div>
+
+<div class="row">
+
+    <div class="col-6">
+        <label>
+            SMTP Password:
+            <a href="#" class="non-bold-link showImageLink"
+               data-target="#otpPasswordImageModal"
+               data-src="@Url.Content("~/Image/OTPPassword.JPG")"><span class="glyphicon glyphicon-info-sign"></span></a>
+        </label>
+        <input type="text" id="OTPPassword" name="OTPPassword" class="form-control" placeholder="Enter SMTP Password" />
+        <div id="otpPasswordImageModal" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">SMTP Password </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <img id="otpPasswordImage" src="" class="img-fluid" alt="OTP Password Image">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <label for="existingOTPPassword">Select SMTP Password:</label>
+        <select id="existingOTPPassword" name="existingOTPPassword" class="form-control" style="height:35px;">
+            <option value="">Select an SMTP Password</option>-->
+<!-- Populate the dropdown options with existing ERP names from the ViewBag -->
+<!--@foreach (var existingOTPPassword in ViewBag.ExistingOTPPassword)
+            {
+                if (!string.IsNullOrWhiteSpace(existingOTPPassword))
+                {
+                    <option value="@existingOTPPassword">@existingOTPPassword</option>
+                }
+            }
+        </select>
+    </div>
+</div>
+
+
+<div class="row">
+
+    <div class="col-6">
+        <label>
+            Email Reply Name:
+            <a href="#" class="non-bold-link showImageLink"
+               data-target="#emailReplyNameImageModal"
+               data-src="@Url.Content("~/Image/EmailReplyName.png")"><span class="glyphicon glyphicon-info-sign"></span></a>
+        </label>
+        <input type="text" id="EmailReplyName" name="EmailReplyName" class="form-control" placeholder="Enter Email Reply Name" />
+        <div id="emailReplyNameImageModal" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Email Reply Name </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <img id="emailReplyName" src="" class="img-fluid" alt="Email Reply Name Image">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <label for="existingEmailReplyName">Select SMTP Password:</label>
+        <select id="existingEmailReplyName" name="existingEmailReplyName" class="form-control" style="height:35px;">
+            <option value="">Select an Email Reply Name</option>-->
+<!-- Populate the dropdown options with existing ERP names from the ViewBag -->
+<!--@foreach (var existingEmailReplyName in ViewBag.ExistingEmailReplyName)
+                {
+                    if (!string.IsNullOrWhiteSpace(existingEmailReplyName))
+                    {
+                        <option value="@existingEmailReplyName">@existingEmailReplyName</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6">
+            <label>
+                LogIn Image:
+                <a href="#" class="non-bold-link showImageLink"
+                   data-target="#loginImageModal"
+                   data-src="@Url.Content("~/Image/LogInImage.JPG")"><span class="glyphicon glyphicon-info-sign"></span></a>
+            </label>
+            <input type="file" name="CustomPhotoFile12" style="width: 300px;" accept=".png, .jpg, .jpeg, .pdf" />
+            <div id="loginImageModal" class="modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">LogIn Image</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img id="loginImage" src="" class="img-fluid" alt="LogIn Image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6">
+            <label>
+                Verify OTP Image:
+                <a href="#" class="non-bold-link showImageLink"
+                   data-target="#otpImageModal"
+                   data-src="@Url.Content("~/Image/OTPImage.JPG")"><span class="glyphicon glyphicon-info-sign"></span></a>
+            </label>
+            <input type="file" name="CustomPhotoFile123" style="width: 300px;" accept=".png, .jpg, .jpeg, .pdf" />
+            <div id="otpImageModal" class="modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Verify OTP Image</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img id="otpImage" src="" class="img-fluid" alt="Verify OTP Image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6">
+            <label>
+                Invoice Icon:
+                <a href="#" class="non-bold-link showImageLink"
+                   data-target="#iconImageModal"
+                   data-src="@Url.Content("~/Image/InvoiceIcon.PNG")"><span class="glyphicon glyphicon-info-sign"></span></a>
+            </label>
+            <input type="file" name="CustomPhotoFile1234" style="width: 300px;" accept=".png, .jpg, .jpeg, .pdf" />
+            <div id="iconImageModal" class="modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Invoice Icon</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img id="otpImage" src="" class="img-fluid" alt="Verify OTP Image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+
+
+    <div>
+        <button type="submit" class="btn btn-success" id="saveNameBtn">Save</button>
+    </div>
+     </div>
+}
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#saveNameBtn').click(function () {
+            var selectedName = $('#existingERPNames').val();
+            var selectedName1 = $('#existingOTPEmail').val();
+            var selectedName2 = $('#existingOTPPassword').val();
+            var selectedName3 = $('#existingEmailReplyName').val();
+            var formData = new FormData();
+            formData.append('existingERPNames', selectedName);
+            formData.append('existingOTPEmail', selectedName1);
+            formData.append('existingOTPPassword', selectedName2);
+            formData.append('existingEmailReplyName', selectedName3);
+
+            $.ajax({
+                url: '@Url.Action("LayOutSettings", "Settings")',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    // Handle success if needed
+                },
+                error: function (error) {
+                    // Handle error if needed
+                }
+            });
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('#showImageLink').click(function () {
+            var imageUrl = '@Url.Content("~/Image/RegardsName.png")'; // Corrected image URL
+            $('#companyImage').attr('src', imageUrl);
+            $('#imageModal').modal('show');
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('.showImageLink').click(function () {
+            var imageUrl = $(this).data('src');
+            $($(this).data('target') + ' img').attr('src', imageUrl);
+            $($(this).data('target')).modal('show');
+        });
+    });
+</script>-->
+
+
+
+
+
+
+@model ERPEntities.ValidationsSettingDetails
+
+@{
+    ViewBag.Title = "LayOutSettings";
+    Layout = "~/Views/Shared/_SwipfeMaster.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style>
+
+    .settings-container {
+        display: flex;
+        background: white;
+        border: 1px solid #ccc;
+        min-height: 650px;
+    }
+
+    h4 {
+        font-size: 18px;
+        color: #00209cde;
+        margin-top: -1%;
+    }
+
+    .left-menu {
+        width: 250px;
+        background: #f7f7f7;
+        border-right: 1px solid #ddd;
+        color: #000000;
+    }
+
+        .left-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .left-menu li {
+            padding: 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #ddd;
+        }
+
+            .left-menu li:hover {
+                background: #e9f0ff;
+            }
+
+    .menu-list {
+        list-style: none;
+        padding: 15px;
+        margin: 0;
+    }
+
+        .menu-list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            color: #444;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+            .menu-list li i {
+                color: #4376c0;
+                font-size: 16px;
+                width: 20px;
+            }
+
+            .menu-list li:hover {
+                background: #eef4ff;
+                transform: translateX(4px);
+            }
+
+            .menu-list li.active {
+                background: linear-gradient(90deg, #052a5f,#83cdc6 /*#4a90ff*/ );
+                color: white;
+                box-shadow: 0px 4px 10px rgba(13,110,253,0.2);
+            }
+
+                .menu-list li.active i {
+                    color: white;
+                }
+
+    .right-panel {
+        flex: 1;
+        padding: 20px;
+    }
+
+    .setting-row {
+        display: grid;
+        grid-template-columns: 70% 30%;
+        margin-bottom: 10px;
+        align-items: center;
+    }
+
+        .setting-row label {
+            font-size: 13px;
+        }
+
+        .setting-row select,
+        .setting-row input {
+            height: 30px;
+            padding: 5px;
+        }
+
+    .settings-section {
+        display: none;
+    }
+
+    .active-section {
+        display: block;
+    }
+
+    .preview-box {
+        background: #f4f8ff;
+        padding: 10px;
+        margin-top: 15px;
+        border: 1px solid #ddd;
+    }
+
+    .save-btn {
+        margin-top: 25px;
+        width: 220px;
+        height: 42px;
+        border: none;
+        border-radius: 8px;
+        background: linear-gradient(90deg, #052a5f, #83cdc6);
+        color: white;
+        font-weight: 600;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        box-shadow: 0px 4px 10px rgba(0,0,0,0.15);
+    }
+
+    label {
+        color: #000000;
+    }
+
+    select {
+        color: #000000;
+    }
+
+    h4 {
+        font-size: 18px;
+        color: #00209cde;
+        margin-top: -1%;
+    }
+
+    label {
+        color: #000000;
+    }
+
+    select {
+        color: #000000;
+    }
+
+    .setting-label i {
+        color: #4376c0; /* blue icons */
+        margin-right: 8px;
+        font-size: 14px;
+    }
+
+    .setting-row label i,
+    h4 i {
+        color: #4376c0 !important;
+        margin-right: 8px;
+    }
+
+    .toggle-wrapper {
+        display: flex;
+        align-items: flex-start; /* moves Yes/No slightly upward */
+        gap: 8px;
+        margin-top: -2px;
+    }
+
+    .toggle-text {
+        font-size: 13px;
+        font-weight: 600;
+        color: #555;
+        min-width: 25px;
+    }
+
+    select {
+        width: 41%;
+    }
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 45px;
+        height: 22px;
+    }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #ccc;
+        transition: .4s;
+        border-radius: 34px;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 2px;
+            bottom: 2px;
+            background: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+    input:checked + .slider {
+        background: #4376c0;
+    }
+
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+    /* =========================================================
+   SETTINGS ROUTE PATH
+   ========================================================= */
+
+    .route-path1 {
+        clip-path: polygon( 0% 0%, 85% 0%, 100% 50%, 85% 100%, 0% 100% );
+        background-color: #003399;
+        color: white;
+        padding: 5px 13px 5px 5px;
+        margin: 0;
+        font-size: 18px;
+    }
+
+    .route-path2 {
+>>>>>>> Stashed changes
+        cursor: pointer;
+        color: white;
+        clip-path: polygon( 89% 0%, 100% 50%, 89% 100%, 0% 100%, 11% 50%, 0% 0% );
+        background-color: #003399;
+        padding: 5px 15px;
+        margin: 0;
+        font-size: 18px;
+    }
+
+<<<<<<< Updated upstream
+        button:hover {
+            background-color: #218838;
+        }
+
+    input[type="file"] {
+        margin-top: 5px;
+    }
+
+    .non-bold-link {
+        font-weight: normal;
+        font-size: 12px; /* You can adjust the value to the desired size */
+=======
+    .route-path3 {
+        color: white;
+        clip-path: polygon( 89% 0%, 100% 50%, 89% 100%, 0% 100%, 11% 50%, 0% 0% );
+        background-color: #003399;
+        padding: 5px 15px;
+        margin: 0;
+        font-size: 18px;
+>>>>>>> Stashed changes
+    }
+
+    .modal-body {
+        text-align: center;
+        padding: 0;
+    }
+
+        .modal-body img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+    .modal-body {
+        text-align: center;
+        padding: 20px; /* Add padding for better appearance */
+    }
+
+        .modal-body img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto; /* Allow images to scale */
+            height: auto; /* Allow images to scale */
+            margin: 0 auto; /* Center the image horizontally */
+        }
+</style>
+
+
+<<<<<<< Updated upstream
+<h2 class="text-center">Layout Settings</h2>
+
+@using (Html.BeginForm("LayOutSettings", "Settings", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="row">
+        <div class="col-6">
+            <label for="ERPName">OTP Regards Name: <a href="#" id="showImageLink" class="non-bold-link"><span class="glyphicon glyphicon-info-sign"></span></a></label>
+
+            <div id="imageModal" class="modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Regards Name Image</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img id="companyImage" src="" class="img-fluid" alt="Company Image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input type="text" id="ERPName" name="ERPName" class="form-control" placeholder="Enter ERP Name" />
+        </div>
+
+
+        <div class="col-6">
+            <label for="existingERPNames">Select Regards Name:</label>
+            <select id="existingERPNames" name="existingERPNames" class="form-control" style="height:35px;">
+                <option value="">Select an Regards Name</option>
+                <!-- Populate the dropdown options with existing ERP names from the ViewBag -->
+                @foreach (var existingERPName in ViewBag.ExistingERPNames)
+                {
+                    if (!string.IsNullOrWhiteSpace(existingERPName))
+                    {
+                        <option value="@existingERPName">@existingERPName</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-6">
+            <label>
+                SMTP UserName:
+                <a href="#" class="non-bold-link showImageLink"
+                   data-target="#otpEmailImageModal"
+                   data-src="@Url.Content("~/Image/OTPEmail.JPG")"><span class="glyphicon glyphicon-info-sign"></span></a>
+            </label>
+            <input type="text" id="OTPEmail" name="OTPEmail" class="form-control" placeholder="SMTP UserName" />
+            <div id="otpEmailImageModal" class="modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">SMTP UserName</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img id="otpEmailImage" src="" class="img-fluid" alt="OTP Email Image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <label for="existingOTPEmail">Select SMTP UserName:</label>
+            <select id="existingOTPEmail" name="existingOTPEmail" class="form-control" style="height:35px;">
+                <option value="">Select an SMTP UserName</option>
+                <!-- Populate the dropdown options with existing ERP names from the ViewBag -->
+                @foreach (var existingOTPEmail in ViewBag.ExistingOTPEmail)
+                {
+                    if (!string.IsNullOrWhiteSpace(existingOTPEmail))
+                    {
+                        <option value="@existingOTPEmail">@existingOTPEmail</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-6">
+            <label>
+                SMTP Password:
+                <a href="#" class="non-bold-link showImageLink"
+                   data-target="#otpPasswordImageModal"
+                   data-src="@Url.Content("~/Image/OTPPassword.JPG")"><span class="glyphicon glyphicon-info-sign"></span></a>
+            </label>
+            <input type="text" id="OTPPassword" name="OTPPassword" class="form-control" placeholder="Enter SMTP Password" />
+            <div id="otpPasswordImageModal" class="modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">SMTP Password </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img id="otpPasswordImage" src="" class="img-fluid" alt="OTP Password Image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <label for="existingOTPPassword">Select SMTP Password:</label>
+            <select id="existingOTPPassword" name="existingOTPPassword" class="form-control" style="height:35px;">
+                <option value="">Select an SMTP Password</option>
+                <!-- Populate the dropdown options with existing ERP names from the ViewBag -->
+                @foreach (var existingOTPPassword in ViewBag.ExistingOTPPassword)
+                {
+                    if (!string.IsNullOrWhiteSpace(existingOTPPassword))
+                    {
+                        <option value="@existingOTPPassword">@existingOTPPassword</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+
+
+    <div class="row">
+
+        <div class="col-6">
+            <label>
+                Email Reply Name:
+                <a href="#" class="non-bold-link showImageLink"
+                   data-target="#emailReplyNameImageModal"
+                   data-src="@Url.Content("~/Image/EmailReplyName.png")"><span class="glyphicon glyphicon-info-sign"></span></a>
+            </label>
+            <input type="text" id="EmailReplyName" name="EmailReplyName" class="form-control" placeholder="Enter Email Reply Name" />
+            <div id="emailReplyNameImageModal" class="modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Email Reply Name </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img id="emailReplyName" src="" class="img-fluid" alt="Email Reply Name Image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <label for="existingEmailReplyName">Select SMTP Password:</label>
+            <select id="existingEmailReplyName" name="existingEmailReplyName" class="form-control" style="height:35px;">
+                <option value="">Select an Email Reply Name</option>
+                <!-- Populate the dropdown options with existing ERP names from the ViewBag -->
+                @foreach (var existingEmailReplyName in ViewBag.ExistingEmailReplyName)
+                {
+                    if (!string.IsNullOrWhiteSpace(existingEmailReplyName))
+                    {
+                        <option value="@existingEmailReplyName">@existingEmailReplyName</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6">
+            <label>
+                LogIn Image:
+                <a href="#" class="non-bold-link showImageLink"
+                   data-target="#loginImageModal"
+                   data-src="@Url.Content("~/Image/LogInImage.JPG")"><span class="glyphicon glyphicon-info-sign"></span></a>
+            </label>
+            <input type="file" name="CustomPhotoFile12" style="width: 300px;" accept=".png, .jpg, .jpeg, .pdf" />
+            <div id="loginImageModal" class="modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">LogIn Image</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img id="loginImage" src="" class="img-fluid" alt="LogIn Image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6">
+            <label>
+                Verify OTP Image:
+                <a href="#" class="non-bold-link showImageLink"
+                   data-target="#otpImageModal"
+                   data-src="@Url.Content("~/Image/OTPImage.JPG")"><span class="glyphicon glyphicon-info-sign"></span></a>
+            </label>
+            <input type="file" name="CustomPhotoFile123" style="width: 300px;" accept=".png, .jpg, .jpeg, .pdf" />
+            <div id="otpImageModal" class="modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Verify OTP Image</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img id="otpImage" src="" class="img-fluid" alt="Verify OTP Image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6">
+            <label>
+                Invoice Icon:
+                <a href="#" class="non-bold-link showImageLink"
+                   data-target="#iconImageModal"
+                   data-src="@Url.Content("~/Image/InvoiceIcon.PNG")"><span class="glyphicon glyphicon-info-sign"></span></a>
+            </label>
+            <input type="file" name="CustomPhotoFile1234" style="width: 300px;" accept=".png, .jpg, .jpeg, .pdf" />
+            <div id="iconImageModal" class="modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Invoice Icon</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img id="otpImage" src="" class="img-fluid" alt="Verify OTP Image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+
+
+    <div>
+        <button type="submit" class="btn btn-success" id="saveNameBtn">Save</button>
+    </div>
+}
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#saveNameBtn').click(function () {
+            var selectedName = $('#existingERPNames').val();
+            var selectedName1 = $('#existingOTPEmail').val();
+            var selectedName2 = $('#existingOTPPassword').val();
+            var selectedName3 = $('#existingEmailReplyName').val();
+            var formData = new FormData();
+            formData.append('existingERPNames', selectedName);
+            formData.append('existingOTPEmail', selectedName1);
+            formData.append('existingOTPPassword', selectedName2);
+            formData.append('existingEmailReplyName', selectedName3);
+
+            $.ajax({
+                url: '@Url.Action("LayOutSettings", "Settings")',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    // Handle success if needed
+                },
+                error: function (error) {
+                    // Handle error if needed
+                }
+            });
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('#showImageLink').click(function () {
+            var imageUrl = '@Url.Content("~/Image/RegardsName.png")'; // Corrected image URL
+            $('#companyImage').attr('src', imageUrl);
+            $('#imageModal').modal('show');
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('.showImageLink').click(function () {
+            var imageUrl = $(this).data('src');
+            $($(this).data('target') + ' img').attr('src', imageUrl);
+            $($(this).data('target')).modal('show');
+=======
+@helper CheckRow(string labelText)
+{
+    <div class="setting-row">
+        <label class="setting-label">
+            @Html.Raw(labelText)
+        </label>
+
+        <div class="toggle-wrapper">
+            <label class="switch">
+                <input type="checkbox" checked onchange="updateToggleText(this)">
+                <span class="slider"></span>
+            </label>
+
+            <span class="toggle-text">Yes</span>
+        </div>
+    </div>
+}
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pagefix">
+
+    <div class="d-flex">
+
+        <h4 class="route-path1">
+            Admin
+        </h4>
+
+        <h4 class="route-path2"
+            onclick="location.href='@Url.Action("Index","Settings")'">
+            Setting
+        </h4>
+
+        <h4 class="route-path3">
+            Layout
+        </h4>
+
+    </div>
+
+    <br />
+
+</div>
+@using (Html.BeginForm("LayOutSettings", "Settings", FormMethod.Post,
+    new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="settings-container">
+
+        <div class="left-menu">
+
+            <ul class="menu-list">
+                <li class="active" onclick="showSection('branding',this)">
+                    <i class="fa fa-palette"></i> Branding
+                </li>
+
+                <li onclick="showSection('email',this)">
+                    <i class="fa fa-envelope"></i> Email
+                </li>
+
+                <li onclick="showSection('loginlayout',this)">
+                    <i class="fa fa-sign-in-alt"></i> Login Layout
+                </li>
+
+                <li onclick="showSection('documentlayout',this)">
+                    <i class="fa fa-file-alt"></i> Document Layout
+                </li>
+            </ul>
+        </div>
+        <!-- RIGHT PANEL -->
+        <div class="right-panel">
+
+
+         
+
+
+            <div id="branding" class="settings-section active-section">
+                <h4><i class="fa fa-building"></i> Branding Settings</h4>
+
+                <div class="setting-row">
+                    <label class="setting-label">
+                        <i class="fa fa-signature"></i> OTP Regards Name
+                    </label>
+                    <input type="text"
+                           id="ERPName"
+                           name="ERPName"
+                           class="form-control"
+                           placeholder="Enter ERP Name" />
+                </div>
+
+                <div class="setting-row">
+                    <label class="setting-label">
+                        <i class="fa fa-list"></i> Select Regards Name
+                    </label>
+                    <select id="existingERPNames"
+                            name="existingERPNames"
+                            class="form-control">
+                        <option value="">Select Regards Name</option>
+
+                        @foreach (var existingERPName in ViewBag.ExistingERPNames)
+                        {
+                            if (!string.IsNullOrWhiteSpace(existingERPName))
+                            {
+                                <option value="@existingERPName">
+                                    @existingERPName
+                                </option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="setting-row">
+                    <label class="setting-label">
+                        <i class="fa fa-image"></i> Invoice Icon
+                    </label>
+                    <input type="file"
+                           name="CustomPhotoFile1234"
+                           class="form-control"
+                           accept=".png,.jpg,.jpeg,.pdf" />
+                </div>
+            </div>
+
+
+
+            <div id="email" class="settings-section">
+                <h4><i class="fa fa-envelope"></i> Email Settings</h4>
+
+                <div class="setting-row">
+                    <label class="setting-label">
+                        <i class="fa fa-user"></i> SMTP UserName
+                    </label>
+                    <input type="text"
+                           id="OTPEmail"
+                           name="OTPEmail"
+                           class="form-control"
+                           placeholder="SMTP Username" />
+                </div>
+
+                <div class="setting-row">
+                    <label class="setting-label">
+                        <i class="fa fa-list"></i> Select SMTP UserName
+                    </label>
+                    <select id="existingOTPEmail"
+                            name="existingOTPEmail"
+                            class="form-control">
+                        <option>Select SMTP Username</option>
+
+                        @foreach (var existingOTPEmail in ViewBag.ExistingOTPEmail)
+                        {
+                            if (!string.IsNullOrWhiteSpace(existingOTPEmail))
+                            {
+                                <option value="@existingOTPEmail">
+                                    @existingOTPEmail
+                                </option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="setting-row">
+                    <label class="setting-label">
+                        <i class="fa fa-lock"></i> SMTP Password
+                    </label>
+                    <input type="text"
+                           id="OTPPassword"
+                           name="OTPPassword"
+                           class="form-control"
+                           placeholder="Enter SMTP Password" />
+                </div>
+
+                <div class="setting-row">
+                    <label class="setting-label">
+                        <i class="fa fa-list-alt"></i> Select SMTP Password
+                    </label>
+                    <select id="existingOTPPassword"
+                            name="existingOTPPassword"
+                            class="form-control">
+                        <option>Select SMTP Password</option>
+
+                        @foreach (var item in ViewBag.ExistingOTPPassword)
+                        {
+                            if (!string.IsNullOrWhiteSpace(item))
+                            {
+                                <option value="@item">@item</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="setting-row">
+                    <label class="setting-label">
+                        <i class="fa fa-reply"></i> Email Reply Name
+                    </label>
+                    <input type="text"
+                           id="EmailReplyName"
+                           name="EmailReplyName"
+                           class="form-control"
+                           placeholder="Enter Email Reply Name" />
+                </div>
+
+                <div class="setting-row">
+                    <label class="setting-label">
+                        <i class="fa fa-list"></i> Select Email Reply Name
+                    </label>
+                    <select id="existingEmailReplyName"
+                            name="existingEmailReplyName"
+                            class="form-control">
+                        <option>Select Email Reply Name</option>
+
+                        @foreach (var item in ViewBag.ExistingEmailReplyName)
+                        {
+                            if (!string.IsNullOrWhiteSpace(item))
+                            {
+                                <option value="@item">@item</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+
+
+            <div id="loginlayout" class="settings-section">
+                <h4><i class="fa fa-image"></i> Login Layout Settings</h4>
+
+                <div class="setting-row">
+                    
+                        <label>
+                            <i class="fa fa-sign-in-alt"></i> Login Image
+                        </label>
+                        <input type="file"
+                               name="CustomPhotoFile12"
+                               class="form-control"
+                               accept=".png,.jpg,.jpeg,.pdf" />
+                    
+
+                    
+                        <label>
+                            <i class="fa fa-shield-alt"></i> Verify OTP Image
+                        </label>
+                        <input type="file"
+                               name="CustomPhotoFile123"
+                               class="form-control"
+                               accept=".png,.jpg,.jpeg,.pdf" />
+                    
+                </div>
+            </div>
+
+            <div id="documentlayout" class="settings-section">
+                <h4><i class="fa fa-file-alt"></i> Document Layout Settings</h4>
+
+                @CheckRow("<i class='fa fa-building'></i> Show Company Logo")
+
+                @CheckRow("<i class='fa fa-barcode'></i> Show Barcode")
+
+                @CheckRow("<i class='fa fa-qrcode'></i> Show QR Code")
+
+                @CheckRow("<i class='fa fa-signature'></i> Show Signature")
+
+                @CheckRow("<i class='fa fa-file-contract'></i> Show Terms & Conditions")
+            </div>
+
+
+            <button type="submit" class="save-btn">
+                Save Layout Settings
+            </button>
+
+
+
+        </div>
+
+    </div>
+}
+
+
+
+<script>
+    function updateToggleText(toggle) {
+        let textElement = toggle.closest(".toggle-wrapper")
+            .querySelector(".toggle-text");
+
+        if (toggle.checked) {
+            textElement.innerText = "Yes";
+        } else {
+            textElement.innerText = "No";
+        }
+    }
+
+    // initialize all toggles on page load
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".switch input").forEach(function (toggle) {
+            updateToggleText(toggle);
+>>>>>>> Stashed changes
+        });
+    });
+</script>
+
+
+<script>
+    function showSection(sectionId, element) {
+
+        // Hide all sections
+        document.querySelectorAll(".settings-section").forEach(function (section) {
+            section.style.display = "none";
+        });
+
+        // Show selected section
+        document.getElementById(sectionId).style.display = "block";
+
+        // Remove active class from all sidebar items
+        document.querySelectorAll(".menu-list li").forEach(function (item) {
+            item.classList.remove("active");
+        });
+
+        // Add active class to clicked item
+        element.classList.add("active");
+    }
+</script>
+
+
+<script>
+    function showSection(sectionId, element) {
+
+        // Hide all sections
+        document.querySelectorAll(".settings-section").forEach(function (section) {
+            section.style.display = "none";
+        });
+
+        // Show selected section
+        document.getElementById(sectionId).style.display = "block";
+
+        // Remove active class from all sidebar items
+        document.querySelectorAll(".menu-list li").forEach(function (item) {
+            item.classList.remove("active");
+        });
+
+        // Add active class to clicked item
+        element.classList.add("active");
+    }
+</script>

@@ -1,0 +1,216 @@
+﻿@model ERPEntities.PaymentTerms
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_SwipfeMaster.cshtml";
+}
+
+
+<style>
+    /*Adding some css for looks good*/
+    #label {
+        font-size: 15px;
+        color: #0077B3;
+        font-weight: 500
+    }
+
+    h4 {
+        font-size: 18px;
+        padding: 10px 0;
+        font-weight: 600;
+    }
+
+    .form-head h4 {
+        padding: 10px 10px;
+        font-size: 16px;
+        font-weight: 600;
+        background-color: #C1D5BD;
+    }
+
+
+    .body-panel {
+        border: 1px solid black;
+        /*background-color: whitesmoke;*/
+        margin-top: -10px;
+        border-radius: 5px;
+        background-color: floralwhite;
+    }
+
+    .submit-btn {
+        display: inline-flex;
+        padding: 7px;
+    }
+
+
+        .submit-btn button {
+            border-radius: 30px;
+            padding: 5px 5px;
+        }
+
+
+
+    .save-btn input {
+        /*border-radius: 30px;*/
+        font-size: 14px;
+    }
+
+
+
+    fieldset {
+        border: 1px solid #ddd !important;
+        margin: 10px;
+        /*max-width:0;*/
+        padding: 5px;
+        /* position:relative;*/
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        /*background-color: whitesmoke;*/
+        /* background-color: white;*/
+        background-color: white;
+    }
+
+
+    span.error {
+        display: block;
+        visibility: hidden;
+        color: red;
+        font-size: 60px;
+    }
+
+
+    .ui-widget {
+        font-size: 12px !important;
+    }
+
+    .reqError {
+        color: #ff0000; /*Red Color*/
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+
+    .dshapefieldset {
+        background-color: #e5e6e7;
+        border: 2px solid #ddd;
+        border-radius: 0px 25px 25px 0px;
+        margin-bottom: 25px;
+    }
+
+    .field-heading {
+        font-size: 18px;
+        color: midnightblue;
+        font-family: Helvetica;
+        font-weight: bold;
+        display: flex
+    }
+
+    .route-path1 {
+        clip-path: polygon(0% 0%, 85% 0%, 100% 50%, 85% 100%, 0% 100%);
+        background-color: #003399;
+        color: white;
+        padding: 5px 15px 5px 5px
+    }
+
+    .route-path2 {
+        cursor: pointer;
+        color: white;
+        clip-path: polygon(95% 0%, 100% 50%, 95% 100%, 0% 100%, 5% 50%, 0% 0%);
+        background-color: #003399;
+        padding: 5px 15px 5px 15px;
+    }
+
+    .route-path3 {
+        cursor: pointer;
+        color: white;
+        clip-path: polygon(91% 0%, 100% 50%, 91% 100%, 0% 100%, 9% 50%, 0% 0%);
+        background-color: #003399;
+        padding: 5px 15px 5px 15px;
+    }
+
+    .cross-btn {
+        font-size: 30px;
+        cursor: pointer;
+        color: midnightblue;
+        position: absolute;
+        top: 35px;
+        right: 15px;
+    }
+</style>
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="Stylesheet" type="text/css" />
+@*AP external CSS*@
+<link href="~/Content/ERPStyle.css" rel="stylesheet" type="text/css" />
+
+@using (Html.BeginForm("Edit", "TermsOfDelivery", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+<form class="form-horizontal" action="#" method="">
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="d-flex" style="margin-top:-20px">
+                <h4 class="route-path1">Sales </h4>
+                <h4 class="route-path2" onclick="location.href='@Url.Action("Index","TermsOfDelivery")'">Terms of Delivery</h4>
+                <h4 class="route-path3 " onclick="location.href='@Url.Action("Details","TermsOfDelivery", new { id = Model.PaymentTermId })'">Details</h4>
+            </div>
+            <br />
+            <div class="panel panel-default outer-main-container">
+
+                <div class=" main-heading">
+                    <div class=" d-flex ">
+                        <i class="material-icons" style="font-size: 32px; margin-right: 10px;">info</i>
+                        Delivery Term Details
+
+                        <i class="material-icons cross-btn" onclick="history.back()">cancel</i>
+                    </div>
+                </div>
+                <div style="padding-inline:20px">
+                    <fieldset class="dshapefieldset">
+                        <p class="field-heading pt-3">
+                            <i class="material-icons">double_arrow</i>
+                            Term of Delivery
+                        </p>
+                        <div class="form-group row">
+                            <div class="col-lg-4 p-3">
+                                @Html.EditorFor(model => model.TermsOfDelivery, new { htmlAttributes = new { @class = "form-control bg-light fs-4 pl-3 input-text-box", @onkeyup = "myFunction(this.id)", disabled = true } })
+                                @Html.ValidationMessageFor(model => model.TermsOfDelivery, "", new { @class = "text-danger" })
+
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="form-group row ">
+                        <div class="col-md-2 col-lg-2 p-2">
+                            <input type="button" value="Back to List" class=" btn btn-success btn-round create-bttn custo-inner" style="outline:none" onclick="location.href='@Url.Action("Index","TermsOfDelivery")'" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+}
+
+
+<script>
+    $(document).ready(function () {
+
+        /*module button*/
+        $.ajax({
+            url: '/Settings/GetAllColors',
+            type: 'GET',
+            success: function (colors) {
+                // Example: Apply Inner Button colors
+                var bgColor5 = colors.InnerButtonColor; // inner
+                var fontColor5 = colors.InnerButtonFontColor; // inner text
+
+                // Example for all preview boxes (optional)
+                $('.custo-inner').css('background', bgColor5);//  inner
+                $('.custo-inner').css('color', fontColor5);// inner text
+            },
+            error: function () {
+                console.error("Failed to load color settings.");
+            }
+        });
+
+    });
+</script>

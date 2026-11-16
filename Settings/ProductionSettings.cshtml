@@ -1,0 +1,578 @@
+﻿@*@{
+        ViewBag.Title = "ProductionSettings";
+        Layout = "~/Views/Shared/_SwipfeMaster.cshtml";
+    }*@
+
+@model ERPEntities.ValidationsSettingDetails
+@{
+    ViewBag.Title = "ProductionSettings";
+    Layout = "~/Views/Shared/_SwipfeMaster.cshtml";
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+@*<style>
+        /* SAME STYLE AS SALES (KEEP CONSISTENT ERP UI) */
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 45px;
+            height: 22px;
+        }
+
+            .switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 18px;
+                width: 18px;
+                left: 2px;
+                bottom: 2px;
+                background: white;
+                transition: .4s;
+                border-radius: 50%;
+            }
+
+        input:checked + .slider {
+            background: #4376c0;
+        }
+
+            input:checked + .slider:before {
+                transform: translateX(22px);
+            }
+
+        .settings-container {
+            display: flex;
+            background: white;
+            border: 1px solid #ccc;
+            min-height: 600px;
+        }
+
+        .left-menu {
+            width: 250px;
+            background: #f7f7f7;
+            border-right: 1px solid #ddd;
+        }
+
+        .menu-list {
+            list-style: none;
+            padding: 15px;
+            margin: 0;
+        }
+
+            .menu-list li {
+                display: flex;
+                gap: 12px;
+                padding: 14px;
+                margin-bottom: 10px;
+                cursor: pointer;
+                border-radius: 10px;
+                transition: .3s;
+                color: #444;
+            }
+
+                .menu-list li i {
+                    color: #4376c0;
+                }
+
+                .menu-list li:hover {
+                    background: #eef4ff;
+                }
+
+                .menu-list li.active {
+                    background: linear-gradient(90deg,#052a5f,#83cdc6);
+                    color: #fff;
+                }
+
+                    .menu-list li.active i {
+                        color: #fff;
+                    }
+
+        .right-panel {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .settings-section {
+            display: none;
+        }
+
+        .active-section {
+            display: block;
+        }
+
+        .setting-row {
+            display: grid;
+            grid-template-columns: 70% 30%;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .toggle-wrapper {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .toggle-text {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .save-btn {
+            margin-top: 20px;
+            width: 100%;
+            height: 40px;
+            background: linear-gradient(90deg,#052a5f,#83cdc6);
+            color: white;
+            border: none;
+        }
+    </style>*@
+
+<style>
+     .switch {
+         position: relative;
+         display: inline-block;
+         width: 45px;
+         height: 22px;
+     }
+
+         .switch input {
+             opacity: 0;
+             width: 0;
+             height: 0;
+         }
+
+     .slider {
+         position: absolute;
+         cursor: pointer;
+         top: 0;
+         left: 0;
+         right: 0;
+         bottom: 0;
+         background: #ccc;
+         transition: .4s;
+         border-radius: 34px;
+     }
+
+         .slider:before {
+             position: absolute;
+             content: "";
+             height: 18px;
+             width: 18px;
+             left: 2px;
+             bottom: 2px;
+             background: white;
+             transition: .4s;
+             border-radius: 50%;
+         }
+
+     input:checked + .slider {
+         background: #4376c0;
+     }
+
+         input:checked + .slider:before {
+             transform: translateX(22px);
+         }
+
+     .settings-container {
+         display: flex;
+         background: white;
+         border: 1px solid #ccc;
+         min-height: 600px;
+     }
+
+     h4 {
+         font-size: 18px;
+         color: #00209cde;
+         margin-top: -1%;
+     }
+
+     .left-menu {
+         width: 250px;
+         background: #f7f7f7;
+         border-right: 1px solid #ddd;
+         color: #000000;
+     }
+
+         .left-menu ul {
+             list-style: none;
+             padding: 0;
+             margin: 0;
+         }
+
+         .left-menu li {
+             padding: 12px;
+             cursor: pointer;
+             border-bottom: 1px solid #ddd;
+         }
+
+             .left-menu li:hover {
+                 background: #e9f0ff;
+             }
+
+     .menu-list {
+         list-style: none;
+         padding: 15px;
+         margin: 0;
+     }
+
+         .menu-list li {
+             display: flex;
+             align-items: center;
+             gap: 12px;
+             padding: 14px 16px;
+             margin-bottom: 10px;
+             border-radius: 10px;
+             cursor: pointer;
+             color: #444;
+             font-weight: 500;
+             transition: all 0.3s ease;
+         }
+
+             .menu-list li i {
+                 color: #4376c0;
+                 font-size: 16px;
+                 width: 20px;
+             }
+
+             .menu-list li:hover {
+                 background: #eef4ff;
+                 transform: translateX(4px);
+             }
+
+             .menu-list li.active {
+                 background: linear-gradient(90deg, #052a5f,#83cdc6 /*#4a90ff*/ );
+                 color: white;
+                 box-shadow: 0px 4px 10px rgba(13,110,253,0.2);
+             }
+
+                 .menu-list li.active i {
+                     color: white;
+                 }
+
+     .right-panel {
+         flex: 1;
+         padding: 20px;
+     }
+
+     .setting-row {
+         display: grid;
+         grid-template-columns: 70% 30%;
+         margin-bottom: 10px;
+         align-items: center;
+     }
+
+         .setting-row label {
+             font-size: 13px;
+         }
+
+         .setting-row select,
+         .setting-row input {
+             height: 30px;
+             padding: 5px;
+         }
+
+     .settings-section {
+         display: none;
+     }
+
+     .active-section {
+         display: block;
+     }
+
+     .preview-box {
+         background: #f2f6ff;
+         padding: 10px;
+         margin-top: 15px;
+     }
+
+     .save-btn {
+         margin-top: 20px;
+         width: 100%;
+         height: 40px;
+         background: linear-gradient(90deg, #052a5f,#83cdc6 /*#4a90ff*/ );
+         color: white;
+         border: none;
+     }
+
+     label {
+         color: #000000;
+     }
+
+     select {
+         color: #000000;
+     }
+
+     .setting-label i {
+         color: #4376c0; /* blue icons */
+         margin-right: 8px;
+         font-size: 14px;
+     }
+
+     .setting-row label i,
+     h4 i {
+         color: #4376c0 !important;
+         margin-right: 8px;
+     }
+
+     .toggle-wrapper {
+         display: flex;
+         align-items: flex-start; /* moves Yes/No slightly upward */
+         gap: 8px;
+         margin-top: -2px;
+     }
+
+     .toggle-text {
+         font-size: 13px;
+         font-weight: 600;
+         color: #555;
+         min-width: 25px;
+     }
+
+     select {
+         width: 41%;
+     }
+     /* =========================================================
+    SETTINGS ROUTE PATH
+    ========================================================= */
+
+     .route-path1 {
+         clip-path: polygon( 0% 0%, 85% 0%, 100% 50%, 85% 100%, 0% 100% );
+         background-color: #003399;
+         color: white;
+         padding: 5px 13px 5px 5px;
+         margin: 0;
+         font-size: 18px;
+     }
+
+     .route-path2 {
+         cursor: pointer;
+         color: white;
+         clip-path: polygon( 89% 0%, 100% 50%, 89% 100%, 0% 100%, 11% 50%, 0% 0% );
+         background-color: #003399;
+         padding: 5px 15px;
+         margin: 0;
+         font-size: 18px;
+     }
+
+     .route-path3 {
+         color: white;
+         clip-path: polygon( 89% 0%, 100% 50%, 89% 100%, 0% 100%, 11% 50%, 0% 0% );
+         background-color: #003399;
+         padding: 5px 15px;
+         margin: 0;
+         font-size: 18px;
+     }
+</style>
+
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pagefix">
+
+    <div class="d-flex">
+
+        <h4 class="route-path1">
+            Admin
+        </h4>
+
+        <h4 class="route-path2"
+            onclick="location.href='@Url.Action("Index","Settings")'">
+            Setting
+        </h4>
+
+        <h4 class="route-path3">
+            Production
+        </h4>
+
+    </div>
+
+    <br />
+
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="settings-container">
+
+        <!-- LEFT MENU -->
+        <div class="left-menu">
+            <ul class="menu-list">
+
+                <li class="active" onclick="showSection('general',this)">
+                    <i class="fa fa-industry"></i> Production
+                </li>
+
+                <li onclick="showSection('bom',this)">
+                    <i class="fa fa-sitemap"></i> BOM
+                </li>
+
+                <li onclick="showSection('consumption',this)">
+                    <i class="fa fa-boxes-stacked"></i> Consumption
+                </li>
+
+                <li onclick="showSection('finished',this)">
+                    <i class="fa fa-box"></i> Finished Goods
+                </li>
+
+                <li onclick="showSection('costing',this)">
+                    <i class="fa fa-coins"></i> Costing
+                </li>
+
+                <li onclick="showSection('numbering',this)">
+                    <i class="fa fa-hashtag"></i> Numbering
+                </li>
+
+                <li onclick="showSection('approval',this)">
+                    <i class="fa fa-check-circle"></i> Approval
+                </li>
+
+                <li onclick="showSection('print',this)">
+                    <i class="fa fa-print"></i> Print
+                </li>
+
+            </ul>
+        </div>
+
+        <div class="right-panel">
+
+            <!-- PRODUCTION GENERAL -->
+            <div id="general" class="settings-section active-section">
+                <h4><i class="fa fa-industry"></i> Production Settings</h4>
+                @CheckRow("<i class='fa fa-industry'></i> Enable Production Module")
+                @CheckRow("<i class='fa fa-clipboard-list'></i> Enable Work Order")
+                @CheckRow("<i class='fa fa-truck-ramp-box'></i> Auto Material Issue")
+                @CheckRow("<i class='fa fa-scissors'></i> Allow Partial Production")
+                @CheckRow("<i class='fa fa-recycle'></i> Enable Rework Entry")
+            </div>
+
+            <!-- BOM -->
+            <!--<div id="bom" class="settings-section">
+                <h4><i class="fa fa-sitemap"></i> BOM Settings</h4>
+
+                @CheckRow("<i class='fa fa-diagram-project'></i> Enable Multi-Level BOM")
+                @CheckRow("<i class='fa fa-pen-to-square'></i> Allow BOM Revision")
+                @CheckRow("<i class='fa fa-calculator'></i> Auto BOM Cost Calculation")
+            </div>-->
+            <!-- CONSUMPTION -->
+            <div id="consumption" class="settings-section">
+                <h4><i class="fa fa-boxes-stacked"></i> Material Consumption</h4>
+
+                @CheckRow("<i class='fa fa-arrow-up-from-bracket'></i> Auto Issue Material")
+                @CheckRow("<i class='fa fa-keyboard'></i> Allow Manual Consumption Entry")
+                @CheckRow("<i class='fa fa-barcode'></i> Track Batch Wise Consumption")
+            </div>
+
+            <!-- FINISHED GOODS -->
+            <div id="finished" class="settings-section">
+                <h4><i class="fa fa-box"></i> Finished Goods</h4>
+
+                @CheckRow("<i class='fa fa-warehouse'></i> Auto Stock Update")
+                @CheckRow("<i class='fa fa-tags'></i> Enable FG Batch Tracking")
+                @CheckRow("<i class='fa fa-link'></i> Link with Sales Module")
+            </div>
+
+            <!-- COSTING -->
+            <div id="costing" class="settings-section">
+                <h4><i class="fa fa-coins"></i> Production Costing</h4>
+
+                @CheckRow("<i class='fa fa-box-open'></i> Material Cost")
+                @CheckRow("<i class='fa fa-user-cog'></i> Labour Cost")
+                @CheckRow("<i class='fa fa-building'></i> Overhead Cost")
+                @CheckRow("<i class='fa fa-calculator'></i> Auto Cost Calculation")
+            </div>
+
+            <!-- NUMBERING -->
+            <div id="numbering" class="settings-section">
+                <h4><i class="fa fa-hashtag"></i> Production Numbering</h4>
+
+                @CheckRow("<i class='fa fa-sort-numeric-up'></i> Auto Production No")
+                @CheckRow("<i class='fa fa-user-cog'></i> Reset Yearly Numbering")
+
+                <div class="setting-row">
+                    <label>
+                        <i class="fa fa-tag"></i> Prefix
+                    </label>
+                    <input type="text" value="PR" />
+                </div>
+
+                <div class="preview-box col-lg-3" id="previewBox">
+                    <i class="fa fa-eye"></i> Preview: SI26040001
+                </div>
+            </div>
+
+            <!-- APPROVAL -->
+            <div id="approval" class="settings-section">
+                <h4><i class="fa fa-check-circle"></i> Approval Settings</h4>
+
+                @CheckRow("<i class='fa fa-user-check'></i> Production Approval Required")
+                @CheckRow("<i class='fa fa-user-shield'></i> Manager Approval for BOM Change")
+            </div>
+
+            <!-- PRINT -->
+            <div id="print" class="settings-section">
+                <h4><i class="fa fa-print"></i> Print Settings</h4>
+
+                @CheckRow("<i class='fa fa-file-contract'></i> Print Work Order")
+                @CheckRow("<i class='fa fa-receipt'></i> Print Production Slip")
+                @CheckRow("<i class='fa fa-file-invoice'></i> Print BOM Report")
+            </div>
+
+            <button type="submit" class="save-btn">Save Production Settings</button>
+        </div>
+    </div>
+}
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<script>
+    function showSection(sectionId, element) {
+
+        document.querySelectorAll(".settings-section").forEach(s => s.style.display = "none");
+        document.getElementById(sectionId).style.display = "block";
+
+        document.querySelectorAll(".menu-list li").forEach(i => i.classList.remove("active"));
+        element.classList.add("active");
+    }
+</script>
+
+@helper CheckRow(string labelText)
+{
+    <div class="setting-row">
+        <label>@Html.Raw(labelText)</label>
+
+        <div class="toggle-wrapper">
+            <label class="switch">
+                <input type="checkbox" checked onchange="updateToggleText(this)">
+                <span class="slider"></span>
+            </label>
+            <span class="toggle-text">Yes</span>
+        </div>
+    </div>
+}
+
+<script>
+    function updateToggleText(toggle) {
+        let text = toggle.closest(".toggle-wrapper").querySelector(".toggle-text");
+        text.innerText = toggle.checked ? "Yes" : "No";
+    }
+</script>
+

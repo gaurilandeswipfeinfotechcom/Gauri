@@ -1,0 +1,1361 @@
+﻿@*changes by chanchal*@
+
+
+
+<!--<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f7fb; /* softer light background */
+        font-size: 13px;
+    }
+
+    /* container */
+    .form-container {
+        max-width: 950px;
+        margin: 15px auto;
+        padding: 15px;
+        background: #ffffff;
+        border: 1px solid #dcdcdc;
+        border-radius: 6px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    /* headings */
+    h3 {
+        text-align: center;
+        font-size: 16px;
+        margin-bottom: 12px;
+        color: #2c3e50;
+    }
+
+    h4 {
+        font-size: 13px;
+        margin: 10px 0 6px;
+        padding-bottom: 3px;
+        border-bottom: 1px solid #e0e0e0;
+        color: #34495e;
+    }
+
+    /* grid */
+    .settings-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px 25px;
+    }
+
+    /* row */
+    .setting-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        /* checkbox */
+        .setting-item input[type="checkbox"] {
+            transform: scale(0.9);
+            cursor: pointer;
+        }
+
+        /* labels aligned */
+        .setting-item label {
+            min-width: 140px; /* 🔥 important for alignment */
+            font-weight: 500;
+            color: #333;
+        }
+
+        /* inputs */
+        .setting-item input,
+        .setting-item select {
+            height: 26px;
+            font-size: 12px;
+            padding: 3px 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: #fafafa;
+            transition: 0.2s;
+        }
+
+            /* focus effect */
+            .setting-item input:focus,
+            .setting-item select:focus {
+                border-color: #6c9cff;
+                outline: none;
+                background: #fff;
+            }
+
+    /* output */
+    .output {
+        background: #edf3ff; /* light blue instead of yellow */
+        border: 1px solid #d6e4ff;
+        padding: 6px;
+        font-size: 12px;
+        margin-top: 6px;
+        border-radius: 4px;
+        color: #2c3e50;
+    }
+
+    /* button */
+    input[type="submit"] {
+        background: #6c9cff;
+        border: none;
+        color: white;
+        padding: 8px;
+        font-size: 13px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+        input[type="submit"]:hover {
+            background: #4f7df3;
+        }
+
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f7fb;
+        font-size: 13px;
+    }
+
+    /* MAIN CONTAINER */
+    .form-container {
+        max-width: 1100px;
+        margin: 15px auto;
+        padding: 10px;
+    }
+
+    /* GRID FOR CARDS (3 per row) */
+    .card-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+
+    /* CARD STYLE (SECTION BOX) */
+    .settings-card {
+        background: #ffffff;
+        border-radius: 10px;
+        padding: 12px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+        transition: 0.2s;
+    }
+
+        .settings-card:hover {
+            box-shadow: 0 5px 12px rgba(0,0,0,0.1);
+        }
+
+        /* CARD HEADER */
+        .settings-card h4 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #e5e6eb;
+            color: #2c3e50;
+        }
+
+    /* SETTINGS GRID INSIDE CARD */
+    .settings-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px 10px;
+    }
+
+    /* ITEMS */
+    .setting-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+        /* LABEL ALIGN */
+        .setting-item label {
+            min-width: 120px;
+            font-weight: 500;
+        }
+
+        /* INPUT */
+        .setting-item input,
+        .setting-item select {
+            height: 26px;
+            font-size: 12px;
+            padding: 3px 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+    /* OUTPUT */
+    .output {
+        background: #edf3ff;
+        border: 1px solid #d6e4ff;
+        padding: 6px;
+        font-size: 12px;
+        margin-top: 6px;
+        border-radius: 4px;
+    }
+
+    /* BUTTON */
+    input[type="submit"] {
+        background: #6c9cff;
+        border: none;
+        color: white;
+        padding: 8px;
+        border-radius: 5px;
+        width: 100%;
+    }
+
+    /* PAGE BG */
+    body {
+        background: #e5e6eb;
+        font-size: 13px;
+        font-family: Arial, sans-serif;
+    }
+
+    /* CONTAINER */
+    .form-container {
+        max-width: 1000px;
+        margin: 10px auto;
+    }
+
+    /* GRID (2 CARDS) */
+    .card-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    /* CARD (FLAT STYLE LIKE IMAGE) */
+    .settings-card {
+        background: #fff;
+        border: 1px solid #cfcfcf;
+        padding: 10px;
+        border-radius: 4px;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+        /* HEADER (LIKE REPORT TITLE) */
+        .settings-card h4 {
+            font-size: 13px;
+            margin-bottom: 8px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid #dcdcdc;
+            font-weight: 600;
+            color: #333;
+        }
+
+    /* INNER GRID */
+    .settings-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px 10px;
+    }
+
+    /* ITEM */
+    .setting-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+        /* LABEL */
+        .setting-item label {
+            min-width: 110px;
+            font-size: 12px;
+        }
+
+        /* INPUT */
+        .setting-item input,
+        .setting-item select {
+            height: 24px;
+            font-size: 12px;
+            padding: 2px 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+    /* OUTPUT (BOTTOM FIXED) */
+    .output {
+        margin-top: auto;
+        font-size: 12px;
+        background: #f5f7fa;
+        padding: 5px;
+        border: 1px solid #dcdcdc;
+    }
+
+    /* BUTTON */
+    input[type="submit"] {
+        margin-top: 10px;
+        width: 100%;
+        background: #2f5ea6;
+        color: #fff;
+        border: none;
+        padding: 6px;
+        font-size: 13px;
+    }
+</style>
+
+
+
+    <div class="form-container">
+
+        <h3><b>Sales Settings</b></h3>
+
+
+<!-- GRID START -->
+<!--<div class="card-grid">-->
+<!-- SALES ORDER -->
+<!--<div class="settings-card">
+    <h4>Sales Order</h4>
+
+    <div class="settings-grid">
+        <div class="setting-item">
+            <label>Preference</label>
+        </div>
+        <div class="setting-item">
+
+        </div>
+    </div>
+</div>-->
+<!-- GENERAL -->
+<!--<div class="settings-card">
+    <h4>General Settings</h4>
+
+    <div class="settings-grid">
+
+        <div class="setting-item">
+            <input type="checkbox" id="enablePOS">
+            <label>WhatsApp After Save</label>
+        </div>
+
+        <div class="setting-item">
+            <input type="checkbox" id="printAfterSave">
+            <label>Print After Save</label>
+        </div>
+
+        <div class="setting-item">
+            <input type="checkbox" id="allowZero">
+            <label>Allow Zero Value</label>
+        </div>
+
+        <div class="setting-item">
+            <input type="checkbox" id="enableNarration">
+            <label>Enable Narration</label>
+        </div>
+
+    </div>
+</div>-->
+<!-- CURRENCY -->
+<!--<div class="settings-card">
+    <h4>Currency</h4>
+
+    <div class="settings-grid">
+
+        <div class="setting-item">
+            <input type="checkbox" id="multiCurrency" />
+            <label>Multi Currency</label>
+        </div>
+
+        <div class="setting-item">
+            <select id="currencyDropdown">
+                <option value="INR">INR ₹</option>
+                <option value="USD">USD $</option>
+                <option value="EUR">EUR €</option>
+                <option value="GBP">GBP £</option>
+            </select>
+        </div>
+
+    </div>
+
+    <div class="output" id="output"></div>
+</div>-->
+<!-- DISCOUNT -->
+<!--<div class="settings-card">
+    <h4>Discount</h4>
+
+    <div class="settings-grid">
+
+        <div class="setting-item">
+            <input type="checkbox" id="enableDiscount" />
+            <label>Enable Discount</label>
+        </div>
+
+        <div class="setting-item" id="discountField">
+            <input type="number" id="discountValue" placeholder="%">
+        </div>
+
+    </div>
+
+    <div class="output" id="discountOutput"></div>
+</div>-->
+<!-- NUMBERING -->
+<!--<div class="settings-card" style="grid-column: span 2;">
+        <h4>Numbering</h4>
+
+        <div class="settings-grid">
+
+            <div class="setting-item">
+                <label>Prefix</label>
+                <input type="text" id="prefix" value="TI">
+            </div>
+
+            <div class="setting-item">
+                <label>Start</label>
+                <input type="number" id="startFrom" value="1">
+            </div>
+
+            <div class="setting-item">
+                <input type="checkbox" id="includeYear" checked>
+                <label>Include Year</label>
+            </div>
+
+            <div class="setting-item">
+                <input type="number" id="selectedYear" placeholder="2026">
+            </div>
+
+            <div class="setting-item">
+                <label>Year Type</label>
+                <select id="yearType">
+                    <option value="CY">Calendar Year (Jan-Dec)</option>
+                    <option value="FY">Financial Year (Apr-Mar)</option>
+                </select>
+            </div>
+
+            <div class="setting-item">
+                <label>Year Format</label>
+                <select id="yearFormat">
+                    <option value="2">26</option>
+                    <option value="4">2026</option>
+                </select>
+            </div>
+
+            <div class="setting-item">
+                <label>Position</label>
+                <select id="position">
+                    <option value="prefix">Prefix</option>
+                    <option value="postfix">Postfix</option>
+                </select>
+            </div>
+
+            <div class="setting-item">
+                <label>Length</label>
+                <input type="number" id="length" value="12">
+            </div>
+
+            <div class="setting-item">
+                <input type="checkbox" id="resetYearly">
+                <label>Reset Yearly</label>
+            </div>
+
+        </div>
+
+        <div class="output" id="preview"></div>
+    </div>
+
+</div>-->
+<!-- SUBMIT -->
+<!--<br />
+        <input type="submit" value="Save All Settings" class="btn btn-sm btn-info w-100" />
+
+    </div>
+}-->
+<!-- ✅ SCRIPTS -->
+<!--<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    const toggle = document.getElementById("multiCurrency");
+    const dropdown = document.getElementById("currencyDropdown");
+
+    // Default state
+    dropdown.disabled = true;
+    dropdown.value = "INR";
+
+    // Toggle Logic
+    toggle.addEventListener("change", function () {
+        if (this.checked) {
+            dropdown.disabled = false;
+        } else {
+            dropdown.value = "INR";
+            dropdown.disabled = true;
+        }
+    });
+
+    // Save preview (frontend simulation)
+    function updateOutput() {
+        const isMulti = toggle.checked;
+        const currency = dropdown.value;
+
+        document.getElementById("output").innerHTML =
+            "Multi Currency: " + (isMulti ? "Enabled" : "Disabled") +
+            "<br>Selected Currency: " + currency;
+
+        // Store locally
+        localStorage.setItem("multiCurrency", isMulti);
+        localStorage.setItem("currency", currency);
+    }
+
+    toggle.addEventListener("change", updateOutput);
+    dropdown.addEventListener("change", updateOutput);
+
+    // Load saved values
+    window.onload = function () {
+        const savedMulti = localStorage.getItem("multiCurrency") === "true";
+        const savedCurrency = localStorage.getItem("currency") || "INR";
+
+        toggle.checked = savedMulti;
+        dropdown.disabled = !savedMulti;
+        dropdown.value = savedCurrency;
+
+        updateOutput();
+    };
+</script>
+
+<script>
+    const discountToggle = document.getElementById("enableDiscount");
+    const discountField = document.getElementById("discountField");
+    const discountValue = document.getElementById("discountValue");
+    const discountOutput = document.getElementById("discountOutput");
+
+    // Default
+    discountField.style.display = "none";
+
+    // Toggle Logic
+    discountToggle.addEventListener("change", function () {
+        if (this.checked) {
+            discountField.style.display = "block";
+        } else {
+            discountField.style.display = "none";
+            discountValue.value = "";
+        }
+        updateDiscountPreview();
+    });
+
+    // Live Preview
+    discountValue.addEventListener("input", updateDiscountPreview);
+
+    function updateDiscountPreview() {
+        let enabled = discountToggle.checked;
+        let discount = parseFloat(discountValue.value) || 0;
+
+        let amount = 1000;
+        let finalAmount = amount;
+
+        if (enabled) {
+            finalAmount = amount - (amount * discount / 100);
+        }
+
+        discountOutput.innerHTML = `
+            Discount: ${enabled ? discount + "%" : "Disabled"} <br>
+            Final Amount: ₹ ${finalAmount}
+        `;
+
+        // Save locally
+        localStorage.setItem("enableDiscount", enabled);
+        localStorage.setItem("discountValue", discount);
+    }
+
+    // Load saved data
+    window.addEventListener("load", function () {
+        const savedToggle = localStorage.getItem("enableDiscount") === "true";
+        const savedDiscount = localStorage.getItem("discountValue") || "";
+
+        discountToggle.checked = savedToggle;
+        discountField.style.display = savedToggle ? "block" : "none";
+        discountValue.value = savedDiscount;
+
+        updateDiscountPreview();
+    });
+</script>
+
+
+
+
+<script>
+    let counters = JSON.parse(localStorage.getItem("counters")) || {};
+
+    // ✅ YEAR LOGIC (CY + FY)
+    function getYearPart(selectedYear, format, type) {
+
+        selectedYear = parseInt(selectedYear);
+
+        if (type === "CY") {
+            // Calendar Year
+            return format == "2"
+                ? selectedYear.toString().slice(-2)
+                : selectedYear.toString();
+        }
+
+        if (type === "FY") {
+            // Financial Year (Apr–Mar)
+            let startYear = selectedYear - 1;
+            let endYear = selectedYear;
+
+            if (format == "2") {
+                return startYear.toString().slice(-2) + "-" + endYear.toString().slice(-2);
+            } else {
+                return startYear + "-" + endYear;
+            }
+        }
+
+        return "";
+    }
+
+    // KEY FOR COUNTER
+    function getKey(prefix, year, reset) {
+        return reset ? prefix + "_" + year : prefix;
+    }
+
+
+
+    function generateNumber() {
+
+        let prefix = document.getElementById("prefix").value;
+
+        let today = new Date();
+
+        let yearFull = today.getFullYear();
+        let month = today.getMonth() + 1;
+
+        let position = document.getElementById("position").value;
+        // YEAR (last 2 digits → 2026 = 26)
+        let year = yearFull.toString().slice(-2);
+
+        // MONTH (04 format)
+        let monthPart = month.toString().padStart(2, "0");
+
+        let startFrom = parseInt(document.getElementById("startFrom").value) || 1;
+        let length = parseInt(document.getElementById("length").value) || 12;
+
+        // KEY (separate counter per month)
+        let key = prefix + "_" + year + "_" + monthPart;
+
+        if (!counters[key]) counters[key] = startFrom;
+
+        let count = counters[key];
+
+        // BASE → QN2604
+        let base = prefix + year + monthPart;
+
+        let remaining = length - base.length;
+
+        if (remaining <= 0) return "❌ Length too small";
+
+        let numberPart = count.toString().padStart(remaining, "0");
+
+        /*return base + numberPart;*/
+        return position === "prefix"
+            ? base + numberPart
+            : numberPart + base;
+    }
+
+
+
+
+
+    function generateNext() {
+
+        let prefix = document.getElementById("prefix").value;
+
+        let today = new Date();
+        let year = today.getFullYear().toString().slice(-2);
+        let month = (today.getMonth() + 1).toString().padStart(2, "0");
+
+        let startFrom = parseInt(document.getElementById("startFrom").value) || 1;
+
+        let key = prefix + "_" + year + "_" + month;
+
+        if (!counters[key]) counters[key] = startFrom;
+
+        counters[key]++;
+        localStorage.setItem("counters", JSON.stringify(counters));
+
+        updatePreview();
+    }
+
+
+
+
+
+
+
+    // ✅ PREVIEW
+    function updatePreview() {
+        document.getElementById("preview").innerText =
+            "Preview: " + generateNumber();
+    }
+
+    // ✅ SAVE SETTINGS
+    function saveSettings() {
+        localStorage.setItem("numberSettings", JSON.stringify({
+            prefix: document.getElementById("prefix").value,
+            yearType: document.getElementById("yearType").value,
+            yearFormat: document.getElementById("yearFormat").value,
+            includeYear: document.getElementById("includeYear").checked,
+            position: document.getElementById("position").value,
+            startFrom: document.getElementById("startFrom").value,
+            length: document.getElementById("length").value,
+            resetYearly: document.getElementById("resetYearly").checked,
+            selectedYear: document.getElementById("selectedYear").value
+        }));
+
+        updatePreview();
+    }
+
+    // ✅ LOAD SETTINGS (FIXED)
+    window.addEventListener("load", function () {
+
+        let saved = JSON.parse(localStorage.getItem("numberSettings")) || {};
+
+        document.getElementById("prefix").value = saved.prefix || "TI";
+        document.getElementById("yearType").value = saved.yearType || "CY";
+        document.getElementById("yearFormat").value = saved.yearFormat || "4";
+        document.getElementById("includeYear").checked = saved.includeYear ?? true;
+        document.getElementById("position").value = saved.position || "prefix";
+        document.getElementById("startFrom").value = saved.startFrom || "1";
+        document.getElementById("length").value = saved.length || "12";
+        document.getElementById("resetYearly").checked = saved.resetYearly || false;
+        document.getElementById("selectedYear").value =
+            saved.selectedYear || new Date().getFullYear();
+
+        updatePreview();
+
+        // ✅ LIVE PREVIEW (FIXED PROPERLY)
+        document.querySelectorAll("#prefix, #startFrom, #includeYear, #selectedYear, #yearFormat, #position, #length, #resetYearly, #yearType")
+            .forEach(el => {
+                el.addEventListener("input", updatePreview);
+                el.addEventListener("change", updatePreview);
+            });
+    });
+</script>-->
+
+
+
+@model ERPEntities.ValidationsSettingDetails
+@{
+    ViewBag.Title = "SalesSettings";
+    Layout = "~/Views/Shared/_SwipfeMaster.cshtml";
+}
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+     .switch {
+         position: relative;
+         display: inline-block;
+         width: 45px;
+         height: 22px;
+     }
+
+         .switch input {
+             opacity: 0;
+             width: 0;
+             height: 0;
+         }
+
+     .slider {
+         position: absolute;
+         cursor: pointer;
+         top: 0;
+         left: 0;
+         right: 0;
+         bottom: 0;
+         background: #ccc;
+         transition: .4s;
+         border-radius: 34px;
+     }
+
+         .slider:before {
+             position: absolute;
+             content: "";
+             height: 18px;
+             width: 18px;
+             left: 2px;
+             bottom: 2px;
+             background: white;
+             transition: .4s;
+             border-radius: 50%;
+         }
+
+     input:checked + .slider {
+         background: #4376c0;
+     }
+
+         input:checked + .slider:before {
+             transform: translateX(22px);
+         }
+
+     .settings-container {
+         display: flex;
+         background: white;
+         border: 1px solid #ccc;
+         min-height: 600px;
+     }
+
+     h4 {
+         font-size: 18px;
+         color: #00209cde;
+         margin-top: -1%;
+     }
+
+     .left-menu {
+         width: 250px;
+         background: #f7f7f7;
+         border-right: 1px solid #ddd;
+         color: #000000;
+     }
+
+         .left-menu ul {
+             list-style: none;
+             padding: 0;
+             margin: 0;
+         }
+
+         .left-menu li {
+             padding: 12px;
+             cursor: pointer;
+             border-bottom: 1px solid #ddd;
+         }
+
+             .left-menu li:hover {
+                 background: #e9f0ff;
+             }
+
+     .menu-list {
+         list-style: none;
+         padding: 15px;
+         margin: 0;
+     }
+
+         .menu-list li {
+             display: flex;
+             align-items: center;
+             gap: 12px;
+             padding: 14px 16px;
+             margin-bottom: 10px;
+             border-radius: 10px;
+             cursor: pointer;
+             color: #444;
+             font-weight: 500;
+             transition: all 0.3s ease;
+         }
+
+             .menu-list li i {
+                 color: #4376c0;
+                 font-size: 16px;
+                 width: 20px;
+             }
+
+             .menu-list li:hover {
+                 background: #eef4ff;
+                 transform: translateX(4px);
+             }
+
+             .menu-list li.active {
+                 background: linear-gradient(90deg, #052a5f,#83cdc6 /*#4a90ff*/ );
+                 color: white;
+                 box-shadow: 0px 4px 10px rgba(13,110,253,0.2);
+             }
+
+                 .menu-list li.active i {
+                     color: white;
+                 }
+
+     .right-panel {
+         flex: 1;
+         padding: 20px;
+     }
+
+     .setting-row {
+         display: grid;
+         grid-template-columns: 70% 30%;
+         margin-bottom: 10px;
+         align-items: center;
+     }
+
+         .setting-row label {
+             font-size: 13px;
+         }
+
+         .setting-row select,
+         .setting-row input {
+             height: 30px;
+             padding: 5px;
+         }
+
+     .settings-section {
+         display: none;
+     }
+
+     .active-section {
+         display: block;
+     }
+
+     .preview-box {
+         background: #f2f6ff;
+         padding: 10px;
+         margin-top: 15px;
+     }
+
+     .save-btn {
+         margin-top: 25px;
+         width: 220px;
+         height: 42px;
+         border: none;
+         border-radius: 8px;
+         background: linear-gradient(90deg, #052a5f, #83cdc6);
+         color: white;
+         font-weight: 600;
+         display: block;
+         margin-left: auto;
+         margin-right: auto;
+         box-shadow: 0px 4px 10px rgba(0,0,0,0.15);
+     }
+
+     label {
+         color: #000000;
+     }
+
+     select {
+         color: #000000;
+     }
+
+     .setting-label i {
+         color: #4376c0; /* blue icons */
+         margin-right: 8px;
+         font-size: 14px;
+     }
+
+     .setting-row label i,
+     h4 i {
+         color: #4376c0 !important;
+         margin-right: 8px;
+     }
+
+     .toggle-wrapper {
+         display: flex;
+         align-items: flex-start; /* moves Yes/No slightly upward */
+         gap: 8px;
+         margin-top: -2px;
+     }
+
+     .toggle-text {
+         font-size: 13px;
+         font-weight: 600;
+         color: #555;
+         min-width: 25px;
+     }
+
+     select {
+         width: 41%;
+     }
+
+     /* =========================================================
+    SETTINGS ROUTE PATH
+    ========================================================= */
+
+     .route-path1 {
+         clip-path: polygon( 0% 0%, 85% 0%, 100% 50%, 85% 100%, 0% 100% );
+         background-color: #003399;
+         color: white;
+         padding: 5px 13px 5px 5px;
+         margin: 0;
+         font-size: 18px;
+     }
+
+     .route-path2 {
+         cursor: pointer;
+         color: white;
+         clip-path: polygon( 89% 0%, 100% 50%, 89% 100%, 0% 100%, 11% 50%, 0% 0% );
+         background-color: #003399;
+         padding: 5px 15px;
+         margin: 0;
+         font-size: 18px;
+     }
+
+     .route-path3 {
+         color: white;
+         clip-path: polygon( 89% 0%, 100% 50%, 89% 100%, 0% 100%, 11% 50%, 0% 0% );
+         background-color: #003399;
+         padding: 5px 15px;
+         margin: 0;
+         font-size: 18px;
+     }
+</style>
+
+
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pagefix">
+
+    <div class="d-flex">
+
+        <h4 class="route-path1">
+            Admin
+        </h4>
+
+        <h4 class="route-path2"
+            onclick="location.href='@Url.Action("Index","Settings")'">
+            Setting
+        </h4>
+
+        <h4 class="route-path3">
+            Sales
+        </h4>
+
+    </div>
+
+    <br />
+
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="settings-container">
+        @Html.HiddenFor(model => model.SettingDetailID)
+        <!-- LEFT MENU -->
+        <div class="left-menu">
+
+
+            @*<ul>
+                    <li class="active" onclick="showSection('general',this)">⚙ General</li>
+                    <li onclick="showSection('invoice',this)">🧾 Invoice</li>
+                    <li onclick="showSection('tax',this)">📊 Tax/GST</li>
+                    <li onclick="showSection('discount',this)">💰 Discount</li>
+                    <li onclick="showSection('numbering',this)"># Numbering</li>
+                    <li onclick="showSection('print',this)">🖨 Print</li>
+                    <li onclick="showSection('approval',this)">✔ Approval</li>
+                </ul>*@
+
+            <ul class="menu-list">
+                <li class="active" onclick="showSection('general',this)">
+                    <i class="fa fa-cog"></i>
+                    <span>General</span>
+                </li>
+
+                <li onclick="showSection('invoice',this)">
+                    <i class="fa fa-file-invoice-dollar"></i>
+                    <span>Invoice</span>
+                </li>
+
+                <li onclick="showSection('tax',this)">
+                    <i class="fa fa-percent"></i>
+                    <span>Tax / GST</span>
+                </li>
+
+                <li onclick="showSection('discount',this)">
+                    <i class="fa fa-tags"></i>
+                    <span>Discount</span>
+                </li>
+
+                <li onclick="showSection('numbering',this)">
+                    <i class="fa fa-hashtag"></i>
+                    <span>Numbering</span>
+                </li>
+
+                <li onclick="showSection('print',this)">
+                    <i class="fa fa-print"></i>
+                    <span>Print</span>
+                </li>
+
+                <li onclick="showSection('approval',this)">
+                    <i class="fa fa-check-circle"></i>
+                    <span>Approval</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- RIGHT CONTENT -->
+        @*@helper CheckRow(string labelText)
+            {
+                <div class="setting-row">
+                    <label>@labelText</label>
+                    <select>
+                        <option>Yes</option>
+                        <option>No</option>
+                    </select>
+                </div>
+            }*@
+
+        @helper CheckRow(string labelText)
+        {
+            <div class="setting-row">
+                <label class="setting-label">@Html.Raw(labelText)</label>
+
+                <div class="toggle-wrapper">
+                    <label class="switch">
+                        <input type="checkbox" checked onchange="updateToggleText(this)">
+                        <span class="slider"></span>
+                    </label>
+
+                    <span class="toggle-text">Yes</span>
+                </div>
+            </div>
+        }
+        <div class="right-panel">
+
+
+
+            <div id="general" class="settings-section active-section">
+                <h4><i class="fa fa-cog"></i> General Sales Settings</h4>
+
+                @CheckRow("<i class='fa fa-shopping-cart'></i> Enable Sales Order")
+                @CheckRow("<i class='fa fa-file-text'></i> Enable Quotation")
+
+                @CheckRow("<i class='fa fa-undo'></i> Enable Sales Return")
+                @CheckRow("<i class='fa fa-credit-card'></i> Enable Credit Note")
+                @CheckRow("<i class='fa fa-ban'></i> Allow Zero Value Invoice")
+                @CheckRow("<i class='fa fa-pencil'></i> Enable Narration")
+                @CheckRow("<i class='fa fa-file'></i> Optional Voucher")
+                @CheckRow("<i class='fa fa-calculator'></i> Round Off Invoice")
+                @CheckRow("<i class='fa fa-calendar'></i> Allow Back Date Entry")
+            </div>
+
+            <!-- INVOICE -->
+            <div id="invoice" class="settings-section">
+                <h4><i class="fa fa-file-invoice-dollar"></i> Invoice Settings</h4>
+
+                @CheckRow("<i class='fa fa-print'></i> Print Invoice After Save")
+                @CheckRow("<i class='fa-brands fa-whatsapp'></i> WhatsApp Invoice After Save")
+                @CheckRow("<i class='fa fa-envelope'></i> Email Invoice After Save")
+                @CheckRow("<i class='fa fa-wallet'></i> Show Customer Previous Balance")
+                @CheckRow("<i class='fa fa-money-bill-wave'></i> Allow Partial Payment")
+                @CheckRow("<i class='fa fa-calendar-days'></i> Enable Due Date")
+                @CheckRow("<i class='fa fa-credit-card'></i> Auto Payment Entry")
+
+                <div class="setting-row">
+                    <label>
+                        <i class="fa fa-hand-holding-dollar"></i> Default Payment Mode
+                    </label>
+                    <select>
+                        <option>Cash</option>
+                        <option>UPI</option>
+                        <option>Bank</option>
+                        <option>Credit</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <!-- TAX -->
+            <div id="tax" class="settings-section">
+                <h4><i class="fa fa-percent"></i> Tax Settings</h4>
+
+                @CheckRow("<i class='fa fa-receipt'></i> Enable GST")
+                @CheckRow("<i class='fa fa-calculator'></i> Auto CGST/SGST")
+                @CheckRow("<i class='fa fa-file-invoice'></i> Auto IGST")
+
+                <div class="setting-row">
+                    <label>
+                        <i class="fa fa-sliders"></i> GST Type
+                    </label>
+                    <select>
+                        <option>Inclusive</option>
+                        <option>Exclusive</option>
+                    </select>
+                </div>
+            </div>
+
+
+
+            <div id="discount" class="settings-section">
+                <h4><i class="fa fa-tags"></i> Discount Settings</h4>
+
+                @CheckRow("<i class='fa fa-box'></i> Enable Item Discount")
+                @CheckRow("<i class='fa fa-file-invoice-dollar'></i> Enable Bill Discount")
+
+                <div class="setting-row">
+                    <label>
+                        <i class="fa fa-percent"></i> Discount Type
+                    </label>
+                    <select>
+                        <option>% Percentage</option>
+                        <option>Flat Amount</option>
+                    </select>
+                </div>
+
+                <div class="setting-row">
+                    <label>
+                        <i class="fa fa-indian-rupee-sign"></i> Maximum Discount Limit
+                    </label>
+                    <input type="number" style="width:101px;" />
+                </div>
+            </div>
+
+
+
+            <div id="numbering" class="settings-section">
+                <h4><i class="fa fa-hashtag"></i> Sales Numbering</h4>
+
+                <div class="setting-row">
+                    <label>
+                        <i class="fa fa-tag"></i> Prefix
+                    </label>
+                    <input type="text" id="prefix" value="SO" style="width:100px;" />
+                </div>
+
+                <div class="setting-row">
+                    <label>
+                        <i class="fa fa-sort-numeric-up"></i> Start Number
+                    </label>
+                    <input type="number" id="startNumber" value="1" style="width:100px;" />
+                </div>
+
+                <div class="setting-row">
+                    <label>
+                        <i class="fa fa-calendar-alt"></i> Year Type
+                    </label>
+                    <select>
+                        <option>Financial Year</option>
+                        <option>Calendar Year</option>
+                    </select>
+                </div>
+
+                <div class="setting-row">
+                    <label>
+                        <i class="fa fa-ruler-horizontal"></i> Number Length
+                    </label>
+                    <input type="number" id="length" value="10" style="width:100px;" />
+                </div>
+
+                <div class="setting-row">
+                    <label>
+                        <i class="fa fa-arrows-left-right"></i> Position
+                    </label>
+                    <select>
+                        <option>Prefix</option>
+                        <option>Postfix</option>
+                    </select>
+                </div>
+
+                @CheckRow("<i class='fa fa-calendar-check'></i> Include Year")
+                @CheckRow("<i class='fa fa-rotate-right'></i> Reset Yearly")
+                @CheckRow("<i class='fa fa-repeat'></i> Reset Monthly")
+
+                <div class="preview-box col-lg-3" id="previewBox">
+                    <i class="fa fa-eye"></i> Preview: SI26040001
+                </div>
+            </div>
+
+            <!-- PRINT -->
+            <div id="print" class="settings-section">
+                <h4>Print Settings</h4>
+
+                @CheckRow("Show Company Logo")
+                @CheckRow("Show QR Code")
+                @CheckRow("Show Terms & Conditions")
+                @CheckRow("Print Duplicate Copy")
+                @CheckRow("Print Transport Details")
+                @CheckRow("Show Authorized Signature")
+            </div>
+
+            <!-- APPROVAL -->
+            <div id="approval" class="settings-section">
+                <h4>Approval Settings</h4>
+
+                @CheckRow("Sales Approval Required")
+                @CheckRow("Credit Limit Validation")
+                @CheckRow("Manager Approval For Discount")
+
+            </div>
+
+            <button type="submit" class="save-btn">Save Settings</button>
+        </div>
+    </div>
+
+}
+
+@*<script>
+        function showSection(sectionId) {
+
+            let sections = document.querySelectorAll(".settings-section");
+
+            sections.forEach(section => {
+                section.style.display = "none";
+            });
+
+            document.getElementById(sectionId).style.display = "block";
+        }
+
+    </script>*@
+
+<script>
+    function updatePreview() {
+
+        let prefix = document.getElementById("prefix").value;
+        let start = document.getElementById("startNumber").value;
+        let year = new Date().getFullYear().toString().slice(-2);
+
+        document.getElementById("previewBox").innerHTML =
+            "Preview: " + prefix + year + start.padStart(4, '0');
+    }
+
+    document.getElementById("prefix").addEventListener("input", updatePreview);
+    document.getElementById("startNumber").addEventListener("input", updatePreview);
+
+    updatePreview();
+</script>
+
+
+<script>
+    function updateToggleText(toggle) {
+        let textElement = toggle.closest(".toggle-wrapper")
+            .querySelector(".toggle-text");
+
+        if (toggle.checked) {
+            textElement.innerText = "Yes";
+        } else {
+            textElement.innerText = "No";
+        }
+    }
+
+    // initialize all toggles on page load
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".switch input").forEach(function (toggle) {
+            updateToggleText(toggle);
+        });
+    });
+</script>
+
+
+<script>
+    function showSection(sectionId, element) {
+
+        // Hide all sections
+        document.querySelectorAll(".settings-section").forEach(function (section) {
+            section.style.display = "none";
+        });
+
+        // Show selected section
+        document.getElementById(sectionId).style.display = "block";
+
+        // Remove active class from all sidebar items
+        document.querySelectorAll(".menu-list li").forEach(function (item) {
+            item.classList.remove("active");
+        });
+
+        // Add active class to clicked item
+        element.classList.add("active");
+    }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

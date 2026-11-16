@@ -1,0 +1,707 @@
+﻿@*@model ERPEntities.TestParameters*@
+
+@model IEnumerable<ERPEntities.TestReport>
+@{
+    ViewBag.Title = "Test Parameter Form";
+    Layout = "~/Views/Shared/_SwipfeMaster.cshtml";
+}
+
+<style>
+    /*Adding some css for looks good*/
+    #label {
+        font-size: 13px;
+        color: #0077B3;
+        font-weight: 500
+    }
+
+    h4 {
+        font-size: 18px;
+        padding: 10px 0;
+        font-weight: 600;
+    }
+
+    .form-head h4 {
+        padding: 10px 10px;
+        font-size: 16px;
+        font-weight: 600;
+        background-color: #C1D5BD;
+    }
+
+
+    .body-panel {
+        border: 1px solid black;
+        /*background-color: whitesmoke;*/
+        margin-top: -10px;
+        border-radius: 5px;
+        background-color: floralwhite;
+    }
+
+    .submit-btn {
+        display: inline-flex;
+        padding: 7px;
+    }
+
+
+        .submit-btn button {
+            border-radius: 30px;
+            padding: 5px 5px;
+        }
+
+
+
+    .save-btn input {
+        /*border-radius: 30px;*/
+        font-size: 14px;
+    }
+
+
+
+    fieldset {
+        border: 1px solid #ddd !important;
+        margin: 10px;
+        /*max-width:0;*/
+        padding: 5px;
+        /* position:relative;*/
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        /*background-color: whitesmoke;*/
+        /* background-color: white;*/
+        background-color: white;
+    }
+
+
+    .button {
+        display: inline-block;
+        /*padding: 5px 6px;*/
+        /*font-size: 5px;*/
+        padding: 20px;
+        font-size: 16px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        outline: none;
+        border: none;
+        box-shadow: 0 9px #999;
+        height: 3px;
+        width: auto;
+        margin: 4px 2px;
+    }
+
+        .button:hover {
+            /*background-color: #3e8e41*/
+            background-color: cyan;
+        }
+
+        .button:active {
+            background-color: cyan;
+            box-shadow: 0 5px #666;
+            transform: translateY(4px);
+        }
+
+
+
+    span.error {
+        display: block;
+        visibility: hidden;
+        color: red;
+        font-size: 60px;
+    }
+
+
+    .ui-widget {
+        font-size: 12px !important;
+    }
+
+    .reqError {
+        color: #ff0000; /*Red Color*/
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .backsubmitbtn {
+        background-image: linear-gradient(to right,#35d3e1,midnightblue);
+        padding: 5px 20px 5px 20px;
+        color: white;
+        font-family: Helvetica;
+        box-shadow: -4px -4px 8px rgba(255, 255, 255, 0.7), 4px 4px 8px rgba(128, 128, 128, 0.7);
+        outline-style: none;
+        border: none
+    }
+
+    .dshapefieldset {
+        background-color: #e5e6e7;
+        border: 2px solid #ddd;
+        border-radius: 0px 25px 25px 0px;
+        margin-bottom: 20px
+    }
+
+    .field-heading {
+        font-size: 18px;
+        color: midnightblue;
+        font-family: Helvetica;
+        font-weight: bold;
+        display: flex
+    }
+
+    .route-path1 {
+        cursor: pointer;
+        clip-path: polygon(0% 0%, 90% 0%, 100% 50%, 90% 100%, 0% 100%);
+        background-color: #003399;
+        color: white;
+        padding: 5px 15px 5px 5px
+    }
+
+    .route-path2 {
+        cursor: pointer;
+        color: white;
+        clip-path: polygon(95% 0%, 100% 50%, 95% 100%, 0% 100%, 5% 50%, 0% 0%);
+        background-color: #003399;
+        padding: 5px 15px 5px 15px;
+    }
+
+    .route-path3 {
+        cursor: pointer;
+        color: white;
+        clip-path: polygon(91% 0%, 100% 50%, 91% 100%, 0% 100%, 9% 50%, 0% 0%);
+        background-color: #003399;
+        padding: 5px 15px 5px 15px;
+    }
+
+    .cross-btn {
+        font-size: 30px;
+        cursor: pointer;
+        color: midnightblue;
+        position: absolute;
+        top: 35px;
+        right: 15px;
+    }
+
+    .material-icons {
+        cursor: pointer
+    }
+
+    span i {
+        padding: 5px
+    }
+</style>
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="Stylesheet" type="text/css" />
+@*AP external CSS*@
+<link href="~/Content/ERPStyle.css" rel="stylesheet" type="text/css" />
+
+<form id="TypeValidation" class="form-horizontal" action="#" method="">
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="d-flex" style="margin-top:-20px">
+                <h4 class="route-path1">Inventory </h4>
+                <h4 class="route-path2 " onclick="location.href='@Url.Action("Index","TestParameters")'">Test Parameters</h4>
+                <h4 class="route-path3" onclick="location.reload()">Create</h4>
+            </div>
+            <br />
+
+            <div class="panel panel-default outer-main-container">
+                <div class=" main-heading">
+                    <div class=" d-flex ">
+                        <i class="material-icons" style="font-size: 32px; margin-right: 10px;">feed</i>
+                        Test Parameter Create
+                        <i class="material-icons cross-btn" onclick="history.back()">cancel</i>
+                    </div>
+                </div>
+                <div class="" style="padding-inline:20px">
+                    <div class="form-group row mx-0 mb-4">
+                        <div class="col-12 col-md-6 col-lg-4 ">
+                            <label id="label">Select Item :</label>
+                            <div class="form-group row m-0">
+                                @Html.DropDownList("ItemId", (IEnumerable<SelectListItem>)ViewBag.ItemID, "Please Select", new { @class = "form-control fs-4 pl-3 dropdown-textbox", @onchange = "GetCode(this.value);", style = "height:35px;" })
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-4 ">
+                            <label id="label">Copy Parameter Item :</label>
+                            <div class="form-group row m-0">
+                                @Html.DropDownList("CopyItemId", (IEnumerable<SelectListItem>)ViewBag.ParameterItem, "Please Select copy item", new { @class = "form-control fs-4 pl-3 dropdown-textbox", @onchange = "loadParametersFromCopyItem(this.value);", style = "height:35px;" })
+                            </div>
+                        </div>
+                    </div>
+                    <fieldset class="dshapefieldset">
+                        <div class="form-group row mx-0">
+                            <div class="col-lg-2">
+                                <label id="label">Parameter Name :</label>
+                                @Html.TextBox("TestReportName", null, new { @class = "form-control bg-light fs-4 pl-3 input-text-box", style = "height:35px" })
+                                <span id="reqitem" class="fs-5"></span>
+                            </div>
+                            <div class="col-lg-2">
+                                <label id="label">Unit Desc. :</label>
+                                @Html.TextBox("UnitDescription", null, new { @class = "form-control bg-light fs-4 pl-3 input-text-box", style = "height:35px" })
+                                <span id="reqitem" class="fs-5"></span>
+                            </div>
+                            <div class="col-lg-2">
+                                <label id="label">Unit :</label>
+                                @Html.TextBox("MeasuringUnit", null, new { @class = "form-control bg-light fs-4 pl-3 input-text-box", style = "height:35px" })
+                            </div>
+                            <div class="col-lg-2">
+                                <label for="Value" id="label">Value:</label><br />
+                                @Html.TextBox("Value", null, new { @class = "form-control bg-light fs-4 pl-3 input-text-box ",@type="Number", @style = "pointer:cursor", id = "Value" })
+                            </div>
+                            <div class="col-lg-1">
+                                <label for="IsNumber" id="label">IsNumber:</label><br />
+                                @Html.CheckBox("IsNumber", false, new { @class = "form-check-input fs-2 ", @style = "pointer:cursor", id = "IsNumber" })
+                            </div>
+
+                            <div class="col-lg-2">
+                                <label id="label">Remark :</label>
+                                @Html.TextBox("Remark", null, new { @class = "form-control fs-4 pl-3 input-text-box", style = "height:35px" })
+                            </div>
+                            <div class="col-lg-1 align-items-end d-flex pt-2">
+                                <input type="button" id="add" value="Add" class="mb-2 btn btn-success btn-round create-bttn custo-inner" style="outline-style: none; border: none;" onclick="AddParameters()" />
+                                <input type="button" id="update" value="Update" class="mb-2 btn btn-success btn-round create-bttn custo-inner d-none" style="outline-style: none; border: none;" onclick="UpdateParameters()" />
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="">
+                        <div id="orderItems" class="tablecontainer table-responsive" style="background-color:#fff">
+
+                            <table id="itemsTable" class="table table-bordered">
+                                <thead class="bg-secondary text-black">
+                                    <tr>
+                                        <th>Sr. No</th>
+                                        <th>Parameter Name</th>
+                                        <th>Unit Desc.</th>
+                                        @*<th>Measuring Unit</th>*@
+                                        <th>Unit</th>
+                                        <th>Value</th>
+                                        @*<th>Tolerance2</th>*@
+                                        <th>IsNumber</th>
+                                        <th>Remark</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        int serialNo = 1;
+                                    }
+                                    @foreach (var item in Model)
+                                    {
+                                    <tr>
+                                        <td class="sno">@serialNo</td>
+                                        <td class="TestReportName">@item.TestReportName</td>
+                                        <td class="UnitDescription">@item.UnitDescription</td>
+                                        <td class="MeasuringUnit">@item.MeasuringUnit</td>
+                                        @*<td class="Unit">@item.Unit</td>*@
+                                        @*<td class="Unit" data-unit-id="@item.UnitId">@item.UnitId</td>
+
+                                        <td class="ToleranceValue">@item.ToleranceValue</td>*@
+                                        <td class="Value">@item.Value</td>  <!-- HERE -->
+                                        <td class="IsNumber">@item.IsNumber</td>
+                                        <td class="Remark">@item.Remark</td>
+                                        <td>
+                                            <button type="button" class="btn btn-warning btn-sm" onclick="editRow(this)">Edit</button>
+                                            <button type="button" class="btn btn-danger btn-sm" onclick="deleteRow(this)">Delete</button>
+                                        </td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <label></label>
+                    </div>
+                    <div id="TestParametersHiddenFields"></div>
+                    <div class="form-group row ">
+                        <div class="col-md-2 col-lg-2 col-sm-4 px-2">
+                            <input type="button" value="Create" class=" btn btn-success btn-round create-bttn custo-inner" style="outline:none" onclick="CreateTestParameter()" />
+                        </div>
+                        <div class="col-md-2 col-lg-2 col-sm-4 px-2">
+                            <input type="button" value="Close" class=" btn btn-success btn-round create-bttn custo-inner" style="outline:none" onclick="history.back()" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+@*<script>
+    function toggleTolerance1Visibility() {
+        var selected = document.getElementById("ToleranceType").value;
+        var container = document.getElementById("tolerance1Container");
+
+        if (selected === "±") {
+            container.style.display = "none";
+            document.getElementById("Tolerance1Value").value = ""; // Clear value if hidden
+        } else {
+            container.style.display = "block";
+        }
+    }
+
+    // Wait for DOM to be ready
+    document.addEventListener("DOMContentLoaded", function () {
+        toggleTolerance1Visibility(); // Run on page load
+
+        // Run whenever the dropdown changes
+        document.getElementById("ToleranceType").addEventListener("change", toggleTolerance1Visibility);
+    });
+</script>*@
+
+
+<script>
+    var rowCount = 0;
+    var currentEditingRow = null;
+
+    function AddParameters() {
+        var data = getFormData();
+
+        // 🌐 Basic Field Validations
+        let isValid = true;
+        let errorMsg = "";
+
+        if (!$('#TestReportName').val().trim()) {
+            isValid = false;
+            errorMsg += "• Parameter is required.\n";
+        }
+
+        if (!$('#UnitDescription').val().trim()) {
+            isValid = false;
+            errorMsg += "• Description is required.\n";
+        }
+
+        if (!$('#MeasuringUnit').val().trim()) {
+            isValid = false;
+            errorMsg += "• Dimention is required.\n";
+        }
+
+        //if (!$('#UnitId').val()) {
+        //    isValid = false;
+        //    errorMsg += "• Unit is required.\n";
+        //}
+
+        if (!$('#Value').val().trim()) {
+            isValid = false;
+            errorMsg += "• Value is required/Should be in number only.\n";
+        }
+
+
+        if (!isValid) {
+            alert("Please fill the following:\n\n" + errorMsg);
+            return; // ❌ Stop execution
+        }
+
+        //if ($('#itemsTable').length === 0) {
+        //    createTable();
+        //}
+
+        rowCount++;
+
+        var newRow = `
+            <tr>
+                <td class="sno">${rowCount}</td>
+                <td class="TestReportName">${data.TestReportName}</td>
+                <td class="UnitDescription">${data.UnitDescription}</td>
+                <td class="MeasuringUnit">${data.MeasuringUnit}</td>
+                <td class="Value">${data.Value}</td>
+                <td class="IsNumber">${data.IsNumber}</td> <!-- new column -->
+                <td class="Remark">${data.Remark}</td>
+                <td>
+                    <button type="button" class="btn btn-warning btn-sm" onclick="editRow(this)">Edit</button>
+                    <button type="button" class="btn btn-success btn-sm" onclick="insertRowBelow(this)">Insert</button>
+                    <button type="button" class="btn btn-danger btn-sm" onclick="deleteRow(this)">Delete</button>
+                </td>
+            </tr>
+        `;
+        if (window.insertAfterRow) {
+            // Insert below the specific row
+            $(window.insertAfterRow).after(newRow);
+            window.insertAfterRow = null; // reset
+        } else {
+            // Default: append at the end
+            $('#itemsTable tbody').append(newRow);
+        }
+
+        updateSerialNumbers();
+        clearForm();
+
+        //$('#itemsTable tbody').append(newRow);
+        //clearForm();
+    }
+
+
+    function editRow(btn) {
+        var row = $(btn).closest('tr');
+        currentEditingRow = row;
+        $("input[name='TestReportName']").val(row.find('.TestReportName').text());
+        $("input[name='UnitDescription']").val(row.find('.UnitDescription').text());
+        $("input[name='MeasuringUnit']").val(row.find('.MeasuringUnit').text());
+        $("input[name='Value']").val(row.find('.Value').text());
+
+        
+
+        // ✅ Handle IsNumber checkbox
+        var isNumberValue = row.find('.IsNumber').text().trim().toUpperCase();
+        $("#IsNumber").prop("checked", isNumberValue === "Y");
+        $("input[name='Remark']").val(row.find('.Remark').text());
+
+        $('#add').addClass('d-none');
+        $('#update').removeClass('d-none');
+    }
+
+    function UpdateParameters() {
+        if (currentEditingRow == null) return;
+
+        var data = getFormData();
+
+        // 🌐 Basic Field Validations
+        let isValid = true;
+        let errorMsg = "";
+
+        if (!$('#UnitDescription').val().trim()) {
+            isValid = false;
+            errorMsg += "• Description is required.\n";
+        }
+
+        if (!$('#MeasuringUnit').val().trim()) {
+            isValid = false;
+            errorMsg += "• Dimention is required.\n";
+        }
+
+        //if (!$('#UnitId').val()) {
+        //    isValid = false;
+        //    errorMsg += "• Unit is required.\n";
+        //}
+
+        if (!$('#Value').val().trim()) {
+            isValid = false;
+            errorMsg += "• Value is required.\n";
+        }
+
+
+        if (!isValid) {
+            alert("Please fill the following:\n\n" + errorMsg);
+            return; // ❌ Stop execution
+        }
+
+        // Update row cells
+        currentEditingRow.find('.TestReportName').text(data.TestReportName);
+        currentEditingRow.find('.UnitDescription').text(data.UnitDescription);
+        currentEditingRow.find('.MeasuringUnit').text(data.MeasuringUnit);
+        currentEditingRow.find('.Value').text(data.Value); // ✅ ADD THIS LINE
+        currentEditingRow.find('.IsNumber').text(data.IsNumber);
+        currentEditingRow.find('.Remark').text(data.Remark);
+
+        clearForm();
+
+        // Reset buttons
+        $('#add').removeClass('d-none');
+        $('#update').addClass('d-none');
+        currentEditingRow = null;
+    }
+
+
+    function deleteRow(btn) {
+        $(btn).closest('tr').remove();
+        updateSerialNumbers();
+    }
+
+    function updateSerialNumbers() {
+        rowCount = 0;
+        $('#itemsTable tbody tr').each(function () {
+            rowCount++;
+            $(this).find('.sno').text(rowCount);
+        });
+
+        if (rowCount === 0) {
+            $('#orderItems').html('');
+        }
+    }
+
+
+    function insertRowBelow(btn) {
+        const currentRow = $(btn).closest("tr");
+
+        // Store the next row's position
+        const insertAfterRow = currentRow;
+
+        // Fill form with the current row's values
+        $("input[name='TestReportName']").val(currentRow.find('.TestReportName').text().trim());
+        $("input[name='UnitDescription']").val(currentRow.find('.UnitDescription').text().trim());
+        $("input[name='MeasuringUnit']").val(currentRow.find('.MeasuringUnit').text().trim());
+        $("input[name='Value']").val(currentRow.find('.Value').text().trim());
+
+       
+        // Handle IsNumber checkbox
+        var isNumberValue = currentRow.find('.IsNumber').text().trim().toUpperCase();
+        $("#IsNumber").prop("checked", isNumberValue === "Y");
+        // Remark
+        $("input[name='Remark']").val(currentRow.find('.Remark').text().trim());
+
+        //toggleTolerance1Visibility(); // If you have conditional logic
+
+        // Set form state
+        $('#add').removeClass('d-none');
+        $('#update').addClass('d-none');
+
+        // Optional: Scroll to form
+        $('html, body').animate({
+            scrollTop: $("#UnitDescription").offset().top - 100
+        }, 300);
+
+        // Set a global variable to know we are inserting below a specific row
+        window.insertAfterRow = insertAfterRow;
+    }
+
+    function getFormData() {
+
+        return {
+            TestReportName: $("input[name='TestReportName']").val().trim(),
+            UnitDescription: $("input[name='UnitDescription']").val().trim(),
+            MeasuringUnit: $("input[name='MeasuringUnit']").val().trim(),
+            //Unit: $("#Unit").val(),
+            MeasuringUnit: $("input[name='MeasuringUnit']").val().trim(),
+            //ToleranceValue: fullToleranceValue,
+            //Value: $("input[name='Value']").val().trim(), //  NEW FIELD ADDED
+            Value: parseFloat($("input[name='Value']").val()),
+            Remark: $("input[name='Remark']").val().trim(),
+            IsNumber: $("#IsNumber").is(":checked") ? "Y" : "N" //  this line added
+        };
+    }
+
+    function clearForm() {
+        // Clear all text and number inputs
+        $("input[name='TestReportName'], input[name='UnitDescription'], input[name='MeasuringUnit'], input[name='Value'],input[name='Tolerance1Value'], input[name='Parameter2'], input[name='Parameter3'], input[name='Parameter4'], input[name='Parameter5'], input[name='Remark']").val('');
+
+        // Reset dropdowns to default (first option)
+        $("#ToleranceType").prop('selectedIndex', 0);
+        $("#Tolerance1Type").prop('selectedIndex', 0);
+        $("#UnitId").prop('selectedIndex', 0); // Only if Unit is a <select>
+        // Reset the IsNumber checkbox (unchecked = "N" by default)
+        $("#IsNumber").prop('checked', false);
+    }
+
+
+    function syncHiddenFieldsWithTable() {
+        var container = $('#TestParametersHiddenFields');
+        container.empty(); // Clear previous hidden fields
+
+        $('#itemsTable tbody tr').each(function (i) {
+            var row = $(this);
+
+            container.append(`<input type="hidden" name="testParameters[${i}].UnitDescription" value="${row.find('.UnitDescription').text()}" />`);
+            container.append(`<input type="hidden" name="testParameters[${i}].MeasuringUnit" value="${row.find('.MeasuringUnit').text()}" />`);
+            container.append(`<input type="hidden" name="testParameters[${i}].ToleranceValue" value="${row.find('.ToleranceValue').text()}" />`);
+
+            container.append(`<input type="hidden" name="testParameters[${i}].Remark" value="${row.find('.Remark').text()}" />`);
+        });
+    }
+
+
+    function loadParametersFromCopyItem(itemId) {
+    if (!itemId) {
+        alert("Please select a valid item to copy parameters.");
+        return;
+    }
+
+    $.ajax({
+        url: '@Url.Action("GetTestParametersByItem", "TestParameter")',
+        type: 'GET',
+        data: { itemId: itemId },
+        success: function (data) {
+            if (data.length === 0) {
+                alert("No parameters found for the selected item.");
+                return;
+            }
+
+            $('#itemsTable tbody').empty(); // Clear previous rows
+            rowCount = 0;
+
+            data.forEach(function (param) {
+                rowCount++;
+
+                var newRow = `
+                    <tr>
+                        <td class="sno">${rowCount}</td>
+                        <td class="TestReportName">${param.TestReportName || ''}</td>
+                        <td class="UnitDescription">${param.UnitDescription || ''}</td>
+                        <td class="MeasuringUnit">${param.MeasuringUnit || ''}</td>
+                        <td class="Value">${param.Value || ''}</td>
+                        <td class="IsNumber">${param.IsNumber === "Y" ? "Y" : "N"}</td> <!-- Added -->
+                        <td class="Remark">${param.Remark || ''}</td>
+                        <td>
+                            <button type="button" class="btn btn-warning btn-sm" onclick="editRow(this)">Edit</button>
+                            <button type="button" class="btn btn-success btn-sm" onclick="insertRowBelow(this)">Insert</button>
+                            <button type="button" class="btn btn-danger btn-sm" onclick="deleteRow(this)">Delete</button>
+                        </td>
+                    </tr>
+                `;
+                $('#itemsTable tbody').append(newRow);
+            });
+        },
+        error: function () {
+            alert("Failed to load parameters. Please try again.");
+        }
+    });
+}
+
+
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#ItemForm').submit(function () {
+            syncHiddenFieldsWithTable(); // Sync table to hidden inputs before form posts
+        });
+    });
+
+    function CreateTestParameter() {
+        // Get selected ItemId
+        var itemId = $('#ItemId').val(); // or just $('select[name="ItemId"]').val()
+
+        console.log('item id is ' + itemId);
+        if (!itemId) {
+            alert("Please select an item.");
+            return;
+        }
+
+        // Prepare parameter list from hidden fields or table rows
+        var parameters = [];
+
+        $('#itemsTable tbody tr').each(function () {
+            var row = $(this);
+            var param = {
+                TestReportName: row.find('.TestReportName').text().trim(),
+                UnitDescription: row.find('.UnitDescription').text().trim(),
+                MeasuringUnit: row.find('.MeasuringUnit').text().trim(),
+                Value: row.find('.Value').text().trim(), //  ADDED LINE
+                IsNumber: row.find('.IsNumber').text().trim().toUpperCase(), //  added line
+                Remark: row.find('.Remark').text().trim()
+            };
+            parameters.push(param);
+        });
+
+        if (parameters.length === 0) {
+            alert("Please add at least one test parameter.");
+            return;
+        }
+
+        // Prepare data to send
+        var dataToSend = {
+            ItemId: itemId,
+            TestParametersList: parameters
+        };
+
+        // Send AJAX request to controller
+        $.ajax({
+            url: '@Url.Action("CreateTestParameter", "TestParameter")', // Adjust as needed
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(dataToSend),
+            success: function (response) {
+                alert("Test parameter created successfully!");
+                window.location.href = '@Url.Action("Index", "TestParameter")'; // redirect if needed
+            },
+            error: function (xhr) {
+                alert("Error occurred: " + xhr.responseText);
+            }
+        });
+    }
+
+</script>

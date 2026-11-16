@@ -1,0 +1,642 @@
+﻿
+@model ERPEntities.ThemeSetting
+@{
+    ViewBag.Title = "Theme Settings";
+    Layout = "~/Views/Shared/_SwipfeMaster.cshtml";
+}
+
+
+
+<style>
+    .preview-box {
+        padding: 5px 10px;
+        border-radius: 4px;
+        margin-left: 10px;
+        border: 1px solid #ccc;
+        display: inline-block;
+        min-width: 80px;
+        text-align: center;
+    }
+
+    .pagefix {
+        margin-top: -22px;
+        margin-bottom: -20px
+    }
+
+    .material-icons {
+        font-size: 35px;
+        margin-right: 10px;
+    }
+
+    .resetbtn {
+        border-radius: 20px;
+        font-size: large;
+        padding-right: 15px;
+        max-height: 40px;
+        float: right;
+        margin-top: -36px;
+        margin-right: 10px
+    }
+
+    .zoom {
+        transition: transform .1s;
+    }
+
+        .zoom:hover {
+            -ms-transform: scale(1.5); /* IE 9 */
+            -webkit-transform: scale(1.5); /* Safari 3-8 */
+            transform: scale(1.02);
+        }
+
+    .cardbox {
+        border-radius: 10px;
+        box-shadow: 0 6px 15px rgb(0 0 0 / 39%);
+        background-color: #fff;
+        width: 100%;
+        overflow: hidden; /* Prevents content from spilling out */
+        box-sizing: border-box;
+        min-height: 250px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 1rem;
+        text-align: center;
+    }
+
+    .setting-name {
+        font-family: 'poppins',sans-serif;
+        color: midnightblue;
+        text-transform: uppercase;
+        text-align: center;
+        overflow: hidden;
+        padding-inline: 0;
+        overflow-wrap: break-word;
+    }
+
+    .demo-module {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-image: linear-gradient(to right bottom, rgb(239,240,243), rgb(229,230,235));
+        box-shadow: 5px 5px 6px #bfc3cf, -5px -5px 6px #fff;
+        color: midnightblue;
+        height: 40px;
+        width: 60%;
+        padding: 0 10px;
+        border-radius: 15px;
+        font-family: Verdana, sans-serif;
+        border: none;
+        font-size: large;
+        margin-inline: 20%;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+        .demo-module .icon {
+            margin-right: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .demo-module .text {
+            flex: 1; /* Takes available space */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: left;
+        }
+
+        .demo-module .caret {
+            margin-left: 8px;
+        }
+
+    .demo-drop {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-radius: 0 10px 10px 10px;
+        background-image: linear-gradient(to right,rgba(198,219,244,0.7),white,white,white,white,white,white,rgba(198,219,244,0.7));
+        box-shadow: 5px 0px 5px lightgray;
+        color: midnightblue;
+        height: 40px;
+        width: 60%;
+        padding: 0 10px;
+        font-family: Verdana, sans-serif;
+        border: none;
+        font-size: large;
+        margin-inline: 20%;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+        .demo-drop .icon {
+            margin-right: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .demo-drop .text {
+            flex: 1; /* Takes available space */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: left;
+        }
+
+    .demo-side {
+        background-color: rgb(240, 240, 240);
+        box-shadow: 4px 8px 8px rgba(0, 0, 0, 0.2);
+        border-radius: 0 0 15px 0;
+        height: 60px;
+        border: none;
+        width: 70%
+    }
+
+    .demo-head {
+        background-image: linear-gradient(to left, lightblue, white);
+        box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.2);
+        height: 50px;
+        border: none;
+        width: 95%
+    }
+
+        .demo-head .text {
+            flex: 1; /* Takes available space */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: left;
+            font-weight: bold;
+            color: midnightblue;
+            font-size: x-large;
+        }
+
+    .demo-foot {
+        background-color: #e0f7fa;
+        box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2);
+        height: 50px;
+        border: none;
+        width: 95%
+    }
+
+        .demo-foot .text {
+            flex: 1; /* Takes available space */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: left;
+            color: black;
+            font-size: large;
+        }
+
+
+    .create-bttn {
+        border-radius: 10px;
+        font-size: small;
+    }
+
+    label {
+        font-size: large;
+        padding-right: 10%
+    }
+</style>
+
+
+
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>-->
+<!-- Bootstrap JS -->
+<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="Stylesheet" type="text/css" />-->
+<!-- External CSS-->
+<!--<link href="~/CSS/ERPStyle.css" rel="stylesheet" />-->
+<!-- fonts-->
+<!--<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">-->
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="Stylesheet" type="text/css" />
+<!-- External CSS-->
+<link href="~/Content/ERPStyle.css" rel="stylesheet" />
+<!-- fonts-->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: '/Settings/GetThemeColors', // This should return all colors as JSON
+            type: 'GET',
+            success: function (colors) {
+                for (const key in colors) {
+                    if (colors.hasOwnProperty(key)) {
+                        $('#' + key).val(colors[key]);
+                    }
+                }
+            },
+            error: function () {
+                console.error("Failed to load theme colors.");
+            }
+        });
+    });
+
+
+</script>
+
+
+<script>
+    function updatePreview(bgId, fontId, previewId) {
+        const bg = $('#' + bgId).val();
+        const font = $('#' + fontId).val();
+        $('#' + previewId).css({
+            'background-color': bg,
+            'color': font
+        });
+    }
+
+    $(document).ready(function () {
+        // Set initial previews
+        updatePreview('InnerButtonColor', 'InnerButtonFontColor', 'InnerButtonPreview');
+        updatePreview('ModuleButtonColor', 'ModuleButtonFontColor', 'ModuleButtonPreview');
+        updatePreview('ModuleDropdownBgColor', 'ModuleDropdownFontColor', 'ModuleDropdownPreview');
+        updatePreview('SidebarBgColor', 'ModuleDropdownFontColor', 'SidebarPreview'); // Use any text color you want here
+        updatePreview('HeaderBgColor', 'HeaderFontColor', 'HeaderPreview');
+        updatePreview('FooterBgColor', 'FooterFontColor', 'FooterPreview');
+
+        // Bind on change
+        $('#InnerButtonColor, #InnerButtonFontColor').on('input', function () {
+            updatePreview('InnerButtonColor', 'InnerButtonFontColor', 'InnerButtonPreview');
+        });
+
+        $('#ModuleButtonColor, #ModuleButtonFontColor').on('input', function () {
+            updatePreview('ModuleButtonColor', 'ModuleButtonFontColor', 'ModuleButtonPreview');
+        });
+
+        $('#ModuleDropdownBgColor, #ModuleDropdownFontColor').on('input', function () {
+            updatePreview('ModuleDropdownBgColor', 'ModuleDropdownFontColor', 'ModuleDropdownPreview');
+        });
+
+        $('#SidebarBgColor, #ModuleDropdownFontColor').on('input', function () {
+            updatePreview('SidebarBgColor', 'ModuleDropdownFontColor', 'SidebarPreview');
+        });
+
+        $('#HeaderBgColor, #HeaderFontColor').on('input', function () {
+            updatePreview('HeaderBgColor', 'HeaderFontColor', 'HeaderPreview');
+        });
+
+        $('#FooterBgColor, #FooterFontColor').on('input', function () {
+            updatePreview('FooterBgColor', 'FooterFontColor', 'FooterPreview');
+        });
+    });
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        // Reset button click handler
+        $('#resetColorsBtn').on('click', function () {
+            if (confirm("Are you sure you want to reset all color settings?")) {
+                $.ajax({
+                    url: '/Settings/ResetAllColors',
+                    type: 'POST',
+                    success: function (response) {
+                        alert("All colors have been reset.");
+                        if (response.success) {
+                            window.reload(); //  Proper page reload
+                            window.location.href = '/Settings/ColourPicker';
+                        }
+                    },
+                    error: function () {
+                        alert("Error occurred while resetting colors.");
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="Stylesheet" type="text/css" />
+@*AP external CSS*@
+<link href="~/Content/ERPStyle.css" rel="stylesheet" />
+
+
+<div class=" col-lg-12 col-md-12 col-sm-12 col-xs-12 pagefix">
+
+    <div class="d-flex">
+        <h4 style="clip-path: polygon(0% 0%, 85% 0%, 100% 50%, 85% 100%, 0% 100%); background-color: #003399; color: white; padding: 5px 13px 5px 5px ">Admin </h4>
+        <h4 style="cursor: pointer; color: white; clip-path: polygon(89% 0%, 100% 50%, 89% 100%, 0% 100%, 11% 50%, 0% 0%); background-color: #003399; padding: 5px 15px 5px 15px; " onclick="location.href='@Url.Action("Index","Settings")'">Setting</h4>
+        <h4 style="cursor: pointer; color: white; clip-path: polygon(94% 0%, 100% 50%, 94% 100%, 0% 100%, 6% 50%, 0% 0%); background-color: #003399; padding: 5px 15px 5px 15px; " onclick="location.href='@Url.Action("ColourPicker","Settings")'">Customize Panel</h4>
+    </div>
+    <br />
+    <div class="panel panel-default outer-main-container">
+        <div class="d-flex main-heading ">
+            <i class="material-icons">view_cozy</i>
+            Customization Panel
+        </div>
+        <form method="post" action="/Settings/ResetAllColors">
+            <button class="search-bttn d-flex resetbtn custo-inner" type="submit" id="resetColorsBtn" title="Previous Setting will apply to all">
+                <i class="material-icons" style="font-size:x-large">restart_alt</i>
+                Reset to Default
+            </button>
+        </form>
+        <div class="panel-body" style="margin-top:-30px">
+            <div class="form-group " style="padding-top:-10px">
+                <div class="row ">
+                    <div class="col-lg-4 col-md-4 col-sm-6 p-5">
+                        <form method="post" action="/Settings/SaveColors">
+                            <div class="cardbox cardlevel zoom d-block">
+                                <h2 class="setting-name">Module Button</h2>
+                                <input type="hidden" name="group" value="ModuleButton" />
+                                <div class="d-flex justify-content-center p-3">
+                                    <label>Select Button colour : </label>
+                                    <input type="color" id="ModuleButtonColor" name="colorSettings[ModuleButtonColor]" value="@ViewData["ModuleButtonColor"]" />
+                                </div>
+                                <div class="d-flex justify-content-center p-3">
+                                    <label>Select Font colour : </label>
+                                    <input type="color" id="ModuleButtonFontColor" name="colorSettings[ModuleButtonFontColor]" value="@ViewData["ModuleButtonFontColor"]" />
+                                </div>
+
+                                <button class="demo-module p-3 custo-module">
+                                    <span class="icon"><i class="material-icons" title="Module icon">view_module</i></span>
+                                    <span class="text">Module Name</span>
+                                    <span class="caret"></span>
+                                </button>
+                                <button type="submit" class="create-bttn mt-4 custo-inner">Apply </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 p-5">
+                        <form method="post" action="/Settings/SaveColors">
+                            <div class="cardbox cardlevel zoom d-block">
+                                <h2 class="setting-name">Module Dropdown</h2>
+                                <input type="hidden" name="group" value="ModuleDropdown" />
+                                <div class="d-flex justify-content-center p-3">
+                                    <label>Select Dropdown colour : </label>
+                                    <input type="color" id="ModuleDropdownBgColor" name="colorSettings[ModuleDropdownBgColor]" value="@ViewData["ModuleDropdownBgColor"]" />
+                                </div>
+                                <div class="d-flex justify-content-center p-3">
+                                    <label>Select Font colour : </label>
+                                    <input type="color" id="ModuleDropdownFontColor" name="colorSettings[ModuleDropdownFontColor]" value="@ViewData["ModuleDropdownFontColor"]" />
+                                </div>
+
+                                <button class="demo-drop p-3 custo-drop">
+                                    <span class="icon custo-dropt"><i class="material-icons" title="Module icon">subdirectory_arrow_right</i></span>
+                                    <span class="text custo-dropt">Sub-Module Name</span>
+                                </button>
+                                <button type="submit" class="create-bttn mt-4 custo-inner">Apply </button>
+                            </div>
+                        </form>
+
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 p-5">
+                        <form method="post" action="/Settings/SaveColors">
+                            <div class="cardbox cardlevel zoom d-block">
+                                <h2 class="setting-name">Sidebar Colour</h2>
+                                <input type="hidden" name="group" value="Sidebar" />
+                                <div class="d-flex justify-content-center p-4">
+                                    <label>Select Background-colour : </label>
+                                    <input type="color" id="SidebarBgColor" name="colorSettings[SidebarBgColor]" value="@ViewData["SidebarBgColor"]" />
+                                </div>
+                                <div class="justify-content-center">
+                                    <button class="demo-side custo-sidebar " style="">
+                                    </button><br />
+                                    <button type="submit" class="create-bttn mt-4 custo-inner">Apply </button>
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 col-md-4 col-sm-6 p-5">
+                        <form method="post" action="/Settings/SaveColors">
+                            <div class="cardbox cardlevel zoom d-block">
+                                <h2 class="setting-name">Header Colour</h2>
+                                <button class="demo-head p-3 custo-head">
+                                    <span class="text custo-headt">Company Name</span>
+                                </button>
+                                <input type="hidden" name="group" value="Header" />
+                                <div class="d-flex justify-content-center p-3">
+                                    <label>Select Background colour : </label>
+                                    <input type="color" id="HeaderBgColor" name="colorSettings[HeaderBgColor]" value="@ViewData["HeaderBgColor"]" />
+                                </div>
+                                <div class="d-flex justify-content-center p-3">
+                                    <label>Select Font colour : </label>
+                                    <input type="color" id="HeaderFontColor" name="colorSettings[HeaderFontColor]" value="@ViewData["HeaderFontColor"]" />
+                                </div>
+
+                                <button type="submit" class="create-bttn mt-4 custo-inner">Apply </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 p-5">
+                        <form method="post" action="/Settings/SaveColors">
+                            <div class="cardbox cardlevel zoom d-block">
+                                <h2 class="setting-name">footer Colour</h2>
+                                <input type="hidden" name="group" value="Footer" />
+                                <div class="d-flex justify-content-center p-3">
+                                    <label>Select Background colour : </label>
+                                    <input type="color" id="FooterBgColor" name="colorSettings[FooterBgColor]" value="@ViewData["FooterBgColor"]" />
+                                </div>
+                                <div class="d-flex justify-content-center p-3">
+                                    <label>Select Font colour : </label>
+                                    <input type="color" id="FooterFontColor" name="colorSettings[FooterFontColor]" value="@ViewData["FooterFontColor"]" />
+                                </div>
+                                <button type="submit" class="create-bttn mb-4 custo-inner">Apply </button>
+                                <button class="demo-foot p-3 custo-foot">
+                                    <span class="text custo-foott">copyrights & Company name</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 p-5">
+                        <form method="post" action="/Settings/SaveColors">
+                            <div class="cardbox zoom">
+                                <h2 class="setting-name">All Action Buttons</h2>
+                                <input type="hidden" name="group" value="InnerButton" />
+                                <div class="d-flex justify-content-center p-3">
+                                    <label>Select Button colour : </label>
+                                    <input type="color" id="InnerButtonColor" name="colorSettings[InnerButtonColor]" value="@ViewData["InnerButtonColor"]" />
+                                </div>
+                                <div class="d-flex justify-content-center p-3">
+                                    <label>Select Font colour : </label>
+                                    <input type="color" id="InnerButtonFontColor" name="colorSettings[InnerButtonFontColor]" value="@ViewData["InnerButtonFontColor"]" />
+                                </div>
+                                <div class="p-3 " style="border:1px solid lightgrey" title="Examples">
+                                    <button class="create-bttn m-1 custo-inner">
+                                        <span class="text">e.g. Create</span>
+                                    </button>
+                                    <button class="create-bttn m-1 custo-inner">
+                                        <span class="text">e.g. Search</span>
+                                    </button>
+                                    <button class="create-bttn m-1 custo-inner">
+                                        <span class="text">e.g. Update</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button type="submit" class="create-bttn mt-4 custo-inner">Apply </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+            <!-- inner btn Section
+            <form method="post" action="/Settings/SaveColors">
+                <input type="hidden" name="group" value="InnerButton" />
+
+                <div style="margin-bottom: 15px;">
+                    <label>Inner Button Color:</label>
+                    <input type="color" id="InnerButtonColor" name="colorSettings[InnerButtonColor]" value="@ViewData["InnerButtonColor"]" />
+                    <span id="InnerButtonPreview" class="preview-box">Preview</span>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label>Inner Button Font Color:</label>
+                    <input type="color" id="InnerButtonFontColor" name="colorSettings[InnerButtonFontColor]" value="@ViewData["InnerButtonFontColor"]" />
+                </div>
+
+                <button type="submit">Save Inner Button Colors</button>
+            </form>
+
+
+
+            Footer Section
+            <form method="post" action="/Settings/SaveColors">
+                <input type="hidden" name="group" value="Footer" />
+
+                <div style="margin-bottom: 15px;">
+                    <label>Footer Bg-Color:</label>
+                    <input type="color" id="FooterBgColor" name="colorSettings[FooterBgColor]" value="@ViewData["FooterBgColor"]" />
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label>Footer Font-Color:</label>
+                    <input type="color" id="FooterFontColor" name="colorSettings[FooterFontColor]" value="@ViewData["FooterFontColor"]" />
+                    <span id="FooterPreview" class="preview-box">Footer</span>
+                </div>
+
+                <button type="submit">Save Footer Colors</button>
+            </form>
+                 -->
+
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+
+        /*module button*/
+        $.ajax({
+            url: '/Settings/GetAllColors',
+            type: 'GET',
+            success: function (colors) {
+                // Example: Apply Inner Button colors
+                var bgColor = colors.ModuleButtonColor; // module buttons
+                var fontColor = colors.ModuleButtonFontColor; // module buttons
+                var bgColor1 = colors.ModuleDropdownBgColor; // module dropdown
+                var fontColor1 = colors.ModuleDropdownFontColor; // module dropdown
+                var bgColor2 = colors.SidebarBgColor; // sidebar
+                var bgColor3 = colors.HeaderBgColor; // header
+                var fontColor3 = colors.HeaderFontColor; // header text
+                var bgColor4 = colors.FooterBgColor; // footer
+                var fontColor4 = colors.FooterFontColor; // footer text
+                var bgColor5 = colors.InnerButtonColor; // inner
+                var fontColor5 = colors.InnerButtonFontColor; // inner text
+
+                // Example for all preview boxes (optional)
+                $('.custo-module').css('background', bgColor);// module buttons
+                $('.custo-module').css('color', fontColor);// module buttons
+                $('.custo-drop').css('background', bgColor1);// module dropdown
+                $('.custo-dropt').css('color', fontColor1);// module dropdown
+                $('.custo-sidebar').css('background', bgColor2);// module dropdown
+                $('.custo-head').css('background', bgColor3);//  header
+                $('.custo-headt').css('color', fontColor3);// header text
+                $('.custo-foot').css('background', bgColor4);//  footer
+                $('.custo-foott').css('color', fontColor4);// footer text
+                $('.custo-inner').css('background', bgColor5);//  inner
+                $('.custo-inner').css('color', fontColor5);// inner text
+            },
+            error: function () {
+                console.error("Failed to load color settings.");
+            }
+        });
+
+    });
+</script>
+
+<!-- Module Button Section
+    <form method="post" action="/Settings/SaveColors">
+        <input type="hidden" name="group" value="ModuleButton" />
+
+        <div style="margin-bottom: 15px;">
+            <label>Module Button Color:</label>
+            <input type="color" id="ModuleButtonColor" name="colorSettings[ModuleButtonColor]" value="@ViewData["ModuleButtonColor"]" />
+            <span id="ModuleButtonPreview" class="preview-box">Preview</span>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label>Module Button Font Color:</label>
+            <input type="color" id="ModuleButtonFontColor" name="colorSettings[ModuleButtonFontColor]" value="@ViewData["ModuleButtonFontColor"]" />
+        </div>
+
+        <button type="submit">Save Module Button Colors</button>
+    </form>
+    <hr /> -->
+<!-- Module Dropdown Section
+<form method="post" action="/Settings/SaveColors">
+    <input type="hidden" name="group" value="ModuleDropdown" />
+
+    <div style="margin-bottom: 15px;">
+        <label>Module Dropdown Bg-Color:</label>
+        <input type="color" id="ModuleDropdownBgColor" name="colorSettings[ModuleDropdownBgColor]" value="@ViewData["ModuleDropdownBgColor"]" />
+        <span id="ModuleDropdownPreview" class="preview-box">Dropdown</span>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label>Module Dropdown Font-Color:</label>
+        <input type="color" id="ModuleDropdownFontColor" name="colorSettings[ModuleDropdownFontColor]" value="@ViewData["ModuleDropdownFontColor"]" />
+    </div>
+
+    <button type="submit">Save Module Dropdown Colors</button>
+</form> -->
+<!-- Sidebar Section
+<form method="post" action="/Settings/SaveColors">
+    <input type="hidden" name="group" value="Sidebar" />
+
+    <div style="margin-bottom: 15px;">
+        <label>Sidebar Bg-Color:</label>
+        <input type="color" id="SidebarBgColor" name="colorSettings[SidebarBgColor]" value="@ViewData["SidebarBgColor"]" />
+        <span id="SidebarPreview" class="preview-box">Sidebar</span>
+    </div>
+
+    <button type="submit">Save Sidebar Colors</button>
+</form>
+<hr /> -->
+<!-- Header Section
+<form method="post" action="/Settings/SaveColors">
+    <input type="hidden" name="group" value="Header" />
+
+    <div style="margin-bottom: 15px;">
+        <label>Header Bg-Color:</label>
+        <input type="color" id="HeaderBgColor" name="colorSettings[HeaderBgColor]" value="@ViewData["HeaderBgColor"]" />
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label>Header Font-Color:</label>
+        <input type="color" id="HeaderFontColor" name="colorSettings[HeaderFontColor]" value="@ViewData["HeaderFontColor"]" />
+        <span id="HeaderPreview" class="preview-box">Header</span>
+    </div>
+
+    <button type="submit">Save Header Colors</button>
+</form>-->

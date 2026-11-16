@@ -1,0 +1,715 @@
+﻿
+
+
+@using ERPModels
+@model ERPModels.VisitCustomerSearchModel_Paging
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_SwipfeMaster.cshtml";
+    // int sno = ((Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)) * 15 - 14;
+    //int sno = 1;
+    //if (Model.PageNumber <= Model.PageCount)
+    //{
+    //    if (Model.PageNumber == 1)
+    //    {
+    //        sno = 1;
+    //    }
+    //    else
+    //    {
+    //        sno = sno + ((Model.PageNumber - 1) * Model.RecordsPerPage);
+    //    }
+
+    //}
+}
+
+
+<style>
+    #label {
+        font-size: small;
+        color: #0077B3;
+    }
+
+    .courierCreate:hover {
+        transform: scale(1.1);
+        background-color: Highlight;
+    }
+    /*table {
+        border: 1px solid black;*/
+    /*border-collapse: collapse;*/
+    /*border:none;*/
+    /*}*/
+
+    td {
+        /*border: 1px solid white;
+    border-right: 2px solid White;
+    border-left: 2px solid white;
+    padding-left: 10px;
+    font-weight: bold;*/
+        font-family: Cambria;
+        font-size: small;
+        color: black;
+    }
+
+    th {
+        border-right: 2px solid White;
+        border-left: 1px solid white;
+        text-align: center;
+        font-size: small;
+        height: 30px;
+    }
+
+    td span {
+        border: none;
+        background: none;
+        color: blue;
+        font-size: 15px;
+        cursor: pointer;
+    }
+
+    .page td a {
+        font-size: 12px;
+    }
+
+    td span i:hover {
+        transform: scale(1.3);
+        color: Highlight;
+    }
+
+    td .glyphicon-edit {
+        color: green;
+    }
+
+    td .glyphicon-list {
+        color: blue;
+        padding-left: 5px;
+    }
+</style>
+
+
+@*<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />*@
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
+
+
+@*<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">*@
+
+@*<link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css"
+          rel="Stylesheet" type="text/css" />
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>*@
+
+<script type="text/javascript">
+    $(window).load(function () {
+
+        var b = '@Session["LoginUserId"]';
+        //var b = 15;
+
+        $.ajax({
+            url: '@Url.Action("GetInfoUserAccess")',
+            data: { "userId": b },
+            type: "POST",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+
+                if (data.length > 0) {
+
+                    for (var i = 0; i < data.length; i++) {
+
+                        if (data[i].FormName == "CompanyLedger") {
+
+                            if (data[i].Create == "Y") {
+
+                                $('#CreateLedger').show();
+                            }
+                            else {
+
+                                $('#CreateLedger').hide();
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+        });
+    });
+
+    function searchCompanyName(id) {
+        var txt = document.getElementById(id);
+        //txt.value = txt.value.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+
+        // var txt = document.getElementById(id);
+
+        $.ajax({
+            url: '/VisitCustomer/AutocompleteCustomer/',
+            data: { "searchByText": txt.value, "sortBy": $('#SortByColumnName').val()},
+
+            type: "POST",
+            dataType: "json",
+
+            success: function (data) {
+                $('#json-datalistcomp').empty();
+                var jsonOptions = data;
+                var dataList = document.getElementById('json-datalistcomp');
+
+                jsonOptions.forEach(function (item) {
+
+                    var option = document.createElement('option');
+
+                    option.value = item;
+
+                    dataList.appendChild(option);
+                });
+
+            }
+        });
+    }
+
+
+    function validate() {
+        if ($('#SearchByText').val() != "") {
+            $('#SortByColumnName').val('CompanyName');
+
+        }
+        else if ($('#SortByColumnName').val() != "CompanyName") {
+            $('#SearchCompanyName').val('');
+        }
+    }
+
+    function funPageNoClicked(requestedPgNo) {
+        $("#isPageNavigationRequested").val("true");
+        $("#RequestedPageNumber").val(requestedPgNo);
+        event.preventDefault();
+        $("#VisitCustomer_List").submit();
+    }
+    $(function () {
+        $("#Search").click(function () {
+            $("#isPageNavigationRequested").val("false");
+        });
+    });
+    function openEditForm(editFormUrl) {
+        var editTab = window.open(editFormUrl, '_blank');
+
+        // Listen for the edit tab closure
+        editTab.onbeforeunload = function () {
+            // Refresh the index page when the edit tab is closed
+            location.reload();
+        };
+    }
+    $(document).ready(function () {
+        var table = $("#ledger").DataTable({
+            paging: true,
+            searching: true, // Enable DataTables' built-in search
+        });
+
+        // Custom live search
+        //$("#searchBox").on("input", function () {
+        //    table.search(this.value).draw();
+        //});
+    });
+
+    $(document).ready(function () {
+        $('.sortable').click(function () {
+            var table = $(this).parents('table').eq(0);
+            var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()));
+            this.asc = !this.asc;
+            if (!this.asc) {
+                rows = rows.reverse();
+            }
+            for (var i = 0; i < rows.length; i++) {
+                table.append(rows[i]);
+            }
+        });
+
+        function comparer(index) {
+            return function (a, b) {
+                var valA = getCellValue(a, index);
+                var valB = getCellValue(b, index);
+                return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB);
+            };
+        }
+
+        function getCellValue(row, index) {
+            return $(row).children('td').eq(index).text();
+        }
+    });
+
+</script>
+
+
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+
+
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+        @*<div class="card" style="background-color:lightslategrey">
+
+            <div class="container-fluid">*@
+
+        <div class="panel panel-default" style="border-bottom:solid;border-bottom-width:2px; border-bottom-color:gray;border-left:solid;border-left-width:2px;border-left-color:gray;border-right:solid;border-right-color:gray;border-right-width:2px;">
+            
+            <div style="display:flex;align-items:center;justify-content:space-evenly; background-color:lightblue; padding:2px">
+                <div></div>
+                <h4 style=""><b>Customer Visit List</b></h4>
+                <div>
+                    <button class="btn btn-success courierCreate" style="border-radius:20px;font-weight:600" id="CreateLedger" onclick="location.href = '@Url.Action("Create", "VisitCustomer")'">Create New</button>
+                </div>
+            </div>
+
+            <div class="panel-body">
+                @Html.TextBox("Edit", null, new { @onkeyup = "myFunction(this.id)", @class = "form-control", style = "display: none;" })
+                @Html.TextBox("details", null, new { @onkeyup = "myFunction(this.id)", @class = "form-control", style = "display: none;" })
+                @Html.TextBox("delete", null, new
+                   {
+                       @onkeyup = "myFunction(this.id)",
+                       @class = "form-control",
+                       style = "display: none;"
+                   })
+                @using (Html.BeginForm("Index", "VisitCustomer", FormMethod.Post, new { id = "VisitCustomer_List" }))
+                {
+
+                    //Finding Data
+
+                    <div class="panel panel-success">
+                        <div class="panel-heading" style="color:black;font-family:Helvetica;font-size:small">Finding Data</div>
+                        <div class="panel-body">
+                            <div class="form-group row">
+                                <div class="col-lg-2">
+                                    <label id="label">Sort/Search By :</label>
+                                    <div class="form-group row">
+                                        @Html.DropDownListFor(m => m.SortByColumnName, new List<SelectListItem>
+                                     {
+                                         //new SelectListItem{ Text="Date", Value = "Date" },
+                                         new SelectListItem{ Text="Company Name", Value = "CompanyName" },
+                                         new SelectListItem{ Text="Pincode", Value = "Pincode" },
+                                         new SelectListItem{ Text="District", Value = "District" },
+
+                                     }, new { @class = "form-control", style = "font-size:small;height:30px;" })
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <label id="label">Find :</label>
+                                    @Html.TextBoxFor(m => m.SearchByText, null, new
+                               {
+                                   @class = "form-control",
+                                   //@placeholder = "Comapany Name",
+                                   @oninput = "searchCompanyName(this.id)",
+                                   @list = "json-datalistcomp",
+                                   //style = "width:280px"
+                               })
+                                    <datalist id="json-datalistcomp"></datalist>
+                                </div>
+
+                                <div class="col-lg-1">
+                                    <label id="label">Sort By</label>
+                                    <div class="form-group row">
+
+                                        @Html.DropDownListFor(m => m.OrderByType, new List<SelectListItem>
+                                     {
+                                     //new SelectListItem{ Text="Please Select", Value = "Please Select" },
+                                      new SelectListItem{ Text="Z-A", Value = "Z-A" },
+                                     new SelectListItem{ Text="A-Z", Value = "A-Z" },
+                                      }, new { @class = "form-control", style = "font-size:small;height:30px" })
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-2">
+                                    <label id="label">Records/Page</label>
+
+
+                                    @Html.TextBoxFor(m => m.RecordsPerPage, null, new
+                                       {
+                                           @class = "form-control",
+                                       })
+                                </div>
+
+                                <div class="col-lg-2 ">
+                                    <label id="label">Page Number</label>
+                                    @Html.TextBox("Page", null, new
+                                       {
+                                           @class = "form-control",
+                                           //@placeholder = "Page No.",
+
+
+                                       })
+                                </div>
+                                <div class="col-lg-1" style="margin-left:-15px">
+                                    <label></label>
+                                    <input type="submit" id="Search" value="Search" name="Search" @*onclick="searchcomp()"*@ class="btn btn-success btn-round" />
+                                </div>
+                            </div>
+                        </div>
+                        <!--<div class="panel panel-success" style="margin: 5px 5px">-->
+                            @*<div class="panel-heading" style="color:black;font-family:Helvetica;font-size:small">Search</div>*@
+                            <!--<div class="panel-body">-->
+                                @*<label id="label">Zone :</label>
+                                    @Html.CheckBoxFor("Zone", true)*@
+
+                                @*<label id="label">Yearly Business :</label>
+                                    @Html.CheckBoxFor(m => m.YearlyBusiness, true)
+
+                                    <label id="label">Frequency Of Pur :</label>
+                                    @Html.CheckBoxFor(m => m.FrequencyPur, true)*@
+
+                                <!--<label id="label">Catagery :</label>
+                                Html.CheckBoxFor(m => m.CatName, true)
+
+                                <label id="label">Date :</label>
+                                Html.CheckBoxFor(m => m.Date, true)
+
+                                <label id="label">Company Name :</label>
+                                Html.CheckBoxFor(m => m.CompanyName, true)
+
+                                <label id="label">Address Title :</label>
+                                Html.CheckBoxFor(m => m.AddressTitle, true)
+
+                                <label id="label">Taluka :</label>
+                                Html.CheckBoxFor(m => m.Taluka, true)
+
+                                <label id="label">Pincode :</label>
+                                Html.CheckBoxFor(m => m.Pincode, true)
+
+                                <label id="label">GSTIN :</label>
+                                Html.CheckBoxFor(m => m.GSTIN, true)
+
+                                @*<label id="label">Discount :</label>
+                                    @Html.CheckBoxFor(m=>, true)*@
+
+                                @*<label id="label">CreatedBy :</label>
+                                    @Html.CheckBox("CreatedBy", true)
+
+                                    <label id="label">EditedBy :</label>
+                                    @Html.CheckBox("EditedBy", true)*@
+
+
+
+                            <!--</div>
+                        </div>-->
+                    </div>
+
+                    <table class="table table-bordered table-striped display table-info table-hover text-left" id="ledger">
+                        <tr class="bg-primary">
+
+                            <th width="2%">
+                                No.
+                            </th>
+                            @if (Model.CallStartTime)
+                            {
+                                <th class="sortable" width="15%">Date</th>
+                            }
+                            @if (Model.CompanyName == true)
+                            {
+                                <th class="sortable" width="29%">
+                                    Company Name
+                                </th>
+                            }
+
+                            <th class="sortable" width="5%">
+                                Cu. Mobile No.
+                            </th>
+
+                            <th class="sortable" width="12%">
+                                District
+                            </th>
+                            <th class="sortable" width="12%">
+                                Taluka
+                            </th>
+                            @if (Model.Pincode == true)
+                            {
+                                <th class="sortable" width="3%">
+                                    Pincode
+                                </th>
+                            }
+                            @*@if (Model.GSTIN == true)
+        {
+            <th class="sortable" width="10%">
+                GSTIN
+            </th>
+        }*@
+                            @*@if (Model.Zone)
+        {
+            <th width="5%">
+                Zone
+            </th>
+        }*@
+
+
+                            <th class="sortable" width="8%">
+                                Yearly Business
+                            </th>
+                            @*<th width="5%">Zone</th>*@
+                            @*@if (Model.FrequencyPur == true)
+        {
+            <th class="sortable" width="5%">
+                Freq.Of Pur.
+            </th>
+        }
+
+        @if (Model.YearlyBusiness == true)
+        {
+            <th class="sortable" width="5%">
+                Yearly Bus.
+            </th>
+        }*@
+
+
+
+
+                            @*<th width="2%">
+             Disc(%)
+                 </th>
+        <th width="8%">
+            CreatedBy
+
+        </th>
+
+        <th width="8%">
+            EditedBy
+
+        </th>*@
+                            <th width="14%">Action</th>
+                        </tr>
+
+                        @*@if (Model.Count() == 0)
+                            {
+
+                                <tr>
+                                    <td colspan="11">
+                                        No record found
+                                    </td>
+                                </tr>
+
+                            }*@
+                        @*else
+                            {*@
+                        @{ int sno = (Model.RequestedPageNumber - 1) * Model.RecordsPerPage + 1;
+                            for (var i = 0; i < Model.VisitSearchedList.Count; i++)
+                            {
+                                var item = Model.VisitSearchedList[i];
+
+                                @*@{ int sno = (Model.RequestedPageNumber - 1) * Model.RecordsPerPage + 1;
+                                    foreach (var item in Model.CLSearchedList)
+                                    {*@
+                                <tr>
+                                    <td>
+                                        @sno
+                                        @{ sno++;}
+
+                                    </td>
+                                    @if (Model.CallStartTime)
+                                    {
+                                        <td>
+                                            @* @Html.DisplayFor(modelItem => item.led.Date)*@
+                                            @*@Html.DisplayFor(modelItem => item.Date)*@
+                                            @Convert.ToString(string.Format("{0:dd/MM/yyyy hh:mm:ss}", item.CallStartTime))
+                                        </td>
+                                    }
+                                    @if (Model.CompanyName == true)
+                                    {
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CompanyName)
+                                        </td>
+                                    }
+                                    
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CustomerMobileNo)
+                                        </td>
+                                   
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.District)
+                                        </td>
+                                     <td>
+                                          @Html.DisplayFor(modelItem => item.Taluka)
+                                      </td>
+                                    @if (Model.Pincode == true)
+                                    {
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Pincode)
+                                        </td>
+                                    }
+                                   
+                                    <td style="text-align:right">
+                                        @Html.DisplayFor(modelItem => item.YearlyBusiness)
+                                    </td>
+
+
+                                    @*@if (Model.FrequencyPur == true)
+                                        {
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.FrequencyPur)
+                                            </td>
+                                        }
+
+                                        @if (Model.YearlyBusiness == true)
+                                        {
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.YearlyBusiness)
+                                            </td>
+                                        }
+
+
+
+                                        @if (Model.DiscountPercent == false)
+                                        {
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.DiscountPercent)
+                                            </td>
+                                        }
+
+                                        @if (Model.CreatedBy == false)
+                                        {
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.CreatedBy)
+                                            </td>
+                                        }
+
+                                        @if (Model.EditedBy == false)
+                                        {
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.EditedBy)
+                                            </td>
+                                        }*@
+
+                                    <td class="text-center">
+                                        @if (Model.AllowEdit == true)
+                                        {
+                                            <span> <i type="submit" class="glyphicon glyphicon-edit" id="click" title="Edit" onclick="location.href = '@Url.Action("Edit", new {id = item.LedgerID })'"></i></span>
+                                            @*@Html.ActionLink("Edit", "Edit", new { LedgerID = item.LedgerID, id = item.LedgerID, }, new { @class = "glyphicon glyphicon-edit", title = "Edit"@*, style = "text-indent: -9999px;" })*@
+                                        }
+                                        else
+                                        {
+                                            <span> <i type="submit" style="display:none" class="glyphicon glyphicon-edit" id="click" title="Edit" onclick="location.href = '@Url.Action("Edit", new { id = item.LedgerID })'"></i></span>
+                                            @*<div>
+                                                    @Html.ActionLink("Edit", "Edit", new { LedgerID = item.LedgerID, id = item.LedgerID }, new { @class = "glyphicon glyphicon-edit", title = "Edit", style = "display: none;text-indent: -9999px;" })
+                                                </div>*@
+                                        }
+                                        @if (Model.AllowDetails == true)
+                                        {
+                                            <span><i class="glyphicon glyphicon-list" title="Details" onclick="location.href = '@Url.Action("Details",new {id = item.LedgerID })'"></i></span>
+                                            @*@Html.ActionLink("Details", "Details", new { LedgerID = item.LedgerID, id = item.LedgerID }, new { @class = "glyphicon glyphicon-list", title = "Details" })*@
+                                        }
+                                        else
+                                        {
+                                            @*@Html.ActionLink("Details", "Details", new { LedgerID = item.LedgerID, id = item.LedgerID }, new { @class = "glyphicon glyphicon-list", title = "Details", style = "display: none;" })*@
+                                            <span><i type="submit" style="display:none" class="glyphicon glyphicon-list" title="Details" onclick="location.href = '@Url.Action("Details",new {id = item.LedgerID })'"></i></span>
+                                        }
+
+                                        @*@Html.ActionLink("Details", "Details", new { LedgerID = item.LedgerID, id = item.LedgerID }, new { @class = "cssclassnamedetail", title = "Details" })*@
+                                        @*<button class="glyphicon glyphicon-trash" title="Delete" onclick="location.href = '@Url.Action("Delete",new { id = item.Data.CourierID })'"></button>*@
+                                    </td>
+
+
+                                </tr>
+                            }
+                        }
+                    </table>
+
+                    <table align="center">
+                        <tr class="page">
+                            @if (Model.PageCount > 1)
+                            {
+                                @Html.HiddenFor(m => m.PageCount)
+                                <td>
+                                    @if (Model.RequestedPageNumber > 1)
+                                    {
+                                        <a id="FirstPage" href="#" class="btn btn-info" onclick='funPageNoClicked(1);'>First</a>
+                                    }
+                                </td>
+
+                                <td>
+                                    @if (Model.RequestedPageNumber > 1)
+                                    {
+                                        <a id="PreviousPage" href="#" class="btn btn-info" onclick='funPageNoClicked(@Model.RequestedPageNumber - 1);'><<</a>
+                                    }
+                                </td>
+
+                                {
+                                    int startPage;
+                                    int endPage;
+
+                                    if (Model.PageCount <= 10)
+                                    {
+                                        startPage = 1;
+                                        endPage = Model.PageCount;
+                                    }
+                                    else
+                                    {
+                                        if (Model.RequestedPageNumber <= 6)
+                                        {
+                                            startPage = 1;
+                                            endPage = 10;
+                                        }
+                                        else if (Model.RequestedPageNumber >= Model.PageCount - 4)
+                                        {
+                                            startPage = Model.PageCount - 9;
+                                            endPage = Model.PageCount;
+                                        }
+                                        else
+                                        {
+                                            startPage = Model.RequestedPageNumber - 5;
+                                            endPage = Model.RequestedPageNumber + 4;
+                                        }
+                                    }
+
+                                    for (int pgno = startPage; pgno <= endPage; pgno++)
+                                    {
+                                        <td>
+                                            <a id="PageNo" href="#" class="btn btn-secondary @(pgno == Model.RequestedPageNumber ? "active" : "")" onclick='funPageNoClicked(@pgno);'>@pgno.ToString()</a>
+                                        </td>
+                                    }
+                                }
+
+                                <td>
+                                    @if (Model.RequestedPageNumber < Model.PageCount)
+                                    {
+                                        <a id="NextPage" href="#" class="btn btn-info" onclick='funPageNoClicked(@Model.RequestedPageNumber + 1);'>>></a>
+                                    }
+                                </td>
+                                <td>
+                                    @if (Model.RequestedPageNumber < Model.PageCount)
+                                    {
+                                        <a id="LastPage" href="#" class="btn btn-info" onclick='funPageNoClicked(@Model.PageCount);'>Last</a>
+                                    }
+                                </td>
+                            }
+                            @Html.HiddenFor(x => x.isPageNavigationRequested)
+                            @Html.HiddenFor(x => x.RequestedPageNumber)
+                        </tr>
+                    </table>
+                    if (Model.PageCount > 1)
+                    {
+                        <div class="pager">
+
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+    $("#Search").click(function () {
+    var requestedPageNumber = parseInt($("#Page").val());
+    if (!isNaN(requestedPageNumber) && requestedPageNumber > 0 && requestedPageNumber <= @Model.PageCount) {
+    funPageNoClicked(requestedPageNumber);
+    }
+    });
+    });
+</script>
+
+

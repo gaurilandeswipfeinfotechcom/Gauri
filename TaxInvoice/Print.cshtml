@@ -1,0 +1,126 @@
+﻿
+@{
+    ViewBag.Title = "Print";
+    Layout = "~/Views/Shared/_SwipfeMaster.cshtml";
+}
+
+<style>
+    /*Adding some css for looks good*/
+    #label {
+        font-size: small;
+        color: #0077B3;
+    }
+
+    .button {
+        display: inline-block;
+        /*padding: 5px 6px;*/
+        /*font-size: 5px;*/
+        padding: 20px;
+        font-size: 16px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        outline: none;
+        /*color: #fff;*/
+        /*background-color: #4CAF50;*/
+        /*background-color: cyan;*/
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 9px #999;
+        height: 3px;
+        width: auto;
+        background-color: deepskyblue;
+        color: white;
+        margin: 4px 2px;
+    }
+
+        .button:hover {
+            /*background-color: #3e8e41*/
+            background-color: cyan;
+        }
+
+        .button:active {
+            background-color: cyan;
+            box-shadow: 0 5px #666;
+            transform: translateY(4px);
+        }
+
+    .button1 {
+        border-radius: 50%;
+    }
+
+    span.error {
+        display: block;
+        visibility: hidden;
+        color: red;
+        font-size: 60px;
+    }
+
+    .tablecontainer table {
+        width: 60%;
+        border-collapse: collapse;
+        border-top: 1px solid #BFAEAE;
+        border-right: 1px solid #BFAEAE;
+    }
+
+    .tablecontainer th {
+        border-bottom: 2px solid #BFAEAE !important;
+        background-color: lightcyan;
+        font-size: small;
+    }
+
+    .tablecontainer th, .tablecontainer td {
+        text-align: left;
+        border-left: 1px solid #BFAEAE;
+        padding: 5px;
+        border-bottom: 1px solid #BFAEAE;
+        font-size: small;
+    }
+
+    .ui-widget {
+        font-size: 12px !important;
+    }
+
+    .reqError {
+        color: #ff0000; /*Red Color*/
+        font-weight: bold;
+        font-size: 16px;
+    }
+</style>
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+<link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css"
+      rel="Stylesheet" type="text/css" />
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>
+    $(window).load(function () {
+
+        var urlcurrent = $(location).attr('href');
+
+        urlcurrent = unescape(urlcurrent);
+        var i = urlcurrent.split("=");
+
+        var orderItems = [];
+
+        $.ajax({
+
+            url: '@Url.Action("Prints")',
+            data: { "tino": i[1] },
+            type: "POST",
+            dataType: "json",
+            success: function (result) {
+                window.location.href = '/TaxInvoiceReportPrint3.aspx';
+
+            }
+        })
+ })
+</script>
+
+
+

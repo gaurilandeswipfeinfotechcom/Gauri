@@ -1,0 +1,202 @@
+﻿
+@model ERPEntities.WorkRegister
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_SwipfeMaster.cshtml";
+}
+
+<!-- ===== CSS & JS (same as Edit for layout consistency) ===== -->
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js"></script>
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css" rel="stylesheet" />
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/ERPStyle.css" rel="stylesheet" />
+
+<style>
+    #label {
+        font-size: 15px;
+        color: #0077B3;
+        font-weight: 500
+    }
+
+    h4 {
+        font-size: 18px;
+        padding: 10px 0;
+        font-weight: 600;
+    }
+
+    .dshapefieldset {
+        background-color: #e5e6e7;
+        border: 2px solid #ddd;
+        border-radius: 0px 25px 25px 0px;
+        margin-bottom: 20px
+    }
+
+    .field-heading {
+        font-size: 18px;
+        color: midnightblue;
+        font-weight: bold;
+        display: flex
+    }
+
+    .route-path1 {
+        clip-path: polygon(0% 0%, 80% 0%, 100% 50%, 80% 100%, 0% 100%);
+        background-color: #003399;
+        color: white;
+        padding: 5px 15px 5px 5px
+    }
+
+    .route-path2 {
+        clip-path: polygon(89% 0%, 100% 50%, 89% 100%, 0% 100%, 11% 50%, 0% 0%);
+        background-color: #003399;
+        color: white;
+        padding: 5px 15px
+    }
+
+    .route-path3 {
+        clip-path: polygon(88% 0%, 100% 50%, 88% 100%, 0% 100%, 12% 50%, 0% 0%);
+        background-color: #003399;
+        color: white;
+        padding: 5px 15px
+    }
+
+    .cross-btn {
+        font-size: 30px;
+        cursor: pointer;
+        color: midnightblue;
+        position: absolute;
+        top: 35px;
+        right: 15px;
+    }
+</style>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="Stylesheet" type="text/css" />
+@*AP external CSS*@
+<link href="~/Content/ERPStyle.css" rel="stylesheet" type="text/css" />
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<div class="row clearfix">
+    <div class="col-lg-12">
+
+        <!-- ===== Breadcrumb ===== -->
+
+        <div class="d-flex" style="margin-top:-20px">
+            <h4 class="route-path1">HR</h4>
+            <h4 class="route-path2" onclick="location.href='@Url.Action("Index","WorkRegister")'">
+                Work Register
+            </h4>
+            <h4 class="route-path3">Details</h4>
+        </div>
+
+        <br />
+
+        <div class="panel panel-default outer-main-container">
+            <div class="main-heading">
+                <div class="d-flex pr-5">
+                    <i class="material-icons" style="font-size:32px;margin-right:10px">feed</i>
+                    Work Register Details
+                    <i class="material-icons cross-btn" onclick="history.back()">cancel</i>
+                </div>
+            </div>
+
+            <div style="padding-inline:20px">
+
+                <!-- ===== Employee & Date ===== -->
+                <div class="form-group row mb-4">
+                    <div class="col-md-3">
+                        <label id="label">Employee Name :</label>
+                        @Html.DropDownListFor(
+                            m => m.EmployeeId,
+                            ViewBag.Employees as IEnumerable<SelectListItem>,
+                            new { @class = "form-control fs-4", disabled = "disabled" }
+                        )
+                    </div>
+
+                    <div class="col-md-3">
+                        <label id="label">Work Date :</label>
+                        @Html.TextBoxFor(
+                            m => m.WorkDate,
+                            "{0:yyyy-MM-dd}",
+                            new
+                                 {
+                                type = "date",
+                                @class = "form-control fs-4",
+                                @readonly = "readonly"
+                            })
+                    </div>
+                </div>
+
+                @{
+                    var wf = ViewBag.WorkFunctions as string[];
+                    var qty = ViewBag.Quantities as string[];
+                    var time = ViewBag.TotalWorkOutputTimes as string[];
+                }
+
+                <!-- ===== Work Function Details ===== -->
+                <div id="itemSectionContainer">
+                    @for (int i = 0; i < wf.Length; i++)
+                    {
+                        <fieldset class="dshapefieldset px-3">
+                            <div class="form-group row">
+
+                                <div class="col-md-4">
+                                    <label id="label">Work Function :</label>
+                                    <input type="text"
+                                           class="form-control fs-4"
+                                           value="@wf[i]"
+                                           readonly />
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label id="label">Quantity :</label>
+                                    <input type="number"
+                                           class="form-control fs-4"
+                                           value="@qty[i]"
+                                           readonly />
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label id="label">Total Work Output Time :</label>
+                                    <input type="number"
+                                           class="form-control fs-4"
+                                           value="@time[i]"
+                                           readonly />
+                                </div>
+
+                            </div>
+                        </fieldset>
+                    }
+                </div>
+
+                <!-- ===== Totals ===== -->
+                <fieldset class="dshapefieldset px-4">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <label id="label">Total Work Time (Mins) :</label>
+                            @Html.TextBoxFor(
+                                m => m.TotalWorkTimeInMins,
+                                new { @readonly = "readonly", @class = "form-control fs-4" })
+                        </div>
+
+                        <div class="col-md-3">
+                            <label id="label">Efficiency (%) :</label>
+                            @Html.TextBoxFor(
+                                m => m.EfficiencyofWorkInPercent,
+                                new { @readonly = "readonly", @class = "form-control fs-4" })
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- ===== Back Button ===== -->
+                <div class="form-group row ">
+                    <div class="col-md-2 col-lg-2 p-4">
+                        <input type="button" value="Close" class=" btn btn-success btn-round create-bttn custo-inner" style="outline:none" onclick="history.back();" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,588 @@
+﻿@model ERPEntities.StockJournal
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_SwipfeMaster.cshtml";
+}
+
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+<link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css"
+      rel="Stylesheet" type="text/css" />
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<style>
+    /*Adding some css for looks good*/
+    #label {
+        font-size: 15px;
+        color: #0077B3;
+        font-weight: 500
+    }
+
+    h4 {
+        font-size: 18px;
+        padding: 10px 0;
+        font-weight: 600;
+    }
+
+    .form-head h4 {
+        padding: 10px 10px;
+        font-size: 16px;
+        font-weight: 600;
+        background-color: #C1D5BD;
+    }
+
+
+    .body-panel {
+        border: 1px solid black;
+        /*background-color: whitesmoke;*/
+        margin-top: -10px;
+        border-radius: 5px;
+        background-color: floralwhite;
+    }
+
+    .submit-btn {
+        display: inline-flex;
+        padding: 7px;
+    }
+
+
+        .submit-btn button {
+            border-radius: 30px;
+            padding: 5px 5px;
+        }
+
+
+
+    .save-btn input {
+        /*border-radius: 30px;*/
+        font-size: 14px;
+    }
+
+    .tablecontainer table {
+        width: 100%;
+        border-collapse: collapse;
+        border-top: 1px solid #fff;
+        border-right: 1px solid #fff;
+        background-color: #fff
+    }
+
+    .tablecontainer .table thead th {
+        border-bottom: 2px solid #fff !important;
+        background-color: lightblue;
+        font-size: small;
+        font-weight: normal;
+        color: midnightblue;
+        text-align: center;
+        height: 30px;
+    }
+
+    .tablecontainer .table thead th {
+        /*text-align: left;*/
+        border-left: 2px solid #fff;
+        padding: 5px;
+        border-bottom: 2px solid #fff;
+        font-size: small;
+    }
+
+    .tablecontainer .table tbody td {
+        /*text-align: left;*/
+        border-left: 2px solid #fff;
+        padding: 5px;
+        border-bottom: 2px solid #fff;
+        font-size: small;
+    }
+
+
+    fieldset {
+        border: 1px solid #ddd !important;
+        margin: 10px;
+        padding: 5px;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        background-color: white;
+    }
+
+
+    .button {
+        display: inline-block;
+        /*padding: 5px 6px;*/
+        /*font-size: 5px;*/
+        padding: 20px;
+        font-size: 16px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        outline: none;
+        border: none;
+        box-shadow: 0 9px #999;
+        height: 3px;
+        width: auto;
+        margin: 4px 2px;
+    }
+
+        .button:hover {
+            /*background-color: #3e8e41*/
+            background-color: cyan;
+        }
+
+        .button:active {
+            background-color: cyan;
+            box-shadow: 0 5px #666;
+            transform: translateY(4px);
+        }
+
+    .button1 {
+        border-radius: 50%;
+    }
+
+    span.error {
+        display: block;
+        visibility: hidden;
+        color: red;
+        font-size: 60px;
+    }
+
+
+    .ui-widget {
+        font-size: 12px !important;
+    }
+
+    .reqError {
+        color: #ff0000; /*Red Color*/
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .backsubmitbtn {
+        background-image: linear-gradient(to right,#35d3e1,midnightblue);
+        padding: 5px 20px 5px 20px;
+        color: white;
+        font-family: Helvetica;
+        box-shadow: -4px -4px 8px rgba(255, 255, 255, 0.7), 4px 4px 8px rgba(128, 128, 128, 0.7);
+        outline-style: none;
+        border: none
+    }
+
+    .dshapefieldset {
+        background-color: #e5e6e7;
+        border: 2px solid #ddd;
+        border-radius: 0px 25px 25px 0px;
+        margin-bottom: 20px
+    }
+
+    .field-heading {
+        font-size: 18px;
+        color: midnightblue;
+        font-family: Helvetica;
+        font-weight: bold;
+        display: flex
+    }
+
+    .route-path1 {
+        cursor: pointer;
+        clip-path: polygon(0% 0%, 90% 0%, 100% 50%, 90% 100%, 0% 100%);
+        background-color: #003399;
+        color: white;
+        padding: 5px 15px 5px 5px
+    }
+
+    .route-path2 {
+        cursor: pointer;
+        color: white;
+        clip-path: polygon(94% 0%, 100% 50%, 94% 100%, 0% 100%, 6% 50%, 0% 0%);
+        background-color: #003399;
+        padding: 5px 15px 5px 15px;
+    }
+
+    .route-path3 {
+        cursor: pointer;
+        color: white;
+        clip-path: polygon(90% 0%, 100% 50%, 90% 100%, 0% 100%, 10% 50%, 0% 0%);
+        background-color: #003399;
+        padding: 5px 15px 5px 15px;
+    }
+
+    .cross-btn {
+        font-size: 30px;
+        cursor: pointer;
+        color: midnightblue;
+        position: absolute;
+        top: 35px;
+        right: 15px;
+    }
+</style>
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="Stylesheet" type="text/css" />
+@*AP external CSS*@
+<link href="~/Content/ERPStyle.css" rel="stylesheet" type="text/css" />
+
+@using (Html.BeginForm("Edit", "StockJournal", FormMethod.Post, new { id = "bomForm" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.StockJournalNo)
+
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="d-flex" style="margin-top:-20px">
+                <h4 class="route-path1 d-none d-sm-block">Inventory </h4>
+                <h4 class="route-path2 " onclick="location.href='@Url.Action("Index","StockJournal")'">Stock Journal</h4>
+                <h4 class="route-path3 " onclick="location.href='@Url.Action("Details","StockJournal", new { sono = Model.StockJournalNo })'">Details</h4>
+            </div>
+            <br />
+
+            <div class="panel panel-default outer-main-container">
+                <div class=" main-heading">
+                    <div class=" d-flex ">
+                        <i class="material-icons" style="font-size: 32px; margin-right: 10px;">info</i>
+                        Stock Journal Details
+                        <i class="material-icons cross-btn" onclick="history.back();">cancel</i>
+                    </div>
+                </div>
+
+                <div class="" style="padding-inline:20px">
+                    <div class="form-group row">
+                        <div class="col-lg-3 col-sm-6 col-md-4 col-xxl-2 ">
+                            <label id="label">Stock Journal No. :</label>
+                            @Html.EditorFor(model => model.StockJournalNo, new
+                            {
+                                htmlAttributes = new
+                                {
+                                    @readonly = "readonly",
+                                    @class = "form-control bg-light fs-4 pl-3 input-text-box",
+                                    style = "height:35px"
+                                }
+                            })
+                            @Html.ValidationMessageFor(model => model.StockJournalNo, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-md-4 col-xxl-2">
+                            <label id="label">Stock Journal Date :</label>
+                            @Html.EditorFor(model => model.StockJournalDate, new{ htmlAttributes = new {
+                                  @readonly = "true",@class = "form-control bg-light fs-4 pl-3 input-text-box",style = "height:35px"}})
+                            @Html.ValidationMessageFor(model => model.StockJournalDate, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <fieldset class="dshapefieldset px-2 outer-main-container" style="border-radius:unset;background-color:#e5e6e7">
+                                <p class="field-heading">
+                                    <i class="material-icons">double_arrow</i>
+                                    Inward Stock Item
+                                </p>
+                                <div class="table-responsive tablecontainer">
+                                    <table id="itemTable1" class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Item Name</th>
+                                                <th>ItemCode</th>
+                                                <th>Godown</th>
+                                                <th>Quantity</th>
+                                                <th id="InwardRate">Rate</th>
+                                                <th id="InwardAmount">Amount</th>
+                                                <th>ItemType</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Table rows will be added dynamically here -->
+                                        </tbody>
+                                    </table>
+                                    <input type="hidden" id="tableData1" name="tableData1" />
+                                </div>
+                                <div class="form-group row px-3">
+                                    <div class="col-sm-6 col-lg-6 col-md-6 col-xxl-4">
+                                        <label id="label">Total In Amount :</label>
+                                        @Html.EditorFor(model => model.TotInAmount, new { htmlAttributes = new { @readonly = "readonly", @class = "form-control bg-light fs-4 pl-3 input-text-box text-end", style = "height:35px", @id = "TotInAmount" } })
+                                        @Html.ValidationMessageFor(model => model.TotInAmount, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-md-6">
+                            <fieldset class="dshapefieldset px-2 outer-main-container" style="border-radius:unset;background-color:#e5e6e7">
+                                <p class="field-heading">
+                                    <i class="material-icons">double_arrow</i>
+                                    Outward Stock Item
+                                </p>
+                                <div class="table-responsive tablecontainer">
+                                    <table id="itemTable2" class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Item Name</th>
+                                                <th>ItemCode</th>
+                                                <th>Godown</th>
+                                                <th>Quantity</th>
+                                                <th id="OutwardRate">Rate</th>
+                                                <th id="OutwardAmount">Amount</th>
+                                                <th>ItemType</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Table rows will be added dynamically here -->
+                                        </tbody>
+                                    </table>
+                                    <input type="hidden" id="tableData2" name="tableData2" />
+                                </div>
+                                <div class="form-group row px-3">
+                                    <div class="col-sm-6 col-lg-6 col-md-6 col-xxl-4">
+                                        <label id="label">Total In Amount :</label>
+                                        @Html.EditorFor(model => model.TotOutAmount, new { htmlAttributes = new { @readonly = "true", @class = "form-control bg-light fs-4 pl-3 input-text-box text-end", style = "height:35px", @id = "TotOutAmount" } })
+                                        @Html.ValidationMessageFor(model => model.TotOutAmount, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <fieldset class="dshapefieldset">
+                        <p class="field-heading pt-3">
+                            <i class="material-icons">double_arrow</i>
+                            Remark
+                        </p>
+                        <div class="form-group row">
+                            <div class="col-lg-12">
+                                @Html.EditorFor(model => model.Remark, new { htmlAttributes = new { @readonly = "readonly", @class = "form-control bg-light fs-4 pl-3 input-text-box" } })
+                                @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <div class="form-group row ">
+                        <div class="col-md-2 col-lg-2 px-4">
+                            <input type="button" value="Edit" class=" btn btn-success btn-round create-bttn custo-inner" style="outline:none" onclick="location.href = '@Url.Action("Edit","StockJournal", new { sono = Model.StockJournalNo })'" />
+                        </div>
+                        <div class="col-md-2 col-lg-2 px-4">
+                            <input type="button" value="close" class=" btn btn-success btn-round create-bttn custo-inner" style="outline:none" onclick="history.back()" />
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+
+<script>
+    $(document).ready(function () {
+        var isEditing = false;
+        var editedRow = null;
+        var itemIdToNameMapping = {}; // Mapping of itemId to itemName
+        itemIdToNameMapping[item.ItemId] = item.ItemName;
+        //updateTotalAmount();
+        //updateTotalAmount2();
+
+        $("#InItemType").val("Inward");
+        $("#OutItemType").val("Outward");
+
+
+
+function loadData() {
+    var stockJournalNo = "@Model.StockJournalNo"; // Get the StockJournalNo from your model
+    var userHasEditPermission = false;
+
+    $.ajax({
+        url: '/StockJournal/GetStockJournalItemDetails', // Replace 'YourControllerName' with the actual controller name
+        type: 'GET',
+        data: { stockJournalNo: stockJournalNo },
+        success: function (data) {
+            $.each(data.InwardItems, function (index, item) {
+                itemIdToNameMapping[item.ItemId] = item.ItemName;
+            });
+
+            // Fetch user access information
+            //var b = 5; // Assuming this is the user's ID
+            var b = '@Session["LoginUserId"]';
+            $.ajax({
+                url: '@Url.Action("GetInfo")',
+                data: { "userId": b },
+                type: "POST",
+                dataType: "json",
+                async: false,
+                success: function (value) {
+                    if (value.length > 0) {
+                        for (var i = 0; i < value.length; i++) {
+                            if (value[i].FormName == "StockJournal") {
+                                if (value[i].Edit == "Y") {
+                                    userHasEditPermission = true;
+                                    $("#InwardRate, #OutwardRate, #InwardAmount, #OutwardAmount").css("display", "table-cell");
+                                } else {
+                                    userHasEditPermission = false;
+                                    $("#InwardRate, #OutwardRate, #InwardAmount, #OutwardAmount").css("display", "none");
+                                }
+                                break;
+                            }
+                        }
+                    }
+                },
+                error: function () {
+                    alert("An error occurred while fetching user permissions.");
+                }
+            });
+
+            populateTable(data.InwardItems, "#itemTable1", userHasEditPermission);
+            populateTable(data.OutwardItems, "#itemTable2", userHasEditPermission);
+        },
+        error: function () {
+            alert("An error occurred while fetching data.");
+        }
+    });
+}
+
+
+//loadData();
+
+loadData();
+
+        function populateTable(data, tableId, userHasEditPermission) {
+            var table = $(tableId + " tbody");
+            table.empty();
+
+            $.each(data, function (index, item) {
+
+                var quantity = 0;
+
+                // Decide which quantity to show
+                if (tableId === "#itemTable1") {
+                    quantity = item.InQty || 0;
+                } else if (tableId === "#itemTable2") {
+                    quantity = item.OutQty || 0;
+                }
+
+                var newRow = $("<tr>");
+                newRow.append("<td style='font-size:small'>" + (item.ItemName || "") + "</td>");
+                newRow.append("<td style='font-size:small'>" + (item.ItemCode || "") + "</td>");
+                newRow.append("<td style='font-size:small;text-align:center'>" + (item.GodownName || "") + "</td>");
+                newRow.append("<td style='font-size:small;text-align:center'>" + (quantity) + "</td>");
+
+                if (userHasEditPermission) {
+
+                    $("#InwardRate, #OutwardRate, #InwardAmount, #OutwardAmount").css("display", "table-cell");
+                    newRow.append("<td class='RateData' style='font-size:small;text-align:right'>" + (item.RatePerUnit || "") + "</td>");
+                    newRow.append("<td class='AmountData' style='font-size:small;text-align:right'>" + (item.Amount || "") + "</td>");
+                } else {
+
+                    $("#InwardRate, #OutwardRate, #InwardAmount, #OutwardAmount").css("display", "none");
+                    newRow.append("<td class='RateData' style='display:none;'>" + "" + "</td>");
+                    newRow.append("<td class='AmountData' style='display:none;'>" + "" + "</td>");
+                }
+
+                newRow.append("<td style='font-size:small;text-align:center'>" + (item.ItemType || "") + "</td>");
+
+                newRow.append("<input type='hidden' name='ItemId' value='" + (item.ItemId || "") + "' />");
+                newRow.append("<input type='hidden' name='StockJournalNo' value='" + ($("#StockJournalNo").val() || "") + "' />");
+
+                table.append(newRow);
+
+                // Store the mapping of itemId to itemName
+                if (item.ItemId && item.ItemName) {
+                    itemIdToNameMapping[item.ItemId] = item.ItemName;
+                }
+            });
+
+            //updateTotalAmount(/*tableId*/);
+        }
+
+        //// Update total amount function to handle the specific table
+        //function updateTotalAmount(tableId) {
+        //    var totalAmount = 0;
+        //    $(tableId + " tbody tr").each(function () {
+        //        var row = $(this);
+        //        var rate = parseFloat(row.find("td.RateData").text()); // Assuming the rate is numeric
+        //        if (!isNaN(rate)) {
+        //            totalAmount += rate;
+        //        }
+        //    });
+
+        //    if (tableId === "#itemTable1") {
+        //        $("#TotInAmount").val(totalAmount);
+
+        //    } else if (tableId === "#itemTable2") {
+        //        $("#TotOutAmount").val(totalAmount);
+        //    }
+        //}
+
+
+        //function getSelectedItemId(itemName) {
+        //    for (var itemId in itemIdToNameMapping) {
+        //        if (itemIdToNameMapping[itemId] === itemName) {
+        //            return itemId;
+        //        }
+        //    }
+        //    return null;
+        //}
+
+
+
+        //function updateTotalAmount() {
+        //    var totalAmount = 0;
+
+        //    $("#itemTable1 tbody tr").each(function () {
+        //        var row = $(this);
+        //        var rate = parseFloat(row.find("td:eq(5)").text()); // Assuming the rate is numeric
+        //        console.log('Rate is' + rate);
+        //        if (!isNaN(rate)) {
+        //            totalAmount += rate;
+        //        }
+        //    });
+
+        //    $("#TotInAmount").val(totalAmount);
+        //}
+        //function updateTotalAmount2() {
+        //    var totalAmount = 0;
+
+        //    $("#itemTable2 tbody tr").each(function () {
+        //        var row = $(this);
+        //        var rate = parseFloat(row.find("td:eq(5)").text()); // Assuming the rate is numeric
+        //        console.log('Rate is'+rate);
+        //        if (!isNaN(rate)) {
+        //            totalAmount += rate;
+        //        }
+        //    });
+
+        //    $("#TotOutAmount").val(totalAmount);
+        //}
+    });
+
+
+    //var b = '@Session["LoginUserId"]';
+    //var b = 23;
+    // $.ajax({
+    //     url: '@Url.Action("GetInfo")',
+    //     data: { "userId": b },
+    //     type: "POST",
+    //     dataType: "json",
+    //     async: false,
+    //     success: function (data) {
+    //
+    //         if (data.length > 0) {
+    //
+    //             for (var i = 0; i < data.length; i++) {
+    //
+    //                 if (data[i].FormName == "StockJournal") {
+    //                     if (data[i].Edit == "Y") {
+    //                         $("#InwardRate, #OutwardRate, #InwardAmount, #OutwardAmount").css("display", "table-cell");
+    //                         //$(".RateData, .AmountData").css("display", "table-cell");
+    //                     } else {
+    //                         $("#InwardRate, #OutwardRate, #InwardAmount, #OutwardAmount").css("display", "none");
+    //                         //$(".RateData, .AmountData").css("display", "none");
+    //                     }
+    //                     break;
+    //                 }
+    //
+    //             }
+    //         }
+    //     }
+    //
+    // });
+
+
+</script>

@@ -1,0 +1,732 @@
+﻿
+@{
+    ViewBag.Title = "PrychaseSettings";
+    Layout = "~/Views/Shared/_SwipfeMaster.cshtml";
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+
+     .settings-container {
+         display: flex;
+         background: white;
+         border: 1px solid #ccc;
+         min-height: 650px;
+     }
+
+     h4 {
+         font-size: 18px;
+         color: #00209cde;
+         margin-top: -1%;
+     }
+
+     .left-menu {
+         width: 250px;
+         background: #f7f7f7;
+         border-right: 1px solid #ddd;
+         color: #000000;
+     }
+
+         .left-menu ul {
+             list-style: none;
+             padding: 0;
+             margin: 0;
+         }
+
+         .left-menu li {
+             padding: 12px;
+             cursor: pointer;
+             border-bottom: 1px solid #ddd;
+         }
+
+             .left-menu li:hover {
+                 background: #e9f0ff;
+             }
+
+     .menu-list {
+         list-style: none;
+         padding: 15px;
+         margin: 0;
+     }
+
+         .menu-list li {
+             display: flex;
+             align-items: center;
+             gap: 12px;
+             padding: 14px 16px;
+             margin-bottom: 10px;
+             border-radius: 10px;
+             cursor: pointer;
+             color: #444;
+             font-weight: 500;
+             transition: all 0.3s ease;
+         }
+
+             .menu-list li i {
+                 color: #4376c0;
+                 font-size: 16px;
+                 width: 20px;
+             }
+
+             .menu-list li:hover {
+                 background: #eef4ff;
+                 transform: translateX(4px);
+             }
+
+             .menu-list li.active {
+                 background: linear-gradient(90deg, #052a5f,#83cdc6 /*#4a90ff*/ );
+                 color: white;
+                 box-shadow: 0px 4px 10px rgba(13,110,253,0.2);
+             }
+
+                 .menu-list li.active i {
+                     color: white;
+                 }
+
+     .right-panel {
+         flex: 1;
+         padding: 20px;
+     }
+
+     .setting-row {
+         display: grid;
+         grid-template-columns: 70% 30%;
+         margin-bottom: 10px;
+         align-items: center;
+     }
+
+         .setting-row label {
+             font-size: 13px;
+         }
+
+         .setting-row select,
+         .setting-row input {
+             height: 30px;
+             padding: 5px;
+         }
+
+     .settings-section {
+         display: none;
+     }
+
+     .active-section {
+         display: block;
+     }
+
+     .preview-box {
+         background: #f4f8ff;
+         padding: 10px;
+         margin-top: 15px;
+         border: 1px solid #ddd;
+     }
+
+     .save-btn {
+         margin-top: 25px;
+         width: 220px;
+         height: 42px;
+         border: none;
+         border-radius: 8px;
+         background: linear-gradient(90deg, #052a5f, #83cdc6);
+         color: white;
+         font-weight: 600;
+         display: block;
+         margin-left: auto;
+         margin-right: auto;
+         box-shadow: 0px 4px 10px rgba(0,0,0,0.15);
+     }
+
+     label {
+         color: #000000;
+     }
+
+     select {
+         color: #000000;
+     }
+
+     h4 {
+         font-size: 18px;
+         color: #00209cde;
+         margin-top: -1%;
+     }
+
+     label {
+         color: #000000;
+     }
+
+     select {
+         color: #000000;
+     }
+
+     .setting-label i {
+         color: #4376c0; /* blue icons */
+         margin-right: 8px;
+         font-size: 14px;
+     }
+
+     .setting-row label i,
+     h4 i {
+         color: #4376c0 !important;
+         margin-right: 8px;
+     }
+
+     .toggle-wrapper {
+         display: flex;
+         align-items: flex-start; /* moves Yes/No slightly upward */
+         gap: 8px;
+         margin-top: -2px;
+     }
+
+     .toggle-text {
+         font-size: 13px;
+         font-weight: 600;
+         color: #555;
+         min-width: 25px;
+     }
+
+     select {
+         width: 41%;
+     }
+
+     .switch {
+         position: relative;
+         display: inline-block;
+         width: 45px;
+         height: 22px;
+     }
+
+         .switch input {
+             opacity: 0;
+             width: 0;
+             height: 0;
+         }
+
+     .slider {
+         position: absolute;
+         cursor: pointer;
+         top: 0;
+         left: 0;
+         right: 0;
+         bottom: 0;
+         background: #ccc;
+         transition: .4s;
+         border-radius: 34px;
+     }
+
+         .slider:before {
+             position: absolute;
+             content: "";
+             height: 18px;
+             width: 18px;
+             left: 2px;
+             bottom: 2px;
+             background: white;
+             transition: .4s;
+             border-radius: 50%;
+         }
+
+     input:checked + .slider {
+         background: #4376c0;
+     }
+
+         input:checked + .slider:before {
+             transform: translateX(22px);
+         }
+
+     /* =========================================================
+    SETTINGS ROUTE PATH
+    ========================================================= */
+
+     .route-path1 {
+         clip-path: polygon( 0% 0%, 85% 0%, 100% 50%, 85% 100%, 0% 100% );
+         background-color: #003399;
+         color: white;
+         padding: 5px 13px 5px 5px;
+         margin: 0;
+         font-size: 18px;
+     }
+
+     .route-path2 {
+         cursor: pointer;
+         color: white;
+         clip-path: polygon( 89% 0%, 100% 50%, 89% 100%, 0% 100%, 11% 50%, 0% 0% );
+         background-color: #003399;
+         padding: 5px 15px;
+         margin: 0;
+         font-size: 18px;
+     }
+
+     .route-path3 {
+         color: white;
+         clip-path: polygon( 89% 0%, 100% 50%, 89% 100%, 0% 100%, 11% 50%, 0% 0% );
+         background-color: #003399;
+         padding: 5px 15px;
+         margin: 0;
+         font-size: 18px;
+     }
+</style>
+
+
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+@helper CheckRow(string labelText)
+{
+    <div class="setting-row">
+        <label class="setting-label">
+            @Html.Raw(labelText)
+        </label>
+
+        <div class="toggle-wrapper">
+            <label class="switch">
+                <input type="checkbox" checked onchange="updateToggleText(this)">
+                <span class="slider"></span>
+            </label>
+
+            <span class="toggle-text">Yes</span>
+        </div>
+    </div>
+}
+
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pagefix">
+
+    <div class="d-flex">
+
+        <h4 class="route-path1">
+            Admin
+        </h4>
+
+        <h4 class="route-path2"
+            onclick="location.href='@Url.Action("Index","Settings")'">
+            Setting
+        </h4>
+
+        <h4 class="route-path3">
+            Purchase
+        </h4>
+
+    </div>
+
+    <br />
+
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="settings-container">
+
+        <!-- LEFT MENU -->
+        <div class="left-menu">
+
+            <ul class="menu-list">
+
+                <li class="active" onclick="showSection('general',this)">
+                    <i class="fa fa-cog"></i>
+                    <span>General</span>
+                </li>
+
+                <li onclick="showSection('vendor',this)">
+                    <i class="fa fa-file-invoice-dollar"></i>
+                    <span>Vendor Invoice</span>
+                </li>
+
+                <li onclick="showSection('tax',this)">
+                    <i class="fa fa-percent"></i>
+                    <span>Tax / GST</span>
+                </li>
+
+                <li onclick="showSection('discount',this)">
+                    <i class="fa fa-tags"></i>
+                    <span>Discount</span>
+                </li>
+
+                <li onclick="showSection('numbering',this)">
+                    <i class="fa fa-hashtag"></i>
+                    <span>Numbering</span>
+                </li>
+
+                <li onclick="showSection('print',this)">
+                    <i class="fa fa-print"></i>
+                    <span>Print</span>
+                </li>
+
+                <li onclick="showSection('approval',this)">
+                    <i class="fa fa-check-circle"></i>
+                    <span>Approval</span>
+                </li>
+
+                <li onclick="showSection('landing',this)">
+                    <i class="fa fa-truck-loading"></i>
+                    <span>Landing Cost</span>
+                </li>
+
+                <li onclick="showSection('importpurchase',this)">
+                    <i class="fa fa-globe"></i>
+                    <span>Import Purchase</span>
+                </li>
+
+            </ul>
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <div class="right-panel">
+
+            <!-- GENERAL -->
+            <div id="general" class="settings-section active-section">
+                <h4><i class="fa fa-cog"></i> General Purchase Settings</h4>
+
+                @CheckRow("<i class='fa fa-cart-plus'></i> Enable Purchase Order")
+                @CheckRow("<i class='fa fa-undo'></i> Enable Purchase Return")
+                @CheckRow("<i class='fa fa-file-invoice'></i> Enable Debit Note")
+                @CheckRow("<i class='fa fa-truck'></i> Enable GRN")
+
+                @CheckRow("<i class='fa fa-ban'></i> Allow Zero Value Purchase")
+                @CheckRow("<i class='fa fa-pencil-alt'></i> Enable Narration")
+                @CheckRow("<i class='fa fa-file'></i> Optional Voucher")
+                @CheckRow("<i class='fa fa-calculator'></i> Round Off Purchase Bill")
+                @CheckRow("<i class='fa fa-calendar'></i> Allow Back Date Entry")
+            </div>
+
+
+            <!-- VENDOR -->
+            <div id="vendor" class="settings-section">
+                <h4><i class="fa fa-store"></i> Vendor Invoice Settings</h4>
+
+                @CheckRow("<i class='fa fa-print'></i> Print Purchase Entry After Save")
+                @CheckRow("<i class='fa fa-envelope'></i> Email Purchase Order To Vendor")
+                @CheckRow("<i class='fa-brands fa-whatsapp'></i> WhatsApp Purchase Order")
+                @CheckRow("<i class='fa fa-wallet'></i> Show Vendor Outstanding Balance")
+                @CheckRow("<i class='fa fa-calendar-days'></i> Enable Due Date")
+
+                @CheckRow("<i class='fa fa-money-bill-wave'></i> Partial Payment Allowed")
+
+                <div class="setting-row">
+                    <label>
+                        <i class="fa fa-hand-holding-dollar"></i> Default Payment Mode
+                    </label>
+                    <select>
+                        <option>Cash</option>
+                        <option>Bank</option>
+                        <option>UPI</option>
+                        <option>Credit</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- VENDOR -->
+            <div id="vendor" class="settings-section">
+                <h4>Vendor Invoice Settings</h4>
+
+                @CheckRow("Print Purchase Entry After Save")
+                @CheckRow("Email Purchase Order To Vendor")
+                @CheckRow("WhatsApp Purchase Order")
+                @CheckRow("Show Vendor Outstanding Balance")
+                @CheckRow("Enable Due Date")
+                @CheckRow("Auto Payment Entry")
+                @CheckRow("Partial Payment Allowed")
+
+                <div class="setting-row">
+                    <label>Default Payment Mode</label>
+                    <select>
+                        <option>Cash</option>
+                        <option>Bank</option>
+                        <option>UPI</option>
+                        <option>Credit</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- TAX -->
+            <!-- TAX -->
+            <div id="tax" class="settings-section">
+                <h4><i class="fa fa-percent"></i> Purchase Tax Settings</h4>
+
+                @CheckRow("<i class='fa fa-receipt'></i> Enable GST")
+
+                @CheckRow("<i class='fa fa-calculator'></i> Auto CGST/SGST")
+                @CheckRow("<i class='fa fa-file-invoice'></i> Auto IGST")
+
+                @CheckRow("<i class='fa fa-money-check-dollar'></i> TDS Applicable")
+                @CheckRow("<i class='fa fa-coins'></i> TCS Applicable")
+
+                <div class="setting-row">
+                    <label>
+                        <i class="fa fa-sliders"></i> GST Type
+                    </label>
+                    <select>
+                        <option>Inclusive</option>
+                        <option>Exclusive</option>
+                    </select>
+                </div>
+
+            </div>
+
+
+            <!-- DISCOUNT -->
+            <div id="discount" class="settings-section">
+                <h4><i class="fa fa-tags"></i> Purchase Discount Settings</h4>
+
+                @CheckRow("<i class='fa fa-box'></i> Enable Item Discount")
+                @CheckRow("<i class='fa fa-file-invoice-dollar'></i> Enable Bill Discount")
+                @CheckRow("<i class='fa fa-user-check'></i> Approval For High Discount")
+
+                <div class="setting-row">
+                    <label>
+                        <i class="fa fa-percent"></i> Discount Type
+                    </label>
+                    <select style="width:40%;">
+                        <option>Percentage</option>
+                        <option>Flat Amount</option>
+                    </select>
+                </div>
+
+                <div class="setting-row">
+                    <label>
+                        <i class="fa fa-indian-rupee-sign"></i> Maximum Discount Limit
+                    </label>
+                    <input type="number" style="width:100px;" />
+                </div>
+
+
+            </div>
+
+            <!-- NUMBERING -->
+            @*<div id="numbering" class="settings-section">
+                    <h4>Purchase Numbering Settings</h4>
+
+                    <div class="setting-row">
+                        <label>Prefix</label>
+                        <input type="text" id="prefix" value="PO" />
+                    </div>
+
+                    <div class="setting-row">
+                        <label>Start Number</label>
+                        <input type="number" id="startNumber" value="1" />
+                    </div>
+
+                    @CheckRow("Include Year")
+                    @CheckRow("Reset Yearly")
+                    @CheckRow("Reset Monthly")
+
+                    <div class="setting-row">
+                        <label>Year Type</label>
+                        <select>
+                            <option>Financial Year</option>
+                            <option>Calendar Year</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-row">
+                        <label>Number Length</label>
+                        <input type="number" id="length" value="8" />
+                    </div>
+
+                    <div class="setting-row">
+                        <label>Position</label>
+                        <select>
+                            <option>Prefix</option>
+                            <option>Postfix</option>
+                        </select>
+                    </div>
+
+                    <div class="preview-box col-lg-3" id="previewBox">
+                        Preview: PO260001
+                    </div>
+                </div>*@
+
+            <div id="numbering" class="settings-section">
+                <h4>
+                    <i class="fa fa-hashtag"></i> Purchase Numbering Settings
+                </h4>
+
+                <div class="setting-row">
+                    <label>
+                        <i class="fa fa-tag"></i> Prefix
+                    </label>
+                    <input type="text" id="prefix" value="PO" style="width:100px;" />
+                </div>
+
+                <div class="setting-row">
+                    <label>
+                        <i class="fa fa-sort-numeric-up"></i> Start Number
+                    </label>
+                    <input type="number" id="startNumber" value="1" style="width:100px;" />
+                </div>
+
+
+                <div class="setting-row">
+                    <label>
+                        <i class="fa fa-calendar-alt"></i> Year Type
+                    </label>
+                    <select>
+                        <option>Financial Year</option>
+                        <option>Calendar Year</option>
+                    </select>
+                </div>
+
+                <div class="setting-row">
+                    <label>
+                        <i class="fa fa-ruler-horizontal"></i> Number Length
+                    </label>
+                    <input type="number" id="length" value="8" style="width:100px;" />
+                </div>
+
+                <div class="setting-row">
+                    <label>
+                        <i class="fa fa-arrows-left-right"></i> Position
+                    </label>
+                    <select>
+                        <option>Prefix</option>
+                        <option>Postfix</option>
+                    </select>
+                </div>
+                @CheckRow("<i class='fa fa-calendar-check'></i> Include Year")
+                @CheckRow("<i class='fa fa-rotate-right'></i> Reset Yearly")
+                @CheckRow("<i class='fa fa-repeat'></i> Reset Monthly")
+
+
+                <div class="preview-box col-lg-3" id="previewBox">
+                    <i class="fa fa-eye"></i> Preview: PO260001
+                </div>
+            </div>
+
+
+            <!-- PRINT -->
+            <div id="print" class="settings-section">
+                <h4><i class="fa fa-print"></i> Print Settings</h4>
+
+                @CheckRow("<i class='fa fa-building'></i> Show Company Logo")
+                @CheckRow("<i class='fa fa-file-contract'></i> Show Terms & Conditions")
+                @CheckRow("<i class='fa fa-copy'></i> Print Duplicate Copy")
+                @CheckRow("<i class='fa fa-signature'></i> Print Authorized Signature")
+                @CheckRow("<i class='fa fa-truck'></i> Show Transport Details")
+            </div>
+
+            <!-- APPROVAL -->
+            <div id="approval" class="settings-section">
+                <h4><i class="fa fa-check-circle"></i> Approval Settings</h4>
+
+                @CheckRow("<i class='fa fa-user-check'></i> Purchase Approval Required")
+                @CheckRow("<i class='fa fa-wallet'></i> Vendor Credit Limit Validation")
+                @CheckRow("<i class='fa fa-user-tie'></i> Manager Approval Required")
+                @CheckRow("<i class='fa fa-indian-rupee-sign'></i> Approval For High Value Purchase")
+            </div>
+
+            <!-- LANDING COST -->
+            <div id="landing" class="settings-section">
+                <h4><i class="fa fa-dolly"></i> Landing Cost Settings</h4>
+
+                @CheckRow("<i class='fa fa-truck-fast'></i> Include Freight Charges")
+                @CheckRow("<i class='fa fa-box'></i> Include Loading Charges")
+                @CheckRow("<i class='fa fa-shield-alt'></i> Include Insurance Charges")
+                @CheckRow("<i class='fa fa-receipt'></i> Include Other Expenses")
+            </div>
+
+            <!-- IMPORT PURCHASE -->
+            <div id="importpurchase" class="settings-section">
+                <h4><i class="fa fa-globe"></i> Import Purchase Settings</h4>
+
+                @CheckRow("<i class='fa fa-ship'></i> Enable Import Purchase")
+
+                <div class="setting-row">
+                    <label>
+                        <i class="fa fa-money-bill-wave"></i> Currency
+                    </label>
+                    <select style="width:100px;">
+                        <option>INR</option>
+                        <option>USD</option>
+                        <option>EUR</option>
+                    </select>
+                </div>
+
+                @CheckRow("<i class='fa fa-landmark'></i> Custom Duty")
+                @CheckRow("<i class='fa fa-percent'></i> Import GST")
+
+                <div class="setting-row">
+                    <label>
+                        <i class="fa fa-truck"></i> Shipping Charges
+                    </label>
+                    <input type="number" style="width:100px;" />
+                </div>
+            </div>
+            <button type="submit" class="save-btn">
+                Save Purchase Settings
+            </button>
+
+        </div>
+    </div>
+}
+
+@*<script>
+
+        function showSection(sectionId) {
+
+            let sections = document.querySelectorAll(".settings-section");
+
+            sections.forEach(section => {
+                section.style.display = "none";
+            });
+
+            document.getElementById(sectionId).style.display = "block";
+        }
+    </script>*@
+
+<script>
+    function updatePreview() {
+
+        let prefix = document.getElementById("prefix").value;
+        let start = document.getElementById("startNumber").value;
+        let year = new Date().getFullYear().toString().slice(-2);
+
+        document.getElementById("previewBox").innerHTML =
+            "Preview: " + prefix + year + start.padStart(4, '0');
+    }
+
+    document.getElementById("prefix").addEventListener("input", updatePreview);
+    document.getElementById("startNumber").addEventListener("input", updatePreview);
+
+    updatePreview();
+</script>
+
+<script>
+    function updateToggleText(toggle) {
+        let textElement = toggle.closest(".toggle-wrapper")
+            .querySelector(".toggle-text");
+
+        if (toggle.checked) {
+            textElement.innerText = "Yes";
+        } else {
+            textElement.innerText = "No";
+        }
+    }
+
+    // initialize all toggles on page load
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".switch input").forEach(function (toggle) {
+            updateToggleText(toggle);
+        });
+    });
+</script>
+
+
+<script>
+    function showSection(sectionId, element) {
+
+        // Hide all sections
+        document.querySelectorAll(".settings-section").forEach(function (section) {
+            section.style.display = "none";
+        });
+
+        // Show selected section
+        document.getElementById(sectionId).style.display = "block";
+
+        // Remove active class from all sidebar items
+        document.querySelectorAll(".menu-list li").forEach(function (item) {
+            item.classList.remove("active");
+        });
+
+        // Add active class to clicked item
+        element.classList.add("active");
+    }
+</script>

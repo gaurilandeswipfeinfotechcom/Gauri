@@ -1,0 +1,568 @@
+﻿@*@model IEnumerable<SwipfeCRMMVC.Models.Tbl_SalesOrder>*@
+
+@using ERPModels
+@*@model  PagedList.IPagedList <ERPModels.SalesOrderSearch>*@
+@model ERPModels.UnitSearchModel_Paging
+@*@using PagedList.Mvc
+    @model  PagedList.IPagedList<SwipfeCRMMVC.Models.MultipleTables>*@
+
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <script>
+        alert('@TempData["ErrorMessage"]');
+
+    </script>
+}
+@if (TempData["ErrorMessage1"] != null)
+{
+    <script>
+        alert('@TempData["ErrorMessage1"]');
+
+    </script>
+}
+
+
+@{
+    //SalesOrderSearchCriteria objSearch = ViewBag.SearchOrderCriteria;
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_SwipfeMaster.cshtml";
+
+    int sno = 1;
+    if (Model.PageNumber <= Model.PageCount)
+    {
+        if (Model.PageNumber == 1)
+        {
+            sno = 1;
+        }
+        else
+        {
+            sno = sno + ((Model.PageNumber - 1) * Model.RecordsPerPage);
+        }
+
+    }
+}
+
+@*@if (Session["Username"] != null)
+    {
+
+    }
+    else
+    {
+        Session.Clear();
+        Session.Abandon();
+        //var s = window.location.toString().split('/Unit');
+        //window.location.href = s[0].toString() + '/QuotationReport.aspx';
+        <script>alert("Please Login");</script>
+        <script>
+            var s = window.location.toString().split('/');
+            window.location.href = s[0].toString() + "/SwipfeHome/Login";</script>
+    }*@
+
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+<link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css"
+      rel="Stylesheet" type="text/css" />
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+<script type="text/javascript">
+
+    @*$(window).load(function () {
+
+        var b = '@Session["LoginUserId"]';
+        //var b = 9;
+        $.ajax({
+            url: '@Url.Action("GetInfo")',
+            data: { "userId": b },
+            type: "POST",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+
+                if (data.length > 0) {
+
+                    for (var i = 0; i < data.length; i++) {
+
+                        if (data[i].FormName == "SalesOrder") {
+
+                        if (data[i].Create == "Y") {
+
+
+                            $('#CreateSalesOrder').show();
+                        }
+                        else {
+
+                            $('#CreateSalesOrder').hide();
+
+                        }
+                   }
+
+                }
+
+                }
+
+            }
+        });
+    });*@
+
+
+    function searchUnitType(id) {
+        var txt = document.getElementById(id);
+        //txt.value = txt.value.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+
+        // var txt = document.getElementById(id);
+        //alert("hi");
+        $.ajax({
+            url: '/Unit/AutocompleteUnit/',
+            data: { "searchByText": txt.value, "sortBy": $('#SortByColumnName').val() },
+            type: "POST",
+            dataType: "json",
+
+            success: function (data) {
+                $('#json-datalistUnitType').empty();
+                var jsonOptions = data;
+                var dataList = document.getElementById('json-datalistUnitType');
+
+                jsonOptions.forEach(function (item) {
+                    var option = document.createElement('option');
+                    option.value = item;
+                    dataList.appendChild(option);
+                });
+            },
+            error: function (xhr, status, error) {
+                alert(xhr.responseText);
+            }
+        });
+    } //end of searchSalesOrderNo
+
+    function validate() {
+        if ($('#SearchByText').val() != "") {
+            $('#SortByColumnName').val('UnitType');
+
+        }
+        else if ($('#SortByColumnName').val() != "UnitType") {
+            $('#SearchUnitType').val('');
+        }
+    }
+    function funPageNoClicked(requestedPgNo) {
+        $("#isPageNavigationRequested").val("true");
+        $("#RequestedPageNumber").val(requestedPgNo);
+        event.preventDefault();
+        $("#Unit_List").submit();
+    }
+    $(function () {
+        $("#Search").click(function () {
+            $("#isPageNavigationRequested").val("false");
+        });
+    });
+</script>
+
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="Stylesheet" type="text/css" />
+@*AP external CSS*@
+<link href="~/Content/ERPStyle.css" rel="stylesheet" type="text/css" />
+<style>
+    #label {
+        font-size: 15px;
+        color: #0077B3;
+        font-weight: 500
+    }
+
+    .table tr {
+        border: 2px solid #fff;
+        background-color: #e5e6eb
+    }
+
+    .panel .panel-body .table tr td {
+        background-color: #e5e6eb;
+        border-right: 2px solid #fff;
+        border-top: 5px solid #fff;
+    }
+
+    .panel .panel-body .table tr th {
+        border-bottom: 5px solid #fff;
+    }
+
+    table td {
+        font-size: 13px;
+    }
+
+    .panel .panel-body .table tr td:hover {
+        background-color: floralwhite
+    }
+
+    td span {
+        border: none;
+        background: none;
+        color: blue;
+        font-size: 15px;
+    }
+
+        td span i:hover {
+            transform: scale(1.3);
+            color: Highlight;
+        }
+
+
+    td .glyphicon-edit {
+        color: green;
+    }
+
+    td .glyphicon-list {
+        color: blue;
+        padding: 0px 4px;
+    }
+
+    td .glyphicon-trash {
+        color: red;
+        padding: 0px 4px;
+    }
+
+    .table tr th {
+        text-align: center;
+        background-color: lightblue;
+        font-family: Helvetica, sans-serif;
+        color: midnightblue;
+    }
+
+    td .glyphicon-print {
+        color: blueviolet;
+    }
+
+    .pageno-btn {
+        background-image: linear-gradient(to right,#35d3e1,midnightblue);
+        outline-style: none;
+        border: none;
+        padding: 5px 10px 5px 10px;
+        color: #fff;
+        font-family: helvetica;
+        text-decoration: none;
+        border-radius: 4px
+    }
+    .submit-btn {
+        display: inline-flex;
+        padding: 7px;
+    }
+
+    .button {
+        display: inline-block;
+        /*padding: 5px 6px;*/
+        /*font-size: 5px;*/
+        padding: 20px;
+        font-size: 16px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        outline: none;
+        border: none;
+        box-shadow: 0 9px #999;
+        height: 3px;
+        width: auto;
+        margin: 4px 2px;
+    }
+
+        .button:hover {
+            /*background-color: #3e8e41*/
+            background-color: cyan;
+        }
+
+        .button:active {
+            background-color: cyan;
+            box-shadow: 0 5px #666;
+            transform: translateY(4px);
+        }
+
+    .button1 {
+        border-radius: 50%;
+    }
+
+    span.error {
+        display: block;
+        visibility: hidden;
+        color: red;
+        font-size: 60px;
+    }
+
+
+    .ui-widget {
+        font-size: 12px !important;
+    }
+
+    .reqError {
+        color: #ff0000; /*Red Color*/
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .backsubmitbtn {
+        background-image: linear-gradient(to right,#35d3e1,midnightblue);
+        padding: 5px 20px 5px 20px;
+        color: white;
+        font-family: Helvetica;
+        box-shadow: -4px -4px 8px rgba(255, 255, 255, 0.7), 4px 4px 8px rgba(128, 128, 128, 0.7);
+        outline-style: none;
+        border: none
+    }
+        .submit-btn button {
+            border-radius: 30px;
+            padding: 5px 5px;
+        }
+    .page td a {
+        font-size: 12px;
+    }
+
+    .route-path1 {
+        cursor: pointer;
+        clip-path: polygon(0% 0%, 90% 0%, 100% 50%, 90% 100%, 0% 100%);
+        background-color: #003399;
+        color: white;
+        padding: 5px 15px 5px 5px
+    }
+
+    .route-path2 {
+        cursor: pointer;
+        color: white;
+        clip-path: polygon(94% 0%, 100% 50%, 94% 100%, 0% 100%, 6% 50%, 0% 0%);
+        background-color: #003399;
+        padding: 5px 15px 5px 15px;
+    }
+</style>
+
+
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="Stylesheet" type="text/css" />
+@*AP external CSS*@
+<link href="~/CSS/ERPStyle.css" rel="stylesheet" type="text/css" />
+
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="d-flex" style="margin-top:-20px">
+            <h4 class="route-path1">Inventory </h4>
+            <h4 class="route-path2 " onclick="location.href='@Url.Action("Index","Unit")'">Unit Master</h4>
+        </div>
+        <br />
+
+        <div class="panel panel-default outer-main-container">
+            <div class="form-group row main-heading">
+                <div class="col-sm-8 col-lg-9 d-flex ">
+                    <i class="material-icons" style="font-size: 32px; margin-right: 10px;">scale</i>
+                    Unit Master
+                </div>
+                <div class="col-sm-4 col-lg-3">
+                    <input type="button" id="CreateSalesOrder" value="Create" class="btn btn-success btn-round create-bttn custo-inner" style="outline:none" onclick="location.href = '@Url.Action("Create", "Unit")'" />
+                </div>
+            </div>
+            <div class="panel-body">
+                @Html.TextBox("details", null, new { @onkeyup = "myFunction(this.id)", @class = "form-control", style = "display: none;" })
+                @Html.TextBox("Edit", null, new { @onkeyup = "myFunction(this.id)", @class = "form-control", style = "display: none;" })
+                @using (Html.BeginForm("Index", "Unit", FormMethod.Post, new { id = "Unit_List" }))
+                {
+                    <div class="panel panel-success search-rectangle" style="margin-top:-15px">
+                        <div class="panel-body">
+                            <div class="form-group row" style="margin-top:-15px">
+                                <div class="col-lg-2 col-sm-4 pb-3 pb-sm-0">
+                                    <label id="label" class="mt-3">Search By :</label>
+                                    <div class="form-group row">
+                                        @Html.DropDownListFor(m => m.SortByColumnName, new List<SelectListItem>
+                                                                 {
+                                                                  new SelectListItem{ Text="Unit Type", Value = "UnitType" },
+                                                                  new SelectListItem { Text="Unit Name", Value ="UnitName"},
+                                                                 }, new { @class = "form-control fs-4 pl-3 dropdown-textbox", style = "height:35px;margin-top:-2px" })
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-8 ">
+                                    <label id="label" class="mt-3">Find :</label>
+                                    @Html.TextBoxFor(m => m.SearchByText, null, new
+                               {
+                                   @class = "form-control pl-3 fs-4 input-text-box",
+                                   style = "height:35px",
+                                   @oninput = "searchUnitType(this.id)",
+                                   @list = "json-datalistUnitType"
+                               })
+                                    <datalist id="json-datalistUnitType"></datalist>
+                                </div>
+                                <div class="col-lg-4 row ">
+                                    <div class="col-sm-4 p-3 pb-4 pb-sm-0">
+                                        <label id="label">Sort:</label>
+                                        <div class="form-group row mt-2">
+                                            @Html.DropDownListFor(m => m.OrderByType, new List<SelectListItem>
+                                                                     {
+                                                                     //new SelectListItem{ Text="Please Select", Value = "Please Select" },
+                                                                     new SelectListItem{ Text="Z-A", Value = "Z-A" },
+                                                                     new SelectListItem{ Text="A-Z", Value = "A-Z" },
+                                                                     }, new { @class = "form-control fs-4 pl-3 dropdown-textbox", style = "height:35px" })
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 p-3">
+                                        <label id="label">Records:</label>
+                                        @Html.TextBoxFor(m => m.RecordsPerPage, null, new
+                                   {
+                                       @class = "form-control pl-3 fs-4 input-text-box",
+                                       style = "height:35px"
+                                   })
+                                    </div>
+                                    <div class="col-sm-4 pt-md-3 p-3">
+                                        <label id="label">Page No. :</label>
+                                        @Html.TextBox("Page", null, new
+                                   {
+                                       @class = "form-control pl-3 fs-4 input-text-box",
+                                       style = "height:35px",
+                                       @id = "Page"
+                                   })
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 align-items-end d-flex">
+                                    <button type="submit" id="Search" value="Search" name="Search" style="outline: none" class="mb-4 btn btn-success btn-round search-bttn custo-inner">
+                                        Search<i class="material-icons" style="font-size: 20px;padding-left:15px">search</i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-group row my-0 py-0">
+                                <div class="col-sm-6 col-md-4 col-lg-3 col-xxl-2">
+                                    <label id="label">Unit Type :</label>
+                                    @Html.CheckBoxFor(m => m.UnitType, true)
+                                </div>
+                                <div class="col-sm-6 col-md-4 col-lg-3 col-xxl-2">
+                                    <label id="label">Unit Name :</label>
+                                    @Html.CheckBoxFor(m => m.UnitName, true)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-success" style="box-shadow:inset 4px 4px 4px gray;border-radius:10px">
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tr style="font-size: small">
+                                        <th width="5%" style="border-right: 2px solid #fff">
+                                            No.
+                                        </th>
+                                        @if (Model.UnitType == true)
+                                        {
+                                            <th width="40%" style="border-right: 2px solid #fff">
+                                                Unit Name
+                                            </th>
+                                        }
+                                        @if (Model.UnitName == true)
+                                        {
+                                            <th width="40%" style="border-right: 2px solid #fff">
+                                                 Unit Short Form
+                                            </th>
+                                        }
+                                        <th width="15%">
+                                            Actions
+                                        </th>
+                                    </tr>
+
+                                    @foreach (var item in Model.UnitSearchedList)
+                                    {
+                                        <tr>
+                                            <td class="text-center">
+                                                @sno
+                                                @{ sno++; }
+                                            </td>
+
+                                            @if (Model.UnitType == true)
+                                            {
+                                                <td class="text-center">
+                                                    @Html.DisplayFor(modelItem => item.UnitType)
+                                                </td>
+                                            }
+                                            @if (Model.UnitName == true)
+                                            {
+
+                                                <td class="text-center"> @Html.DisplayFor(modelItem => item.UnitName)</td>
+                                            }
+
+                                            <td align="center">
+
+                                                <span><i class="glyphicon glyphicon-edit" style="cursor:pointer" onclick="location.href='@Url.Action("Edit",new { sono = item.UnitId })'"></i></span>
+
+                                                <span><i class="glyphicon glyphicon-list" style="cursor:pointer" onclick="location.href='@Url.Action("Details",new { sono = item.UnitId })'"></i></span>
+
+                                                <span><i class="glyphicon glyphicon-trash" style="cursor:pointer" onclick="location.href='@Url.Action("Delete",new { sono = item.UnitId })'"></i></span>
+
+                                            </td>
+                                        </tr>
+
+                                    }
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive p-2">
+                        <table align="center">
+                            <tr class="page">
+                                @if (Model.PageCount > 1)
+                                {
+                                    @Html.HiddenFor(m => m.PageCount)
+
+                                    <td>
+                                        @if (Model.RequestedPageNumber > 1)
+                                        {
+                                            <a id="PreviousPage" href="#" class="btn btn-info custo-inner pageno-btn" style="border:none;margin-right:10px;box-shadow:none" onclick='funPageNoClicked(@Model.RequestedPageNumber - 1);'>Previous</a>
+                                        }
+                                    </td>
+
+                                    for (int pgno = Math.Max(1, Model.RequestedPageNumber - 4); pgno <= Math.Min(Model.PageCount, Model.RequestedPageNumber + 5); pgno++)
+                                    {
+                                        <td>
+                                            <a id="PageNo" href="#" class="btn btn-secondary btn-round @(pgno == Model.RequestedPageNumber ? "active" : "")" onclick='funPageNoClicked(@pgno);'>@pgno.ToString()</a>
+                                        </td>
+                                    }
+
+                                    <td>
+                                        @if (Model.RequestedPageNumber < Model.PageCount)
+                                        {
+                                            <a id="NextPage" href="#" class="btn btn-info custo-inner pageno-btn" style="border:none;margin-left:10px;box-shadow:none" onclick='funPageNoClicked(@Model.RequestedPageNumber + 1);'>Next</a>
+                                        }
+                                    </td>
+                                }
+                                @Html.HiddenFor(x => x.isPageNavigationRequested)
+                                @Html.HiddenFor(x => x.RequestedPageNumber)
+                            </tr>
+                        </table>
+                    </div>
+                    {
+                        <div class="pager">
+                            @*@Html.PagedListPager(Model, page => Url.Action("Index", new
+                                {
+                                    page,
+                                    SortBy = ViewBag.SortBy,
+                                    OrderBy = ViewBag.OrderBy,
+                                    RecordPerPage = ViewBag.RecordPerPage,
+                                    SaleOrderDate = ViewBag.SaleOrderDate,
+
+                                    PurchaseOrderNo = ViewBag.PurchaseOrderNo,
+                                    PurchaseOrderDate = ViewBag.PurchaseOrderDate,
+                                    CompanyName = ViewBag.CompanyName
+
+
+                                }))Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount*@
+
+
+                        </div>
+                    }
+                }
+
+
+            </div>
+
+
+
+        </div>
+
+        @*</div>
+            </div>*@
+    </div>
+</div>

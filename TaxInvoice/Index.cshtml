@@ -1,0 +1,1216 @@
+﻿
+@using ERPModels
+@*@model  PagedList.IPagedList <ERPModels.SalesOrderSearch>*@
+@model ERPModels.TISearchModel_Paging
+
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_SwipfeMaster.cshtml";
+    //int sno = 1;
+    //if (Model.PageNumber <= Model.PageCount)
+    //{
+    //    if (Model.PageNumber == 1)
+    //    {
+    //        sno = 1;
+    //    }
+    //    else
+    //    {
+    //        sno = sno + ((Model.PageNumber - 1) * ViewBag.RecordPerPage);
+    //    }
+
+    //}
+}
+
+
+@*@if (
+
+    ["Username"] != null)
+    {
+
+    }
+    else
+    {
+        Session.Clear();
+        Session.Abandon();
+        //var s = window.location.toString().split('/Unit');
+        //window.location.href = s[0].toString() + '/QuotationReport.aspx';
+        <script>alert("Please Login");</script>
+        <script>
+                            var s = window.location.toString().split('/');
+                            window.location.href = s[0].toString() + "/SwipfeHome/Login";</script>
+    }*@
+
+
+<style>
+
+
+
+    #label {
+        font-size: 15px;
+        color: #0077B3;
+        font-weight: 500
+    }
+
+    .table tr {
+        border: 2px solid #fff;
+        background-color: #e5e6eb
+    }
+
+    .panel .panel-body .table tr td {
+        background-color: #e5e6eb;
+        border-right: 2px solid #fff
+    }
+
+    table td {
+        font-size: 13px;
+    }
+
+    .panel .panel-body .table tr td:hover {
+        background-color: floralwhite
+    }
+
+    td span {
+        border: none;
+        background: none;
+        color: blue;
+        font-size: 15px;
+    }
+
+        td span i:hover {
+            transform: scale(1.3);
+            color: Highlight;
+        }
+
+
+    td .glyphicon-edit {
+        color: green;
+    }
+
+    td .glyphicon-list {
+        color: blue;
+        padding: 0px 4px;
+    }
+
+    .table tr th {
+        text-align: center;
+    }
+
+    td .glyphicon-print {
+        color: blueviolet;
+    }
+
+    /*td .glyphicon-trash {
+        color: red;
+    }*/
+
+    .page td a {
+        font-size: 12px;
+    }
+
+
+
+
+    .month-navbar {
+        position: absolute;
+        top: 30%;
+        left: 30%;
+        background: #ffffff;
+        padding: 5px;
+        border-radius: 5px;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+        display: none;
+        width: 100px;
+        border: 1px solid #ddd;
+        z-index: 1;
+    }
+
+    .month-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        width: 100%
+    }
+
+    .month-btn {
+        border: none;
+        padding: 6px 8px;
+        border-radius: 3px;
+        cursor: pointer;
+        text-align: left;
+        transition: 0.3s;
+        width: 100%;
+    }
+
+        .month-btn:hover {
+            background-color: lemonchiffon;
+        }
+
+
+    .route-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: -22px 0 -6px;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .route-path {
+        color: #1e293b; /* black */
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .active-route {
+        color: #2563eb; /* blue */
+        font-weight: 600;
+    }
+
+    .route-separator {
+        color: #94a3b8;
+        font-size: 14px;
+    }
+    /*.route-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;*/
+        /* margin: 10px 0 20px;*/
+
+        /*margin: -22px 0 -6px;
+        font-family: 'Segoe UI', sans-serif;
+    }*/
+
+    /* First item */
+    /*.route-path1 {
+        background: transparent;
+        color: #2563eb;
+        font-size: 14px;
+        font-weight: 600;
+        padding: 0;
+        clip-path: none;
+    }*/
+
+    /* Current page */
+    /*.route-path2 {
+        background: transparent;
+        color: #1e293b;
+        font-size: 14px;
+        font-weight: 500;
+        padding: 0;
+        clip-path: none;
+        cursor: default;
+    }*/
+
+    /* arrow separator */
+    /*.route-separator {
+        color: #94a3b8;
+        font-size: 14px;
+    }*/
+
+    .panel-body {
+        padding: 2px;
+    }
+
+    .input-text-box {
+        border-radius: 10px;
+        box-shadow: inset 2px 2px 5px gray;
+        height: 30px !important;
+    }
+    .small-action-btn {
+        height: 26px !important;
+        padding: 2px 14px !important;
+        font-size: 13px !important;
+        min-width: auto;
+        border-radius: 6px;
+        line-height: normal;
+    }
+
+    .table > tbody > tr > th {
+        padding: 7px !important;
+    }
+    .main-heading {
+        margin-top: 3px;
+    }
+
+    .search-section-lines {
+        border-top: 1px solid #cfd8dc;
+        border-bottom: 1px solid #cfd8dc;
+        margin-bottom: 8px;
+        margin-top: -23px;
+    }
+
+       
+</style>
+
+
+
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+<link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css"
+      rel="Stylesheet" type="text/css" />
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="Stylesheet" type="text/css" />
+@*AP external CSS*@
+
+<link href="~/Content/ERPStyle.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+
+    $(window).load(function () {
+
+        var b = '@Session["LoginUserId"]';
+        //var b = 9;
+        $.ajax({
+            url: '@Url.Action("GetInfo")',
+            data: { "userId": b },
+            type: "POST",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+
+                if (data.length > 0) {
+
+                    for (var i = 0; i < data.length; i++) {
+
+                        if (data[i].FormName == "TaxInvoice") {
+
+                        if (data[i].Create == "Y") {
+
+
+                            $('#CreateTaxInvoice').show();
+                        }
+                        else {
+
+                            $('#CreateTaxInvoice').hide();
+
+                        }
+                   }
+
+                }
+
+                }
+
+            }
+        });
+    });
+
+
+    function searcTaxInvoiceNo(id) {
+        var txt = document.getElementById(id);
+        //txt.value = txt.value.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+
+        // var txt = document.getElementById(id);
+        //alert("hi");
+        $.ajax({
+            url: '/TaxInvoice/AutocompleteTaxInvoiceNo/',
+            data: { "searchByText": txt.value, "sortBy": $('#SortByColumnName').val() },
+            type: "POST",
+            dataType: "json",
+
+            success: function (data) {
+                $('#json-datalistTaxInvoiceNo').empty();
+                var jsonOptions = data;
+                var dataList = document.getElementById('json-datalistTaxInvoiceNo');
+
+                jsonOptions.forEach(function (item) {
+                    var option = document.createElement('option');
+                    option.value = item;
+                    dataList.appendChild(option);
+                });
+            },
+            error: function (xhr, status, error) {
+                alert(xhr.responseText);
+            }
+        });
+    } //end of searchTaxInvoiceNo
+
+    function validate() {
+        if ($('#SearchByText').val() != "") {
+            $('#SortByColumnName').val('TaxInvoiceNo');
+
+        }
+        else if ($('#SortByColumnName').val() != "TaxInvoiceNo") {
+            $('#SearchTaxInvoiceNo').val('');
+        }
+    }
+    function funPageNoClicked(requestedPgNo) {
+        $("#isPageNavigationRequested").val("true");
+        $("#RequestedPageNumber").val(requestedPgNo);
+        event.preventDefault();
+        $("#Tax_Invoice_List").submit();
+    }
+    $(function () {
+        $("#Search").click(function () {
+            $("#isPageNavigationRequested").val("false");
+        });
+    });
+    function openEditForm(editFormUrl) {
+        var editTab = window.open(editFormUrl, '_blank');
+
+        // Listen for the edit tab closure
+        editTab.onbeforeunload = function () {
+            // Refresh the index page when the edit tab is closed
+            location.reload();
+        };
+    }
+
+
+     function showInvoiceAndPrint(element) {
+         var mgid = $(element).data("id");  // Get the 'data-id' value (MfgJournalID)
+         var mfgJournalNo = $(element).data("mfgjournalno");  // Get the 'data-mfgjournalno' value
+
+         console.log("mgid id: " + mgid);  // For debugging purposes
+
+         // Step 1: AJAX call to fetch the Print page content and show in iframe
+         $.ajax({
+             url: '@Url.Action("Print")',  // Action to fetch print content
+             data: { "id": mgid },  // Send the MfgJournalID to the server
+             type: "GET",
+             success: function (result) {
+                 // Step 2: If the Print page returns successfully, set session in Prints action
+                 $.ajax({
+                     url: '@Url.Action("Prints")',  // Action to set session (use MfgJournalNo)
+                     data: { "tino": mfgJournalNo },  // Send MfgJournalNo to the Prints action
+                     type: "POST",
+                     dataType: "json",
+                     success: function (result) {
+                         if (result.success) {
+                             // Load the Print view content into iframe inside the modal
+                             $('#invoiceIframe').attr('src', '/TaxInvoiceReportPrint.aspx');  // The URL of the print page (replace with correct URL)
+                             openModal('invoiceModal', 'purchaseModalOverlay');  // Open the modal
+                         } else {
+                             alert("Error: " + result.message);  // Handle error from Prints action
+                         }
+                     },
+                     error: function () {
+                         alert('An error occurred while processing the Prints request.');
+                     }
+                 });
+             },
+             error: function () {
+                 alert('An error occurred while processing the Print request.');
+             }
+         });
+     }
+
+    function showInvoicegst() {
+
+         //console.log("mgid id: " + mgid);  // For debugging purposes
+        openModal('gstModal', 'purchaseModalOverl');  // Open the modal
+         // Step 1: AJAX call to fetch the Print page content and show in iframe
+
+    }
+
+
+    // Function to open the modal
+    function openModal(modalId, overlayId) {
+        document.getElementById(modalId).style.display = "block";
+        document.getElementById(overlayId).style.display = "block";
+    }
+
+    // Function to close the modal
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = "none";
+        document.getElementById(modalId + "Overlay").style.display = "none";
+    }
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+        let currentYear = new Date().getFullYear();
+        let dropdown = document.getElementById("businessYear");
+
+        for (let i = currentYear - 5; i <= currentYear; i++) {
+            let startYear = i;
+            let endYear = i + 1;
+            let option = document.createElement("option");
+            option.value = `${startYear}-${endYear}`;
+            option.textContent = `${startYear}-${endYear}`;
+            dropdown.appendChild(option);
+        }
+    });
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".month-btn").forEach(btn => {
+            btn.addEventListener("click", function () {
+                let selectedMonth = this.getAttribute("data-month"); // Get selected month
+                let year = document.getElementById("businessYear").value; // Get selected financial year
+
+                if (!year) {
+                    alert("Please select a financial year first.");
+                    return;
+                }
+
+                let [startYear, endYear] = year.split("-"); // Extract start & end year
+                let selectedYear = startYear; // Default to start year
+
+                //  If month is Jan-Mar, assign to end year (next year)
+                if (["January", "February", "March"].includes(selectedMonth)) {
+                    selectedYear = endYear;
+                }
+
+                let financialYearMonth = `${selectedMonth} ${selectedYear}`;
+
+                let periodDropdown = document.getElementById("period");
+
+                //  Update the dropdown value and text
+                periodDropdown.innerHTML = `
+                <option value="${financialYearMonth}" selected>${financialYearMonth}</option>
+                <option value="Select Month">Select Month</option>
+                <option value="Q1">Q1 (Apr - Jun ${startYear})</option>
+                <option value="Q2">Q2 (Jul - Sep ${startYear})</option>
+                <option value="Q3">Q3 (Oct - Dec ${startYear})</option>
+                <option value="Q4">Q4 (Jan - Mar ${endYear})</option>
+                <option value="H1">Half Yearly-1 (Apr - Sep ${startYear})</option>
+                <option value="H2">Half Yearly-2 (Oct ${startYear} - Mar ${endYear})</option>
+                <option value="Yearly"> Yearly (Apr ${startYear} - Mar ${endYear})</option>
+
+            `;
+
+                //  Hide month list after selection
+                document.getElementById("monthNavbar").style.display = "none";
+            });
+        });
+    });
+
+
+//  Show/Hide Month Selection List Based on Dropdown
+function toggleMonthNavbar() {
+    var periodDropdown = document.getElementById("period");
+    var period = periodDropdown.value;
+    var monthNavbar = document.getElementById("monthNavbar");
+
+    if (period === "Select Month") {
+        monthNavbar.style.display = "block"; //  Show month list
+    } else {
+        monthNavbar.style.display = "none"; //  Hide it when another option is selected
+    }
+}
+
+
+  //  Populate Business Year Dropdown
+function populateBusinessYears() {
+    let yearDropdown = document.getElementById("businessYear");
+    let currentYear = new Date().getFullYear();
+    let startYear = 2015; // Start year for financial years
+
+    yearDropdown.innerHTML = '<option value="">--Select Year--</option>'; // Reset dropdown
+
+    for (let i = currentYear; i >= startYear; i--) {
+        let financialYear = `${i}-${i + 1}`;
+        let option = `<option value="${financialYear}">${financialYear}</option>`;
+        yearDropdown.innerHTML += option;
+    }
+}
+
+//  Update Period Dropdown Based on Financial Year
+function updatePeriods() {
+    let year = document.getElementById("businessYear").value;
+    let periodDropdown = document.getElementById("period");
+
+    if (!year) {
+        periodDropdown.innerHTML = `<option value="select">Select Period</option>`;
+        return;
+    }
+
+    let [startYear, endYear] = year.split("-"); // Extract start & end year
+
+    periodDropdown.innerHTML = `
+        <option value="select">Select Period</option>
+        <option value="Select Month">Select Month</option>
+        <option value="Q1">Q1 (Apr - Jun ${startYear})</option>
+        <option value="Q2">Q2 (Jul - Sep ${startYear})</option>
+        <option value="Q3">Q3 (Oct - Dec ${startYear})</option>
+        <option value="Q4">Q4 (Jan - Mar ${endYear})</option>
+        <option value="H1">Half Yearly-1 (Apr - Sep ${startYear})</option>
+        <option value="H2">Half Yearly-2 (Oct ${startYear} - Mar ${endYear})</option>
+        <option value="Yearly">Yearly (Apr ${startYear} - Mar ${endYear})</option>
+
+    `;
+}
+
+//  Show Month Selection Only if "Select Month" is Chosen
+function toggleMonthNavbar() {
+    var period = document.getElementById("period").value;
+    var monthNavbar = document.getElementById("monthNavbar");
+
+    monthNavbar.style.display = period === "Select Month" ? "block" : "none";
+}
+
+    //  Handle Month Selection & Update Dropdown Correctly
+    document.querySelectorAll(".month-btn").forEach(btn => {
+        btn.addEventListener("click", function () {
+            let selectedMonth = this.getAttribute("data-month"); // Get selected month
+            let year = document.getElementById("businessYear").value; // Get selected financial year
+
+            if (!year) {
+                alert("Please select a financial year first.");
+                return;
+            }
+
+            let [startYear, endYear] = year.split("-"); // Extract start & end year
+            let selectedYear = startYear; // Default to start year
+
+            //  If month is Jan-Mar, use the next year (endYear)
+            if (["January", "February", "March"].includes(selectedMonth)) {
+                selectedYear = endYear;
+            }
+
+            let financialYearMonth = `${selectedMonth} ${selectedYear}`;
+
+            //  Update dropdown with selected month in correct year
+            let periodDropdown = document.getElementById("period");
+            periodDropdown.innerHTML = `
+            <option value="${financialYearMonth}" selected>${financialYearMonth}</option>
+            <option value="Yearly">${year} - Yearly (Apr ${startYear} - Mar ${endYear})</option>
+            <option value="Q1">Q1 (Apr - Jun ${startYear})</option>
+            <option value="Q2">Q2 (Jul - Sep ${startYear})</option>
+            <option value="Q3">Q3 (Oct - Dec ${startYear})</option>
+            <option value="Q4">Q4 (Jan - Mar ${endYear})</option>
+            <option value="H1">Half Yearly-1 (Apr - Sep ${startYear})</option>
+            <option value="H2">Half Yearly-2 (Oct ${startYear} - Mar ${endYear})</option>
+            <option value="Select Month">Select Month</option>
+        `;
+
+            document.getElementById("monthNavbar").style.display = "none"; // Hide month list after selection
+        });
+    });
+
+
+function exportGstFile() {
+    let period = document.getElementById("period").value;
+    let financialYear = document.getElementById("businessYear").value; // Get full "2024-2025"
+
+    if (!financialYear || period === "select") {
+        alert("Please select a financial year and period before exporting.");
+        return;
+    }
+
+    let url = '@Url.Action("ExportToExcel", "TaxInvoice")' + "?financialYear=" + encodeURIComponent(financialYear) + "&period=" + encodeURIComponent(period);
+    window.location.href = url;
+}
+
+
+//  Load Business Years on Page Load
+document.addEventListener("DOMContentLoaded", function () {
+    populateBusinessYears();
+});
+
+</script>
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        @*<div class="d-flex" style="margin-top:-20px">
+            <h4 style="clip-path: polygon(0% 0%, 90% 0%, 100% 50%, 90% 100%, 0% 100%); background-color: #003399; color: white; padding: 5px 15px 5px 5px ">Accounts </h4>
+            <h4 style="cursor: pointer; color: white; clip-path: polygon(93% 0%, 100% 50%, 93% 100%, 0% 100%, 7% 50%, 0% 0%); background-color: #003399; padding: 5px 15px 5px 15px; " onclick="location.href='@Url.Action("Index","TaxInvoice")'">Tax Invoice</h4>
+        </div>*@
+
+
+        @*<div class="route-container">
+
+            <span class="route-path1">
+                Accounts
+            </span>
+
+            <span class="route-separator">
+                <i class="fa fa-angle-right"></i>
+            </span>
+
+            <span class="route-path2"
+                  onclick="location.href='@Url.Action("Index","TaxInvoice")'">
+                Tax Invoice
+            </span>
+
+        </div>*@
+
+        <div class="route-container">
+
+            <span class="route-path">
+                Accounts
+            </span>
+
+            <span class="route-separator">
+                <i class="fa fa-angle-right"></i>
+            </span>
+
+            <span class="route-path active-route"
+                  onclick="location.href='@Url.Action("Index","TaxInvoice")'">
+                Tax Invoice
+            </span>
+
+        </div>
+        <br />
+
+
+        <div class="panel panel-default outer-main-container">
+            <div class="form-group row main-heading">
+                <div class="col-lg-5 d-flex ">
+                    <i class="material-icons" style="font-size: 24px; margin-right: 10px;">file_copy</i>
+                    <h2>  Tax Invoice List</h2>
+                </div>
+                <!--<div class="col-lg-2">
+                <button type="submit" id="Search" value="Search" name="Search"-->
+                @*style="float: right; font-size: small; outline: none"*@
+                <!--class="btn btn-success btn-round search-bttn custo-inner small-action-btn">
+                    Search<i class="material-icons" style="font-size: 20px;padding-left:15px">search</i>
+                </button>
+            </div>-->
+                <!--<div class="col-lg-2">
+            <input type="button" id="CreateTaxInvoice" value="Create" class="btn small-action-btn btn-success btn-round create-bttn courierCreate custo-inner"-->
+                @*style="font-size: small; outline: none"*@
+                <!--onclick="location.href = '@Url.Action("Create", "TaxInvoice")'" />
+                <i class="fa fa-plus"></i>
+            </div>-->
+
+                <div class="col-lg-2">
+                    <button id="CreateTaxInvoice"
+                            class="btn btn-success btn-round create-bttn courierCreate custo-inner"
+                            onclick="location.href='@Url.Action("Create", "TaxInvoice")'">
+
+                         Create <i class="fa fa-plus ml-2"></i>
+                    </button>
+                </div>
+                <div class="col-lg-3">
+                    <input type="button" id="CreateSalesOrder" value="Export Gst File" class="btn btn-success btn-round create-bttn courierCreate custo-inner" @*style="font-size: small; outline: none"*@ onclick="showInvoicegst()" />
+                </div>
+            </div>
+
+            <div class="panel-body">
+
+
+                @Html.TextBox("details", null, new { @onkeyup = "myFunction(this.id)", @class = "form-control", style = "display: none;" })
+                @Html.TextBox("Edit", null, new { @onkeyup = "myFunction(this.id)", @class = "form-control", style = "display: none;" })
+                @using (Html.BeginForm("Index", "TaxInvoice", FormMethod.Post, new { id = "Tax_Invoice_List" }))
+                {
+                    <div class="search-section-lines">
+                        <div class="panel-body">
+                            <div class="form-group row">
+                                <div class="col-lg-2">
+                                    <label id="label">Sort/Search By :</label>
+                                    <div class="form-group row">
+                                        @Html.DropDownListFor(m => m.SortByColumnName, new List<SelectListItem>
+                                                                {
+                                            //new SelectListItem{ Text="Please Select", Value = "Please Select" },
+                                            new SelectListItem{ Text="Tax Invoice No.", Value = "TaxInvoiceNo" },
+                                            new SelectListItem{ Text="Sale Order No.", Value = "SaleOrderNo" },
+                                            new SelectListItem { Text="Company Name", Value ="CompanyName"},
+                                            //new SelectListItem{ Text="Zone", Value = "Zone" },
+                                          }, new { @class = "form-control dropdown-textbox ", style = "height:30px;margin-top:-3px;padding-top: 2px;font-size:15px;" })
+                                    </div>
+                                </div>
+                                <div class="col-lg-5">
+                                    <label id="label">Find :</label>
+
+                                    @Html.TextBoxFor(m => m.SearchByText, null, new
+                               {
+                                   @class = "form-control input-text-box fs-4",
+                                   @style = "font-size:small",
+                                   @oninput = "searcTaxInvoiceNo(this.id)",
+                                   @list = "json-datalistTaxInvoiceNo",
+
+                               })
+                                    <datalist id="json-datalistTaxInvoiceNo"></datalist>
+
+                                </div>
+
+                                <div class="col-lg-1">
+                                    <label id="label">Sort By :</label>
+                                    <div class="form-group row">
+                                        @Html.DropDownListFor(m => m.OrderByType, new List<SelectListItem>
+                                                                 {
+                                                                 //new SelectListItem{ Text="Please Select", Value = "Please Select" },
+                                                                 new SelectListItem{ Text="Z-A", Value = "Z-A" },
+                                                                 new SelectListItem{ Text="A-Z", Value = "A-Z" },
+                                                                 }, new { @class = "form-control dropdown-textbox fs-4", style = "height:30px;margin-top:-3px;padding-left: 12px;padding-top:2px;" })
+                                    </div>
+                                </div>
+
+
+                                <div class="col-lg-1">
+                                    <label id="label">Records</label>
+                                    @Html.TextBoxFor(m => m.RecordsPerPage, null, new
+                               {
+                                   @class = "form-control input-text-box fs-4",
+                                   style = "font-size:small;padding-left: 12px;padding-top:2px"
+
+                               })
+
+                                </div>
+
+                                <div class="col-lg-1">
+                                    <label id="label">Pg No.</label>
+                                    @Html.TextBox("Page", null, new
+                               {
+                                   @class = "form-control input-text-box fs-4",
+                                   @id = "Page",
+                                   style = "font-size:small"
+                               })
+                                </div>
+
+                                <div class="col-lg-2 d-flex align-items-end mb-2">
+                                    @*<h5 style="color: #e8e8e8">ignoresearch</h5>*@
+                                    <button type="submit" id="Search" value="Search" name="Search" class="btn btn-success btn-round search-bttn custo-inner ">
+                                        Search<i class="material-icons" style="font-size: 20px;padding-left:15px">search</i>
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                            <div class="@*form-group row*@">
+                                <div class="col-md-3 ">
+                                    <label id="label" style="color: #0077B3;  font-weight: 500 ">Company Name: </label>
+                                    @Html.CheckBoxFor(m => m.CompanyName, true)
+                                </div>
+                                <div class="col-md-3 ">
+                                    <label id="label" style="color: #0077B3; font-weight: 500">Tax Invoice Date :</label>
+                                    @Html.CheckBoxFor(m => m.TaxInvoiceDate, true)
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="@*panel panel-success*@" style="box-shadow:inset 4px 4px 4px gray;border-radius:10px">
+                        <div class="@*panel-body*@">
+                            <table class="table">
+                                <tr style=" border-bottom: 2px solid #fff; font-size: small">
+                                    <th width="3%" style="background-color: lightblue; font-family: Helvetica, sans-serif; color: midnightblue; border-right: 2px solid #fff">
+                                        No.
+                                    </th>
+                                    @if (Model.TaxInvoiceDate == true)
+                                    {
+                                        <th width="10%" style="background-color: lightblue; font-family: Helvetica, sans-serif; color: midnightblue; border-right: 2px solid #fff">
+                                            Tax Inv. Date
+                                        </th>
+                                    }
+                                    <th width="9%" style="background-color: lightblue; font-family: Helvetica, sans-serif; color: midnightblue; border-right: 2px solid #fff">
+                                        Tax Inv. No.
+
+                                    </th>
+                                    <th width="9%" style="background-color: lightblue; font-family: Helvetica, sans-serif; color: midnightblue; border-right: 2px solid #fff">
+                                        SO. No.
+                                    </th>
+                                    @if (Model.CompanyName == true)
+                                    {
+                                        <th width="33%" style="background-color: lightblue; font-family: Helvetica, sans-serif; color: midnightblue; border-right: 2px solid #fff">
+                                            Company Name
+                                        </th>
+                                    }
+
+                                    <th width="8%" style="background-color: lightblue; font-family: Helvetica, sans-serif; color: midnightblue; border-right: 2px solid #fff">
+                                        Total Amt.
+                                    </th>
+                                    <th width="14%" style="background-color: lightblue; font-family: Helvetica, sans-serif; color: midnightblue; border-right: 2px solid #fff">
+                                        Status
+                                    </th>
+                                    <th width="5%" style="background-color: lightblue; font-family: Helvetica, sans-serif; color: midnightblue; border-right: 2px solid #fff">
+                                        Dispatch
+                                    </th>
+
+                                    <th width="9%" style="background-color: lightblue; font-family: Helvetica, sans-serif; color: midnightblue">
+                                        Action
+                                    </th>
+
+                                </tr>
+
+                                @{ int sno = (Model.RequestedPageNumber - 1) * Model.RecordsPerPage + 1;
+                                    for (var i = 0; i < Model.TISearchedList.Count; i++)
+                                    {
+                                        var item = Model.TISearchedList[i];
+
+                                        <tr>
+                                            <td style="text-align:center">
+                                                @sno
+                                                @{ sno++; }
+                                            </td>
+
+                                            @if (Model.TaxInvoiceDate)
+                                            {
+                                                <td style="text-align:center">
+                                                    @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.TaxInvoiceDate))
+                                                </td>
+                                            }
+                                            <td style="text-align:center">
+                                                @Html.DisplayFor(modelItem => item.TaxInvoiceNo)
+                                            </td>
+                                            @if (item.SaleOrderNo == null)
+                                            {
+                                                <td>N.A.</td>
+                                            }
+                                            else
+                                            {
+                                                <td style="text-align:center"> @Html.DisplayFor(modelItem => item.SaleOrderNo)</td>
+                                            }
+
+                                            @if (Model.CompanyName == true)
+                                            {
+                                                <td style="text-align:left">
+                                                    @Html.DisplayFor(modelItem => item.CompanyName)
+                                                </td>
+                                            }
+
+                                            <td style="text-align:right">
+                                                @*@Math.Round(Convert.ToDouble(item.TotalAmount), 0)*@
+
+                                                @Math.Round(Convert.ToDouble(item.TotalAmount), 0, MidpointRounding.AwayFromZero)
+
+                                            </td>
+                                            <td style="text-align:center">
+                                                @Html.DisplayFor(modelItem => item.Status)
+
+                                            </td>
+
+                                            @*@if (item.StatusId == 10)
+                                            {
+                                                <td>
+                                                    Ready For Dispatch
+                                                </td>
+                                            }
+                                            else if (item.StatusId == 11)
+                                            {
+                                                <td>
+                                                    Dispatched
+                                                </td>
+                                            }
+
+                                            else
+                                            {
+                                                <td>
+                                                    N.A
+                                                </td>
+                                            }*@
+
+                                            @if (item.StatusId == 10 || item.StatusId == 12)
+                                            {
+
+                                                <td style="text-align:center">
+
+                                                    <span title="Create Dispatch" style=" color: midnightblue; cursor: pointer; ">
+                                                        <i class="material-icons"
+                                                           onclick="location.href = '@Url.Action("Create", // <-- Action Method Name
+                                                      "DispatchDetails", // <-- Controller Name
+                                                      new { TiNo = item.TaxInvoiceNo }, // <-- Route value
+                                                      null // <-- htmlArguments
+                                                      )'">send_time_extension</i>
+                                                    </span>
+
+                                                </td>
+
+                                            }
+                                            else
+                                            {
+                                                <td style="text-align:center">
+                                                    N.A
+                                                </td>
+                                            }
+                                            <td>
+                                                <div style="text-align:center">
+                                                    @if (Model.AllowEdit == true)
+                                                    {
+
+                                                        <span><i class="glyphicon glyphicon-edit" id="click" title="Edit" onclick="location.href = '@Url.Action("Edit", new { tino = item.TaxInvoiceNo })'"></i></span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span><i class="glyphicon glyphicon-edit" style="display:none" title="Edit" onclick="location.href = '@Url.Action("edit", new { tino = item.TaxInvoiceNo })'"></i></span>
+
+                                                    }
+                                                    @if (Model.AllowDetails == true)
+                                                    {
+                                                        <span><i class="glyphicon glyphicon-list" title="Details" onclick="location.href = '@Url.Action("Details",new {tino = item.TaxInvoiceNo })'"></i></span>
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <span><i class="glyphicon glyphicon-list" style="display:none" title="Details" onclick="location.href = '@Url.Action("Details",new {tino = item.TaxInvoiceNo })'"></i></span>
+
+                                                    }
+                                                    @*<span><i class="glyphicon glyphicon-print" title="Print" onclick="location.href = '@Url.Action("Print",new {id =item.TaxInvoiceID, item.TaxInvoiceNo })'"></i></span>*@
+                                                    <span>
+                                                        <i class="glyphicon glyphicon-print" title="View Tax Invoice"
+                                                           data-id="@item.TaxInvoiceID"
+                                                           data-mfgjournalno="@item.TaxInvoiceNo"
+                                                           onclick="showInvoiceAndPrint(this)">
+                                                        </i>
+                                                    </span>
+
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                    }
+                                }
+                            </table>
+                        </div>
+                    </div>
+                    <button id="goBackButton" class="btn btn-success custo-inner  back-arrow-bttn" style="display:none">
+                        <i class="material-icons" style="font-size: 20px;padding-right:15px">arrow_back</i>Back
+                    </button>
+
+
+
+
+
+
+
+                    <table align="center">
+                        <tr class="page">
+                            @if (Model.PageCount > 1)
+                            {
+                                @Html.HiddenFor(m => m.PageCount)
+                                <td>
+                                    @if (Model.RequestedPageNumber > 1)
+                                    {
+                                        <a id="FirstPage" href="#" class="btn btn-info custo-inner"
+                                           style="margin-right: 5px; background-image: linear-gradient(to right,#35d3e1,midnightblue); outline-style: none; border: none; padding: 5px 10px 5px 10px; color: #fff; font-size: 15px; font-family: helvetica "
+                                           onclick='funPageNoClicked(1);'>First</a>
+                                    }
+                                </td>
+
+                                <td>
+                                    @if (Model.RequestedPageNumber > 1)
+                                    {
+                                        <a id="PreviousPage" href="#" class="btn btn-info custo-inner"
+                                           style="margin-right: 10px; background-image: linear-gradient(to right,#35d3e1,midnightblue); outline-style: none; border: none; padding: 5px 10px 5px 10px; color: #fff; font-size: 15px; font-family: helvetica"
+                                           onclick='funPageNoClicked(@Model.RequestedPageNumber - 1);'><b><</b></a>
+                                    }
+                                </td>
+
+                                {
+                                    int startPage;
+                                    int endPage;
+
+                                    if (Model.PageCount <= 10)
+                                    {
+                                        startPage = 1;
+                                        endPage = Model.PageCount;
+                                    }
+                                    else
+                                    {
+                                        if (Model.RequestedPageNumber <= 6)
+                                        {
+                                            startPage = 1;
+                                            endPage = 10;
+                                        }
+                                        else if (Model.RequestedPageNumber >= Model.PageCount - 4)
+                                        {
+                                            startPage = Model.PageCount - 9;
+                                            endPage = Model.PageCount;
+                                        }
+                                        else
+                                        {
+                                            startPage = Model.RequestedPageNumber - 5;
+                                            endPage = Model.RequestedPageNumber + 4;
+                                        }
+                                    }
+
+                                    for (int pgno = startPage; pgno <= endPage; pgno++)
+                                    {
+                                        <td>
+                                            <a id="PageNo" href="#" class="btn btn-secondary btn-round @(pgno == Model.RequestedPageNumber ? "active" : "")" onclick='funPageNoClicked(@pgno);'>@pgno.ToString()</a>
+                                        </td>
+                                    }
+                                }
+
+                                <td>
+                                    @if (Model.RequestedPageNumber < Model.PageCount)
+                                    {
+                                        <a id="NextPage" href="#" class="btn btn-info custo-inner"
+                                           style="margin-left: 10px; background-image: linear-gradient(to right,#35d3e1,midnightblue); outline-style: none; border: none; padding: 5px 10px 5px 10px; color: #fff; font-size: 15px; font-family: helvetica"
+                                           onclick='funPageNoClicked(@Model.RequestedPageNumber + 1);'><b>></b></a>
+                                    }
+                                </td>
+                                <td>
+                                    @if (Model.RequestedPageNumber < Model.PageCount)
+                                    {
+                                        <a id="LastPage" href="#" class="btn btn-info custo-inner"
+                                           style="margin-left: 5px; background-image: linear-gradient(to right,#35d3e1,midnightblue); outline-style: none; border: none; padding: 5px 10px 5px 10px; color: #fff; font-size: 15px; font-family: helvetica"
+                                           onclick='funPageNoClicked(@Model.PageCount);'>Last</a>
+                                    }
+                                </td>
+                            }
+                            @Html.HiddenFor(x => x.isPageNavigationRequested)
+                            @Html.HiddenFor(x => x.RequestedPageNumber)
+                        </tr>
+                    </table>
+
+                    {
+                        <div class="pager">
+
+
+                        </div>
+                    }
+                }
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Modal Overlay -->
+        <div class="modalOverlay" id="purchaseModalOverlay" onclick="closeModal('invoiceModal')"></div>
+
+        <!-- Modal Content -->
+        <div class="modal" id="invoiceModal" style=" backdrop-filter: blur(1px); background: rgba(0, 0, 0, 0.5); opacity: 1;">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content" style="margin-top: -6%; margin-bottom: 20%;">
+                    <div class="modal-header" style="background-color: #e5e6e7; box-shadow: 6px 6px 6px #bfc3cf; margin-inline: 10px">
+                        <h3 class="modal-title" id="invoiceModalLabel" style="margin-top: -15px; font-family: Helvetica; color: midnightblue">Tax Invoice</h3>
+
+                        <i class="material-icons" data-dismiss="modal" aria-label="Close" onclick="closeModal('invoiceModal')"
+                           style="color: midnightblue; font-size: 30px; cursor: pointer;margin-top:-15px">cancel</i>
+                    </div>
+                    <div class="modal-body">
+                        <!-- iframe for displaying the print page -->
+                        <iframe id="invoiceIframe" style="width: 100%; height: 500px;" frameborder="0"></iframe>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success btn-round custo-inner" onclick="closeModal('invoiceModal')" style=" background-image: linear-gradient(to right,#35d3e1,midnightblue); color: white; font-family: Helvetica; box-shadow: -4px -4px 8px rgba(255, 255, 255, 0.7), 4px 4px 8px rgba(128, 128, 128, 0.7); outline-style: none; border: none; padding: 5px 20px 5px 20px;">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal Overlay -->
+        <div class="modalOverl" id="purchaseModalOverl" onclick="closeModal('gstModal')"></div>
+
+        <!-- Modal Content -->
+        <div class="modal" id="gstModal" style=" backdrop-filter: blur(1px); background: rgba(0, 0, 0, 0.5); opacity: 1;">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: #e5e6e7; box-shadow: 6px 6px 6px #bfc3cf; margin-inline: 10px">
+                        <h4 class="modal-title" id="gstModalLabel" style="margin-top: -15px; font-family: Helvetica; color: midnightblue">Tax Invoice List for GSTR-1</h4>
+
+                        <i class="material-icons" data-dismiss="modal" aria-label="Close" onclick="closeModal('gstModal')"
+                           style="color: midnightblue; font-size: 30px; cursor: pointer;margin-top:-15px">cancel</i>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-lg-3" style="position: relative;">
+                            <label id="label">Select Business Year :</label>
+                            <select class="form-control" id="businessYear" style="height: 35px; font-size: large" onchange="updatePeriods()">
+                                <option value="">--Select Year--</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-3">
+                            <label id="label">Select Period :</label>
+                            <select class="form-control" id="period" style="height: 35px; font-size: large " onchange="toggleMonthNavbar()">
+                                <option value="select">Select Period</option>
+                                <option value="Select Month">Select Month</option>
+                                <option value="Yearly">Yearly</option>
+                            </select>
+                        </div>
+
+                        <!-- Month Selection List (Initially Hidden) -->
+                        <div id="monthNavbar" class="month-navbar" style="display: none;width:20%;margin-top:40px">
+                            <label>Select Month</label>
+                            <div class="month-container" style="font-size: large;">
+                                <button class="month-btn" data-month="January">January</button>
+                                <button class="month-btn" data-month="February">February</button>
+                                <button class="month-btn" data-month="March">March</button>
+                                <button class="month-btn" data-month="April">April</button>
+                                <button class="month-btn" data-month="May">May</button>
+                                <button class="month-btn" data-month="June">June</button>
+                                <button class="month-btn" data-month="July">July</button>
+                                <button class="month-btn" data-month="August">August</button>
+                                <button class="month-btn" data-month="September">September</button>
+                                <button class="month-btn" data-month="October">October</button>
+                                <button class="month-btn" data-month="November">November</button>
+                                <button class="month-btn" data-month="December">December</button>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <br />
+                            <!-- Export Button -->
+                            <button class="btn btn-success btn-round custo-inner" style=" background-image: linear-gradient(to right,#35d3e1,midnightblue); color: white; font-family: Helvetica; box-shadow: -4px -4px 8px rgba(255, 255, 255, 0.7), 4px 4px 8px rgba(128, 128, 128, 0.7); outline-style: none; border: none; padding: 5px 20px 5px 20px;" onclick="exportGstFile()">
+                                Export Gst File
+                            </button>
+                        </div>
+
+                        <!-- iframe for displaying the print page -->
+                        <iframe id="invoiceIframe" style="width: 10%; height: 100px;" frameborder="0"></iframe>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success btn-round custo-inner" onclick="closeModal('gstModal')" style=" background-image: linear-gradient(to right,#35d3e1,midnightblue); color: white; font-family: Helvetica; box-shadow: -4px -4px 8px rgba(255, 255, 255, 0.7), 4px 4px 8px rgba(128, 128, 128, 0.7); outline-style: none; border: none; padding: 5px 20px 5px 20px;">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<script>
+    $(function () {
+    $("#Search").click(function () {
+    var requestedPageNumber = parseInt($("#Page").val());
+    if (!isNaN(requestedPageNumber) && requestedPageNumber > 0 && requestedPageNumber <= @Model.PageCount) {
+    funPageNoClicked(requestedPageNumber);
+    }
+    });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        var table = $("#stockTable").DataTable({
+            // ... (your existing DataTable initialization code)
+        });
+
+        var searchInput = $("#SearchByText");
+        var goBackButton = $("#goBackButton");
+
+        // Check if the search input has a value when the page loads
+        if (searchInput.val()) {
+            goBackButton.show(); // Show the "GoBack" button if there's a value in the search input
+        }
+
+        // Handle the click event of the "GoBack" button
+        goBackButton.on("click", function () {
+            // Clear the value in the search input
+            searchInput.val('');
+
+            // Reload the page
+            location.reload();
+        });
+
+        // Rest of your existing code...
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+
+        /*module button*/
+        $.ajax({
+            url: '/Settings/GetAllColors',
+            type: 'GET',
+            success: function (colors) {
+                // Example: Apply Inner Button colors
+                var bgColor5 = colors.InnerButtonColor; // inner
+                var fontColor5 = colors.InnerButtonFontColor; // inner text
+
+                // Example for all preview boxes (optional)
+                $('.custo-inner').css('background', bgColor5);//  inner
+                $('.custo-inner').css('color', fontColor5);// inner text
+            },
+            error: function () {
+                console.error("Failed to load color settings.");
+            }
+        });
+
+    });
+</script>

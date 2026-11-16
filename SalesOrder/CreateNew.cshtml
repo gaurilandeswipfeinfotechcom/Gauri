@@ -1,0 +1,2464 @@
+﻿
+
+@model ERPEntities.SalesProcessing
+
+@{ ViewBag.Title = "CreateNew";
+    Layout = "~/Views/Shared/_SwipfeMaster.cshtml"; }
+
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.1 /themes/smoothness/jquery-ui.css">
+
+<link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css"
+      rel="Stylesheet" type="text/css" />
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="Stylesheet" type="text/css" />
+
+<link href="~/Content/ERPStyle.css" rel="stylesheet" />
+<script>
+
+    /* =========================================================
+       OLD / NEW VIEW TOGGLE
+       ========================================================= */
+    //$(document).on("change", "#viewToggle", function () {
+    //    if ($(this).is(":checked")) {
+    //        localStorage.setItem("viewMode", "old");
+    //        window.location.href = "/SalesOrder/Create";
+    //    }
+    //});
+    //$(document).ready(function () {
+    //    try { localStorage.setItem("viewMode", "old"); } catch (e) { }
+    //    /* $("#viewToggle").prop("checked",true );*/
+    //    window.location.href = "/SalesOrder/Create";
+    //    $("#shippAddress").hide();
+    //});
+
+    $(document).on("change", "#viewToggle", function () {
+        if ($(this).is(":checked")) {
+            localStorage.setItem("viewMode", "old");
+            window.location.href = "/SalesOrder/Create";
+        }
+    });
+    //$(document).on("change", "#viewToggle", function () {
+    //    var isNew = $(this).is(":checked");
+    //    try { localStorage.setItem("viewMode", isNew ? "new" : "old"); } catch (e) { }
+    //    window.location.href = isNew ? "/SalesOrder/CreateNew" : "/SalesOrder/Create";
+    //});
+
+    var orderItems = [];
+    var index;
+    var itid, itnm;
+
+    var grate, statename, cityname, GSTRegistrationId;
+
+    /* =========================================================
+       HELPERS
+       ========================================================= */
+    function fv(id) { return ($('#' + id).val() || '').toString().trim(); }
+
+    function toNum(x) { var n = parseFloat(x); return isNaN(n) ? 0 : n; }
+
+    function fmtDate(d) {
+        function pad(s) { return (s < 10) ? '0' + s : s; }
+        return [pad(d.getDate()), pad(d.getMonth() + 1), d.getFullYear()].join('/');
+    }
+
+    // "/Date(1735516800000)/" -> Date
+    function parseMsDate(s) {
+        var m = /\/Date\((-?\d+)\)\//.exec(s || '');
+        return m ? new Date(parseInt(m[1], 10)) : null;
+    }
+
+    function fullName(d) {
+        return d.Title + " " + d.FirstName + (d.MiddleName ? " " + d.MiddleName : "") + " " + d.LastName;
+    }
+
+    function setErr(sel, msg) { $(sel).html('<span style="color:red">' + msg + '</span>').show(); }
+
+    // shows street address + locality, taluka, district, state, pincode as one text
+    function refreshAddr() {
+        var parts = ["#Address", "#Locality", "#Taluka", "#District", "#State", "#Pincode1"], out = [];
+        for (var i = 0; i < parts.length; i++) {
+            var v = ($(parts[i]).val() || "").toString().trim();
+            if (v !== "") out.push(v);
+        }
+        $("#AddressView").val(out.join(", "));
+    }
+
+    /* =========================================================
+       SEARCH BY QUOTATION NUMBER
+       ========================================================= */
+    $(document).ready(function () {
+        // auto search when the quotation dropdown already has a value
+        var q = fv('QuotationNo');
+        if (q !== "" && q !== "Please Select") {
+            GetDetailsByQuoNo();
+        }
+    });
+
+    function GetDetailsByQuoNo() {
+
+        $('#orderItems').empty();
+        orderItems = [];
+
+        var qno = fv('QuotationNo');
+        if (qno === '') {
+            setErr('#reqquo', 'Quotation No Required');
+            return;
+        }
+        $('#reqquo').html('').hide();
+
+        $.ajax({
+            url: '/SalesOrder/GetDetailsByQuoNo/',
+            data: JSON.stringify({ Quono: qno }),
+            dataType: "json",
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            success: function (result) {
+
+                var r = result && result[0];
+                if (!r) { alert('Quotation details not found.'); return; }
+
+                $('#orderItems').empty();
+                orderItems = [];
+
+                var qd = parseMsDate(r.QuoteDate);
+                if (qd) $("#QuotationDate").val(fmtDate(qd));
+
+                var ed = parseMsDate(r.EnquiryDate);
+                if (ed) $("#EnquiryDate").val(fmtDate(ed));
+
+                // company, address, contact
+                $("#LedgerID").val(r.LedgerID);
+                GetCompanyInfo($("#LedgerID").val());
+
+                $("#AddressTitleID").val(r.AddressTitleID);
+                GetAddrCPInfoDirect($("#AddressTitleID").val());
+
+                $("#Address").val(r.Address);
+                $("#Pincode1").val(r.Pincode);
+                $("#State").val(r.State);
+                $("#AddressTitle").val(r.AddressTitle);
+                $("#LandMark").val(r.LandMark);
+                $("#Locality").val(r.Locality);
+                $("#Taluka").val(r.Taluka);
+                $("#District").val(r.District);
+                $("#Country").val(r.Country);
+
+                // fields that come from the quotation and cannot be changed here
+                $("#TermsOfDeliveryID").val(r.TermsOfDeliveryID).prop("disabled", true);
+                $("#PaymentTermID").val(r.PaymentTermID).prop("disabled", true);
+                $("#Discount").val(r.DiscountPercent).prop("disabled", true);
+                $("#EnquiryNo").val(r.EnquiryNo);
+                $("#Note").val(r.Note);
+
+                statename = r.State;
+                cityname = r.Taluka;
+                refreshAddr();
+
+                // items
+                var pro = r.pro || [];
+                if (pro.length) grate = pro[0].GSTRate;
+                var disc = toNum($("#Discount").val());
+
+                for (var i = 0; i < pro.length; i++) {
+                    var p = pro[i], apprate, amt;
+                    if (p.hasPreferredItem) {
+                        apprate = p.RatePerUnit;
+                        amt = (p.RatePerUnit * p.Quantity).toFixed(2);
+                    } else {
+                        apprate = (disc === 0)
+                            ? toNum(p.RatePerUnit).toFixed(2)
+                            : (p.RatePerUnit * (1 - disc / 100)).toFixed(2);
+                        amt = (apprate * p.Quantity).toFixed(2);
+                    }
+                    orderItems.push({
+                        SaleOrderNo: fv('SaleOrderNo'),
+                        ItemID: p.ItemID,
+                        ItemName: p.ItemName,
+                        Quantity: p.Quantity,
+                        ItemCode: p.ItemCode,
+                        HSNCode: p.HSNCode,
+                        HSNClassification: p.HSNClassification,
+                        GSTRate: p.GSTRate,
+                        RatePerUnit: p.RatePerUnit,
+                        ApplicableRate: apprate,
+                        Amount: amt,
+                        WeightPerUnit: p.WeightPerUnit,
+                        WeightOfPackingBox: p.WeightOfPackingBox
+                    });
+                }
+
+                GeneratedItemsTable();
+
+                var subtot = 0, weight = 0;
+                for (i = 0; i < orderItems.length; i++) {
+                    subtot += parseFloat(orderItems[i]["Amount"].toString());
+                    weight += (toNum(orderItems[i]["WeightPerUnit"]) + toNum(orderItems[i]["WeightOfPackingBox"])) * parseInt(orderItems[i]["Quantity"].toString(), 10);
+                }
+                $("#ProductSubTotal").val(subtot);
+                $("#TotalWeightInKg").val(Math.round(weight));
+
+                // dispatch mode, courier, transport mode as saved in the quotation
+                applyDispatch(r.SendType, r.RateType, r.CourierID);
+
+                if (r.SendType) {
+                    checksendtype(r.SendType);
+                    OtherCourier();
+                    if ($("#CourierID").val() == 6) $("#FreightCharges").val(r.FreightCharges);
+                    calbyother();
+                    if (r.SendType === 'By Courier' && $("#CourierID").val() != 6 && fv('RateType')) {
+                        checkratetype(fv('RateType'));
+                    }
+                }
+            },
+            error: function (response) { alert('Error: ' + response.responseText); }
+        });
+    }
+
+    // Dispatch Mode / Transport Mode are dropdowns (#SendType / #RateType)
+    function applyDispatch(sendType, rateType, courierId) {
+        if (sendType === 'By Hand') {
+            $('#SendType').val('By Hand');
+            $('#CourierID').val('').prop('disabled', true);
+            $('#RateType').prop('disabled', true);
+        }
+        else if (sendType === 'By Courier') {
+            $('#SendType').val('By Courier');
+            $('#CourierID').val(courierId).prop('disabled', false);
+            if (rateType) $('#RateType').val(rateType);
+            $('#RateType').prop('disabled', false);
+        }
+    }
+
+    /* =========================================================
+       COMPANY / ADDRESS / CONTACT
+       ========================================================= */
+    function GetCompanyInfo(code) {
+
+        $.ajax({
+            url: '@Url.Action("GetCompanyInfo")',
+            data: { "LedgerID": code },
+            type: "POST",
+            dataType: "json",
+            async: false,
+
+            success: function (result) {
+
+                $("#AddressTitleID").html("");
+
+                $.each(result.d1, function (i, data) {
+                    $('<option>', { value: data.AddressTitleID, text: data.AddressTitleID })
+                        .html(data.AddressTitle).appendTo("#AddressTitleID");
+                });
+                var a = $("#AddressTitleID").val();
+
+                $.ajax({
+                    url: '@Url.Action("getAddressInfo")',
+                    data: '{add: "' + a + '"}',
+                    type: "POST",
+                    dataType: "json",
+                    async: false,
+                    contentType: "application/json; charset=utf-8",
+
+                    success: function (result1) {
+                        if (result1.length > 0) {
+                            var vdata = result1;
+
+                            $("#Address").val(vdata[0].Address);
+                            $("#State").val(vdata[0].State);
+                            $("#Pincode1").val(vdata[0].Pincode);
+                            $("#Locality").val(vdata[0].Locality);
+                            $("#Taluka").val(vdata[0].Taluka);
+                            $("#Country").val(vdata[0].Country);
+                            $("#District").val(vdata[0].District);
+
+                            statename = vdata[0].State;
+                            cityname = vdata[0].Taluka;
+                            GSTRegistrationId = vdata[0].GSTRegistrationId;
+                        }
+                    },
+                    failure: function (response) { alert(response.responseText); },
+                    error: function (response) { alert(response.responseText); }
+                });
+            },
+            error: function (reponse) { alert("error : " + reponse); }
+        });
+
+        refreshAddr();
+    }
+
+    function GetAddrCPInfoDirect(code) {
+
+        var a = $("#AddressTitleID").val();
+
+        $.ajax({
+            url: '@Url.Action("getAddressInfo")',
+            data: '{add: "' + a + '"}',
+            type: "POST",
+            dataType: "json",
+            async: false,
+            contentType: "application/json; charset=utf-8",
+
+            success: function (result1) {
+                if (result1.length > 0) {
+                    var vdata = result1;
+
+                    $("#Address").val(vdata[0].Address);
+                    $("#AddressTitle").val(vdata[0].AddressTitle);
+                    $("#LandMark").val(vdata[0].LandMark);
+                    $("#Locality").val(vdata[0].Locality);
+                    $("#Taluka").val(vdata[0].Taluka);
+                    $("#District").val(vdata[0].District);
+                    $("#Pincode1").val(vdata[0].Pincode);
+                    $("#State").val(vdata[0].State);
+                    $("#Country").val(vdata[0].Country);
+                    GSTRegistrationId = vdata[0].GSTRegistrationId;
+                    statename = vdata[0].State;
+                    cityname = vdata[0].Taluka;
+                }
+            },
+            failure: function (response) { alert(response.responseText); },
+            error: function (response) { alert(response.responseText); }
+        });
+
+        $.ajax({
+            url: '@Url.Action("GetCPInfo")',
+            data: { "AddressTitleID": code },
+            type: "POST",
+            dataType: "json",
+            async: false,
+            success: function (result) {
+                var vdata1 = result.d1;
+                var vdata3 = result.d3;
+
+                // Contact Person dropdown
+                $("#ContactPersonName").html("");
+                $.each(vdata1, function (i, data) {
+                    var nm = fullName(data);
+                    $('<option>', { value: nm, text: nm }).appendTo("#ContactPersonName");
+                });
+
+                // Country code and designation from the first person (default)
+                if (vdata1.length > 0) {
+                    $("#CountryCode1").val(vdata1[0].CountryCode);
+                    $("#CountryCode2").val(vdata1[0].CountryCode);
+                    $("#CPDesignation").val(vdata1[0].CPDesignation);
+                }
+
+                // Office mobile numbers and emails
+                $("#OfficeMobileNo").html("");
+                $("#OfficeEmailId").html("");
+                $.each(vdata3, function (j, data) {
+                    if (data.OfficeMobileNo != null) {
+                        $('<option>', { value: data.OfficeMobileNo, text: data.OfficeMobileNo }).appendTo("#OfficeMobileNo");
+                    }
+                    if (data.OfficeEmailId != null) {
+                        $('<option>', { value: data.OfficeEmailId, text: data.OfficeEmailId }).appendTo("#OfficeEmailId");
+                    }
+                });
+            },
+            error: function (response) { alert("Error: " + response.responseText); }
+        });
+
+        refreshAddr();
+    }
+
+    function GetCPDetails(code) {
+
+        $.ajax({
+            url: '@Url.Action("GetCPDetails")',
+            data: { "ContactPersonName": code, "LedgerID": $("#LedgerID").val(), "AddressTitleID": $("#AddressTitleID").val() },
+            type: "POST",
+            dataType: "json",
+            async: false,
+
+            success: function (result) {
+                $("#CountryCode1").val(result[0].CountryCode);
+                $("#CountryCode2").val(result[0].CountryCode);
+                $("#OfficeMobileNo").val(result[0].OfficeMobileNo);
+                $("#OfficeEmailId").val(result[0].OfficeEmailId);
+                $("#CPDesignation").val(result[0].CPDesignation);
+            },
+            error: function (reponse) { alert("error : " + reponse); }
+        });
+    }
+
+    function GetCPDetailsByOffmobno(code) {
+
+        $.ajax({
+            url: '@Url.Action("GetCPDetailsByOffmobno")',
+            data: { "OffMobile": code },
+            type: "POST",
+            dataType: "json",
+            async: false,
+
+            success: function (result) {
+
+                $("#ContactPersonName").val("Please Select");
+                $("#OfficeEmailId").val("Please Select");
+                if (result.d2 == true) {
+                    $("#CountryCode1").val(result.d1[0].CountryCode);
+                    $("#CountryCode2").val(result.d1[0].CountryCode);
+                    $("#OfficeEmailId").val(result.d1[0].OfficeEmailId);
+                    $("#ContactPersonName").val(fullName(result.d1[0]));
+                }
+                else {
+                    $("#OfficeEmailId").val(result.d1[0].OfficeEmailId);
+                }
+                $("#CPDesignation").val(result.d1 && result.d1[0] ? result.d1[0].CPDesignation : "");
+            },
+            error: function (reponse) { alert("error : " + reponse); }
+        });
+    }
+
+    function GetCPDetailsByOffemail(code) {
+
+        $.ajax({
+            url: '@Url.Action("GetCPDetailsByOffemail")',
+            data: { "OffEmail": code },
+            type: "POST",
+            dataType: "json",
+
+            success: function (result) {
+
+                $("#ContactPersonName").val("Please Select");
+                $("#OfficeMobileNo").val("Please Select");
+
+                if (result.d2 == true) {
+                    $("#CountryCode1").val(result.d1[0].CountryCode);
+                    $("#CountryCode2").val(result.d1[0].CountryCode);
+                    $("#ContactPersonName").val(fullName(result.d1[0]));
+                    $("#OfficeMobileNo").val(result.d1[0].OfficeMobileNo);
+                }
+                else {
+                    $("#OfficeMobileNo").val(result.d1[0].OfficeMobileNo);
+                }
+                $("#CPDesignation").val(result.d1 && result.d1[0] ? result.d1[0].CPDesignation : "");
+            },
+            error: function (reponse) { alert("error : " + reponse); }
+        });
+    }
+
+    /* =========================================================
+       SHIPPING ADDRESS
+       ========================================================= */
+    function checkAdd(code) {
+        if (code == "No") {
+            $("#shippAddress").show();
+        }
+        else {
+            $("#ShippingAddress").val('');
+            $("#ShipAdd").html('');
+            $("#shippAddress").hide();
+        }
+    }
+
+    $(document).ready(function () {
+
+        // punctuation spacing while typing
+        $('#ShippingAddress').keyup(function () {
+            var v = this.value;
+            var fixes = [
+                v.replace(/(?=\S)[,.!?:;)](?=\S)/g, '$& '),
+                v.replace(/\s+([,.!?:;)])/g, "$1"),
+                v.replace(/(?=\S)[&](?=\S)/g, ' & '),
+                v.replace(/\b[(]/g, ' ('),
+                v.replace(/(?=\S)[-](?=\S)/g, ' - '),
+                v.replace(/(?=\S)[\/](?=\S)/g, ' / ')
+            ];
+            for (var i = 0; i < fixes.length; i++) {
+                if (fixes[i] != v) { this.value = fixes[i]; break; }
+            }
+
+            // length warning
+            var max = parseInt(this.getAttribute("maxlength"));
+            if (max && this.value.length >= max) {
+                $("#ShipAdd").html('<span style="color:red">Maximum ' + max + ' characters allowed.</span>').show();
+            } else {
+                $("#ShipAdd").html('');
+            }
+        });
+
+        // capitalise each word
+        $('#ShippingAddress').change(function () {
+            this.value = this.value.replace(/\w\S*/g, function (a) { return a.charAt(0).toUpperCase() + a.substr(1).toLowerCase(); });
+        });
+
+        // trim spaces
+        $('#ShippingAddress').blur(function () {
+            $(this).val($.trim($(this).val()));
+        });
+    });
+
+    /* =========================================================
+       ITEMS
+       ========================================================= */
+    // recalculates sub total, weight and then freight / GST / total
+    function refreshTotals() {
+        var subtot = 0, totalWeight = 0, i;
+        for (i = 0; i < orderItems.length; i++) {
+            subtot += parseFloat(orderItems[i]["Amount"].toString());
+            totalWeight += (toNum(orderItems[i]["WeightPerUnit"]) + toNum(orderItems[i]["WeightOfPackingBox"])) * parseInt(orderItems[i]["Quantity"].toString(), 10);
+        }
+        $("#ProductSubTotal").val(subtot);
+        $("#TotalWeightInKg").val(Math.round(totalWeight));
+
+        var st = fv('SendType');
+        if (!st) return;
+        checksendtype(st);
+        OtherCourier();
+        calbyother();
+        if (st === 'By Courier' && $('#CourierID').val() && $('#CourierID').val() != 6 && fv('RateType')) {
+            checkratetype(fv('RateType'));
+        }
+    }
+
+    function AddProduct(nm) {
+
+        var quan;
+
+        itid = fv('ItemID');
+        itnm = $('#ItemID option:selected').text().trim();
+        quan = parseInt(fv('Quantity'));
+
+        if (nm == "Add") {
+
+            var isAllValid = true;
+            if (fv('ItemID') == '') {
+                $('#ItemID').focus();
+                isAllValid = false;
+                setErr('#reqitem', 'Item Name Required');
+            }
+            else {
+                $("#reqitem").html("").hide();
+            }
+
+            if (fv('Quantity') == '') {
+                $('#Quantity').focus();
+                isAllValid = false;
+                setErr('#reqqty', 'Quantity Required');
+            }
+            else {
+                $("#reqqty").html("").hide();
+                if (/^[0-9]*$/.test(fv('Quantity'))) {
+                    $("#regqty").html("").hide();
+                }
+                else {
+                    setErr('#regqty', 'Enter Valid Quantity');
+                    isAllValid = false;
+                }
+            }
+
+            if (isAllValid) {
+                for (var k = 0; k < orderItems.length; k++) {
+                    if (orderItems[k].ItemID.toString() == itid) {
+                        alert("Item Already Exist In List");
+                        $('#ItemID').val('').focus();
+                        $('#ItemCode').val('');
+                        $('#Quantity').val('');
+                        isAllValid = false;
+                    }
+                }
+            }
+
+            if (isAllValid) {
+                $.ajax({
+                    url: '@Url.Action("GetCode")',
+                    data: { "ItemID": itid, "AddressTitleId": fv('AddressTitleID') },
+                    type: "POST",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.length > 0) {
+
+                            for (var i = 0; i < data.length; i++) {
+                                var irate = data[i].RatePerUnit;
+                                var apprate = data[i].hasPreferredItem
+                                    ? parseFloat(irate).toFixed(2)
+                                    : parseFloat(irate * (1 - toNum($("#Discount").val()) / 100)).toFixed(2);
+                                var amt = (parseFloat(apprate) * quan).toFixed(2);
+
+                                orderItems.push({
+                                    SaleOrderNo: fv('SaleOrderNo'),
+                                    ItemID: parseInt(itid),
+                                    ItemName: itnm,
+                                    Quantity: quan,
+                                    ItemCode: data[i].ItemCode,
+                                    HSNCode: data[i].HSNCode,
+                                    HSNClassification: data[i].HSNClassification,
+                                    GSTRate: data[i].GSTRate,
+                                    RatePerUnit: data[i].RatePerUnit,
+                                    ApplicableRate: apprate,
+                                    Amount: amt,
+                                    WeightPerUnit: data[i].WeightPerUnit,
+                                    WeightOfPackingBox: data[i].WeightOfPackingBox,
+                                    MfgClosingQuantity: quan
+                                });
+                            }
+                            GeneratedItemsTable();
+                            refreshTotals();
+                        }
+                    }
+                });
+
+                $('#ItemID').val('').focus();
+                $('#ItemCode').val('');
+                $('#Quantity').val(1);
+            }
+        }
+        else if (nm == "Update") {
+            var qtyNew = parseInt($('#Quantity').val());
+
+            $.ajax({
+                url: '@Url.Action("GetCode")',
+                data: { "ItemID": itid, "AddressTitleId": fv('AddressTitleID') },
+                type: "POST",
+                dataType: "json",
+                success: function (data) {
+                    if (data.length > 0) {
+                        var irate = data[0].RatePerUnit, apprate;
+
+                        if (data[0].hasPreferredItem) {
+                            apprate = parseFloat(irate).toFixed(2);
+                        } else if (toNum($("#Discount").val()) != 0) {
+                            apprate = (parseFloat(irate) * (1 - toNum($("#Discount").val()) / 100)).toFixed(2);
+                        } else {
+                            apprate = parseFloat(irate).toFixed(2);
+                        }
+
+                        var row = orderItems[index];
+                        row["ItemID"] = itid;
+                        row["Quantity"] = qtyNew;
+                        row["MfgClosingQuantity"] = qtyNew;
+                        row["ApplicableRate"] = apprate;
+                        row["Amount"] = (apprate * qtyNew).toFixed(2);
+                        row["ItemName"] = data[0].ItemName;
+                        row["ItemCode"] = data[0].ItemCode;
+                        row["HSNCode"] = data[0].HSNCode;
+                        row["HSNClassification"] = data[0].HSNClassification;
+                        row["RatePerUnit"] = data[0].RatePerUnit;
+                        row["WeightPerUnit"] = data[0].WeightPerUnit;
+                        row["WeightOfPackingBox"] = data[0].WeightOfPackingBox;
+                        row["GSTRate"] = data[0].GSTRate;
+
+                        GeneratedItemsTable();
+                        refreshTotals();
+                    }
+                }
+            });
+
+            $("#add").val('Add');
+            $('#ItemID').val('');
+            $('#ItemCode').val('');
+            $('#Quantity').val(1);
+        }
+    }
+
+    function GetCode(code) {
+
+        $.ajax({
+            url: '@Url.Action("GetCode")',
+            data: { "ItemID": code, "AddressTitleId": fv('AddressTitleID') },
+            type: "POST",
+            dataType: "json",
+
+            success: function (data) {
+                if (data.length > 0) {
+                    $("#ItemCode").val(data[0].ItemCode);
+                    $("#ItemCode").attr("readonly", true);
+                }
+            }
+        });
+    }
+
+    function GeneratedItemsTable() {
+
+        if (orderItems.length > 0) {
+            var $list = $('<div class="eq-qlist"/>');
+
+            $.each(orderItems, function (i, val) {
+
+                var iname = val.ItemName;
+                $.ajax({
+                    url: '@Url.Action("GetIName")',
+                    data: { "ItmID": val.ItemID },
+                    type: "POST",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.length > 0) { iname = data[0].ItemName; }
+                    }
+                });
+                var rowIdx = i;
+                var $row = $('<div class="eq-qitem"/>');
+                $row.append($('<div class="eq-qitem-name"/>').text(iname));
+                var $meta = $('<div class="eq-qitem-meta"/>');
+                $meta.append('<span><b>Qty:</b> ' + val.Quantity + '</span>');
+                $meta.append('<span><b>Code:</b> ' + (val.ItemCode || '') + '</span>');
+                $meta.append('<span><b>HSN:</b> ' + (val.HSNCode || '') + '</span>');
+                $meta.append('<span><b>GST:</b> ' + val.GSTRate + '%</span>');
+                $meta.append('<span><b>Rate:</b> ' + val.RatePerUnit + '</span>');
+                $meta.append('<span><b>App.Rate:</b> ' + val.ApplicableRate + '</span>');
+                $meta.append('<span><b>Amt:</b> ' + val.Amount + '</span>');
+                $row.append($meta);
+
+                var $remove = $('<button type="button" class="eq-mini" title="Remove">X</button>');
+                $remove.click(function (e) {
+                    e.preventDefault();
+                    orderItems.splice(rowIdx, 1);
+                    GeneratedItemsTable();
+                    refreshTotals();
+                });
+
+                var $Edit = $('<button type="button" class="eq-mini" title="Edit">EDIT</button>');
+                $Edit.click(function (e) {
+                    e.preventDefault();
+                    $('#ItemID').val(val.ItemID);
+                    $('#ItemCode').val(val.ItemCode);
+                    $('#Quantity').val(val.Quantity);
+                    $("#add").val('Update');
+                    index = rowIdx;
+                });
+
+                var $actions = $('<div class="eq-qitem-actions"/>');
+                $actions.append($Edit).append($remove);
+                $row.append($actions);
+
+                $list.append($row);
+            });
+            $('#orderItems').html($list);
+        }
+        else {
+            $('#orderItems').html('');
+        }
+    }
+
+    /* =========================================================
+       COURIER / DISPATCH / CALCULATION
+       ========================================================= */
+    // dropdown arrow buttons (Dispatch / Transport mode)
+    function changeDropdownOption(dropdownId, direction) {
+        var dropdown = document.getElementById(dropdownId);
+        if (!dropdown || dropdown.disabled || dropdown.options.length === 0) return;
+
+        var nextIndex = dropdown.selectedIndex + direction;
+        if (nextIndex < 0 || nextIndex >= dropdown.options.length) return;
+
+        dropdown.selectedIndex = nextIndex;
+        dropdown.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+
+    // courier dropdown changed
+    function onCourierChange() {
+        OtherCourier();
+        if (fv('SendType') === 'By Courier' && $('#CourierID').val() && $('#CourierID').val() != 6 && fv('RateType')) {
+            checkratetype(fv('RateType'));
+        }
+    }
+
+    // OTHER COURIER (id 6): freight is typed by the user, no transport mode
+    function OtherCourier() {
+        if ($("#CourierID").val() == 6) {
+            $("#RateType").prop("disabled", true);
+            $("#FreightCharges").attr("readonly", false);
+            $("#FreightCharges").val(0);
+            calbyother();
+        }
+        else {
+            $("#RateType").prop("disabled", fv('SendType') === 'By Hand');
+        }
+    }
+
+    function calbyother() {
+        if ($("#CourierID").val() == 6) {
+
+            $("#FreightCharges").attr("readonly", false);
+
+            var psubfr = parseFloat($("#ProductSubTotal").val()) + parseFloat($("#FreightCharges").val());
+
+            var GstAmount = ((psubfr * grate) / 100).toFixed(2);
+            $("#GSTTotal").val(GstAmount);
+
+            var SGST, CGST, IGST;
+            if (statename == "MAHARASHTRA") {
+                SGST = (((psubfr * grate) / 100) / 2).toFixed(2);
+                CGST = (((psubfr * grate) / 100) / 2).toFixed(2);
+                IGST = 0.00;
+            }
+            else {
+                SGST = 0.00;
+                CGST = 0.00;
+                IGST = GstAmount;
+            }
+            $("#SGST").val(SGST);
+            $("#CGST").val(CGST);
+            $("#IGST").val(IGST);
+
+            var TotalAmount = (parseFloat($("#ProductSubTotal").val()) + parseFloat(GstAmount) + parseFloat($("#FreightCharges").val())).toFixed(2);
+            $("#TotalAmount").val(TotalAmount);
+
+            var TotalAmountroundoff = (TotalAmount % 1 === 0.5)
+                ? (TotalAmount - 0.5).toFixed(2)
+                : Math.round(TotalAmount).toFixed(2);
+            $("#RoundOffAmount").val(TotalAmountroundoff);
+
+            $("#DocketCharges, #FuelCharges, #OtherCharges, #CODCharges, #FOV").val(0);
+        }
+    }
+
+    // Dispatch mode changed (By Courier / By Hand)
+    function checksendtype(code) {
+        if (code == "By Hand") {
+
+            $("#CourierID").val('').prop("disabled", true);
+            $("#RateType").prop("disabled", true);
+
+            var RoundOffFreight = 0.0;
+            $("#FreightCharges").val(RoundOffFreight).prop("readonly", true);
+
+            var psubfr = parseFloat($("#ProductSubTotal").val()) + RoundOffFreight;
+            var GstAmount = ((psubfr * grate) / 100).toFixed(2);
+            $("#GSTTotal").val(GstAmount);
+
+            var SGST, CGST, IGST;
+            if (statename == "MAHARASHTRA") {
+                SGST = (((psubfr * grate) / 100) / 2).toFixed(2);
+                CGST = (((psubfr * grate) / 100) / 2).toFixed(2);
+                IGST = 0.00;
+            }
+            else {
+                SGST = 0.00;
+                CGST = 0.00;
+                IGST = GstAmount;
+            }
+            $("#SGST").val(SGST);
+            $("#CGST").val(CGST);
+            $("#IGST").val(IGST);
+
+            var TotalAmount = (parseFloat($("#ProductSubTotal").val()) + parseFloat(GstAmount) + RoundOffFreight).toFixed(2);
+            var TotalAmountroundoff = (TotalAmount % 1 === 0.5)
+                ? (TotalAmount - 0.5).toFixed(2)
+                : Math.round(TotalAmount).toFixed(2);
+
+            $("#TotalAmount").val(TotalAmount);
+            $("#RoundOffAmount").val(TotalAmountroundoff);
+
+            $("#DocketCharges, #FuelCharges, #OtherCharges, #CODCharges, #FOV").val(0);
+        }
+        else if (code == "By Courier") {
+            $("#CourierID").prop("disabled", false);
+            $("#RateType").prop("disabled", $("#CourierID").val() == 6);
+        }
+    }
+
+    // Transport mode changed: freight, GST and total are recalculated from the courier rates
+    function checkratetype(code) {
+
+        if (!$("#CourierID").val()) return;
+
+        $.ajax({
+            url: '@Url.Action("GetCourierDetails")',
+            data: '{CourierID: "' + $("#CourierID").val().trim() + '",Cityname: "' + cityname + '",Statename: "' + statename + '"}',
+            type: "POST",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (r) {
+
+                var data = r.d1;
+                var RatePerKG = 0.0;
+                var RatePerKG1 = 0.0;
+                var RatePerKG2 = 0.0;
+
+                if (r.d2 != "") RatePerKG = parseFloat(r.d2[0].RatePerKg);
+                if (r.d3 != "") RatePerKG1 = parseFloat(r.d3[0].RatePerKg);
+
+                if (r.d2 == "" && r.d3 == "" && r.d4 != "" && r.d4 != null) {   // select other rate
+                    RatePerKG2 = parseFloat(r.d4[0].RatePerKg);
+                }
+
+                if (data.length > 0) {
+
+                    var CourierAmount = 0.00;
+                    var TotalCourierAmount = 0.00;
+                    var CourierFuelCharges = 0.00;
+                    var FOVCharges = 0.00;
+                    var NetCourierAmount = 0.00;
+                    var FreightCharges = 0.00;
+                    var RoundOffFreight = 0.00;
+
+                    $("#FreightCharges").attr("readonly", false);
+
+                    // Free Delivery / To Pay: no freight
+                    if ($("#TermsOfDeliveryID").val() == 2 || $("#TermsOfDeliveryID").val() == 3) {
+                        RoundOffFreight = 0.00;
+                    }
+                    else if (code == "Air Rate") {
+
+                        $("#AirRate").val(data[0].AirRate);
+
+                        var w = $("#TotalWeightInKg").val();
+
+                        CourierAmount = parseFloat(w) * parseFloat(data[0].AirRate);
+
+                        TotalCourierAmount = CourierAmount
+                            + parseFloat(data[0].DocketCharges)
+                            + parseFloat(data[0].OtherCharges);
+
+                        // COD charges only for TermsOfDeliveryID = 4
+                        if ($("#TermsOfDeliveryID").val() == 4) {
+                            TotalCourierAmount = TotalCourierAmount + parseFloat(data[0].CODCharges);
+                        }
+
+                        CourierFuelCharges = (TotalCourierAmount * data[0].FuelCharges) / 100;
+                        FOVCharges = (TotalCourierAmount * data[0].FOVPercent) / 100;
+
+                        NetCourierAmount = TotalCourierAmount + CourierFuelCharges + FOVCharges;
+
+                        if (NetCourierAmount < parseFloat(data[0].MinimumAmount)) {
+                            NetCourierAmount = parseFloat(data[0].MinimumAmount);
+                        }
+
+                        FreightCharges = NetCourierAmount;
+                        RoundOffFreight = FreightRoundOff(FreightCharges);
+                    }
+                    else if (code == "Surface Rate") {
+                        if (r.d2 == "" && r.d3 == "" && r.d4 == "" && $("#CourierID").val() != 6) {
+                            alert("Courier Rate Not Exist");
+                            return;
+                        }
+                        var w2 = $("#TotalWeightInKg").val();
+
+                        if (RatePerKG != 0)
+                            RatePerKG = RatePerKG;
+                        else if (RatePerKG1 != 0)
+                            RatePerKG = RatePerKG1;
+                        else
+                            RatePerKG = RatePerKG2;
+
+                        $("#SurfaceRate").val(RatePerKG);
+                        CourierAmount = parseFloat(w2) * parseFloat(RatePerKG);
+
+                        TotalCourierAmount = CourierAmount + data[0].DocketCharges + data[0].OtherCharges;
+
+                        if ($("#TermsOfDeliveryID").val() == 4) {
+                            TotalCourierAmount = TotalCourierAmount + data[0].CODCharges;
+                        }
+
+                        CourierFuelCharges = (TotalCourierAmount * data[0].FuelCharges) / 100;
+                        FOVCharges = (TotalCourierAmount * data[0].FOVPercent) / 100;
+
+                        NetCourierAmount = TotalCourierAmount + CourierFuelCharges + FOVCharges;
+                        if (NetCourierAmount < parseFloat(data[0].MinimumAmount)) {
+                            NetCourierAmount = parseFloat(data[0].MinimumAmount);
+                        }
+
+                        FreightCharges = NetCourierAmount;
+                        RoundOffFreight = FreightRoundOff(FreightCharges);
+                    }
+
+                    $("#FreightCharges").val(Math.round(RoundOffFreight));
+                    $("#FreightCharges").attr("readonly", true);
+
+                    var psubfr = parseFloat($("#ProductSubTotal").val()) + parseFloat($("#FreightCharges").val());
+
+                    var GstAmount0 = ((psubfr * grate) / 100).toFixed(2);
+                    var SGST, CGST, IGST;
+
+                    if (GSTRegistrationId === 6 || GSTRegistrationId === 7 || GSTRegistrationId === 8) {
+                        SGST = 0.00;
+                        CGST = 0.00;
+                        IGST = 0.00;
+                    }
+                    else if (statename == "MAHARASHTRA") {
+                        SGST = (((psubfr * 18) / 100) / 2).toFixed(2);
+                        CGST = (((psubfr * 18) / 100) / 2).toFixed(2);
+                        IGST = 0.00;
+                    }
+                    else {
+                        SGST = 0.00;
+                        CGST = 0.00;
+                        IGST = GstAmount0;
+                    }
+                    $("#SGST").val(SGST);
+                    $("#CGST").val(CGST);
+                    $("#IGST").val(IGST);
+
+                    var GstAmount = parseFloat(SGST) + parseFloat(CGST) + parseFloat(IGST);
+                    $("#GSTTotal").val(GstAmount);
+
+                    var TotalAmount = (parseFloat($("#ProductSubTotal").val()) + GstAmount + parseFloat(RoundOffFreight)).toFixed(2);
+
+                    var TotalAmountroundoff = (TotalAmount % 1 === 0.5)
+                        ? (TotalAmount - 0.5).toFixed(2)
+                        : Math.round(TotalAmount).toFixed(2);
+
+                    $("#TotalAmount").val(TotalAmount);
+                    $("#RoundOffAmount").val(TotalAmountroundoff);
+
+                    $("#DocketCharges").val(Math.round(data[0].DocketCharges));
+                    $("#FuelCharges").val(Math.round(CourierFuelCharges));
+                    $("#OtherCharges").val(Math.round(data[0].OtherCharges));
+
+                    if ($("#TermsOfDeliveryID").val() == 4)
+                        $("#CODCharges").val(Math.round(data[0].CODCharges));
+                    else
+                        $("#CODCharges").val(0);
+
+                    $("#FOV").val(Math.round(FOVCharges));
+                }
+            }
+        });
+    }
+
+    function FreightRoundOff(freight) {
+
+        freight = Math.trunc(freight);
+        var freightCharge = parseInt(freight);
+        var freightMOD = freightCharge % 100;
+
+        freightCharge = parseInt(freightCharge / 100);
+
+        if (freightMOD == 0)
+            freightCharge = freightCharge * 100;
+        else if (freightMOD <= 25)
+            freightCharge = (freightCharge * 100) + 25;
+        else if (freightMOD <= 50)
+            freightCharge = (freightCharge * 100) + 50;
+        else if (freightMOD <= 75)
+            freightCharge = (freightCharge * 100) + 75;
+        else if (freightMOD <= 100)
+            freightCharge = (freightCharge * 100) + 100;
+
+        return freightCharge;
+    }
+
+    /* =========================================================
+       SAVE SALES ORDER
+       ========================================================= */
+    function SaveSO() {
+
+        var ok = true;
+        function fail(focusSel, errSel, msg) {
+            if (ok && focusSel) $(focusSel).focus();
+            setErr(errSel, msg);
+            ok = false;
+        }
+        $('#reqquo, #reqpon, #reqpod, #reqmrd, #reqcon, #errorPMobile11, #reqEm, #ShipAdd, #reqdisp, #reqitems').html('').hide();
+
+        if (orderItems.length == 0) fail('#ItemID', '#reqitems', 'Please add order items');
+
+        if ($('input[name=ShippAdd]:checked').val() == "No" && fv('ShippingAddress') == "") {
+            fail('#ShippingAddress', '#ShipAdd', 'Enter Shipping Address');
+        }
+
+        if (fv('QuotationNo') == '') fail('#QuotationNo', '#reqquo', 'Quotation No Required');
+        if (fv('CustomerPoNo') == '') fail('#CustomerPoNo', '#reqpon', 'Purchase Order No Required');
+        if (fv('PurchaseOrderDate') == '') fail('#PurchaseOrderDate', '#reqpod', 'Purchase Order Date Required');
+        if (fv('MaterialRequiredDate') == '') fail('#MaterialRequiredDate', '#reqmrd', 'Material Required Date Required');
+
+        var cp = fv('ContactPersonName');
+        if (cp == '' || cp == 'Please Select') fail('#ContactPersonName', '#reqcon', 'Required Contact Person');
+
+        var mob = fv('OfficeMobileNo');
+        if (mob == '' || mob == 'Please Select') fail('#OfficeMobileNo', '#errorPMobile11', 'Enter Office MobileNo');
+
+        var em = fv('OfficeEmailId');
+        if (em == '' || em == 'Please Select') fail('#OfficeEmailId', '#reqEm', 'Required OfficeEmailId');
+
+        var stype = fv('SendType'), rtype = '', counm = '', couid = '';
+        if (stype == "By Courier") {
+            couid = fv('CourierID');
+            counm = $.trim($('#CourierID option:selected').text());
+            if (couid == '') fail('#CourierID', '#reqdisp', 'Select Courier');
+            else if (couid != 6) {
+                rtype = fv('RateType');
+                if (rtype == '') fail('#RateType', '#reqdisp', 'Select Transport Mode');
+            }
+        }
+
+        if (!ok) return;
+
+        var SOItems = [];
+        for (var i = 0; i < orderItems.length; i++) {
+            SOItems.push({
+                SaleOrderNo: fv('SaleOrderNo'),
+                ItemId: orderItems[i]["ItemID"],
+                ItemName: orderItems[i]["ItemName"],
+                Quantity: orderItems[i]["Quantity"].toString(),
+                ApplicableRate: orderItems[i]["ApplicableRate"],
+                Amount: orderItems[i]["Amount"].toString(),
+                ItemCode: orderItems[i]["ItemCode"] ? orderItems[i]["ItemCode"].toString() : "",
+                HSNCode: orderItems[i]["HSNCode"] ? orderItems[i]["HSNCode"].toString() : "",
+                RatePerUnit: orderItems[i]["RatePerUnit"].toString(),
+                WeightPerUnit: orderItems[i]["WeightPerUnit"].toString(),
+                WeightOfPackingBox: orderItems[i]["WeightOfPackingBox"].toString(),
+                GSTRate: orderItems[i]["GSTRate"].toString(),
+                SalesClosingQuantity: 0,
+                MfgClosingQuantity: orderItems[i]["Quantity"].toString()
+            });
+        }
+
+        var designinfoid;
+        $.ajax({
+            url: '@Url.Action("GetDesignInfoId")',
+            data: { "ContactPerson": $('#ContactPersonName').val(), "OffEmail": $('#OfficeEmailId').val(), "OffMobile": $('#OfficeMobileNo').val(), "Lid": $('#LedgerID').val(), "AddID": $('#AddressTitleID').val() },
+            type: "POST",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                if (data.length > 0) { designinfoid = data[0].DesignationInfoID; }
+            }
+        });
+
+        var sdate = new Date();
+        var data = {
+            SaleOrderNo: fv('SaleOrderNo'),
+            SaleOrderDate: sdate.toDateString(),
+            QuotationNo: fv('QuotationNo'),
+            CustomerPoNo: fv('CustomerPoNo'),
+            CustomerPoDate: fv('PurchaseOrderDate'),
+            EntityName: $.trim($('#LedgerID option:selected').text()),
+            AddressTitle: fv('AddressTitle'),
+            Address: fv('Address'),
+            LandMark: fv('LandMark'),
+            Locality: fv('Locality'),
+            Taluka: fv('Taluka'),
+            District: fv('District'),
+            Pincode: fv('Pincode1'),
+            State: fv('State'),
+            Country: fv('Country'),
+            MaterialRequiredDate: fv('MaterialRequiredDate'),
+            MatReqPeriodId: '',
+            TermsOfDelivery: $.trim($('#TermsOfDeliveryID option:selected').text()),
+            TermsOfDeliveryId: fv('TermsOfDeliveryID'),
+            DiscountPercent: fv('Discount'),
+            PaymentTerm: $.trim($('#PaymentTermID option:selected').text()),
+            ContactPersonName: cp,
+            OfficeMobileNo: mob,
+            OfficeEmailId: em,
+            TotalWeightInKg: fv('TotalWeightInKg'),
+            SendType: stype,
+            TransporterName: counm,
+            RateType: rtype,
+            AirRate: fv('AirRate'),
+            SurfaceRate: fv('SurfaceRate'),
+            DesignationInfoId: designinfoid,
+            TotalAmount: fv('TotalAmount'),
+            RoundOffTotalAmount: fv('RoundOffAmount'),
+            ProductSubTotal: fv('ProductSubTotal'),
+            FreightCharges: fv('FreightCharges'),
+            GSTTotal: fv('GSTTotal'),
+            SGST: fv('SGST'),
+            CGST: fv('CGST'),
+            IGST: fv('IGST'),
+            DocketCharges: fv('DocketCharges'),
+            FuelCharges: fv('FuelCharges'),
+            OtherCharges: fv('OtherCharges'),
+            CODCharges: fv('CODCharges'),
+            FOV: fv('FOV'),
+            UserId: fv('UserId'),
+            CountryCode: fv('CountryCode1'),
+            TransporterId: couid,
+            CPDesignation: fv('CPDesignation'),
+            Note: fv('Note'),
+            StatusId: 3,
+            ShippingAddSameAsBillAdd: $('input[name=ShippAdd]:checked').val(),
+            ShippingAddress: fv('ShippingAddress'),
+            SalesItem: SOItems
+        };
+
+        $('#createsubmit').prop('disabled', true);
+
+        $.ajax({
+            url: '/SalesOrder/SaveOrder',
+            type: "POST",
+            data: JSON.stringify(data),
+            dataType: "JSON",
+            contentType: "application/json",
+            success: function (d) {
+                if (d.success === true) {
+                    alert(d.responseText);
+                    window.location.href = '/SaleOrderReport.aspx';
+                }
+                else {
+                    alert(d.responseText);
+                    $('#createsubmit').prop('disabled', false);
+                }
+            },
+            error: function () {
+                alert('Error. Please try again.');
+                $('#createsubmit').prop('disabled', false);
+            }
+        });
+    }
+</script>
+
+<style>
+    /* =====================================================
+       SALES ORDER - COMPACT CARD LAYOUT (same card system as Quotation page)
+       ===================================================== */
+    .eq-page {
+        background: #f4f6f9;
+        padding: 0;
+        font-size: 12.5px;
+        color: #222;
+    }
+
+    /* breadcrumb + toggle */
+    .purchase-breadcrumb {
+        display: flex;
+        align-items: center;
+        margin-top: 0;
+        margin-bottom: 5px;
+    }
+
+        .purchase-breadcrumb .route-path1,
+        .purchase-breadcrumb .route-path2 {
+            font-size: 14px;
+            font-weight: 600;
+            font-family: Helvetica, sans-serif;
+            background-color: #003399;
+            color: #fff;
+            padding: 6px 15px 6px 8px;
+            margin: 0;
+            height: 30px;
+        }
+
+        .purchase-breadcrumb .route-path1 {
+            clip-path: polygon(0 0, 90% 0, 100% 50%, 90% 100%, 0 100%);
+            margin-right: -3px;
+        }
+
+        .purchase-breadcrumb .route-path2 {
+            clip-path: polygon(0 0, 94% 0, 100% 50%, 94% 100%, 0 100%, 6% 50%);
+            padding-left: 18px;
+            cursor: pointer;
+        }
+
+            .purchase-breadcrumb .route-path2:hover {
+                background-color: midnightblue;
+            }
+
+    .view-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        white-space: nowrap;
+        margin-left: 20px;
+        margin-right: 0;
+    }
+
+        .view-toggle > span {
+            margin: 0;
+        }
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 44px;
+        height: 22px;
+        margin: 0;
+        flex-shrink: 0;
+    }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 34px;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+    input:checked + .slider {
+        background-color: #28a745;
+    }
+
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+
+    /* row 1 : Search (full width) */
+    .eq-search-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .eq-search-row .eq-field {
+            flex: 0 1 200px;
+            min-width: 0;
+        }
+
+    .eq-search-label {
+        margin: 0;
+        color: #172b7a;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .eq-search-row .eq-btn-sm {
+        flex: none;
+        width: auto !important;
+        height: 28px;
+        padding: 3px 14px;
+    }
+
+    .eq-main {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 8px;
+        align-items: stretch;
+        margin-top: 6px;
+    }
+
+    .eq-col {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        min-width: 0;
+    }
+
+    .eq-card {
+        background: #fff;
+        border: 1px solid #dce1e7;
+        border-radius: 6px;
+        box-shadow: 0 2px 6px rgba(0,0,0,.08);
+        overflow: hidden;
+        min-width: 0;
+    }
+
+    .eq-card-head {
+        min-height: 26px;
+        padding: 1px 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: #172b7a;
+        font-size: 13.5px;
+        font-weight: 600;
+       /* border-bottom: 1px solid #eef1f5;*/
+    }
+
+        .eq-card-head i.material-icons {
+            color: #0085c8;
+            font-size: 18px;
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+
+    .eq-card-body {
+        padding: 0px 10px 7px;
+    }
+
+    .eq-grid {
+        display: grid;
+        gap: 0px 8px;
+        align-items: start;
+    }
+
+    .eq-g2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .eq-g3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .eq-g6 {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+
+    .eq-s2 {
+        grid-column: span 2;
+    }
+
+    .eq-s3 {
+        grid-column: span 3;
+    }
+
+    .eq-full {
+        grid-column: 1 / -1;
+    }
+
+    .eq-field {
+        min-width: 0;
+    }
+
+        .eq-field > label, .eq-label {
+            display: block;
+            color: #172b7a;
+            font-size: 11.5px;
+            font-weight: 600;
+            margin: 0 0 1px;
+            line-height: 13px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .eq-field input[type=text], .eq-field input[type=number], .eq-field input[type=date], .eq-field select, .eq-field textarea, .eq-input {
+            width: 100%;
+            height: 28px;
+            padding: 1px 8px;
+            border: 1px solid #cfd6df;
+            border-radius: 4px;
+            font-size: 12.5px;
+            background: #fff;
+            box-sizing: border-box;
+            color: #222;
+        }
+
+        .eq-field textarea {
+            height: auto;
+            min-height: 30px;
+            resize: vertical;
+            padding: 5px 8px;
+        }
+
+            .eq-field input:focus, .eq-field select:focus, .eq-field textarea:focus {
+                outline: none;
+                border-color: #20BED0;
+                box-shadow: 0 0 0 2px rgba(32,190,208,.15);
+            }
+
+            .eq-field input[readonly], .eq-field textarea[readonly], .eq-field input:disabled, .eq-field select:disabled, .eq-field textarea:disabled {
+                background: #f3f5f8;
+                color: #222;
+                opacity: 1;
+            }
+
+        .eq-field input.eq-num, .eq-field input.eq-num[type=text] {
+            text-align: right;
+        }
+
+    .eq-addr {
+        height: 40px !important;
+        min-height: 40px !important;
+        resize: none;
+        line-height: 15px;
+        padding: 3px 8px !important;
+        background: #f3f5f8 !important;
+    }
+
+    .eq-inline {
+        display: flex;
+        gap: 5px;
+        align-items: flex-end;
+    }
+
+        .eq-inline > .eq-field {
+            flex: 1;
+            min-width: 0;
+        }
+
+    .eq-code {
+        flex: 0 0 54px !important;
+    }
+
+    /* radio group (shipping address) */
+    .eq-radios {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        height: 28px;
+    }
+
+    .eq-radio {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        margin: 0;
+        color: #0077B3;
+        font-size: 12.5px;
+        font-weight: 600;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+        .eq-radio input[type=radio] {
+            width: 14px;
+            height: 14px;
+            margin: 0;
+            position: static;
+            opacity: 1;
+        }
+
+    /* buttons */
+    .eq-btn {
+        width: auto;
+        border: none;
+        background: linear-gradient(135deg, #20BED0, #1B247D);
+        border-radius: 4px;
+        padding: 5px 16px;
+        color: #fff;
+        font-weight: 600;
+        font-size: 12.5px;
+        cursor: pointer;
+    }
+
+        .eq-btn:hover {
+            opacity: .92;
+        }
+
+        .eq-btn:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+        }
+
+    .eq-btn-sm {
+        padding: 4px 12px;
+        font-size: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+    }
+
+        .eq-btn-sm i.material-icons {
+            font-size: 16px;
+            margin: 0;
+            color: #fff;
+        }
+
+    .eq-footer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        margin: 6px auto 0;
+    }
+
+    /* item add row + item list */
+    .eq-item-add {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 100px 70px auto;
+        gap: 8px;
+        align-items: end;
+    }
+
+        .eq-item-add .eq-btn {
+            height: 28px;
+            padding: 3px 14px;
+        }
+
+    .eq-items {
+        margin-top: 6px;
+        flex: 0 0 auto;
+        min-height: 0;
+        overflow: visible;
+        background: #fff;
+    }
+
+    #orderItems:empty {
+        display: none;
+    }
+
+    .eq-qitem {
+        position: relative;
+        background: #f8fbff;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 5px 8px;
+        margin-bottom: 5px;
+        box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    }
+
+    .eq-qitem-name {
+        font-weight: 700;
+        font-size: 13px;
+        color: #222;
+        padding-right: 96px;
+        overflow-wrap: anywhere;
+    }
+
+    .eq-qitem-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2px 14px;
+        margin-top: 2px;
+        font-size: 12px;
+        color: #222;
+    }
+
+        .eq-qitem-meta b {
+            color: #172b7a;
+        }
+
+    .eq-qitem-actions {
+        position: absolute;
+        top: 5px;
+        right: 6px;
+        display: flex;
+        gap: 4px;
+    }
+
+    .eq-mini {
+        border: 1px solid #8a8f98;
+        background: #f1f3f5;
+        color: #172b7a;
+        border-radius: 3px;
+        padding: 1px 9px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        line-height: 18px;
+    }
+
+        .eq-mini:hover {
+            background: #e2e6ea;
+        }
+
+    /* validation messages (the script writes into these spans) */
+    span.error {
+        display: none;
+    }
+
+    .eq-field > span[id], #reqdisp, #reqitems {
+        display: block;
+        font-size: 11px;
+        line-height: 13px;
+    }
+
+        .eq-field > span[id]:empty, #reqdisp:empty, #reqitems:empty {
+            display: none;
+        }
+
+    .info-badge {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        font-size: 11px;
+        font-weight: 600;
+        background-color: #6c757d;
+        color: white;
+        cursor: pointer;
+        margin-left: 6px;
+    }
+
+        .info-badge:hover {
+            background-color: #adb5bd;
+        }
+
+    .ui-widget {
+        font-size: 12px !important;
+    }
+
+    textarea::placeholder {
+        color: #999;
+        font-size: 12.5px;
+    }
+
+    /* ---------- Delivery Instructions card ---------- */
+    .quotation-delivery-four-row {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+        width: 100%;
+        align-items: end;
+    }
+
+        .quotation-delivery-four-row .eq-field,
+        .quotation-delivery-four-row .courier-field {
+            min-width: 0;
+            width: 100%;
+        }
+
+    .quotation-delivery-charges {
+        margin-top: 8px;
+    }
+
+    .courier-mode-field label {
+        display: block;
+        font-size: 11.5px;
+        font-weight: 600;
+        color: #172b7a;
+        margin: 0 0 1px;
+        line-height: 13px;
+    }
+
+    .mode-dropdown-wrapper {
+        position: relative;
+        display: block;
+        width: 100%;
+    }
+
+        .mode-dropdown-wrapper select {
+            width: 100%;
+            height: 28px;
+            padding: 1px 32px 1px 8px;
+            border: 1px solid #cfd6df;
+            border-radius: 4px;
+            font-size: 12.5px;
+            appearance: none;
+            -webkit-appearance: none;
+            box-sizing: border-box;
+        }
+
+            .mode-dropdown-wrapper select:disabled {
+                background: #f3f5f8;
+                color: #222;
+                opacity: 1;
+            }
+
+    .mode-arrow-buttons {
+        position: absolute;
+        top: 1px;
+        right: 2px;
+        bottom: 1px;
+        width: 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        z-index: 5;
+        background: #fff;
+    }
+
+        .mode-arrow-buttons button {
+            flex: 1;
+            width: 100%;
+            min-height: 0;
+            padding: 0;
+            margin: 0;
+            border: none;
+            background: transparent;
+            color: #333;
+            font-size: 9px;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+    @@media (max-width: 1100px) {
+        .eq-main {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+
+    @@media (max-width: 700px) {
+        .eq-g6 {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+            .eq-g6 .eq-s2, .eq-g6 .eq-s3 {
+                grid-column: 1 / -1;
+            }
+
+        .eq-g3 {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .eq-search-row {
+            flex-wrap: wrap;
+        }
+
+        .eq-item-add {
+            grid-template-columns: 1fr 1fr;
+        }
+
+            .eq-item-add > :first-child {
+                grid-column: 1 / -1;
+            }
+
+        .quotation-delivery-four-row {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+    .eq-so-grid {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 8px 3px;
+        align-items: start;
+    }
+    .company-details-head {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 20px;
+    }
+
+    .company-heading {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+    }
+
+    .company-title-inline {
+        display: flex;
+        align-items: center;
+        width: 220px;
+    }
+
+        .company-title-inline select {
+            width: 100%;
+            height: 30px;
+        }
+    .eq-field.eq-s2 {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+        .eq-field.eq-s2 > label {
+            margin-bottom: 0;
+            white-space: nowrap;
+        }
+
+        .eq-field.eq-s2 .eq-radios {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .eq-field.eq-s2 .eq-radio {
+            margin-bottom: 0;
+            white-space: nowrap;
+        }
+    .contact-details-head {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 20px;
+    }
+
+    .contact-details-heading {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+    }
+
+    .contact-person-inline {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 520px;
+    }
+
+    .contact-field-icon {
+        font-size: 20px;
+        color: #0085c8;
+        flex-shrink: 0;
+    }
+
+    .contact-person-inline select {
+        width: 100%;
+        height: 25px;
+    }
+    .contact-input-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+    }
+
+        .contact-input-row > .contact-field-icon {
+            flex-shrink: 0;
+            font-size: 20px;
+            color: #0085c8;
+        }
+
+        .contact-input-row .eq-inline {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .contact-input-row > select {
+            flex: 1;
+            min-width: 0;
+        }
+    /* Remove gaps only between right-side cards */
+    .eq-main > .eq-col:last-child {
+        gap: 0 !important;
+    }
+
+        .eq-main > .eq-col:last-child > .eq-card {
+            margin-bottom: 0 !important;
+        }
+    /* Increase Payment Term and Company Name widths */
+    .eq-so-grid .payment-term-field {
+        grid-column: span 3;
+    }
+
+    .eq-so-grid .company-name-field {
+        grid-column: span 3;
+    }
+    /* Delivery Instructions heading and Other Terms in one row */
+    .delivery-instructions-head {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start !important;
+        gap: 15px;
+    }
+
+    .delivery-heading {
+        display: inline-flex;
+        align-items: center;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    .other-field {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        width: 220px;
+        margin-left: 0;
+    }
+
+        .other-field i.material-icons {
+            color: #0085c8;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .other-field input {
+            width: 100%;
+            height: 26px;
+            min-width: 0;
+            font-size: 12px;
+        }
+    .item-details-card {
+        min-height: 160px;
+    }
+
+        .item-details-card .eq-card-body {
+            padding-bottom: 15px;
+        }
+    .eq-search-company-field {
+        flex: 0 1 460px;
+        min-width: 0;
+    }
+    .eq-search-company-field {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex: 0 1 630px;
+        min-width: 0;
+    }
+
+        .eq-search-company-field label {
+            margin: 0;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .eq-search-company-field select {
+            flex: 1;
+            min-width: 0;
+            width: 100%;
+        }
+    #PurchaseOrderDate,
+    #MaterialRequiredDate {
+        padding-left: 2px !important;
+        padding-right: 0px !important;
+    }
+    /* Space above Search button and Company Name dropdown */
+    /* Space above all three controls */
+    .eq-search-row .eq-field,
+    .eq-search-row #btnsearch,
+    .eq-search-company-field select {
+        margin-top: 8px;
+    }
+</style>
+
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="purchase-breadcrumb">
+            <h4 class="route-path1">Sales</h4>
+
+            <h4 class="route-path2" onclick="location.href='@Url.Action("Index", "SalesOrder")'">
+                Sales Order
+            </h4>
+
+            <h4 class="route-path2">
+                Create
+            </h4>
+
+            <div class="view-toggle">
+                <span>Switch to Form</span>
+                <label class="switch">
+                    <input type="checkbox" id="viewToggle">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="eq-page">
+
+        @* model bound fields used by the save code *@
+        <div style="display:none;">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.AddressTitle)
+            @Html.HiddenFor(model => model.LandMark)
+            @Html.HiddenFor(model => model.Country)
+            @Html.HiddenFor(model => model.AirRate)
+            @Html.HiddenFor(model => model.SurfaceRate)
+            @Html.HiddenFor(model => model.StatusId)
+            @Html.HiddenFor(model => model.CPDesignation)
+            @Html.EditorFor(model => model.UserId, new { htmlAttributes = new { @class = "form-control", style = "display: none;" } })
+            @Html.EditorFor(model => model.GSTTotal, new { htmlAttributes = new { @class = "form-control", style = "display: none;" } })
+            @Html.TextBox("TotalAmount", null, new { @class = "form-control", style = "display: none;" })
+            @Html.TextBox("Locality", null, new { style = "display:none;" })
+            @Html.TextBox("Taluka", null, new { style = "display:none;" })
+            @Html.TextBox("Pincode1", null, new { style = "display:none;" })
+            @Html.TextBox("District", null, new { style = "display:none;" })
+            @Html.TextBox("State", null, new { style = "display:none;" })
+        </div>
+
+        @* ===================== ROW 1 : SEARCH (full width, one block) ===================== *@
+        <div class="eq-card">
+            <div class="eq-card-body">
+                <div class="eq-search-row">
+                    <label class="eq-search-label">Search by Quotation Number</label>
+                    <div class="eq-field">
+                        @Html.DropDownList("QuotationNo", (IEnumerable<System.Web.Mvc.SelectListItem>)ViewBag.QuotationNo, new { @class = "eq-input" })
+                        <span id="reqquo"></span>
+                    </div>
+                    <button type="button" id="btnsearch" name="btnsearch" class="eq-btn eq-btn-sm" onclick="GetDetailsByQuoNo();">
+                        <i class="material-icons">search</i> Search
+                    </button>
+                    <div class="eq-search-company-field">
+                        <label class="eq-search-label">Company Name</label>
+                        @Html.DropDownList("LedgerID", (IEnumerable<SelectListItem>)ViewBag.BusinessEntityId, "Please Select", new { @class = "eq-input", @disabled = "disabled" })
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        @* ===================== ROW 2 : LEFT / RIGHT ===================== *@
+        <div class="eq-main">
+
+            @* ---------- LEFT COLUMN ---------- *@
+            <div class="eq-col">
+
+                @* ---- 1. SALES ORDER DETAILS ---- *@
+                <div class="eq-card">
+                    <div class="eq-card-head">
+                        <span><i class="material-icons">feed</i>Sales Order Details</span>
+                    </div>
+                    <div class="eq-card-body">
+                        @*<div class="eq-grid eq-g3">*@
+                        <div class="eq-grid eq-so-grid">
+                            <div class="eq-field">
+                                <label>Sale Order No.</label>
+                                @Html.EditorFor(model => model.SaleOrderNo, new { htmlAttributes = new { @class = "eq-input", @readonly = "readonly" } })
+                                @Html.ValidationMessageFor(model => model.SaleOrderNo, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="eq-field">
+                                <label>Sale Order Date</label>
+                                @Html.TextBox("SaleOrderDate", null, new { @class = "eq-input", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.SaleOrderDate, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="eq-field">
+                                <label>Pur. Order No.</label>
+                                @Html.EditorFor(model => model.CustomerPoNo, new { htmlAttributes = new { @class = "eq-input" } })
+                                <span id="reqpon"></span>
+                            </div>
+                            <div class="eq-field">
+                                <label>Pur. Order Date</label>
+                                @Html.TextBox("PurchaseOrderDate", null, new { @class = "eq-input", @type = "date" })
+                                <span id="reqpod"></span>
+                            </div>
+                            <div class="eq-field">
+                                <label>Material Req Date</label>
+                                @Html.EditorFor(model => model.MaterialRequiredDate, "{0:dd/MM/yyyy}", new { htmlAttributes = new { @class = "eq-input", @type = "date" } })
+                                <span id="reqmrd"></span>
+                            </div>
+                            <div class="eq-field">
+                                <label>Quotation Date</label>
+                                @Html.TextBox("QuotationDate", null, new { @class = "eq-input", @readonly = "readonly" })
+                            </div>
+                            <div class="eq-field">
+                                <label>Enquiry No.</label>
+                                @Html.TextBox("EnquiryNo", null, new { @class = "eq-input", @readonly = "readonly" })
+                            </div>
+                            <div class="eq-field">
+                                <label>Enquiry Date</label>
+                                @Html.TextBox("EnquiryDate", null, new { @class = "eq-input", @readonly = "readonly" })
+                            </div>
+                            <div class="eq-field">
+                                <label>Discount</label>
+                                @Html.TextBox("Discount", null, new { @class = "eq-input eq-num" })
+                            </div>
+                            <div class="eq-field payment-term-field">
+                                <label>Payment Term</label>
+                                @Html.DropDownList("PaymentTermID", (IEnumerable<SelectListItem>)ViewBag.PaymentTermID, "Please Select", new { @class = "eq-input" })
+                            </div>
+                            @*<div class="eq-field company-name-field">
+                                <label>Company Name</label>
+                                @Html.DropDownList("LedgerID", (IEnumerable<SelectListItem>)ViewBag.BusinessEntityId, "Please Select", new { @class = "eq-input", @disabled = "disabled" })
+                            </div>*@
+                        </div>
+                    </div>
+                </div>
+                @* ---- 4. ITEM DETAILS ---- *@
+            <div class="eq-card item-details-card">
+                <div class="eq-card-head">
+                    <span><i class="material-icons">inventory_2</i>Item Details</span>
+                </div>
+                <div class="eq-card-body">
+                    <div class="eq-item-add">
+                        <div class="eq-field">
+                            <label>Item Name</label>
+                            @Html.DropDownList("ItemID", (IEnumerable<SelectListItem>)ViewBag.ItemID, "Please Select", new { @onchange = "GetCode(this.value);", @class = "eq-input" })
+                            <span id="reqitem"></span>
+                        </div>
+                        <div class="eq-field">
+                            <label>Item Code</label>
+                            @Html.TextBox("ItemCode", null, new { placeholder = "Code", @class = "eq-input" })
+                        </div>
+                        <div class="eq-field">
+                            <label>Quantity</label>
+                            @Html.TextBox("Quantity", null, new { @type = "number", @class = "eq-input eq-num", @Value = "1" })
+                            <span id="reqqty"></span>
+                            <span id="regqty"></span>
+                        </div>
+                        <div>
+                            <input type="button" id="add" value="Add" name="add" class="eq-btn" onclick="AddProduct(this.value);" />
+                        </div>
+                    </div>
+                    <div id="orderItems" class="tablecontainer table-responsive eq-items"></div>
+                    <span id="reqitems"></span>
+                </div>
+            </div>
+                @* ---- 7. SPECIFIC INSTRUCTIONS ---- *@
+                <div class="eq-card">
+                    <div class="eq-card-head">
+                        <span>
+                            <i class="material-icons">description</i>Specific Instructions by Customer
+                            <span class="info-badge" title="Mention any special requirements like customization, delivery needs, or extra details.">i</span>
+                        </span>
+                    </div>
+                    <div class="eq-card-body">
+                        <div class="eq-field">
+                            @Html.TextAreaFor(model => model.Note, new { rows = 1, maxlength = "250", @class = "eq-input", style = "height:45px; min-height:45px;" })
+                            @Html.ValidationMessageFor(model => model.Note, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+               
+            </div>
+
+            @* ---------- RIGHT COLUMN ---------- *@
+        <div class="eq-col">
+
+            @* ---- 2. COMPANY DETAILS ---- *@
+            <div class="eq-card">
+                <div class="eq-card-head company-details-head">
+                    <span class="company-heading">
+                        <i class="material-icons">business</i>Address
+                    </span>
+                    <div class="company-title-inline">
+                        <select class="eq-input"
+                                id="AddressTitleID"
+                                name="AddressTitleID"
+                                onchange="GetAddrCPInfoDirect(this.value);">
+                            <option value="">Please Select</option>
+                        </select>
+                        <span id="reqaddr"></span>
+                    </div>
+
+                </div>
+
+           
+                <div class="eq-card-body">
+                    <div class="eq-grid eq-g3">    
+                        @*<div class="eq-field">*@
+                            @*<label>Add. Title</label>*@
+                            <!--<select class="eq-input" id="AddressTitleID" name="AddressTitleID" onchange="GetAddrCPInfoDirect(this.value);">
+                                <option value="">Please Select</option>
+                            </select>
+                            <span id="reqaddr"></span>
+                        </div>-->
+                        <div class="eq-field eq-full">
+                            @*<label>Address</label>*@
+                            <textarea id="AddressView" rows="2" class="eq-input eq-addr" placeholder="Address" readonly="readonly"></textarea>
+                            <textarea id="Address" rows="1" maxlength="150" style="display:none;"></textarea>
+                        </div>
+                        <div class="eq-field eq-s2">
+                            <label>Shipping Address Same As Billing Address</label>
+                            <div class="eq-radios">
+                                <label class="eq-radio"><input type="radio" name="ShippAdd" value="Yes" id="ShippAddYes" checked onchange="checkAdd(this.value);"> Yes</label>
+                                <label class="eq-radio"><input type="radio" name="ShippAdd" value="No" id="ShippAddNo" onchange="checkAdd(this.value);"> No</label>
+                            </div>
+                        </div>
+                        <div class="eq-field eq-full" id="shippAddress">
+                            <label>Shipping Address</label>
+                            @Html.EditorFor(model => model.ShippingAddress, new { htmlAttributes = new { placeholder = "Shipping Address", @maxlength = "200", @class = "eq-input" } })
+                            <span id="ShipAdd"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @* ---- 3. CONTACT DETAILS ---- *@
+        <div class="eq-card">
+            <div class="eq-card-head contact-details-head">
+                <span class="contact-details-heading">
+                    <i class="material-icons">contacts</i>Contact Details
+                </span>
+
+                <div class="contact-person-inline">
+                    <i class="material-icons contact-field-icon">person</i>
+                    <select class="eq-input" id="ContactPersonName" name="ContactPersonName" onchange="GetCPDetails(this.value);">
+                        <option value="Please Select">Please Select</option>
+                    </select>
+                </div>
+                <span id="reqcon"></span>
+            </div>
+            <div class="eq-card-body">
+
+                <div class="eq-grid eq-g2">
+                    <!-- OFFICE CONTACT -->
+                    <div class="eq-field">
+                        <div class="contact-input-row">
+                            <i class="material-icons contact-field-icon">call</i>
+                            @*<label>Office Contact</label>*@
+                            <div class="eq-inline">
+                                <div class="eq-field eq-code">
+                                    @Html.TextBox("CountryCode1", null, new { @class = "eq-input", disabled = "true" })
+                                </div>
+                                <div class="eq-field">
+                                    <select class="eq-input" id="OfficeMobileNo" name="OfficeMobileNo" onchange="GetCPDetailsByOffmobno(this.value);">
+                                        <option value="Please Select">Please Select</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                            <span id="errorOMobile"></span>
+                            <span id="emailerrorOMobile"></span>
+                            <span id="errorPMobile11"></span>
+                            <span id="emailerrorOMobile11"></span>
+                        </div>
+                    <div class="eq-field">
+                        <div class="contact-input-row">
+                            @*<label>Office Email</label>*@
+                            <i class="material-icons contact-field-icon">email</i>
+                            <select class="eq-input" id="OfficeEmailId" name="OfficeEmailId" onchange="GetCPDetailsByOffemail(this.value);">
+                                <option value="Please Select">Please Select</option>
+                            </select>
+                        </div>
+                            <span id="reqEm"></span>
+                        </div>
+                    </div>
+            </div>
+        </div>
+
+            @* ---- 5. DELIVERY INSTRUCTIONS ---- *@
+            <div class="eq-card">
+                <div class="eq-card-head delivery-instructions-head">
+                    <span class="delivery-heading">
+                    <i class="material-icons">local_shipping</i>
+                    Delivery Instructions
+                    </span>
+
+                    <div class="other-field">
+                        <i class="material-icons">local_shipping</i>
+                        <input type="text"
+                               id="Other"
+                               name="Other"
+                               class="form-control"
+                               placeholder="Other terms" />
+                    </div>
+                </div>
+
+                    <div class="eq-card-body">
+
+                        <div class="quotation-delivery-four-row">
+                            <div class="eq-field">
+                                <label>Transporter</label>
+                                @Html.DropDownList("CourierID",
+                                    (IEnumerable<SelectListItem>)ViewBag.CourierID,
+                                    "Please Select",
+                                    new { @class = "eq-input", @onchange = "onCourierChange();" })
+                            </div>
+
+                            <div class="eq-field">
+                                <label>Terms Of Delivery</label>
+                                @Html.DropDownList("TermsOfDeliveryID",
+                                    (IEnumerable<SelectListItem>)ViewBag.TermsOfDeliveryID,
+                                    "Please Select",
+                                    new { @class = "eq-input" })
+                            </div>
+
+                            <!-- DISPATCH MODE -->
+                            <div class="courier-field courier-mode-field">
+                                <label for="SendType">Dispatch Mode:</label>
+                                <div class="mode-dropdown-wrapper">
+                                    <select id="SendType" name="SendType" onchange="checksendtype(this.value);">
+                                        <option value="By Courier">Courier</option>
+                                        <option value="By Hand">Hand</option>
+                                    </select>
+                                    <div class="mode-arrow-buttons">
+                                        <button type="button" onclick="changeDropdownOption('SendType', -1)" title="Previous option">@*▲*@ &#9650;</button>
+                                        <button type="button" onclick="changeDropdownOption('SendType', 1)" title="Next option">@*▼*@&#9660;</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- TRANSPORT MODE -->
+                            <div class="courier-field courier-mode-field">
+                                <label for="RateType">Transport Mode:</label>
+                                <div class="mode-dropdown-wrapper">
+                                    <select id="RateType" name="RateType" onchange="checkratetype(this.value);">
+                                        <option value="Surface Rate">Surface</option>
+                                        <option value="Air Rate">Air</option>
+                                    </select>
+                                    <div class="mode-arrow-buttons">
+                                        <button type="button" onclick="changeDropdownOption('RateType', -1)" title="Previous option">&#9650;@*▲*@</button>
+                                        <button type="button" onclick="changeDropdownOption('RateType', 1)" title="Next option"> &#9660;@*▼*@</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <span id="reqdisp"></span>
+
+                        <!-- COURIER CHARGES -->
+                        <div class="eq-grid eq-g6 quotation-delivery-charges">
+                            <div class="eq-field">
+                                <label title="Total Weight In Kg">Weight (Kg)</label>
+                                @Html.EditorFor(model => model.TotalWeightInKg, new { htmlAttributes = new { @class = "eq-input eq-num", @readonly = "readonly" } })
+                                @Html.ValidationMessageFor(model => model.TotalWeightInKg, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="eq-field">
+                                <label title="Docket Charges">Docket</label>
+                                @Html.EditorFor(model => model.DocketCharges, new { htmlAttributes = new { @class = "eq-input eq-num", @readonly = "readonly" } })
+                                @Html.ValidationMessageFor(model => model.DocketCharges, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="eq-field">
+                                <label title="Fuel Charges">Fuel</label>
+                                @Html.EditorFor(model => model.FuelCharges, new { htmlAttributes = new { @class = "eq-input eq-num", @readonly = "readonly" } })
+                                @Html.ValidationMessageFor(model => model.FuelCharges, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="eq-field">
+                                <label title="Other Charges">Other</label>
+                                @Html.EditorFor(model => model.OtherCharges, new { htmlAttributes = new { @class = "eq-input eq-num", @readonly = "readonly" } })
+                                @Html.ValidationMessageFor(model => model.OtherCharges, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="eq-field">
+                                <label title="COD Charges">COD</label>
+                                @Html.EditorFor(model => model.CODCharges, new { htmlAttributes = new { @class = "eq-input eq-num", @readonly = "readonly" } })
+                                @Html.ValidationMessageFor(model => model.CODCharges, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="eq-field">
+                                <label title="FOV Charges">FOV</label>
+                                @Html.EditorFor(model => model.FOV, new { htmlAttributes = new { @class = "eq-input eq-num", @readonly = "readonly" } })
+                                @Html.ValidationMessageFor(model => model.FOV, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            @* ---- 6. CALCULATION ---- *@
+            <div class="eq-card">
+                <div class="eq-card-head">
+                    <span><i class="material-icons">calculate</i>Calculation</span>
+                </div>
+                <div class="eq-card-body">
+                    <div class="eq-grid eq-g6">
+                        <div class="eq-field">
+                            <label>Sub Total</label>
+                            @Html.EditorFor(model => model.ProductSubTotal, new { htmlAttributes = new { @class = "eq-input eq-num", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(model => model.ProductSubTotal, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="eq-field">
+                            <label>Freight</label>
+                            @Html.EditorFor(model => model.FreightCharges, new { htmlAttributes = new { @class = "eq-input eq-num", @onchange = "calbyother();", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(model => model.FreightCharges, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="eq-field">
+                            <label>IGST</label>
+                            @Html.EditorFor(model => model.IGST, new { htmlAttributes = new { @class = "eq-input eq-num", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(model => model.IGST, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="eq-field">
+                            <label>CGST</label>
+                            @Html.EditorFor(model => model.CGST, new { htmlAttributes = new { @class = "eq-input eq-num", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(model => model.CGST, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="eq-field">
+                            <label>SGST</label>
+                            @Html.EditorFor(model => model.SGST, new { htmlAttributes = new { @class = "eq-input eq-num", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(model => model.SGST, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="eq-field">
+                            <label>Total Amount</label>
+                            @Html.TextBox("RoundOffAmount", null, new { @class = "eq-input eq-num", @readonly = "readonly" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        </div>
+
+        <div class="eq-footer">
+            <button type="button" id="createsubmit" class="eq-btn" onclick="SaveSO();">
+                <i class="material-icons" style="font-size:16px; vertical-align:middle;">save</i> Create
+            </button>
+            <button type="button" class="eq-btn" onclick="location.href='@Url.Action("Index", "SalesOrder")'">
+                <i class="material-icons" style="font-size:16px; vertical-align:middle;">close</i> Back
+            </button>
+        </div>
+    </div>}
+
+<script>
+    $(document).ready(function () {
+
+        /*module button*/
+        $.ajax({
+            url: '/Settings/GetAllColors',
+            type: 'GET',
+            success: function (colors) {
+                $('.custo-inner').css('background', colors.InnerButtonColor);
+                $('.custo-inner').css('color', colors.InnerButtonFontColor);
+            },
+            error: function () {
+                console.error("Failed to load color settings.");
+            }
+        });
+
+    });</script>

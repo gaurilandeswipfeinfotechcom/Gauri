@@ -1,0 +1,4070 @@
+﻿﻿
+@model ERPEntities.CombineBusinessModel
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_SwipfeMaster.cshtml";
+}
+
+
+<style>
+    /*Adding some css for looks good*/
+    #label {
+        font-size: small;
+        color: #0077B3;
+    }
+
+
+    .button:hover {
+        /*background-color: #3e8e41*/
+        background-color: cyan;
+    }
+
+    .button:active {
+        background-color: cyan;
+        box-shadow: 0 5px #666;
+        transform: translateY(4px);
+    }
+
+    .button1 {
+        border-radius: 50%;
+    }
+
+    span.error {
+        display: block;
+        visibility: hidden;
+        color: red;
+        font-size: 60px;
+    }
+
+
+
+
+
+    .ui-widget {
+        font-size: 12px !important;
+    }
+
+    .reqError {
+        color: #ff0000; /*Red Color*/
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .businessterm {
+        background-color: whitesmoke;
+        border: 1px medium ridge;
+    }
+
+    .save-btn input:hover {
+        background-color: Highlight;
+        transform: scale(1.1);
+    }
+
+
+    /* .carousel-wrapper {
+        scroll-behavior: smooth;
+    }*/
+
+    /* .carousel-item {
+        scroll-snap-align: start;
+    }*/
+
+
+    .route-path1 {
+        cursor: pointer;
+        clip-path: polygon(0% 0%, 90% 0%, 100% 50%, 90% 100%, 0% 100%);
+        background-color: #003399;
+        color: white;
+        padding: 5px 15px 5px 5px
+    }
+
+    .route-path3 {
+        cursor: pointer;
+        color: white;
+        clip-path: polygon(94% 0%, 100% 50%, 94% 100%, 0% 100%, 6% 50%, 0% 0%);
+        background-color: #003399;
+        padding: 5px 15px 5px 15px;
+    }
+
+    .route-path4 {
+        cursor: pointer;
+        color: white;
+        clip-path: polygon(90% 0%, 100% 50%, 90% 100%, 0% 100%, 10% 50%, 0% 0%);
+        background-color: #003399;
+        padding: 5px 15px 5px 15px;
+    }
+
+    .info-badge {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        font-size: 11px;
+        font-weight: 600;
+        background-color: #e0e0e0; /* Light grey circle */
+        color: #000; /* Black 'i' */
+        cursor: pointer;
+        margin-left: 6px;
+    }
+
+        .info-badge:hover {
+            background-color: #cfcfcf;
+        }
+
+    .helper-text {
+        font-size: 12px;
+        color: #6c757d;
+    }
+    /* Hide at page load */
+    .hide-field {
+        display: none;
+    }
+</style>
+
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+
+
+<link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css"
+      rel="Stylesheet" type="text/css" />
+
+@*<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">*@
+
+@*<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>*@
+
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    var orderItemsss = [];
+    var index;
+    var tempScrollTop;
+    var p;
+
+    /*____________________________________________*/
+    function List() {
+        window.location.href = '/CompanyLedger/Index';
+    }
+    //function Next() {
+    //    window.location.href = '/CompanyContactPerson/Details/' + $('#LedgerID').val() + '';
+    //}
+
+    let ledgerId;
+    function Edit() {
+
+        const segments = window.location.pathname.split('/');
+        const ledgerId = segments[segments.length - 1]; // "8141"
+        console.log('ledger id is' + ledgerId);
+        //window.location.href = '/CompanyAddress/Edit/' + $('#LedgerID').val() + '' + '?LedgerID=' + $("#LedgerID").val();
+        //const ledgerId = decodeURIComponent(window.location.href).split("=")[1];
+        window.location.href = '/Vendor/Details/' + ledgerId + '' + '?LedgerID=' + ledgerId;
+    }
+
+
+    @*function getinfo(code) {
+
+        $.ajax({
+            url: '@Url.Action("GetCompanyInfo")',
+            data: { "cnm": code },
+
+            type: "POST",
+            dataType: "json",
+
+            success: function (data) {
+
+                if (data.length > 0) {
+
+                    var vdata = data;
+
+                    $("#Address1").val(vdata[0].Address);
+
+                    $("#Pincode1").val(vdata[0].Pincode);
+
+
+                    $("#Locality1").val(vdata[0].Locality);
+                    $("#Taluka1").val(vdata[0].Taluka);
+
+                    $("#District1").val(vdata[0].District);
+
+                    $("#State1").val(vdata[0].State);
+
+                    $("#Country1").val(vdata[0].Country);
+                    $("#Title1").val(vdata[0].Title1);
+
+                    $("#FirstName").val(vdata[0].FirstName);
+                    $("#LastName").val(vdata[0].LastName);
+
+                    $("#PersonalMobileNo").val(vdata[0].MobNo);
+                    $("#EmailID").val(vdata[0].Email);
+
+
+                }
+            }
+        });
+    }*@
+
+    /////First Letter Uppercase
+    //function myFunction(id) {
+    //    var txt = document.getElementById(id);
+    //    txt.value = txt.value.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1); });
+    //}
+
+    ///All uppercase letter
+
+    function myFunction(id) {
+        let txt = document.getElementById(id);
+        let value = txt.value;
+
+        if (value.length === 0) return;
+
+        // Convert to Title Case (capitalize after space)
+        txt.value = value.toLowerCase().replace(/\b\w/g, function (char) {
+            return char.toUpperCase();
+        });
+    }
+
+    ///All uppercase letter
+
+    function ToUpper(id) {
+        document.getElementById(id).value = document.getElementById(id).value.toUpperCase();
+    };
+
+    //function checksendtype(code) {
+    //    if (code == "By Hand") {
+    //        //$("#CourierID option:eq(0)").attr('selected', true)
+    //        $("#CourierID").val(""); // assuming the blank option has value=""
+    //        $("#CourierID").attr("disabled", true);
+
+    //        $("#TermsOfDeliveryID").val(3);
+    //        $("#CourierID").val("");
+
+    //    }
+    //    else if (code == "By Courier") {
+    //        $("#CourierID").attr("disabled", false);
+    //        $("input:radio[name=RateType]").attr("disabled", false);
+    //        $("#TermsOfDeliveryID").val("1");
+    //    }
+    //}
+
+
+    // 🔹 Dispatch Mode Change
+    function checksendtype(code) {
+
+        if (code === "By Hand") {
+
+            // Set TOD to Self Pick Up
+            $("#TermsOfDeliveryID option").filter(function () {
+                return $(this).text().trim().toLowerCase() === "self pick up";
+            }).prop("selected", true);
+
+            $("#CourierID").val("");
+            $("#CourierID").prop("disabled", true);
+        }
+
+        else if (code === "By Courier") {
+
+            // Set TOD to Freight Paid (default for courier)
+            $("#TermsOfDeliveryID option").filter(function () {
+                return $(this).text().trim().toLowerCase() === "freight paid";
+            }).prop("selected", true);
+
+            $("#CourierID").prop("disabled", false);
+        }
+
+        // Important: trigger change so UI updates properly
+        $("#TermsOfDeliveryID").trigger("change");
+    }
+
+
+
+
+
+    // 🔹 Terms Of Delivery Change
+    function checkTODChange() {
+
+        var selectedText = $("#TermsOfDeliveryID option:selected").text().trim().toLowerCase();
+
+        if (selectedText === "self pick up") {
+
+            $("#ByHand").prop("checked", true);
+            $("#CourierID").val("");
+            $("#CourierID").prop("disabled", true);
+
+        } else {
+
+            $("#ByCourier").prop("checked", true);
+            $("#CourierID").prop("disabled", false);
+        }
+    }
+    $(document).ready(function () {
+
+        // Default Terms Of Delivery = Self Pick Up
+        $("#TermsOfDeliveryID option").filter(function () {
+            return $(this).text().trim().toLowerCase() === "self pick up";
+        }).prop("selected", true);
+
+        // Default Dispatch Mode = By Hand
+        $("#ByHand").prop("checked", true);
+
+        // Clear Courier
+        $("#CourierID").val("");
+
+        // Disable Courier
+        $("#CourierID").prop("disabled", true);
+
+    });
+
+
+
+    ///Bank Details
+    function check(code) {
+
+        // alert("heyyyy");
+        if (code == "Yes")
+            $("#collapseOneBank").show();
+        else
+            $("#collapseOneBank").hide();
+        $('#BankID').val('');
+        $('#BranchName').val('');
+        $('#AccountNo').val('');
+        $('#IFSCCode').val('');
+
+    }
+
+    function GST(val, event) {
+
+        if (event.target.selectionStart != undefined && (event.which == 46 || event.which == 8)) {
+            var startPos = event.target.selectionStart,
+                endPos = event.target.selectionEnd;
+            console.log(startPos, endPos);
+            if (startPos == 1 && startPos != endPos) {
+                var restPart = val.slice(endPos, val.length);
+                if (restPart) {
+                    val = val[0].concat(restPart);
+                }
+                else {
+                    val = val[0];
+                }
+                event.target.value = val;
+                event.preventDefault();
+            }
+            else if (startPos == 1 && startPos == endPos && event.which == 46) {
+                event.preventDefault();
+            }
+            else if (startPos == 2 && event.which == 8) {
+                event.preventDefault();
+            }
+        }
+    }
+
+    function currencySelected() {
+        var value = $("#CurrencyID option:selected").text();
+
+        var value1 = value.substring(6, 7);
+
+
+        $('#CreditLimit').val(value1);
+
+        $('#YearlyBusiness').val(value1);
+    }
+
+
+
+    function ToUpper(id) {
+        const input = document.getElementById(id);
+        if (input) input.value = input.value.toUpperCase();
+    }
+    // Apply sentence case to company name
+    //$("#editcompanyName").val(toSentenceCase(companyName));
+    function clearValidationMessages() {
+
+        $("#companyNameError").text('');
+        $("#panError").text('');
+        $("#cinError").text('');
+        $("#websiteError").text('');
+        $("#typeError").text('');
+        $("#msmeError").text('').hide();
+
+    }
+
+    // Validate website format
+    function validateWebsite() {
+        const website = $("#editcompanyWebsite").val().trim();
+        const websiteRegex = /^(https?:\/\/)?(www\.)?[a-zA-Z0-9\-]+\.[a-z]{2,}(\.[a-z]{2,})?(\/.*)?$/;
+
+        if (website && !websiteRegex.test(website)) {
+            $("#websiteError").text("❌ Enter a valid website URL (e.g. https://example.com)");
+            return false;
+        }
+
+        return true;
+    }
+    function validateCompanySuffix(companyName) {
+
+        const trimmed = companyName.trim().replace(/\s+/g, ' ');
+        const upper = trimmed.toUpperCase();
+
+        $("#companyNameError").text("");
+        $("#companySuggestion").text("");
+
+        let isValid = false;
+
+        // Only these exact endings are allowed
+        const validRegex = /^(.*\s)?(PRIVATE LIMITED|PVT\. LTD\.|LIMITED|LTD\.)$/;
+
+        if (validRegex.test(upper)) {
+
+            // If "PVT" appears, it must be exactly "PVT. LTD."
+            if (upper.includes("PVT") && !upper.endsWith("PVT. LTD.")) {
+                isValid = false;
+            } else {
+                isValid = true;
+            }
+
+        }
+
+        if (!isValid) {
+            $("#companyNameError").text(
+                "Company name must end with 'Private Limited', 'Pvt. Ltd.', 'Limited', or 'Ltd.'"
+            );
+        }
+
+        return isValid;
+    }
+    function GSTPIN() {
+
+        clearValidationMessages();
+
+        const pan = $("#editcompanyPAN").val().toUpperCase().trim();
+        const companyName = $("#editcompanyName").val().trim().toUpperCase();
+
+        if (pan === "") {
+            return;
+        }
+
+        const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
+
+        if (!panRegex.test(pan)) {
+
+            $("#panError").text(
+                "❌ PAN format should be ABCDE1234F"
+            );
+
+            resetEntityAndCIN();
+            return;
+        }
+
+        const fourthChar = pan.charAt(3);
+        const fifthChar = pan.charAt(4);
+
+        const firstCharCompany =
+            companyName.charAt(0);
+
+        // 5th character validation
+
+        if (!["P", "H"].includes(fourthChar)) {
+
+            if (fifthChar !== firstCharCompany) {
+
+                $("#panError").text(
+                    "❌ PAN 5th character must match company first letter."
+                );
+
+                resetEntityAndCIN();
+                return;
+            }
+        }
+
+        // COMPANY VALIDATION
+        if (fourthChar === "C") {
+
+            $("#CIN").removeClass("d-none");
+
+            if (!validateCompanySuffix(companyName)) {
+                resetEntityAndCIN();
+                return;
+            }
+
+        } else {
+            $("#CIN").addClass("d-none");
+            $("#cinError").text("");
+        }
+
+        // ENTITY TYPE
+
+        switch (fourthChar) {
+
+            case "C":
+                $("#TypeOfCompanyID").val("1");
+                break;
+
+            case "F":
+                $("#TypeOfCompanyID").val("4");
+                break;
+
+            case "A":
+                $("#TypeOfCompanyID").val("5");
+                break;
+
+            case "G":
+                $("#TypeOfCompanyID").val("10");
+                break;
+
+            case "T":
+                $("#TypeOfCompanyID").val("6");
+                break;
+
+            case "P":
+                $("#TypeOfCompanyID").val("11");
+                break;
+
+            case "H":
+                $("#TypeOfCompanyID").val("3");
+                break;
+
+            default:
+
+                $("#panError").text(
+                    "❌ Invalid PAN type."
+                );
+
+                resetEntityAndCIN();
+        }
+    }
+
+    function resetEntityAndCIN() {
+        $("#TypeOfCompanyID").val("");
+        $("#CIN").addClass("d-none");
+    }
+
+
+
+
+    //.......tomarrow need to impliment this.
+    //<div id="CIN" class="mb-2 col-lg-4">
+    //    <label class="fs-5 fw-normal text-dark" title="Corporate Identification Number">CIN Number :</label>
+    //    <input class="form-control fs-5 input-text-box" id="CINNumber" placeholder="Enter CIN" maxlength="21" />
+    //</div>
+
+
+
+    //function convertDate(inputFormat) {
+    //    function pad(s) { return (s < 10) ? '0' + s : s; }
+    //    var d = new Date(inputFormat)
+    //    //return [pad(d.getDate()), pad(d.getMonth() + 1), d.getFullYear()].join('-')
+    //    return [d.getFullYear(), pad(d.getMonth() + 1), pad(d.getDate())].join('-')
+    //}
+    /*------------------------------------------------------------------------------------------------------*/
+
+
+
+    /*Convert Date  format*/
+    function parseAspNetDate1(aspNetDate) {
+        if (!aspNetDate) return "";
+
+        // Extract the number part from "/Date(1688199641000)/"
+        var timestamp = parseInt(aspNetDate.replace(/[^0-9]/g, ""));
+        var d = new Date(timestamp);
+
+        // Format: dd/MM/yyyy HH:mm
+        var day = ('0' + d.getDate()).slice(-2);
+        var month = ('0' + (d.getMonth() + 1)).slice(-2);
+        var year = d.getFullYear();
+
+
+        return `${day}/${month}/${year} `;
+    }
+
+
+    /*Convert Date and time format*/
+    function parseAspNetDate(aspNetDate) {
+        if (!aspNetDate) return "";
+
+        // Extract the number part from "/Date(1688199641000)/"
+        var timestamp = parseInt(aspNetDate.replace(/[^0-9]/g, ""));
+        var d = new Date(timestamp);
+
+        // Format: dd/MM/yyyy HH:mm
+        var day = ('0' + d.getDate()).slice(-2);
+        var month = ('0' + (d.getMonth() + 1)).slice(-2);
+        var year = d.getFullYear();
+        var hours = ('0' + d.getHours()).slice(-2);
+        var minutes = ('0' + d.getMinutes()).slice(-2);
+
+        return `${day}/${month}/${year} ${hours}:${minutes}`;
+    }
+
+    let pan;
+
+    $(document).ready(function () {
+
+
+        var b = '@Session["LoginUserId"]';
+        //var b = 5 ;
+        $.ajax({
+            url: '@Url.Action("GetInfo")',
+            data: { "userId": b },
+            type: "POST",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+
+                if (data.length > 0) {
+
+                    for (var i = 0; i < data.length; i++) {
+
+                        if (data[i].FormName == "BusinessTerms") {
+
+                            if (data[i].Create == "Y") {
+                                $("#CurrencyID").attr("disabled", false);
+                                $("#editDiscountPercent").attr("disabled", false);
+                                $("#editCreditPeriodDays").attr("disabled", false);
+                                $("#editCreditLimit").attr("disabled", false);
+                                $("#PaymentTermID").attr("disabled", false);
+                                //$("#GSTRegistrationId").attr("disabled", false);
+                                break;
+                            }
+                            else {
+                                $("#CurrencyID").attr("disabled", true);
+                                $("#editDiscountPercent").attr("disabled", true);
+                                $("#editCreditPeriodDays").attr("disabled", true);
+                                $("#editCreditLimit").attr("disabled", true);
+                                $("#PaymentTermID").attr("disabled", true);
+                                //$("#GSTRegistrationId").attr("disabled", true);
+                                break;
+                            }
+
+                        }
+                        else {
+                            $("#CurrencyID").attr("disabled", true);
+                            $("#DiscountPercent").attr("disabled", true);
+                            $("#editCreditPeriodDays").attr("disabled", true);
+                            $("#editCreditLimit").attr("disabled", true);
+                            $("#PaymentTermID").attr("disabled", true);
+                            //$("#GSTRegistrationId").attr("disabled", true);
+                        }
+
+                    }
+                    //for (var i = 0; i < data.length; i++) {
+                    //    if (data[i].FormName == "CompopeningBal") {
+
+                    //        if (data[i].Create == "Y") {
+
+                    //            $('#Compopeningbalance').show();
+                    //            break;
+                    //        }
+                    //        else {
+
+                    //            $('#Compopeningbalance').hide();
+                    //            break;
+                    //        }
+
+                    //    }
+                    //    else {
+
+                    //        $('#Compopeningbalance').hide();
+                    //    }
+                    //}
+                }
+            }
+
+        });
+
+
+
+        //const ledgerId = decodeURIComponent(window.location.href).split("=")[1];
+
+        const segments = window.location.pathname.split('/');
+        const ledgerId = segments[segments.length - 1]; // "8141"
+
+         var dropdownOptionsHtml = '';
+        @if (ViewBag.ItemID != null)
+        {
+            foreach (var item in (SelectList)ViewBag.ItemID)
+            {
+                <text>
+                   dropdownOptionsHtml += "<option value='@item.Value'>@item.Text</option>";
+                </text>
+            }
+        }
+
+        $.ajax({
+            url: `/Vendor/CompanyDetails?LedgerID=${ledgerId}`,
+            type: "GET",
+            success: function (response) {
+                const { CompanyInfo, BusinessAddresses, ContactPersons} = response.data;
+
+
+                $("#EditedDate").val(parseAspNetDate(CompanyInfo?.EditedDate));
+                $("#Date").val(parseAspNetDate(CompanyInfo?.Date));
+
+                pan = CompanyInfo?.PAN;
+
+                //console.log('address id is ' + BusinessAddresses.AddressTitleID);
+                //console.log('Pan is ' + pan);
+
+
+                let keyContactsHtml = '';
+                //let bankHtml = '';
+
+                let itemsHtml = '';
+                let totalOpeningBalance = 0;
+                let keyContact = '';
+
+                BusinessAddresses.forEach((address, index) => {
+                    const openBalance = parseFloat(address.OpeningBalance) || 0;
+                    totalOpeningBalance += openBalance;
+
+                    const addressTitle = address.AddressTitle?.trim();
+
+                    // For showing Currency
+                    $('#CurrencyID').val(address.CountryId);
+                    // Get selected text
+                    const currencyText = $('#CurrencyID option:selected').text();
+
+
+                    // For showing Payment Terms
+                    $('#PaymentTermID').val(address.PurPaymentTermId);
+                    // Get selected text
+                    const PaymentTermText = $('#PaymentTermID option:selected').text();
+
+                    // For showing Frequency Purchase
+                    $('#FrequencyPurId').val(address.PurFreqOfTransactionId);
+                    // Get selected text
+                    const FreqPurchaseText = $('#FrequencyPurId option:selected').text();
+
+                    // For showing Category
+                    $('#SubGroupID').val(address.PurSubGroupId);
+                    // Get selected text
+                    const CategoryType = $('#SubGroupID option:selected').text();
+
+                    // For showing Courier Name
+                    $('#CourierID').val(address.PurTransporterId);
+                    // Get selected text
+                    const CourierName = $('#CourierID option:selected').text();
+
+                    // For showing DeliveryTerm
+                    $('#TermsOfDeliveryID').val(address.PurTermsOfDeliveryId);
+                    // Get selected text
+                    const DeliveryTerm = $('#TermsOfDeliveryID option:selected').text();
+
+                    // For showing GstType
+                    $('#GSTRegistrationId').val(address.GSTRegCategoryId);
+                    // Get selected text
+                    const GstType = $('#GSTRegistrationId option:selected').text();
+
+                    console.log('address id is ' + address.BusinessAddressId);
+
+                    // Step 1: Extract key contacts (Directors or Proprietors)
+                    keyContact = ContactPersons[0]; // single object
+
+                    const contactButtonHtml = keyContact
+                        ? `
+                            <button type="button"
+                                class="edit-contact-btn position-absolute end-0 ml-5 mr-2"
+                                style="border:none"
+                                data-addresstitleid="${address.BusinessAddressId}"
+                                data-title="${keyContact.Title || ''}"
+                                data-designationid="${keyContact.DesignationId || ''}"
+                                data-countrycode1="${keyContact.CountryCode1 || '+91'}"
+                                data-countrycode2="${keyContact.CountryCode2 || '+91'}"
+                                data-countrycode3="${keyContact.CountryCode3 || '+91'}"
+                                title="Add Contact Person">
+                                <i class="material-icons fs-3">person_add</i>
+                            </button>
+                        `
+                        : ''; // No button if keyContact is null
+
+
+          //          keyContactsHtml = keyContact && (keyContact.FirstName?.trim() || keyContact.LastName?.trim())
+          //              ? `
+          //             <div class="mb-2 pl-4 fs-4 d-inline">
+          //                 <strong>${keyContact.Title || ''} ${keyContact.FirstName || ''} ${keyContact.LastName || ''}</strong> -
+          //                 ${keyContact.Designation || ''} &nbsp
+          //                 ${keyContact.OfficeMobileNo || ''} &nbsp
+          //                 ${keyContact.OfficeEmailId || ''}
+          //             </div>
+          //         `
+          //              : (address.BusinessAddressId
+          //                  ? `
+          //  <div class="mb-2 pl-4 fs-4 d-inline text-muted">
+          //      Add Owner Details <button type="button" class="edit-contact-btn" style="border:none"
+          //                    data-unique="OwnerDetails"
+          //                    data-addresstitleid="${address.BusinessAddressId}"
+          //                    data-addresstitle=""
+          //                    data-contpersonid=""
+          //                    data-designationinfoid=""
+          //                    data-title="Mr."
+          //                    data-firstname=""
+          //                    data-middlename=""
+          //                    data-lastname=""
+          //                    data-designationid=""
+          //                    data-countrycode1="+91"
+          //                    data-officemobileno=""
+          //                    data-officeemailid=""
+          //                    data-officeemailincludingcc=""
+          //                    data-countrycode2="+91"
+          //                    data-personalmobileno=""
+          //                    data-personalemailid=""
+          //                    data-personalemailincludingcc=""
+          //                    data-altemailid=""
+          //                    data-altemailincludingcc=""
+          //                    data-defaultperson=""
+          //                    data-countrycode3="+91"
+          //                    data-stdcode=""
+          //                    data-landlineno1=""
+          //                    data-landlineno2=""
+          //                    data-dob=""
+          //                    data-homeaddress=""
+          //                    title="Add Owner Details ">
+          //                    <i class="material-icons align-middle">add</i>
+          //                </button>
+          //  </div>
+          //`
+          //                  : ''
+          //              );
+
+                    keyContactsHtml = keyContact && (keyContact.FirstName?.trim() || keyContact.LastName?.trim())
+                        ? `
+    <div class="mb-2 pl-4 fs-4 d-inline position-relative">
+
+        <strong>
+            ${keyContact.Title || ''}
+            ${keyContact.FirstName || ''}
+            ${keyContact.LastName || ''}
+        </strong> -
+
+        ${keyContact.Designation || ''} &nbsp
+        ${keyContact.OfficeMobileNo || ''} &nbsp
+        ${keyContact.OfficeEmailId || ''}
+
+        <!-- EDIT OWNER BUTTON -->
+        <button type="button"
+            class="edit-contact-btn p-2"
+            style="border:none"
+            data-unique="OwnerDetails"
+            data-addresstitleid="${keyContact.BusinessAddressId || address.BusinessAddressId}"
+            data-addresstitle="${keyContact.AddressTitle || ''}"
+            data-contpersonid="${keyContact.ContactPersonId || ''}"
+            data-designationinfoid="${keyContact.DesignationInfoId || ''}"
+            data-title="${keyContact.Title || 'Mr.'}"
+            data-firstname="${keyContact.FirstName || ''}"
+            data-middlename="${keyContact.MiddleName || ''}"
+            data-lastname="${keyContact.LastName || ''}"
+            data-designationid="${keyContact.DesignationId || ''}"
+            data-countrycode1="${keyContact.CountryCode || '+91'}"
+            data-officemobileno="${keyContact.OfficeMobileNo || ''}"
+            data-officeemailid="${keyContact.OfficeEmailId || ''}"
+            data-officeemailincludingcc="${keyContact.OfficeEmailIncludingCC || ''}"
+            data-countrycode2="${keyContact.CountryCode || '+91'}"
+            data-personalmobileno="${keyContact.PersonalMobileNo || ''}"
+            data-personalemailid="${keyContact.PersonalEmailId || ''}"
+            data-personalemailincludingcc="${keyContact.PersonalEmailncludingCC || ''}"
+            data-altemailid="${keyContact.AltEmailId || ''}"
+            data-altemailincludingcc="${keyContact.AltEmailIncludingCC || ''}"
+            data-defaultperson="${keyContact.DefaultPerson || ''}"
+            data-countrycode3="${keyContact.CountryCode || '+91'}"
+            data-stdcode="${keyContact.STDCode || ''}"
+            data-landlineno1="${keyContact.LandlineNo1 || ''}"
+            data-landlineno2="${keyContact.LandlineNo2 || ''}"
+            data-dob="${keyContact.DOB || ''}"
+            data-homeaddress="${keyContact.HomeAddress || ''}"
+            title="Edit Owner Details">
+
+            <i class="material-icons fs-3">edit_square</i>
+        </button>
+
+    </div>
+`
+                        : (address.BusinessAddressId
+                            ? `
+        <div class="mb-2 pl-4 fs-4 d-inline text-muted">
+            Add Owner Details
+
+            <button type="button"
+                class="edit-contact-btn"
+                style="border:none"
+                data-unique="OwnerDetails"
+                data-addresstitleid="${address.BusinessAddressId}"
+                data-addresstitle=""
+                data-contpersonid=""
+                data-designationinfoid=""
+                data-title="Mr."
+                data-firstname=""
+                data-middlename=""
+                data-lastname=""
+                data-designationid=""
+                data-countrycode1="+91"
+                data-officemobileno=""
+                data-officeemailid=""
+                data-officeemailincludingcc=""
+                data-countrycode2="+91"
+                data-personalmobileno=""
+                data-personalemailid=""
+                data-personalemailincludingcc=""
+                data-altemailid=""
+                data-altemailincludingcc=""
+                data-defaultperson=""
+                data-countrycode3="+91"
+                data-stdcode=""
+                data-landlineno1=""
+                data-landlineno2=""
+                data-dob=""
+                data-homeaddress=""
+                title="Add Owner Details">
+
+                <i class="material-icons align-middle">add</i>
+            </button>
+        </div>
+    `
+                            : ''
+                        );
+
+
+
+
+                    const contactPersonsExceptFirst = ContactPersons.slice(1); // Exclude the first one
+
+                    const relatedPersons = contactPersonsExceptFirst
+                        .filter(p => p.AddressTitle?.trim() === addressTitle)
+                        .sort((a, b) => {
+                            const nameA = (a.FirstName + ' ' + a.LastName).toUpperCase();
+                            const nameB = (b.FirstName + ' ' + b.LastName).toUpperCase();
+                            return nameA.localeCompare(nameB);
+                        });
+
+                    const contactListHtml = relatedPersons.length > 0
+                        ? relatedPersons.map(p => `
+                  <div class="border rounded p-3 mb-3 position-relative">
+
+                   <!-- Edit Button (Top Right Corner) -->
+
+                      <button type="button" class="p-2 position-absolute top-0 end-0 m-2 edit-contact-btn" style="border:none"
+                        data-addresstitleid="${p.BusinessAddressId}"
+                        data-addresstitle="${p.AddressTitle}"
+                        data-contpersonid="${p.ContactPersonId}"
+                        data-designationinfoid="${p.DesignationInfoId}"
+                        data-title="${p.Title}"
+                        data-firstname="${p.FirstName}"
+                        data-middlename="${p.MiddleName}"
+                        data-lastname="${p.LastName}"
+                        data-designationid="${p.DesignationId}"
+                        data-countrycode1="${p.CountryCode}"
+                        data-officemobileno="${p.OfficeMobileNo}"
+                        data-officeemailid="${p.OfficeEmailId}"
+                        data-officeemailincludingcc="${p.OfficeEmailIncludingCC}"
+                        data-countrycode2="${p.CountryCode}"
+                        data-personalmobileno="${p.PersonalMobileNo}"
+                        data-personalemailid="${p.PersonalEmailId}"
+                        data-personalemailincludingcc="${p.PersonalEmailncludingCC}"
+                        data-altemailid="${p.AltEmailId}"
+                        data-altemailincludingcc="${p.AltEmailIncludingCC}"
+                        data-defaultperson="${p.DefaultPerson}"
+                        data-countrycode3="${p.CountryCode}"
+                        data-stdcode="${p.STDCode}"
+                        data-landlineno1="${p.LandlineNo1}"
+                        data-landlineno2="${p.LandlineNo2}"
+                        data-dob="${p.DOB}"
+                        data-homeaddress="${p.HomeAddress}"
+                        title="Edit Contact">
+                        <i class="material-icons fs-3">edit_square</i>
+                      </button>
+
+
+                    <!-- Row 1: Name and Designation -->
+                    <div class="d-flex justify-content-between flex-wrap pe-5">
+                           <span class="fw-bold fs-5">${p.Title} ${p.FirstName} ${p.MiddleName || ''} ${p.LastName}</span>
+                      <span class="fs-5 text-muted">${p.Designation}</span>
+                    </div>
+
+                    <!-- Row 2: Mobile and Email -->
+                    <div class="d-flex justify-content-between flex-wrap mt-2 pe-5">
+                      <span class="fs-5">${p.CountryCode} ${p.OfficeMobileNo}</span>
+                      <span class="fs-5 text-break text-end">${p.OfficeEmailId || ''}</span>
+                    </div>
+                  </div>
+                `).join('')
+                        : '<li class="text-muted fs-3">No contact persons available.</li>';
+
+                    itemsHtml += `
+
+                    <div class="carousel-item ${index === 0 ? 'active' : ''}">
+                               <div>
+                                  <h4 class="pl-4">Address Title <span class="fs-4 text-dark pr-2">- ${address.AddressTitle}</span>
+                                   <!-- Add Button (positioned absolutely) -->
+                                    <button type="button"
+                                        class="pl-1 pr-3 bg-light edit-address-btn more-address-btn"
+                                        data-ledgerid="${address.BusinessEntityId}"
+                                        /*data-ledgerid=""*/
+                                        data-contry="India"
+                                        data-gsttype=3
+                                        style="border: none; position: absolute; top: 0;margin-top:-5px" title="Add Address">
+                                        <i class="material-icons fs-1">add</i><i style="padding-bottom:5px"> More Address</i>
+                                    </button>
+                               </div>
+
+                               <div class="row gx-4 px-4" > <!-- gx for horizontal, gy for vertical spacing -->
+                                  <div class="col-lg-4 col-md-6 col-sm-12">
+                                      <div class="card p-4 shadow zoom" style="min-height: 300px;max-height: 300px; overflow-y: auto;">
+                                       <h4 class="mr-5">Business Address <span class="fs-4 text-dark">- ${address.AddressTitle}</span>
+                                  <button type="button"
+                                        class=" position-absolute  end-0 p-2 edit-address-btn ml-5 mr-2" style="border:none"
+                                        data-ledgerid="${address.BusinessEntityId}"
+                                        data-addresstitleid="${address.BusinessAddressId}"
+                                        data-id="${address.AddressTitle}"
+                                        data-title="${address.AddressTitle}"
+                                        data-contry="${address.Country}"
+                                        data-address="${address.Address}"
+                                        data-landmark="${address.LandMark}"
+                                        data-locality="${address.Locality}"
+                                        data-ataluka="${address.Taluka}"
+                                        data-city="${address.District}"
+                                        data-state="${address.State}"
+                                        data-pincode="${address.Pincode}"
+                                        data-gstin="${address.GSTIN}"
+                                        data-gsttype="${address.GSTRegCategoryId}"
+                                        title="Edit Address">
+                                        <i class="material-icons fs-3">edit_square</i>
+                                    </button>
+
+                                </h4>
+
+
+                               <p class="fs-5">${address.Address || ''}, ${address.LandMark || ''}<br>
+                                ${address.Locality || ''}  ${address.Taluka}<br>
+                                ${address.District || ''} - ${address.Pincode || ''}<br>
+                                ${address.State || ''}, ${address.Country || ''}<br>
+                                 <span style=" color: #0077B3;font-weight:500" >GSTIN :</span> <strong>${address.GSTIN || ''}</strong> - ${GstType}</p>
+
+                                <h4 class="mr-5 ">Business Terms
+                               <button button type="button"
+                                    class=" position-absolute end-0 p-2 edit-businessterm-btn ml-5 mr-2" style="border:none"
+                                        data-addresstitleid="${address.BusinessAddressId}"
+                                        data-address-title="${address.AddressTitle}"
+                                        data-currency-id="${address.CountryId ?? 1}"
+                                        data-discount-percent="${address.PurDiscountPercent ?? 0}"
+                                        data-credit-period-days="${address.PurCreditPeriodDays ?? 0}"
+                                        data-credit-limit="${address.PurCreditLimit ?? 0}"
+                                        data-payment-term-id="${address.PurPaymentTermId ?? 9}"
+                                        data-terms-of-delivery-id="${address.PurTermsOfDeliveryId ?? 2}"
+                                        data-other-term="${address.PurOtherTerm}"
+                                        data-send-type="${address.PurSendType}"
+                                        data-courier-id="${address.PurTransporterId ?? 6}"
+                                        data-yearly-business="${address.PurYearlyBusiness ?? 50000}"
+                                        data-sub-group-id="${address.PurSubGroupId ?? 13}"
+                                        data-frequency-pur-id="${address.PurFreqOfTransactionId ?? 4}"
+                                         title="Edit Address">
+                                        <i class="material-icons fs-3">edit_square</i>
+                               </button></h4>
+                                <p class="fs-5 ">${currencyText||''}&nbsp;
+                                    <span style=" color: #0077B3;font-weight:500">Discount : </span>${address.PurDiscountPercent || '0'}%  &nbsp;
+                                    <span style=" color: #0077B3;font-weight:500">Credit Period : </span>${address.PurCreditPeriodDays || '0'}&nbsp;
+                                    <span style=" color: #0077B3;font-weight:500">Credit Limit : </span>${address.PurCreditLimit || '0'}
+                                    <br><span style=" color: #0077B3;font-weight:500">Delivery Terms : </span>${DeliveryTerm || ''}  ${address.PurOtherTerm || ''}&nbsp;&nbsp;&nbsp;
+                                    <span style=" color: #0077B3;font-weight:500">Dispatch Mode : </span>${address.PurSendType || ''}
+                                    <br><span style=" color: #0077B3;font-weight:500">Transporter : </span>${CourierName || ''} <br>
+                                    <span style=" color: #0077B3;font-weight:500">Category : </span>${CategoryType || ''}
+                                    <br><span style=" color: #0077B3;font-weight:500">Yearly Business : </span>${address.PurYearlyBusiness || ''}&nbsp;&nbsp;&nbsp;
+                                    <span style=" color: #0077B3;font-weight:500">Purchase(fq.) : </span>${FreqPurchaseText || ''}
+                                    <br><span style=" color: #0077B3;font-weight:500">Payment Term :</span> ${PaymentTermText || ''}
+                                 </p>
+
+                            </div>
+                          </div>
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                      <div class="card p-3 shadow zoom" style="max-height: 300px;min-height: 300px; overflow-y: auto;">
+                                <h4>Contact Persons</h4>
+
+                                ${contactButtonHtml}
+
+
+                                <ul style="list-style-type: disc; padding-left:0">
+                                    ${contactListHtml||''}
+                                </ul>
+                            </div>
+                            </div>
+
+                        <div class="col-lg-4 col-md-6 col-sm-12">
+                               <div class="card p-4 shadow zoom" style="max-height: 300px;min-height: 300px; overflow-y: auto;">
+
+
+                       
+
+
+ <div class="d-flex justify-content-evenly align-items-center mb-1 fs-5 flex-wrap">
+                                <h4 class="mr-5">
+                                    Bank Details
+
+                                <span style=" color: #0077B3;font-weight:500">IFSC :<span class="text-dark">${address.IFSCCode || ''}</span></span>
+
+                                <span style=" color: #0077B3;font-weight:500">Account :<span class="text-dark"> ${address.AccountNo || ''}</span></span>
+                                 <span class="px-2 text-start" style="color: #0077B3; font-weight: 500;">
+                                Cheque :
+                                <span class="text-dark" style="cursor: pointer;">
+            
+                                <i class="material-icons align-middle fs-1"
+                                style="cursor:pointer;"
+                                onclick="showImagePreview('/Image/${address.ChequeScanCopyImgName}')">image</i>
+
+ </span>
+    </span>
+    <br/>
+    <span style="color: #0077B3; font-weight: 500;">
+        GST Certificate:
+                  <i class="material-icons text-dark fs-2"
+style="cursor:pointer;"
+onclick="showImagePreview('/Image/${address.GSTCertificateImgName}')">image</i>
+
+    </span>
+                                  <button type="button"
+                                        class=" position-absolute end-0 edit-bank-btn ml-5 mr-2"
+                                        style="border:none"
+                                        data-ledgerid="${ledgerId}"
+                                        data-purbankid="${address.PurBankID}"
+                                        data-purifsccode="${address.IFSCCode}"
+                                        data-purbankname="${address.PurBankName}"
+                                        data-purbranchname="${address.PurBranchName}"
+                                        data-puraccountno="${address.PurAccountNo || ''}"
+                                        data-addresstitleid="${address.BusinessAddressId}"
+                                        data-gstcertificate="${address.GSTCertificateImgName}"
+                                        data-chequecopy="${address.ChequeScanCopyImgName}"
+                                        /*data-addresstitleid="${'AddressTitleID'}"*/
+                                        data-qty="1"
+                                        title="Add Bank Details">
+                                    <i class="material-icons fs-3">add</i>
+                                </button>
+                          </div>
+
+                        </h4>
+        <!-- Opening Balance - inside the same card -->
+
+                                  <div class="d-flex justify-content-evenly align-items-center mb-1 fs-5 ps-2 flex-wrap ">
+                                    <h4>Opening Balance
+                                    <span style=" color: #0077B3;font-weight:500">Amount :<span class="text-dark">${openBalance.toFixed(2) || ''}</span></span>
+                                    <span style=" color: #0077B3;font-weight:500">Type :<span class="text-dark "> ${address.TypeOfAccount || ''}</span></span>
+                                    <span style=" color: #0077B3;font-weight:500">Ref. No. :<span class="text-dark"> ${address.RefNo || ''}</span></span>
+                                    <span style=" color: #0077B3;font-weight:500">Date :<span class="text-dark"> ${parseAspNetDate1(address.OpnBalDate) || ''}</span></span>
+              
+
+                                        <button type="button"
+                                                class="position-absolute end-0 p-2 edit-amount-btn ms-5 me-2"
+                                                style="border:none"
+                                            data-ledgeridd="${address.BusinessEntityId}"
+                                            data-addresstitleid="${address.BusinessAddressId}"
+                                            data-addresstytle="${address.AddressTitle}"
+                                            data-amount="${openBalance.toFixed(2)}"
+                                            data-typeamount=${address.TypeOfAccount}"
+                                            data-referno="${address.RefNo}"
+                                            data-dateAmont="${address.OpnBalDate}"
+                                          title="Add Amount Details">
+                                          <i class="material-icons fs-3">add</i>
+                                        </button>
+</h4>
+
+
+                                
+                                  </div>
+  <div class="mt-2 px-2 fs-5 position-relative">
+                                    <!-- Row 1: Title -->
+                                    <h5 class="mb-0 pe-5" style="color: #0077B3; font-weight: 500;">
+                                        Specific Instructions to Vendor :
+                                    </h5>
+
+                                    <!-- Edit Button (positioned absolutely) -->
+                                    <button type="button"
+                                        class="p-2 instruction-btn"
+                                        data-ledgerid="${ledgerId}"
+                                        data-addresstitleid="${address.BusinessAddressId || ''}"
+                                        data-specific="${address.PurSpecificInstruction || ''}"
+                                        style="border: none; position: absolute; top: 0; right: 0;">
+                                        <i class="material-icons fs-3">add</i>
+                                    </button>
+
+                                    <!-- Specific Instruction -->
+                                    <p class="text-dark mt-2 mb-0  text-wrap" style="padding-right:3rem">
+                                        ${address.PurSpecificInstruction || 'Not Available !'}
+                                    </p>
+                                </div>
+                        </div>
+
+                    </div>
+
+                            </div>
+
+                          
+                `;
+                });
+
+                document.querySelector('#carouselContainer').innerHTML += itemsHtml;
+
+                // For showing type of Company
+                $('#TypeOfCompanyID').val(CompanyInfo?.TypeOfEntityId);
+                // Get selected text
+                const CompType = $('#TypeOfCompanyID option:selected').text();
+
+
+                const itemCount = (itemsHtml.match(/class="carousel-item/g) || []).length;
+                const showControls = itemCount > 1;
+
+
+                const finalCarousel =
+                    `<div class="row pl-4 pr-4" style=""><center>
+                          <div class="col-xs-12  zoom card justify-content-center d-inline p-3">
+
+                           <span class="fs-3 ml-4 p-2" style=" color: #0077B3; font-weight: bold">${CompanyInfo?.EntityName}</span>
+                           <span class="fs-5 p-2" style="font-weight:500">PAN : ${CompanyInfo?.PAN}</span>
+                           <span class="fs-5 p-2" style="font-weight:500">MSME No. : ${CompanyInfo?.MSMENo || ''}</span>
+                           <span class="fs-5 p-2" style="font-weight: 500;">
+                                <i class="material-icons text-dark fs-2" style="cursor:pointer" onclick="showImagePreview1('/Image/${CompanyInfo?.MSMECertificateCopy}')">image</i>
+                           </span>
+                           <span class="fs-5 p-2" style="font-weight:500"> ${CompanyInfo?.Website || ''}</span>
+                           <span class="fs-5 p-2" style="font-weight:500">${CompType || ''}</span>
+                           <span class="fs-5 p-2 " style="font-weight:500">${CompanyInfo?.CIN || ''}</span>
+
+                           <button type="button"class="edit-company-btn "  style="border:none"
+                              data-ledgerid="${ledgerId}"
+                              data-company-name="${CompanyInfo?.EntityName}"
+                              data-pano="${CompanyInfo?.PAN}"
+                              data-websit="${CompanyInfo?.Website}"
+                              data-incorpo="${CompanyInfo?.CIN}"
+                              data-typofc="${CompanyInfo?.TypeOfEntityId}"
+                              title="Edit company">
+                              <i class="material-icons fs-3">edit_square</i>
+                          </button>
+
+
+
+                   <div class=" p-1 mb-1 ">
+                     <span class="fs-5 p-2" style="font-weight:500"> ${keyContactsHtml}</span>
+
+
+                   </div>
+                 </div></center></div>
+                    <div id="addressCarousel" class="carousel slide" style="margin-top:-20px">
+                        <div class="carousel-inner p-1">
+                            ${itemsHtml || `
+                                <span class="fs-4" style="color:midnightblue">Create Address :</span>
+                                <button class="add-address-btn border-0" type="button" data-ledgerid="${ledgerId}" data-title="Primary"
+                                        data-contry="INDIA" data-gsttype=3>
+                                    <i class="material-icons fs-2" style="color: #0077B3;">add</i>
+                                </button>
+                            `}
+
+                        </div>
+
+
+                       ${showControls ? `
+                       <button class="carousel-control-prev border-0 bg-transparent" type="button" data-bs-target="#addressCarousel" data-bs-slide="prev">
+                           <span class="fs-2 text-dark">&#9664;</span> <!-- ◀ -->
+                           <span class="visually-hidden">Previous</span>
+                       </button>
+
+                       <button class="carousel-control-next border-0 bg-transparent" type="button" data-bs-target="#addressCarousel" data-bs-slide="next">
+                           <span class="fs-2 text-dark">&#9654;</span> <!-- ▶ -->
+                           <span class="visually-hidden">Next</span>
+                       </button>
+                   ` : ''}
+
+
+                    </div>
+                    <div class="row pl-4 pr-4">
+                            <div class="col-xs-12 zoom card justify-content-center d-inline  p-3">
+                                <span class="fs-4" style=" color: #0077B3;font-weight:500">Default Note :</span>
+                                <span class="fs-5" >${CompanyInfo?.BusinessEntityNote || 'Not Available !'}</span>&nbsp;&nbsp;
+                                <button type="button"
+                                   class="end-0 p-2 default-note-btn" style="border:none"
+                                   data-idledger="${ledgerId}"
+                                   data-default-note="${CompanyInfo?.BusinessEntityNote || ''}"
+                                   title="Add Default Note">
+                                   <i class="material-icons fs-3">add</i>
+                                </button>
+                            </div>
+                     </div>
+                `;
+
+
+                $('#carouselContainer').html(finalCarousel);
+
+                console.log("Final Carousel HTML:", itemsHtml);
+
+                //Opening balance amount edit modal
+                $(document).on('click', '.edit-amount-btn', function () {
+                    const button = $(this);
+                    $('#editLedgeriid').val(button.data('ledgeridd'));
+                    $('#addresstitleid').val(button.data('addresstitleid'));
+                    $('#editAddressTytle').val(button.data('addresstytle'));
+                    $('#editAmount').val(button.data('amount'));
+                    $('#editAmountType').val(button.data('typeamount'));
+                    $('#editReferNo').val(button.data('referno'));
+                    $('#editDateOpn').val(button.data('dateAmont'));
+                    openModal('OpnBalAmtModal', 'OpnBalAmtModalOverlay');
+                    var check = button.data('addressTitleID');
+                    console.log('address titleid :' + check);
+                });
+
+
+                //Default note edit modal
+                $(document).on('click', '.default-note-btn', function () {
+                    const button = $(this);
+                    $('#editLedgerid').val(button.data('idledger'));
+                    $('#editDefaultNote').val(button.data('default-note'));
+                    openModal('DefaultNoteModal', 'DefaultNoteModalOverlay');
+                    //var check = button.data('idLedger');
+                    //console.log('checkingiD :' + check);
+                });
+
+                //Instruction edit modal
+                $(document).on('click', '.instruction-btn', function () {
+                    const button = $(this);
+                    $('#editLedgeriD').val(button.data('idledger'));
+                    $('#addressTitleID').val(button.data('addresstitleid'));
+                    $('#editSInstruction').val(button.data('specific'));
+                    openModal('SpeciInstructionModal', 'SpeciInstructionModalOverlay');
+                    //var check = button.data('iDledger');
+                    //console.log('checkingS :' + check);
+                });
+
+                //const pan='';
+                //company edit modal
+                $(document).on('click', '.edit-company-btn', function () {
+                    const button = $(this);
+                    $('#editLedgerN').val(button.data('ledgerid'));
+                    $('#editcompanyName').val(button.data('company-name'));
+                    $('#editcompanyPAN').val(button.data('pano'));
+                    $('#editcompanyWebsite').val(button.data('websit'));
+                    $('#editcompanyCIN').val(button.data('incorpo'));
+                    $('#TypeOfCompanyID').val(button.data('typofc'));
+
+
+                    //// Change modal title
+                    //$('.modal-title').text('Update Company Data');
+
+                    //////    // Change button text
+                    $('#UpdateCompany').val('Update');
+                    openModal('CompanyModal', 'CompanyModalOverlay');
+                    const pan = button.data('pano');
+                    //console.log('checking :' + pincode);
+                });
+
+
+
+                // Address edit modal
+                $(document).on('click', '.edit-address-btn', function () {
+                    const button = $(this);
+
+                    $('#editledgerid').val(button.data('ledgerid'));
+                    $('#editbussinessID').val(button.data('addresstitleid'));
+                    $('#editAddressId').val(button.data('AddressTitle'));
+                    $('#editAddressTitle').val(button.data('title'));
+                    $('#editCountry').val(button.data('contry'));
+                    $('#editAddressText').val(button.data('address'));
+                    $('#editLandmarkText').val(button.data('landmark'));
+                    $('#editAddressLocality').val(button.data('locality'));
+                    $('#editTaluka').val(button.data('ataluka')),
+                    $('#editAddressCity').val(button.data('city'));
+                    $('#editAddressState').val(button.data('state'));
+                    $('#editAddressPincode').val(button.data('pincode'));
+                    $('#editAddressGstin').val(button.data('gstin'));
+                    $('#GSTRegistrationId').val(button.data('gsttype'));
+
+                   /* Gauri*/
+                    $('#UpdateBusinessAddress').text(
+                        button.hasClass('more-address-btn') ? 'Create' : 'Update'
+                    );
+                    //---------------------------
+                    openModal('BusinessAddressModal', 'BusinessAddressModalOverlay');
+                    var check = button.data('title');
+                    console.log('checking Add. :' + check);
+                });
+
+                // Address edit modal
+                $(document).on('click', '.add-address-btn', function () {
+                    const button = $(this);
+                    $('#editledgerid').val(button.data('ledgerid'));
+                    $('#editbussinessID').val(button.data('addresstitleid'));
+                    $('#editAddressId').val(button.data('AddressTitle'));
+                    $('#editAddressTitle').val(button.data('title'));
+                    $('#editCountry').val(button.data('contry'));
+                    $('#editAddressText').val(button.data('address'));
+                    $('#editLandmarkText').val(button.data('landmark'));
+                    $('#editAddressLocality').val(button.data('locality'));
+                    $('#editTaluka').val(button.data('ataluka')),
+                    $('#editAddressCity').val(button.data('city'));
+                    $('#editAddressState').val(button.data('state'));
+                    $('#editAddressPincode').val(button.data('pincode'));
+                    $('#editAddressGstin').val(button.data('gstin'));
+                    $('#GSTRegistrationId').val(button.data('gsttype'));
+                    /*Gauri*/
+                    $('#UpdateBusinessAddress').text('Create');
+                    openModal('BusinessAddressModal', 'BusinessAddressModalOverlay');
+                    var check = button.data('title');
+                    console.log('checking Add. :' + check);
+                });
+
+                // Business term edit modal
+                $(document).on('click', '.edit-businessterm-btn', function () {
+                    const button = $(this);
+
+                    $('#editbussinessID').val(button.data('addresstitleid'));
+                    $('#editAddressTitle').val(button.data('address-title'));
+                    $('#CurrencyID').val(button.data('currency-id'));
+                    $('#editDiscountPercent').val(button.data('discount-percent'));
+                    $('#editCreditPeriodDays').val(button.data('credit-period-days'));
+                    $('#editCreditLimit').val(button.data('credit-limit'));
+                    $('#PaymentTermID').val(button.data('payment-term-id'));
+                    $('#TermsOfDeliveryID').val(button.data('terms-of-delivery-id'));
+                    $('#editOtherTerm').val(button.data('other-term'));
+
+                    //const sendType = button.data('send-type'); // e.g., "By Hand" or "By Courier"
+                    //$('#editSendType').val(sendType); // optional if you keep the hidden field
+
+                    //// Reset all radio buttons first
+                    //$("input[name='SendType']").prop('checked', false);
+
+                    //// Then check the correct one based on value
+                    //$(`input[name='SendType'][value='${sendType}']`).prop('checked', true);
+
+
+
+                    //let sendType = button.data('send-type'); // e.g., "By Hand" or "By Courier"
+
+                    //// Use "By Courier" as default if sendType is missing or empty
+                    //if (!sendType || sendType.trim() === "") {
+                    //    sendType = "By Courier";
+                    //}
+
+                    //$('#editSendType').val(sendType); // optional hidden field update
+
+                    //// Reset all radio buttons first
+                    //$("input[name='SendType']").prop('checked', false);
+
+                    //// Then check the correct one based on value
+                    //$(`input[name='SendType'][value='${sendType}']`).prop('checked', true);
+
+
+                    ////$('#editSendType').val(button.data('send-type'));
+                    ////CHANGED
+                    //  $('#CourierID').val(button.data('courier-id'));
+                    ////let courierId = button.data('courier-id');
+
+                    ////if (sendType && sendType.trim() === "By Hand") {
+                    ////    // Clear and disable courier
+                    ////    $('#CourierID').val("").trigger("change");
+                    ////    $('#CourierID').prop('disabled', true);
+                    ////} else {
+                    ////    // Set courier normally
+                    ////    $('#CourierID').val(courierId).trigger("change");
+                    ////    $('#CourierID').prop('disabled', false);
+                    ////}
+
+                    let sendType = button.data('send-type');
+                    let courierId = button.data('courier-id');
+
+                    // remove space
+                    sendType = sendType ? sendType.trim() : "";
+
+                    // Reset radio
+                    $("input[name='SendType']").prop('checked', false);
+                    $(`input[name='SendType'][value='${sendType}']`).prop('checked', true);
+
+                    // Courier logic
+                    if (sendType === "By Hand") {
+
+                        $('#CourierID').val("");
+                        $('#CourierID').prop('disabled', true);
+
+                    } else {
+
+                        $('#CourierID').val(courierId);
+                        $('#CourierID').prop('disabled', false);
+                    }
+
+                    $('#editYearlyBusiness').val(button.data('yearly-business'));
+                    $('#SubGroupID').val(button.data('sub-group-id'));
+                    $('#FrequencyPurId').val(button.data('frequency-pur-id'));
+
+                    openModal('Businessterm', 'BusinesstermOverlay');
+                });
+
+
+                // Contact edit modal
+                $(document).on('click', '.edit-contact-btn', function () {
+                    const button = $(this);
+                    /*Gauri*/
+                    const contactId = button.data('contpersonid');
+
+                    if (contactId) {
+                        $('#update-contact-persons').text('Update');
+                    } else {
+                        $('#update-contact-persons').text('Create');
+                    }
+
+                    /*--------------------------------------*/
+
+
+
+
+
+                    const unique = button.data('unique'); // "OwnerDetails" or something else
+                    $('#OwnerDetails').val(unique); // ✅ Only for display/debug, not logic
+
+                    //$('#OwnerDetails').val(button.data('unique'));
+                    $('#CpersonAddressTitleID').val(button.data('addresstitleid'));
+                    $('#personTitle').val(button.data('title'));
+                    $('#contactPersonId').val(button.data('contpersonid'));
+                    $('#designationfoid').val(button.data('designationinfoid'));
+                    $('#personFirstName').val(button.data('firstname'));
+                    $('#personMiddleName').val(button.data('middlename'));
+                    $('#personLastName').val(button.data('lastname'));
+                    $('#personDesignationId').val(button.data('designationid'));
+                    $('#CountryCode1').val(button.data('countrycode1'));
+                    $('#CountryCode2').val(button.data('countrycode2'));
+                    $('#CountryCode3').val(button.data('countrycode3'));
+                    $('#personOfficeMobile').val(button.data('officemobileno'));
+                    $('#personOfficeEmail').val(button.data('officeemailid'));
+                    const isOffccChecked = button.data('officeemailincludingcc') === 'Y';
+                    $('#personOfficeCC').prop('checked', isOffccChecked);
+                    //$('#personOfficeCC').val(button.data('officeemailincludingcc'));
+                    $('#personPersonalMobile').val(button.data('personalmobileno'));
+                    $('#personPersonalEmail').val(button.data('personalemailid'));
+                    const isPersonaltccChecked = button.data('personalemailincludingcc') === 'Y';
+                    $('#personPersonalCC').prop('checked', isPersonaltccChecked);
+                    //$('#personPersonalCC').val(button.data('personalemailincludingcc'));
+                    $('#personAltEmail').val(button.data('altemailid'));
+                    const isAltccChecked = button.data('altemailincludingcc') === 'Y';
+                    $('#personAltCC').prop('checked', isAltccChecked);
+                    //$('#personAltCC').val(button.data('altemailincludingcc'));
+                    // Assuming the data value is either "Y" or "N"
+                    const isChecked = button.data('defaultperson') === 'Y';
+                    $('#personDefault').prop('checked', isChecked);
+                    //$('#personDefault').val(button.data('defaultperson'));
+                    $('#personSTD').val(button.data('stdcode'));
+                    $('#personLandline1').val(button.data('landlineno1'));
+                    $('#personLandline2').val(button.data('landlineno2'));
+                    $('#personDOB').val(button.data('dob'));
+                    $('#personHomeAddress').val(button.data('homeaddress'));
+
+                    //console.log('default person is ' + button.data('defaultperson'));
+                    const panno = pan; // globally available
+                    const owner = unique; // ✅ use button’s data directly
+
+                    OwnerDetails(panno, owner); // ✅ no dependency on #OwnerDetails input
+
+                    //OwnerDetails(panno, owner);
+
+                    openModal('ContactPersonModal', 'ContactPersonModalOverlay');
+                });
+
+                //// Preferred item edit modal
+                //$(document).on('click', '.edit-preferred-btn', function () {
+                //    const button = $(this);
+                //    $('#editLedgerID').val(button.data('ledgerid'));
+                //    $('#editAddressTitleID').val(button.data('addresstitleid'));
+                //    $('#editpurbankid').val(button.data('purbankid'));
+                //    $('#editpurifsccode').val(button.data('purifsccode'));
+                //    $('#editpurbranchname').val(button.data('purbranchname'));
+                //    $('#editpuraccountno').val(button.data('puraccountno'));
+                //    openModal('PreferredItemModal', 'PreferredItemModalOverlay');
+                //});
+
+                // Preferred item edit modal
+                $(document).on('click', '.edit-preferred-btn', function () {
+                    const button = $(this);
+                    $('#editLedgerID').val(button.data('ledgerid'));
+                    $('#editAddressTitleID').val(button.data('addresstitleid'));
+                    $('#editPreferredItemId').val(button.data('itemid'));
+                    $('#editPreferredQuantity').val(button.data('qty'));
+                    $('#editPreferredRate').val(button.data('rate'));
+                    $('#editPrefItemid').val(button.data('preffid'));
+                    openModal('PreferredItemModal', 'PreferredItemModalOverlay');
+                });
+
+                // Preferred item edit modal
+                $(document).on('click', '.edit-bank-btn', function () {
+                    const button = $(this);
+                    $('#editLedgerID').val(button.data('ledgerid'));
+                    $('#editAddressTitleID').val(button.data('addresstitleid'));
+                    $('#editpurbankid').val(button.data('purbankid'));
+                    $('#editpurifsccode').val(button.data('purifsccode'));
+                    $('#BankName').val(button.data('purbankname'));
+                    $('#editpurbranchname').val(button.data('purbranchname'));
+                    $('#editpuraccountno').val(button.data('puraccountno'));
+
+                    $('#hiddenChequeCopy').val(button.data('chequecopy'));
+                    $('#hiddenGSTCertificate').val(button.data('gstcertificate'));
+
+                    // Cheque file preview
+                    if (button.data('chequecopy')) {
+                        $('#chequeImgPreview').attr('src', '/Image/' + button.data('chequecopy')).show();
+                        $('#existingChequeLink').attr('href', '/Image/' + button.data('chequecopy'));
+                        $('#previewButtonContainer').show();
+                    } else {
+                        $('#chequeImgPreview').hide();
+                        $('#previewButtonContainer').hide();
+                    }
+
+                    // GST file preview
+                    if (button.data('gstcertificate')) {
+                        $('#gstImgPreview').attr('src', '/Image/' + button.data('gstcertificate')).show();
+                        $('#existingGSTLink').attr('href', '/Image/' + button.data('gstcertificate'));
+                        $('#previewButtonContainer1').show();
+                    } else {
+                        $('#gstImgPreview').hide();
+                        $('#previewButtonContainer1').hide();
+                    }
+
+
+
+                    //$('#previewButtonContainer1').val(button.data('gstcertificate'));
+                    //$('#previewButtonContainer').val(button.data('chequecopy'));
+                    openModal('BankDetailsModal', 'BankDetailsModalOverlay');
+                });
+                //Opening balance amount edit modal
+                $(document).on('click', '.edit-amount-btn', function () {
+                    const button = $(this);
+                    $('#editLedgeriid').val(button.data('ledgeridd'));
+                    $('#addresstitleid').val(button.data('addresstitleid'));
+                    $('#editAddressTytle').val(button.data('addresstytle'));
+                    $('#editAmount').val(button.data('amount'));
+                    /*$('#editAmountType').val(button.data('typeamount'));*/
+                    $('#editReferNo').val(button.data('referno'));
+                    $('#editDateOpn').val(button.data('dateAmont'));
+                    openModal('OpnBalAmtModal', 'OpnBalAmtModalOverlay');
+                    var check = button.data('addressTitleID');
+                    console.log('address titleid :' + check);
+                });
+
+                //Default note edit modal
+                $(document).on('click', '.default-note-btn', function () {
+                    const button = $(this);
+                    $('#editLedgerid').val(button.data('idledger'));
+                    $('#editDefaultNote').val(button.data('default-note'));
+                    openModal('DefaultNoteModal', 'DefaultNoteModalOverlay');
+                    //var check = button.data('idLedger');
+                    //console.log('checkingiD :' + check);
+                });
+
+                //Instruction edit modal
+                $(document).on('click', '.instruction-btn', function () {
+                    const button = $(this);
+                    $('#editLedgeriD').val(button.data('idledger'));
+                    $('#addressTitleID').val(button.data('addresstitleid'));
+                    $('#editSInstruction').val(button.data('specific'));
+                    openModal('SpeciInstructionModal', 'SpeciInstructionModalOverlay');
+                    //var check = button.data('iDledger');
+                    //console.log('checkingS :' + check);
+                });
+
+
+            },
+            error: function (err) {
+                console.error("Error fetching data", err);
+                $('#carouselContainer').html("<button type='button' class='add-company-btn ms-2 border-0' title='Create New Customer'><i class='material-icons fs-1' style='color: #0077B3;'>add</i></button> <p class='text-dark fs-4 fw-500'>Please create new Vendor profile by clicking + icon.</p>");
+            }
+
+        });
+    });
+
+
+    function showImagePreview(imageUrl) {
+        $('#modalImage').attr('src', imageUrl);
+        $('#imagePreviewModal').modal('show');
+    }
+
+    function showFilePreview(fileUrl) {
+        const fileExt = fileUrl.split('.').pop().toLowerCase();
+
+        if (fileExt === 'pdf') {
+            // Show PDF in iframe
+            $('#modalImage').hide();          // hide image
+            $('#modalPDF').attr('src', fileUrl).show(); // show iframe
+        } else {
+            // Show Image
+            $('#modalPDF').hide();            // hide iframe
+            $('#modalImage').attr('src', fileUrl).show(); // show image
+        }
+
+        $('#imagePreviewModal').modal('show');
+    }
+
+
+    function showImagePreview1(imageUrl) {
+        $('#modalImage1').attr('src', imageUrl);
+        $('#imagePreviewModal1').modal('show');
+    }
+
+    //< button type="button" class="add-company-btn ms-2" style="border: none; background: none;"
+
+    //    title="Edit Company Info" >
+    //    <i class="material-icons" style="font-size: 26px; color: #0077B3;">add</i> <!-- This is the plus icon-- >
+    //</button >
+
+    // Function to open the modal
+    function openModal(modalId, overlayId) {
+        document.getElementById(modalId).style.display = "block";
+        document.getElementById(overlayId).style.display = "block";
+    }
+
+    // Function to close the modal
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = "none";
+        document.getElementById(modalId + "Overlay").style.display = "none";
+    }
+    /*------------------------------------------------------------------------------------------------------*/
+
+
+    //var data = {
+            //    Section: "BusinessAddress",
+            //    AddressId: $('#editAddressId').val(),
+            //    Title: $('#editAddressTitle').val(),
+            //    Country: $('#editCountry').val(),
+            //    AddressText: $('#editAddressText').val(),
+            //    Locality: $('#editAddressLocality').val(),
+            //    City: $('#editAddressCity').val(),
+            //    State: $('#editAddressState').val(),
+            //    Pincode: $('#editAddressPincode').val(),
+            //    Gstin: $('#editAddressGstin').val()
+            //};
+
+    //Specific Instruction data
+    $(document).ready(function () {
+
+        const msmeInput = document.getElementById("MSMENumber");
+        const msmeError = document.getElementById("msmeError");
+
+        const validRegex = /^UDYAM-[A-Z]{2}-\d{2}-\d{7}$/;
+
+        msmeInput.addEventListener("input", function () {
+            let val = this.value.toUpperCase();
+
+            // Remove anything not allowed (only UDYAM-XX-00-0000000)
+            val = val.replace(/[^A-Z0-9-]/g, '');
+
+            // Auto-format: force 'UDYAM-' prefix if not already
+            if (!val.startsWith("UDYAM-")) {
+                val = "UDYAM-";
+            }
+
+            // Prevent more than 2 letters after UDYAM-
+            const parts = val.split('-');
+
+            // Fix extra parts
+            if (parts.length > 4) {
+                parts.length = 4;
+            }
+
+            // Rebuild correctly formatted value
+            val = parts[0] || "UDYAM";
+            if (parts.length > 1) val += "-" + (parts[1].substring(0, 2).replace(/[^A-Z]/g, ''));
+            if (parts.length > 2) val += "-" + (parts[2].substring(0, 2).replace(/\D/g, ''));
+            if (parts.length > 3) val += "-" + (parts[3].substring(0, 7).replace(/\D/g, ''));
+
+            this.value = val;
+
+            // Final validation check
+            if (validRegex.test(val)) {
+                msmeError.style.display = "none";
+            } else {
+                msmeError.style.display = "inline";
+            }
+        });
+    });
+
+    function validateAndUpdateCompany() {
+
+        clearValidationMessages();
+
+        let isValid = true;
+
+        const companyName =
+            $("#editcompanyName").val().trim();
+
+        const pan =
+            $("#editcompanyPAN").val().toUpperCase().trim();
+
+        // COMPANY NAME
+
+        if (companyName === "") {
+
+            $("#companyNameError").text(
+                "❌ Vendor name is required."
+            );
+
+            isValid = false;
+        }
+
+        // PAN
+
+        if (pan === "") {
+
+            $("#panError").text(
+                "❌ PAN is required."
+            );
+
+            isValid = false;
+
+        } else {
+
+            GSTPIN();
+
+            if ($("#panError").text() !== "") {
+                isValid = false;
+            }
+
+            if ($("#companyNameError").text() !== "") {
+                isValid = false;
+            }
+        }
+
+        // WEBSITE
+
+        if (!validateWebsite()) {
+            isValid = false;
+        }
+
+        // MSME
+
+        const isMSMEChecked =
+            $('#MSMECheckbox').prop('checked');
+
+        const msmeNo =
+            $('#MSMENumber').val().trim();
+
+        const msmeRegex =
+            /^UDYAM-[A-Z]{2}-\d{2}-\d{7}$/;
+
+        if (isMSMEChecked) {
+
+            if (!msmeNo) {
+
+                $("#msmeError")
+                    .text("❌ MSME number is required.")
+                    .show();
+
+                isValid = false;
+
+            } else if (!msmeRegex.test(msmeNo)) {
+
+                $("#msmeError")
+                    .text("❌ Invalid MSME number format.")
+                    .show();
+
+                isValid = false;
+
+            } else {
+
+                $("#msmeError").hide();
+            }
+
+        } else {
+
+            $("#msmeError").hide();
+        }
+
+        return isValid;
+    }
+
+
+$(document).ready(function () {
+
+    $('#UpdateCompany').click(function () {
+
+        if (!validateAndUpdateCompany()) return;
+
+        var user = '@Session["LoginUserId"]';
+
+        const ledgerID = $('#editLedgerN').val().trim();
+
+        let formData = new FormData();
+
+        formData.append("Section", "Company");
+        formData.append("UserId", user);
+        formData.append("BusinessEntityId", ledgerID);
+
+        formData.append("EntityName", $('#editcompanyName').val());
+        formData.append("PAN", $('#editcompanyPAN').val());
+        formData.append("CIN", $('#editcompanyCIN').val());
+        formData.append("TypeOfEntityId", $('#TypeOfCompanyID').val());
+        formData.append("Website", $('#editcompanyWebsite').val());
+
+        // MSME
+        formData.append("MSMENo", $('#MSMENumber').val());
+        formData.append(
+            "IsMSMENo",
+            $('#MSMECheckbox').prop('checked') ? "Y" : "N"
+        );
+
+        const MSMEFile = $('#MSMEInput')[0].files[0];
+
+        if (MSMEFile) {
+            formData.append("CustomPhotoFileMSME", MSMEFile);
+        }
+
+        console.log("🟢 LedgerID:", ledgerID);
+
+        // CREATE
+        if (ledgerID == null || ledgerID == "") {
+
+            $.ajax({
+                url: '/Vendor/CreateCustomerProfile',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+
+                success: function (response) {
+
+                    if (response.success) {
+
+                        alert("✅ Created Successfully");
+
+                        window.location.href =
+                            `/Vendor/create/${response.ledgerId}`;
+
+                    } else {
+                        alert(response.message);
+                    }
+                },
+
+                error: function (xhr, status, error) {
+                    alert("Error: " + error);
+                }
+            });
+
+        }
+
+        // UPDATE
+        else {
+
+            $.ajax({
+                url: '/Vendor/UpdateCustomerProfile',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+
+                success: function (response) {
+
+                    if (response.success) {
+
+                        alert("✅ Updated Successfully");
+
+                        location.reload();
+
+                    } else {
+
+                        alert("❌ Failed: " + response.message);
+                    }
+                },
+
+                error: function (xhr, status, error) {
+                    alert("❌ AJAX error: " + error);
+                }
+            });
+
+        }
+
+    });
+
+});
+
+
+
+
+
+
+
+    //business address data.......
+    $(document).ready(function () {
+        $('#UpdateBusinessAddress').click(function () {
+
+            // Basic Field Validations
+            let isValid = true;
+            let errorMsg = "";
+
+            if (!$('#editAddressTitle').val().trim()) {
+                isValid = false;
+                errorMsg += "• Address Title is required.\n";
+            }
+
+            if (!$('#editCountry').val().trim()) {
+                isValid = false;
+                errorMsg += "• Country is required.\n";
+            }
+
+            if (!$('#editAddressPincode').val().trim()) {
+                isValid = false;
+                errorMsg += "• Pincode is required.\n";
+            }
+
+            if (!$('#editAddressState').val().trim()) {
+                isValid = false;
+                errorMsg += "• State is required.\n";
+            }
+
+            if (!$('#editAddressCity').val().trim()) {
+                isValid = false;
+                errorMsg += "• District is required.\n";
+            }
+
+            if (!$('#editTaluka').val().trim()) {
+                isValid = false;
+                errorMsg += "• Taluka is required.\n";
+            }
+
+            if (!$('#editAddressLocality').val().trim()) {
+                isValid = false;
+                errorMsg += "• Locality is required.\n";
+            }
+
+            if (!$('#editAddressText').val().trim()) {
+                isValid = false;
+                errorMsg += "• Address is required.\n";
+            }
+
+            if (!$('#GSTRegistrationId').val()) {
+                isValid = false;
+                errorMsg += "• GST Type must be selected.\n";
+            }
+
+            // Conditional GSTIN Validation
+            let gstTypeText = $('#GSTRegistrationId option:selected').text().trim();
+            let gstin = $('#editAddressGstin').val().trim();
+
+            if (gstTypeText !== "Unregistered / Consumer" && gstin === "") {
+                isValid = false;
+                errorMsg += "• GSTIN is required for the selected GST Type.\n";
+            }
+
+            if (gstin.length > 0 && !/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(gstin)) {
+                isValid = false;
+                errorMsg += "• GSTIN format is invalid.\n";
+            }
+
+            if (!isValid) {
+                alert("Please correct the following:\n\n" + errorMsg);
+                return; // ❌ Stop execution
+            }
+
+
+            const data = {
+                Section: "BusinessAddress",
+                MultipleAddress: [{
+                    BusinessEntityId: $('#editledgerid').val(),
+                    BusinessAddressId: $('#editbussinessID').val(),
+                    //AddressId: $('#editAddressId').val(),
+                    AddressTitle: $('#editAddressTitle').val(),
+                    Country: $('#editCountry').val(),
+                    Address: $('#editAddressText').val(),
+                    LandMark: $('#editLandmarkText').val(),
+                    Locality: $('#editAddressLocality').val(),
+                    Taluka: $('#editTaluka').val(),
+                    District: $('#editAddressCity').val(),
+                    State: $('#editAddressState').val(),
+                    Pincode: $('#editAddressPincode').val(),
+                    GSTIN: $('#editAddressGstin').val(),
+                    GSTRegCategoryId: $('#GSTRegistrationId').val()
+                }]
+            };
+
+            UpdateCustomerProfile(data);  // Call the update function with the collected data
+            console.log("🟢 Final Data Sent to Server:", JSON.stringify(data));
+        });
+    });
+
+
+    //business terms data.....
+    $(document).ready(function () {
+        $('#saveBusinessTermBtn').click(function () {
+
+
+            let isValid = true;
+            let errorMessages = [];
+
+            // Validate fields
+            const currencyID = $('#CurrencyID').val();
+            const discountPercent = $('#editDiscountPercent').val();
+            const creditPeriodDays = $('#editCreditPeriodDays').val();
+            const creditLimit = $('#editCreditLimit').val();
+            const paymentTermID = $('#PaymentTermID').val();
+            const termsOfDeliveryID = $('#TermsOfDeliveryID').val();
+            const sendType = $("input[name='SendType']:checked").val(); // <-- radio
+            const courierID = $('#CourierID').val();
+            const yearlyBusiness = $('#editYearlyBusiness').val();
+            const subGroupID = $('#SubGroupID').val();
+            const frequencyPurId = $('#FrequencyPurId').val();
+
+            // Example validations
+            if (!currencyID) {
+                isValid = false;
+                errorMessages.push("Currency is required.");
+            }
+            if (!discountPercent || isNaN(discountPercent) || discountPercent < 0) {
+                isValid = false;
+                errorMessages.push("Valid Discount Percent is required.");
+            }
+            if (!creditPeriodDays || isNaN(creditPeriodDays) || creditPeriodDays < 0) {
+                isValid = false;
+                errorMessages.push("Valid Credit Period Days is required.");
+            }
+            if (!creditLimit || isNaN(creditLimit) || creditLimit < 0) {
+                isValid = false;
+                errorMessages.push("Valid Credit Limit is required.");
+            }
+            if (!paymentTermID) {
+                isValid = false;
+                errorMessages.push("Payment Term is required.");
+            }
+            if (!termsOfDeliveryID) {
+                isValid = false;
+                errorMessages.push("Terms of Delivery is required.");
+            }
+            if (!sendType) {
+                isValid = false;
+                errorMessages.push("Dispatch Mode (Send Type) is required.");
+            }
+            //if (!courierID) {
+            //    isValid = false;
+            //    errorMessages.push("Courier is required.");
+            //}this changed
+            var dispatchMode = $("input[name='DispatchMode']:checked").val();
+            // adjust name if different
+
+            if (dispatchMode === "By Courier" && !courierID) {
+                isValid = false;
+                errorMessages.push("Courier is required when Dispatch Mode is By Courier.");
+            }
+            //if (!yearlyBusiness || isNaN(yearlyBusiness) || yearlyBusiness < 0) {
+            //    isValid = false;
+            //    errorMessages.push("Valid Yearly Business value is required.");
+            //}
+            if (!subGroupID) {
+                isValid = false;
+                errorMessages.push("Sub Group is required.");
+            }
+            if (!frequencyPurId) {
+                isValid = false;
+                errorMessages.push("Purchase Frequency is required.");
+            }
+
+            // If invalid, show errors and return
+            if (!isValid) {
+              /*  alert("Please fix the following errors:\n" + errorMessages.join("\n"));*/
+                alert("Please complete the required fields:\n\n" + errorMessages.join("\n"));
+                return;
+            }
+
+            // Construct final data
+            var data = {
+                Section: "BusinessTerms",
+                MultipleAddress: [{
+                    BusinessAddressId: $('#editbussinessID').val(),
+                    CountryId: currencyID,
+                    PurDiscountPercent: discountPercent,
+                    PurCreditPeriodDays: creditPeriodDays,
+                    PurCreditLimit: creditLimit,
+                    PurPaymentTermId: paymentTermID,
+                    PurTermsOfDeliveryId: termsOfDeliveryID,
+                    PurOtherTerm: $('#editOtherTerm').val(),
+                    PurSendType: sendType,
+                    PurTransporterId: courierID,
+                    PurYearlyBusiness: yearlyBusiness,
+                    PurSubGroupID: subGroupID,
+                    PurFreqOfTransactionId: frequencyPurId
+
+
+                }]
+            };
+
+
+        UpdateCustomerProfile(data); // 🔥 Only one common function call
+        console.log("🟢 Final Data Sent to Server:", JSON.stringify(data));
+    });
+    });
+
+
+
+
+    // Customer Contact person data......
+    $(document).on('click', '#update-contact-persons', function (e) {
+        e.preventDefault();
+        let errors = [];
+
+        // Required field validations
+        if (!$('#personFirstName').val().trim()) {
+            errors.push("First name is required.");
+        }
+        if (!$('#personLastName').val().trim()) {
+            errors.push("Last name is required.");
+        }
+        if (!$('#personDesignationId').val()) {
+            errors.push("Designation is required.");
+        }
+
+
+        // ---------- CONDITIONAL REQUIRED VALIDATION ----------
+        if ($("#OwnerDetails").val() !== "OwnerDetails") {
+
+            if (!$('#personOfficeMobile').val().trim()) {
+                errors.push("Office mobile number is required.");
+            }
+
+            if (!$('#personOfficeEmail').val().trim()) {
+                errors.push("Office email is required.");
+            }
+        }
+
+        // ---------- REGEX ----------
+        const mobileRegex = /^(?:\+91)?[6-9]\d{9}$/;
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}$/;
+
+
+        // ---------- FORMAT VALIDATION ----------
+        const officeMobile = $('#personOfficeMobile').val().trim();
+        const officeEmail = $('#personOfficeEmail').val().trim();
+
+        const officeAltEmail = $('#personAltEmail').val().trim();
+        const isCCChecked = $('#personAltCC').prop('checked');
+
+        if (isCCChecked) {
+            // CC checked → field required
+            if (!officeAltEmail) {
+                errors.push("Alternate email is required when CC is checked.");
+            } else if (!emailRegex.test(officeAltEmail)) {
+                errors.push("Alternate email is invalid.");
+            }
+        } else {
+            // CC not checked → field optional, but must be valid if filled
+            if (officeAltEmail && !emailRegex.test(officeAltEmail)) {
+                errors.push("Alternate email is invalid.");
+            }
+        }
+
+
+        if (officeMobile && !mobileRegex.test(officeMobile)) {
+            errors.push("Office contact must be exactly 10 digits.");
+        }
+
+        if (officeEmail && !emailRegex.test(officeEmail)) {
+            errors.push("Office email is invalid.");
+        }
+
+        // ---------- STOP IF ANY ERRORS ----------
+        if (errors.length > 0) {
+            alert("Please fix the following:\n\n" + errors.join("\n"));
+            return false;
+        }
+
+
+
+
+
+
+
+
+
+        //// Required field validations
+        //if (!$('#personFirstName').val().trim()) {
+        //    errors.push("First name is required.");
+        //}
+        //if (!$('#personLastName').val().trim()) {
+        //    errors.push("Last name is required.");
+        //}
+
+        //if (!$('#personDesignationId').val()) {
+        //    errors.push("Designation is required.");
+        //}
+
+        ////if (!$('#personOfficeMobile').val().trim()) {
+        ////    errors.push("Office mobile number is required.");
+        ////}
+
+        ////if (!$('#personOfficeEmail').val().trim()) {
+        ////    errors.push("Office email is required.");
+        ////}
+
+        //if ($("#OwnerDetails").val() !== "OwnerDetails") {
+        //    if (!$('#personOfficeMobile').val().trim()) {
+        //        errors.push("Office mobile number is required.");
+        //    }
+        //    if (!$('#personOfficeEmail').val().trim()) {
+        //        errors.push("Office email is required.");
+        //    }
+        //}
+
+        //// Optional format validations
+        //const mobileRegex = /^[0-9]{10}$/;
+        //const emailRegex = /^[^\s]+[^\s]+\.[^\s]+$/;
+
+        //if ($('#personOfficeMobile').val().trim() && !mobileRegex.test($('#personOfficeMobile').val().trim())) {
+        //    errors.push("Office mobile must be a 10-digit number.");
+        //}
+
+        //if ($('#personOfficeEmail').val().trim() && !emailRegex.test($('#personOfficeEmail').val().trim())) {
+        //    errors.push("Invalid office email format.");
+        //}
+
+        //if ($('#personPersonalEmail').val().trim() && !emailRegex.test($('#personPersonalEmail').val().trim())) {
+        //    errors.push("Invalid personal email format.");
+        //}
+
+        //if ($('#personAltEmail').val().trim() && !emailRegex.test($('#personAltEmail').val().trim())) {
+        //    errors.push("Invalid alternate email format.");
+        //}
+
+        //// Show errors if any
+        //if (errors.length > 0) {
+        //    alert("Please fix the following:\n\n" + errors.join("\n"));
+        //    return false;
+        //}
+
+        //// Contact fields to check for duplicates
+        //const officeEmail = $('#personOfficeEmail').val().trim();
+        //const officeMobile = $('#personOfficeMobile').val().trim();
+
+        // Now check for duplicate using AJAX
+        $.ajax({
+            url: '/Vendor/CheckDuplicateContact',
+            type: 'POST',
+            data: {
+                email: officeEmail,
+                mobile: officeMobile,
+                contactPersonId: $('#contactPersonId').val(),
+                designationInfoId: $('#designationfoid').val()
+            },
+            success: function (response) {
+                if (response.exists) {
+                    alert("⚠️ " + response.message); // Alert shown, no refresh
+                    return; // Stop further processing
+                }
+
+                // If no duplicate found, proceed with saving
+                var data = {
+                    Section: "ContactPerson",
+                    //LedgerID: LEDGERID,
+                    DesignationInfo: [{
+                        BusinessAddressId: $('#CpersonAddressTitleID').val(),
+                        DesignationInfoId: $('#designationfoid').val(),
+                        DesignationId: $('#personDesignationId').val(),
+                        OfficeMobileNo: $('#personOfficeMobile').val(),
+                        OfficeEmailId: $('#personOfficeEmail').val(),
+                        //OfficeEmailIncludingCC: $('#personOfficeCC').is(':checked') ? true : false,
+                        OfficeEmailIncludingCC: $('#personOfficeCC').prop('checked') ? "Y" : "N",
+                        AltEmailId: $('#personAltEmail').val(),
+                        //AltEmailIncludingCC: $('#personAltCC').is(':checked') ? true : false,
+                        AltEmailIncludingCC: $('#personAltCC').prop('checked') ? "Y" : "N",
+                        //DefaultPerson: $('#personDefault').is(':checked') ? true : false,
+                        DefaultPerson: $('#personDefault').prop('checked') ? "Y" : "N",
+                        STDCode: $('#personSTD').val(),
+                        LandlineNo1: $('#personLandline1').val(),
+                        LandlineNo2: $('#personLandline2').val(),
+                        CountryCode: $('#CountryCode1').val()
+                    }],
+                    ContactPersonDetails: [{
+                        DesignationInfoId: $('#designationfoid').val(),
+                        ContactPersonId: $('#contactPersonId').val(),
+                        Title: $('#personTitle').val(),
+                        FirstName: $('#personFirstName').val(),
+                        MiddleName: $('#personMiddleName').val(),
+                        LastName: $('#personLastName').val(),
+                        PersonalMobileNo: $('#personPersonalMobile').val(),
+                        PersonalEmailId: $('#personPersonalEmail').val(),
+                        HomeAddress: $('#personHomeAddress').val(),
+                        DOB: $('#personDOB').val(),
+                        //PersonalEmailncludingCC: $('#personPersonalCC').is(':checked') ? true : false,
+                        PersonalEmailncludingCC: $('#personPersonalCC').prop('checked') ? "Y" : "N",
+                        CountryCode: $('#CountryCode1').val()
+                    }]
+                };
+
+                console.log("🟢 Final Data Sent to Server:", JSON.stringify(data));
+                UpdateCustomerProfile(data);
+
+            },
+            error: function () {
+                alert("❌ Server error while checking duplicate email or mobile.");
+            }
+        });
+
+    });
+
+    //OpenBalAmount data
+    $(document).ready(function () {
+        $('#UpdateOpnBalAmt').click(function () {
+
+            const data = {
+                Section: "AccountDetails",
+                MultipleAddress: [{
+                    ledgerID: $('#editLedgeriid').val(),
+                    BusinessAddressId: $('#addresstitleid').val(),
+                    Title: $('#editAddressTytle').val(),
+                    OpeningBalance: $('#editAmount').val(),
+                    //TypeOfAccount: $('#editAmountType').val(),
+                    TypeOfAccount: $('input[name="editAmountType"]:checked').val(),
+                    RefNo: $('#editReferNo').val(),
+                    OpnBalDate: $('#editDateOpn').val(),
+                }]
+            };
+
+            UpdateCustomerProfile(data);  // Call the update function with the collected data
+            console.log("🟢 Final Data Sent to Server:", JSON.stringify(data));
+        });
+    });
+
+    //DefaultNote data
+    $(document).ready(function () {
+        $('#UpdateDefaultNote').click(function () {
+
+            const data = {
+                Section: "Description",
+                BusinessEntityId: $('#editLedgerid').val(),
+                BusinessAddressId: $('#addresstitleid').val(),
+                BusinessEntityNote: $('#editDefaultNote').val(),
+            };
+
+            UpdateCustomerProfile(data);  // Call the update function with the collected data
+            console.log("🟢 Final Data Sent to Server:", JSON.stringify(data));
+        });
+    });
+
+
+    //Specific Instruction data
+    $(document).ready(function () {
+        $('#UpdateSpecificInstruction').click(function () {
+
+            const data = {
+                Section: "DefaultNote",
+                MultipleAddress: [{
+                    BusinessEntityId: $('#editLedgeriD').val(),
+                    BusinessAddressId: $('#addressTitleID').val(),
+                    PurSpecificInstruction: $('#editSInstruction').val(),
+                }]
+
+            };
+
+            UpdateCustomerProfile(data);  // Call the update function with the collected data
+            console.log("🟢 Final Data Sent to Server:", JSON.stringify(data));
+        });
+    });
+
+    ////Ajax call to save data as per user selection
+    //function UpdateCompanyProfile(data) {
+    //    $.ajax({
+    //        url: '/Vendor/CreateCustomerProfile', // your correct URL
+    //        type: 'POST',
+    //        data: data, // Send whole object
+    //        success: function (response) {
+    //            if (response.success) {
+    //                alert('Created Successfully!');
+    //                //$('#Businessterm').modal('hide');
+    //                window.location.href = `/Vendor/create/${response.ledgerId}`;
+
+    //                // Refresh DataTable after update
+    //                //location.reload();
+    //            } else {
+    //                alert(response.message);
+    //            }
+    //        },
+    //        error: function (xhr, status, error) {
+    //            alert('Error: ' + error);
+    //        }
+    //    });
+    //}
+
+    //Ajax call to save data as per user selection
+    function UpdateCustomerProfile(data) {
+        $.ajax({
+            url: '/Vendor/UpdateCustomerProfile', // your correct URL
+            type: 'POST',
+            data: data, // Send whole object
+            success: function (response) {
+                if (response.success) {
+                    alert('Successfully done!');
+                    //$('#Businessterm').modal('hide');
+
+                    // Refresh DataTable after update
+                    location.reload();
+                } else {
+                    alert('Update failed: ' + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                alert('Error: ' + error);
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        $('#updateBankDetailsBtn').click(function () {
+            let errors = [];
+
+            const ledgerID = $('#editLedgerID').val();
+            const addressTitleID = $('#editAddressTitleID').val();
+
+            const ifsc = $('#editpurifsccode').val().trim();
+            const bankName = $('#BankName').val().trim();
+            const branchName = $('#editpurbranchname').val().trim();
+            const accountNo = $('#editpuraccountno').val().trim();
+            const bankID = $('#editpurbankid').val();
+            const chequeFile = $('#pdfInput')[0].files[0];
+
+            //if (!chequeFile) {
+            //    $('#pdfInput').siblings('p').html('<span style="color:red;">Please select a file for Cheque copy</span>');
+            //    return;
+            //}
+
+            const gstFile = $('#pdfInput1')[0].files[0];
+
+            //if (!gstFile) {
+            //    $('#pdfInput1').siblings('p').html('<span style="color:red;">Please select a file for GST copy</span>');
+            //    return;
+            //}
+
+            if (!ifsc || ifsc.length !== 11) errors.push("IFSC Code must be 11 characters.");
+            //if (!bankName) errors.push("Bank Name is required.");
+            //if (!branchName) errors.push("Branch Name is required.");
+            if (!accountNo || isNaN(accountNo)) errors.push("Valid Account Number is required.");
+
+            if (errors.length > 0) {
+                alert("Please fix the following:\n" + errors.join("\n"));
+                return;
+            }
+
+            let formData = new FormData();
+
+            // Bind main Ledger fields
+            formData.append("BusinessEntityId", ledgerID);
+            formData.append("Section", "BankDetails");
+
+            // Bind nested MultipleAddress[0] fields (use index-style keys)
+            formData.append("MultipleAddress[0].BusinessAddressId", addressTitleID);
+            formData.append("MultipleAddress[0].IFSCCode", ifsc);
+            //formData.append("MultipleAddress[0].PurBankName", bankName);
+            //formData.append("MultipleAddress[0].PurBranchName", branchName);
+            formData.append("MultipleAddress[0].AccountNo", accountNo);
+            //formData.append("MultipleAddress[0].PurBankID", bankID);
+
+            // Add the file
+            formData.append("CustomPhotoFile", chequeFile);
+            // Add the file
+            formData.append("CustomPhotoFile1", gstFile);
+
+            // Send to server
+            $.ajax({
+                url: '/Vendor/UpdateCustomerProfile',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response.success) {
+                        alert("Updated Successfully");
+                        location.reload();
+                    } else {
+                        alert("Failed: " + response.responseText);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert("AJAX error: " + error);
+                }
+            });
+        });
+    });
+
+
+
+    var gstinno;
+    function GetPincode1(code) {
+        console.log("Called GetPincode1 with:", code); // add this
+
+        $.ajax({
+            url: '@Url.Action("GetInpincode")',
+            data: { "PinCode": code },
+            type: "POST",
+            dataType: "json",
+            success: function (data) {
+            if (data.length > 0) {
+                var vdata = data;
+
+                $("#editAddressState").val(vdata[0].StateName);
+
+                $.ajax({
+                    url: '@Url.Action("GetGST")',
+                    data: { "State1": vdata[0].StateName },
+                    type: "POST",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.length > 0) {
+                            var vdata = data;
+                            gstinno = vdata[0].StateGSTCode + pan + "1Z";
+                            $("#editAddressGstin").val(gstinno);
+                            //document.getElementById("editAddressGstin").disabled = false;
+                        }
+                    }
+                });
+
+                $("#editTaluka").val(vdata[0].Taluka);
+                $("#editAddressCity").val(vdata[0].District);
+
+                $("#editAddressLocality").val('');
+                $("#editAddressText").val('');
+
+
+                $.each(data, function (i, item) {
+                    var optionhtml = '<option value="' + item.Locality + '">' + item.Locality + '</option>';
+                    $("#json-datalistLocality").append(optionhtml);
+                });
+
+                //document.getElementById("editAddressGstin").disabled = false;
+
+                document.getElementById("editAddressState").disabled = true;
+                document.getElementById("editTaluka").disabled = true;
+                document.getElementById("editAddressCity").disabled = true;
+            }
+            else {
+                alert("No Record Found");
+                var s = window.location.toString().split('/');
+                window.location.href = s[0].toString() + "/Pincode/Create";
+            }
+        }
+
+        });
+    }
+
+    function SelectGST() {
+        // Get the selected value
+        var gstRegistrationTypes = $('#GSTRegistrationId option:selected').text().trim();
+
+        if (gstRegistrationTypes === "Unregistered / Consumer") {
+            //console.log(gstRegistrationTypes);
+            // If GST registration type is Unregistered / Consumer, mark as valid and hide error
+            $("#editAddressGstin").val(""); // Clear the error message
+            document.getElementById("editAddressGstin").disabled = true;
+        } else {
+            //console.log(gstinno); // Now gstinno should be accessible
+            $("#editAddressGstin").val(gstinno); // Set the GSTIN to the value calculated in GetPincode1
+            document.getElementById("editAddressGstin").disabled = false;
+        }
+    }
+
+
+
+
+    //function setDesignationReadOnlyIfProprietor(entityType) {
+    //    if (entityType == 4) {
+    //        $('#personDesignationId').prop('disabled', true);
+    //    } else {
+    //        $('#personDesignationId').prop('disabled', false);
+    //    }
+    //}
+
+
+
+    function OwnerDetails(panno, owner) {
+        if (owner === "OwnerDetails") {
+
+
+            $('#addcontact').text("Add Owner Details");
+            if (!panno || panno.length < 5) return;
+
+            const fourthChar = panno.charAt(3).toUpperCase(); // PAN 4th char (index 3)
+            const fifthChar = panno.charAt(4).toUpperCase();  // PAN 5th char (index 4)
+
+            // Reset everything first
+            $('#personDesignationId').prop('disabled', false);
+            $('#personLastName').prop('readonly', false).off('input');
+
+            switch (fourthChar) {
+                case "C":
+                    $('#personDesignationId').val(1).prop('disabled', true);
+                    break;
+                case "H":
+                    $('#personDesignationId').val(2).prop('disabled', true);
+                    break;
+                case "F":
+                    $('#personDesignationId').val(3).prop('disabled', true);
+                    break;
+                case "T":
+                    $('#personDesignationId').val(6).prop('disabled', true);
+                    break;
+                case "A":
+                case "G":
+                    $('#personDesignationId').prop('disabled', false);
+                    break;
+                case "P":
+                    $('#personDesignationId').val(4).prop('disabled', true);
+
+                    // Enforce last name starting with 5th PAN char
+                    $('#personLastName').prop('readonly', false).off('input').on('input', function () {
+                        const currentVal = $(this).val();
+                        if (currentVal.length === 0) return;
+
+                        const firstChar = currentVal.charAt(0).toUpperCase();
+                        if (firstChar !== fifthChar) {
+                            alert(`Last Name must start with '${fifthChar}' as per PAN.`);
+                            $(this).val('');
+                        }
+                    });
+                    break;
+                default:
+                    $('#personDesignationId').prop('disabled', false);
+            }
+        }
+        else {
+            // Remove any locking logic
+            $('#addcontact').text("Add Contact Person"); // reset default
+            $('#personDesignationId').attr('disabled', false);
+            $('#personLastName').off('input');
+        }
+    }
+
+
+    function GetBankInfo(code) {
+    var ifsccpde = /^[A-Z|a-z]{4}[0][a-zA-Z0-9]{6}$/;
+
+    // Ensure input is exactly 11 characters long
+    if (code.length > 11) {
+        code = code.substring(0, 11); // Trim the input to 11 characters
+        $('#editpurifsccode').val(code); // Update the input field value
+        }
+        console.log('IFSC CODE IS ' + $('#editpurifsccode').val());
+
+    // Validate the pattern and length before making the AJAX call
+    if (code.length === 11 && ifsccpde.test(code.toUpperCase())) {
+        $.ajax({
+            url: "/Vendor/GetInBankInfo",
+            //url: '@Url.Action("GetInBankInfo")',
+            data: { "ifsc": code },
+            type: "POST",
+            dataType: "json",
+            success: function (data) {
+                if (data.d1.length > 0) {
+                    var vdata = data.d1;
+                    $("#BankName").val(vdata[0].BankName);
+                    $("#editpurbranchname").val(vdata[0].Branch);
+                    $("#MICR").val(vdata[0].MICR);
+                } else {
+                    alert("No Record Found");
+                }
+            }
+        });
+    } else {
+        // Provide user feedback for invalid IFSC code
+        alert("Please enter a valid 11-character IFSC Code.");
+    }
+}
+
+
+    //function GetBankInfo(ifsc) {
+
+    //    if (!ifsc || ifsc.length !== 11) {
+    //        $('#BankName').val('');
+    //        $('#editpurbranchname').val('');
+    //        return;
+    //    }
+
+    //    $.ajax({
+    //        url: `https://ifsc.razorpay.com/${ifsc}`,
+    //        type: 'GET',
+    //        success: function (response) {
+
+    //            console.log("Bank Details:", response);
+
+    //            // Auto fill fields
+    //            $('#BankName').val(response.BANK || '');
+    //            $('#editpurbranchname').val(response.BRANCH || '');
+
+    //            // optional
+    //            // $('#editpurcity').val(response.CITY || '');
+
+    //        },
+    //        error: function () {
+
+    //            $('#BankName').val('');
+    //            $('#editpurbranchname').val('');
+
+    //            alert('Invalid IFSC Code');
+    //        }
+    //    });
+    //}
+
+
+    //function lockLastNameToPANChar(pan, entityType) {
+    //    if (entityType == 4) {
+    //        if (pan && pan.length >= 5) {
+    //            const fifthChar = pan.charAt(4).toUpperCase();
+    //            $('#personLastName').val(fifthChar);
+    //            $('#personLastName').prop('readonly', true);
+    //        } else {
+    //            $('#personLastName').val('');
+    //            $('#personLastName').prop('readonly', false);
+    //            alert("PAN must have at least 5 characters to auto-fill Last Name.");
+    //        }
+    //    } else {
+    //        $('#personLastName').prop('readonly', false);
+    //    }
+    //}
+
+
+    //function lockLastNameToPANChar(pan, entityType) {
+    //    if (entityType == 4) {
+    //        if (pan && pan.length >= 5) {
+    //            const fifthChar = pan.charAt(4).toUpperCase();
+
+    //            // Remove any old handler first to avoid multiple bindings
+    //            $('#personLastName').off('input').on('input', function () {
+    //                const val = $(this).val();
+
+    //                // Allow empty (backspacing etc.)
+    //                if (val.length === 0) return;
+
+    //                const firstChar = val.charAt(0).toUpperCase();
+
+    //                // If first letter is not the PAN 5th char, revert
+    //                if (firstChar !== fifthChar) {
+    //                    $(this).val('');
+    //                    alert(`Last Name must start with '${fifthChar}' as per PAN.`);
+    //                }
+    //            });
+    //        } else {
+    //            $('#personLastName').off('input'); // remove restriction
+    //            alert("PAN must have at least 5 characters to validate Last Name.");
+    //        }
+    //    } else {
+    //        $('#personLastName').off('input'); // remove restriction
+    //    }
+    //}
+
+    //add company
+    $(document).on('click', '.add-company-btn', function () {
+        const button = $(this);
+
+        // Set default/fallback if data attributes are missing or empty
+        $('#editLedgerN').val(button.data('ledgerid') || '');
+        $('#editcompanyName').val(button.data('company-name') || '');
+        $('#editcompanyPAN').val(button.data('pano') || '');
+        $('#editcompanyWebsite').val(button.data('websit') || '');
+        $('#editcompanyCIN').val(button.data('incorpo') || '');
+        $('#TypeOfCompanyID').val(button.data('typofc') || '');
+
+
+        //$('#MSMENumber').val(button.data('msmeno'));
+
+        //const isChecked = button.data('ismsmeno') === 'Y';
+        //$('#MSMECheckbox').prop('checked', isChecked);
+        //toggleMSME(); // 🔁 Ensure MSME section is shown/hidden based on checkbox
+
+        //const certFile = button.data('imsmecertificate');
+        //if (certFile) {
+        //    const certPath = '/Image/' + certFile;
+        //    $('#MSMEImgPreview').attr('src', certPath).show();
+        //    $('#existingMSME').attr('href', certPath);
+        //    $('#previewMSME').show();
+        //} else {
+        //    $('#MSMEImgPreview').hide();
+        //    $('#previewMSME').hide();
+        //}
+
+        openModal('CompanyModal', 'CompanyModalOverlay');
+    });
+
+
+    $(document).ready(function () {
+        console.log('LEDGER ID IS ' + $('#LEDGERID').val());
+    });
+
+
+    function handleFileChange() {
+        const file = document.getElementById('pdfInput').files[0];
+        if (file) {
+            const previewUrl = URL.createObjectURL(file);
+            $('#chequeImgPreview').attr('src', previewUrl).show();
+            $('#existingChequeLink').attr('href', previewUrl);
+            $('#previewButtonContainer').show();
+        }
+    }
+
+    function handleFileChange1() {
+        const file = document.getElementById('pdfInput1').files[0];
+        if (file) {
+            const previewUrl = URL.createObjectURL(file);
+            $('#gstImgPreview').attr('src', previewUrl).show();
+            $('#existingGSTLink').attr('href', previewUrl);
+            $('#previewButtonContainer1').show();
+        }
+    }
+
+
+    //function previewPdf() {
+    //    var fileInput = document.getElementById('pdfInput');
+    //    var file = fileInput.files[0];
+
+    //    if (file) {
+    //        // Create a URL for the PDF file
+    //        var pdfUrl = URL.createObjectURL(file);
+
+    //        // Open the PDF in a new window
+    //        window.open(pdfUrl, '_blank');
+    //    } else {
+    //        alert('Please select a PDF file.');
+    //    }
+    //}
+
+    //function previewPdf1() {
+    //    var fileInput = document.getElementById('pdfInput1');
+    //    var file = fileInput.files[0];
+
+    //    if (file) {
+    //        // Create a URL for the PDF file
+    //        var pdfUrl = URL.createObjectURL(file);
+
+    //        // Open the PDF in a new window
+    //        window.open(pdfUrl, '_blank');
+    //    } else {
+    //        alert('Please select a PDF file.');
+    //    }
+    //}
+
+
+    function previewPdf() {
+        const fileInput = document.getElementById('pdfInput');
+        const file = fileInput.files[0];
+
+        if (file) {
+            const pdfUrl = URL.createObjectURL(file);
+            window.open(pdfUrl, '_blank');
+        } else {
+            const existingFile = document.getElementById('hiddenChequeCopy').value;
+            if (existingFile) {
+                window.open('/Image/' + existingFile, '_blank');
+            } else {
+                alert('No file available for preview.');
+            }
+        }
+    }
+
+    function previewPdf1() {
+        const fileInput = document.getElementById('pdfInput1');
+        const file = fileInput.files[0];
+
+        if (file) {
+            const pdfUrl = URL.createObjectURL(file);
+            window.open(pdfUrl, '_blank');
+        } else {
+            const existingFile = document.getElementById('hiddenGSTCertificate').value;
+            if (existingFile) {
+                window.open('/Image/' + existingFile, '_blank');
+            } else {
+                alert('No file available for preview.');
+            }
+        }
+    }
+
+    function toggleMSME() {
+        const checkbox = document.getElementById("MSMECheckbox");
+        const msmeSection = document.getElementById("MSMEDetails");
+
+        if (checkbox.checked) {
+            msmeSection.style.display = "flex"; // Or "block" based on layout
+        } else {
+            msmeSection.style.display = "none";
+            //document.getElementById("MSMENumber").value = "";
+            //document.getElementById("MSMECertificate").value = "";
+        }
+    }
+
+
+    function handleMSMEFile() {
+        const file = document.getElementById('MSMEInput').files[0];
+        if (file) {
+            const previewUrl = URL.createObjectURL(file);
+            $('#MSMEImgPreview').attr('src', previewUrl).show();
+            $('#existingMSME').attr('href', previewUrl);
+            $('#previewMSME').show();
+            //toggleMSME();
+        }
+    }
+
+    function allowOnlyLetters(input) {
+        // Remove anything that is NOT a letter
+        input.value = input.value.replace(/[^A-Za-z]/g, '');
+
+        // Capitalize first letter
+        if (input.value.length > 0) {
+            input.value =
+                input.value.charAt(0).toUpperCase() +
+                input.value.slice(1).toLowerCase();
+        }
+    }
+
+    function allowOnlyNumbers(input) {
+        // Remove anything that is not a digit
+        input.value = input.value.replace(/[^0-9]/g, '');
+
+        // Limit to 10 digits (extra safety)
+        if (input.value.length > 10) {
+            input.value = input.value.slice(0, 10);
+        }
+    }
+
+
+</script>
+@*AP external CSS*@
+
+<link href="~/Content/ERPStyle.css" rel="stylesheet" type="text/css" />
+
+@using (Html.BeginForm("Create", "CompanyLedger", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+
+
+    <form id="TypeValidation" class="form-horizontal" action="#" method="">
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                <div class="d-flex " style="margin-top:-20px">
+                    <h4 class="route-path1" onclick="location.href='@Url.Action("Create","VendorInfo")'">Purchase </h4>
+                    <h4 class="route-path3 " onclick="location.href='@Url.Action("Index","Vendor")'">Vendor Profiles</h4>
+                    <h4 class=" route-path4" onclick="location.href='@Url.Action("Create","Vendor")'">Create</h4>
+
+                </div>
+
+                <br />
+
+                @Html.HiddenFor(model => model.Ledger.BusinessEntityId, new { id = "LedgerID" })
+
+                @*<input type="text" class="form-control" value="@ViewBag.LedgerID" readonly />*@
+
+                <input type="hidden" id="LEDGERID" name="LEDGERID" value="@ViewBag.LedgerID" />
+
+
+                <div class="panel panel-default outer-main-container">
+                    <div class="row">
+                        <div class="main-heading d-flex col-md-7">
+                            <i class="material-icons mt-1" style="font-size: 30px; margin-right: 10px;">feed</i>Vendor Profile Edit
+
+                            @*<i class="material-icons" onclick="List()" style=" font-size: 30px; cursor: pointer; color: midnightblue; position: absolute; top: 35px; right: 15px">cancel</i>*@
+                        </div>
+
+                        @*<div class="col-md-2 col-sm-6 " style="padding-inline:15px">
+                                <label id="label">Created Date & time :</label>
+                                @Html.TextBox("Date", null, new { @style = "color:black;font:bold;background:#fff;cursor:pointer", @class = "form-control fs-5", @readonly = "readonly" })
+
+                            </div>
+                            <div class="col-md-2 col-sm-6" style="padding-inline:15px">
+                                <label id="label">Last Edited Date & time :</label>
+                                @Html.TextBox("EditedDate", null, new { @style = "color:black;font:bold;background:#fff;cursor:pointer", @class = "form-control fs-5", @readonly = "readonly" })
+                            </div>*@
+
+                    </div>
+                    <div class="panel-body">
+
+                        <div class="form-group " style="padding-top: -10px; margin-top: -10px">
+                            @*<br><span class="d-flex " id="keyContactsDisplay" style=" color: midnightblue; font-weight: 500;"></span>*@
+
+                            <div class="row d-flex align-items-stretch ">
+
+                                <div id="carouselContainer" class="container "></div>
+
+                            </div>
+                        </div>
+
+                        <div class="submit-btn p-2">
+                            <div class="save-btn ">
+                                <input type="button" id="submit" value="Close" class="btn btn-success btn-round  create-bttn custo-inner mr-3" style="outline-style: none;" onclick="history.back()" />
+                                <input type="button" id="ledgeredit" value="View & Edit" class="btn btn-success btn-round  create-bttn custo-inner" style=" outline-style: none; " onclick="Edit()" />
+                                @*<input type="button" id="submit" value="Next" class="btn btn-success btn-round custo-inner" style="background-image: linear-gradient(to right,#35d3e1,midnightblue); padding: 5px 20px 5px 20px; color: white; font-family: Helvetica; box-shadow: -4px -4px 8px rgba(255, 255, 255, 0.7), 4px 4px 8px rgba(128, 128, 128, 0.7); outline-style: none; border: none" onclick="Next()" />*@
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- 🔍 Image Preview Modal -->
+        <div class="modal fade" id="imagePreviewModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 800px;">
+                <div class="modal-content">
+                    <div class="modal-body p-0">
+                        <img id="modalImage" src="" alt="Preview" class="img-fluid rounded" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*🔍 Image Preview Modal*@
+        <div class="modal fade" id="imagePreviewModal1" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 800px;">
+                <div class="modal-content">
+                    <div class="modal-body p-0">
+                        <img id="modalImage1" src="" alt="Preview" class="img-fluid rounded" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        @*Modal*@
+        <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-body text-center">
+                        Image Preview
+                        <img id="modalImage" src="" style="max-width: 100%; display: none;" />
+
+                        PDF Preview
+                        <iframe id="modalPDF" src="" width="100%" height="500px" style="display: none;" frameborder="0"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        @*---------------------------------------------------------------------------------*@
+
+        <div class="modalOverl" id="CompanyModalOverlay" onclick="closeModal('CompanyModal')"></div>
+        <!-- Preferred Item Edit Modal -->
+        <div id="CompanyModal" class="modal" style=" backdrop-filter: blur(1px); background: rgba(0, 0, 0, 0.5); opacity: 1;">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content shadow-lg rounded-4">
+                    <div class="modal-header m-3 p-3" style="background-color: #e5e6e7; box-shadow: 6px 6px 6px #bfc3cf;">
+                        <h3 class="modal-title" style=" font-family: Helvetica; color: midnightblue">Create Vendor Profile</h3>
+                        <i class="material-icons" data-dismiss="modal" aria-label="Close" onclick="closeModal('CompanyModal')"
+                           style="color: midnightblue; font-size: 25px; cursor: pointer;">cancel</i>
+                    </div>
+                    <div class="modal-body">
+                        <div id="CompanyDetailForm">
+                            <input class="d-none" type="text" id="editLedgerN" />
+                            <div class=" row" style="margin-bottom:10px">
+                                <div class="mb-2 col-lg-6 ">
+                                    <label class="fs-5 fw-normal text-dark">
+                                        Vendor Name : <span class="info-badge"
+                                                            title="Enter the Vendor name.
+Vendor name must end with 'Private Limited', 'Pvt. Ltd.', 'Limited', or 'Ltd.'
+Example: ABC Technologies Pvt. Ltd.">
+                                            i
+                                        </span>
+                                    </label>
+                                    <input class="form-control fs-5 input-text-box" id="editcompanyName" placeholder="Enter Company Name" onkeyup="myFunction(this.id)" , oninput="ToUpper('editcompanyName'); GSTPIN();" />
+                                    <span class="text-danger small" id="companyNameError"></span>
+                                    <span class="text-success small" id="companySuggestion"></span>
+                                </div>
+                                <div class="mb-2 col-lg-6 ">
+                                    <label class="fs-5 fw-normal text-dark">Company Website : <span class=" info-badge" id="websiteError" title="Enter official website. Example: www.company.com">i</span></label>
+                                    <input class=" form-control fs-5 input-text-box" id="editcompanyWebsite" placeholder="Enter Company Website" />
+
+                                </div>
+                            </div>
+                            <div class=" row" style="margin-bottom:10px">
+                                <div class="mb-2 col-lg-4 ">
+                                    <label class="fs-5 fw-normal text-dark">
+                                        PAN Number : <span class="info-badge"
+                                                           title="In a PAN number, the 4th letter indicates the category (P–Individual, C–Company, F–Firm, etc.) and
+                                              the 5th letter must match the first letter of the company.">
+                                            i
+                                        </span>
+                                    </label>
+                                    <input class="form-control fs-5 input-text-box" id="editcompanyPAN" maxlength="10" placeholder="Enter PAN" oninput="ToUpper('editcompanyPAN'); GSTPIN();" />
+                                    <span class="text-danger small" id="panError"></span>
+                                    <span class="text-success small" id="panSuggestion"></span>
+                                </div>
+                                <div class="mb-2 col-lg-4 ">
+                                    <label class="fs-5 fw-normal text-dark">Type of Entity :</label>
+                                    @*<input class=" form-control fs-5 input-text-box" id="TypeOfCompanyID" readonly />*@
+                                    @Html.DropDownListFor(model => model.Ledger.TypeOfEntityId,
+                                        (IEnumerable<SelectListItem>)ViewBag.TypeOfCompanyID,
+                                        new
+                                            {
+                                            @class = "form-control fs-5 dropdown-textbox",
+                                            style = "border:none;background:none;height:35px",
+                                            id = "TypeOfCompanyID",
+                                            @disabled = true,
+                                        })
+                                    <span class="text-danger small" id="typeError"></span>
+                                </div>
+                                <div class="mb-2 col-lg-4 d-none" id="CIN">
+                                    <label class="fs-5 fw-normal text-dark" title="Corporate Identification Number">CIN Number :</label>
+                                    <input class=" form-control fs-5 input-text-box" id="editcompanyCIN" placeholder="Enter CIN" maxlength="21" />
+                                    <span class="text-danger small" id="cinError"></span>
+                                </div>
+                                <div class="alert alert-danger d-none" id="validationAlert"></div>
+                            </div>
+                            <div class="row">
+                                <div class="mb-2 col-lg-4">
+                                    <label class="fs-5 fw-normal text-dark">Is MSME No. :</label>
+                                    <input type="checkbox" id="MSMECheckbox" name="lock" onclick="toggleMSME();" />
+                                </div>
+                            </div>
+
+                            <!-- Hidden section -->
+                            <div class="row" id="MSMEDetails" style="display: none;">
+                                <div class="mb-2 col-lg-4">
+                                    <label class="fs-6 text-dark">MSME Number:</label>
+                                    <input type="text" class="form-control" id="MSMENumber" maxlength="20" placeholder="UDYAM-XX-00-0000000" />
+                                    <span id="msmeError" class="text-danger" style="display: none;">Invalid MSME Number</span>
+                                </div>
+
+                                <!--  Cheque Scan Copy Upload -->
+
+                                <div class="col-lg-3">
+                                    <label id="label">Upload Certificate:</label>
+                                    <input type="file" id="MSMEInput" name="CustomPhotoFileMSME" accept=".png, .jpg, .jpeg, .pdf" onchange="handleMSMEFile()" />
+                                    <p style="font-size:12px"><b>Note:</b> File size must be between 10 KB and 200 KB.</p>
+                                </div>
+                                <div class="col-lg-3" id="previewMSME" style="display: none;">
+                                    <label>&nbsp;</label><br />
+                                    @*<button type="button" class="btn btn-primary mb-2" onclick="previewPdf()">Preview File</button><br />*@
+                                    <a href="#" id="existingMSME" target="_blank">
+                                        <img id="MSMEImgPreview" src="" style="width: 60px; border: 1px solid #ccc; display: none;" />
+                                    </a>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="modal-footer ">
+                        <input type="button" id="UpdateCompany" value="Create" class="btn btn-success btn-round create-bttn custo-inner" style="outline:none" />
+                        <button type="button" class="btn btn-success btn-round create-bttn custo-inner" onclick="closeModal('CompanyModal')" style="outline:none">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="modalOverl " id="BusinessAddressModalOverlay" onclick="closeModal('BusinessAddressModal')"></div>
+
+        <!-- Modal Content -->
+        <div class="modal" id="BusinessAddressModal" style=" backdrop-filter: blur(1px); background: rgba(0, 0, 0, 0.5); opacity: 1;">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header m-3 p-3" style="background-color: #e5e6e7; box-shadow: 6px 6px 6px #bfc3cf;">
+                        <h3 class="modal-title" style=" font-family: Helvetica; color: midnightblue">Add Business Address</h3>
+
+                        <i class="material-icons" data-dismiss="modal" aria-label="Close" onclick="closeModal('BusinessAddressModal')"
+                           style="color: midnightblue; font-size: 25px; cursor: pointer;">cancel</i>
+                    </div>
+
+
+                    <div class="modal-body">
+                        <div>
+                            <input type="hidden" id="editledgerid">
+                            <input type="hidden" id="editbussinessID">
+                            <div class=" row" style="margin-bottom:10px">
+                                <div class="mb-2 col-lg-2 ">
+                                    <label class="fs-5 fw-normal text-dark">Title :</label>
+                                    <span class="info-badge" title="Enter address label like Primary, Billing, Shipping">
+                                        i
+                                    </span>
+
+
+                                    <input class=" sentence-case-input form-control fs-5 input-text-box" id="editAddressTitle" placeholder="Address Title" />
+                                </div>
+                                <div class="mb-2 col-lg-2 "><label class="fs-5 fw-normal text-dark">Country :</label><input class=" form-control fs-5 input-text-box" id="editCountry" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase();" /></div>
+                                <div class="mb-2 col-lg-2 ">
+                                    <label class="fs-5 fw-normal text-dark">Pincode :</label><input type="number" maxlength="6" class=" form-control fs-5 input-text-box" id="editAddressPincode" onchange="GetPincode1(this.value);" />
+                                </div>
+                                <div class="mb-2 col-lg-3 "><label class="fs-5 fw-normal text-dark">State :</label><input class="form-control fs-5 input-text-box" id="editAddressState" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase();" /></div>
+                                <div class="mb-2 col-lg-3"><label class="fs-5 fw-normal text-dark">District :</label><input class="sentence-case-input form-control fs-5 input-text-box" id="editAddressCity" /></div>
+                            </div>
+                            <div class=" row" style="margin-bottom:10px">
+                                <div class="mb-2 col-lg-3">
+                                    <label class="fs-5 fw-normal text-dark">Taluka / Town / City :</label>
+                                    <input class="sentence-case-input form-control fs-5 input-text-box" id="editTaluka" />
+                                </div>
+                                <div class="mb-2 col-lg-3">
+                                    <label class="fs-5 fw-normal text-dark">Locality / Village :</label>
+                                    <input class="sentence-case-input form-control fs-5 input-text-box" id="editAddressLocality" maxlength="100" list="json-datalistLocality" />
+                                    <datalist id="json-datalistLocality"></datalist>
+                                </div>
+                                <div class="mb-2 col-lg-6">
+                                    <label class="fs-5 fw-normal text-dark">Address :</label>
+                                    <textarea class="sentence-case-input form-control fs-5 input-text-box" onkeyup="myFunction(this.id)" , id="editAddressText" maxlength="100">
+                            </textarea>
+                                </div>
+                            </div>
+                            <div class=" row" style="margin-bottom:10px">
+                                <div class="mb-2 col-lg-3">
+                                    <label class="fs-5 fw-normal text-dark">Landmark :</label>
+                                    <input class="sentence-case-input form-control fs-5 input-text-box" onkeyup="myFunction(this.id)" , id="editLandmarkText" />
+                                </div>
+                                <div class="mb-2 col-lg-3">
+                                    <label class="fs-5 fw-normal text-dark">GSTIN</label>
+                                    <input class="form-control fs-5 input-text-box" id="editAddressGstin" maxlength="15" name="editAddressGstin" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase();" />
+                                    <input type="hidden" id="hiddenGstinValue" />
+                                </div>
+                                <div class="mb-2 col-lg-3">
+                                    <label class="fs-5 fw-normal text-dark">GST Type :</label>
+                                    @Html.DropDownListFor(model => model.BusinessAddress.GSTRegCategoryId,
+                                        (IEnumerable<SelectListItem>)ViewBag.GSTRegistrationId,
+                                        new
+                                        {
+                                            @onchange = "SelectGST();",
+                                            @class = "form-control fs-5 dropdown-textbox",
+                                            style = "border:none;background:none;height:35px",
+                                            id = "GSTRegistrationId",
+                                            //disabled=true
+                                        })
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- iframe for displaying the print page -->
+                        <!--<iframe id="invoiceIframe" style="width: 100%; height: 500px;" frameborder="0"></iframe>-->
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-success btn-round create-bttn custo-inner" id="UpdateBusinessAddress" style="outline:none">Update@*Create*@</button>
+                        <button type="button" class="btn btn-success btn-round create-bttn custo-inner" onclick="closeModal('BusinessAddressModal')" style="outline:none">Close</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modalOverl" id="BusinesstermOverlay" onclick="closeModal('Businessterm')"></div>
+
+        <!-- Business Terms Edit Modal -->
+        <div id="Businessterm" class="modal" style=" backdrop-filter: blur(1px); background: rgba(0, 0, 0, 0.5); opacity: 1;">
+            @*<div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content shadow-lg rounded-4">*@
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header m-3 p-3" style="background-color: #e5e6e7; box-shadow: 6px 6px 6px #bfc3cf;">
+                        <h3 class="modal-title" style=" font-family: Helvetica; color: midnightblue">Add Business Terms</h3>
+                        <i class="material-icons" data-dismiss="modal" aria-label="Close" onclick="closeModal('Businessterm')"
+                           style="color: midnightblue; font-size: 25px; cursor: pointer;">cancel</i>
+
+                    </div>
+
+                    <div class="modal-body">
+                        <input type="hidden" id="editbussinessID">
+                        @*<input type="hidden" id="editAddressId">*@
+                        <div class="form-group user-access row pt-2" style="margin-bottom:10px">
+                            <div class="mb-2 col-lg-2 ">
+                                <label class="fs-5 fw-normal text-dark">Currency :</label>
+                                <div class="form-group  row">
+                                    @Html.DropDownList("CurrencyID", (IEnumerable<SelectListItem>)ViewBag.CurrencyID, new { @onchange = "currencySelected();", @class = "form-control fs-5 dropdown-textbox", style = "border:none;background:none;height:35px" })
+                                </div>
+                            </div>
+                            <div class="mb-3  col-lg-2">
+                                <label class="fs-5 fw-normal text-dark">Discount (%) :</label>
+                                <input class="form-control fs-5 input-text-box" id="editDiscountPercent">
+                            </div>
+                            <div class="mb-3  col-lg-2">
+                                <label class="fs-5 fw-normal text-dark">Credit Period :</label>
+                                <input class="form-control fs-5 input-text-box" id="editCreditPeriodDays" />
+                            </div>
+
+                            <div class="mb-3  col-lg-2">
+                                <label class="fs-5 fw-normal text-dark">Credit Limit (₹) :</label>
+                                <input class="form-control fs-5 input-text-box" id="editCreditLimit">
+                            </div>
+
+                            <div class="mb-3  col-lg-4">
+                                <label class="fs-5 fw-normal text-dark">Payment Term :</label>
+                                <div class="form-group  row">
+                                    @Html.DropDownList("PaymentTermID", (IEnumerable<SelectListItem>)ViewBag.PaymentTermID, new { @onchange = "currencySelected();", @class = "form-control fs-5 dropdown-textbox", style = "border:none;background:none;height:35px" })
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group  row" style="margin-bottom:10px">
+
+                            <div class="mb-3  col-lg-3">
+                                <label class="fs-5 fw-normal text-dark">Terms Of Delivery :</label>
+                                <div class="form-group  row">
+                                    @*@Html.DropDownList("TermsOfDeliveryID", (IEnumerable<SelectListItem>)ViewBag.TermsOfDeliveryID, new { @onchange = "currencySelected();", @class = "form-control fs-5 dropdown-textbox", style = "border:none;background:none;height:35px" })*@
+                                    @Html.DropDownList("TermsOfDeliveryID", (IEnumerable<SelectListItem>)ViewBag.TermsOfDeliveryID, new { @onchange = "currencySelected(); checkTODChange();", @class = "form-control fs-5 dropdown-textbox", style = "border:none;background:none;height:35px" })
+
+                                </div>
+                            </div>
+
+                            <div class="mb-3 col-lg-3">
+                                <label class="fs-5 fw-normal text-dark">Other Terms :</label>
+                                <input class="form-control fs-5 input-text-box" id="editOtherTerm" />
+                            </div>
+
+
+                            <div class="col-lg-3">
+                                <label id="" class="fs-5 fw-normal text-dark">Dispatch Mode :</label>
+                                <div class="form-check">
+                                    <label class="form-check-label" style="color:#0077B3;font-size:small">
+                                        <input class="form-check-input" type="radio" name="SendType" value="By Hand" id="ByHand" onchange="checksendtype(this.value);"> By Hand
+                                        <span class="circle">
+                                            <span class="check"></span>
+                                        </span>
+                                    </label>
+                                    <label class="form-check-label" style="color:#0077B3;font-size:small">
+                                        <input class="form-check-input" type="radio" name="SendType" value="By Courier" checked id="ByCourier" onchange="checksendtype(this.value);"> By Courier
+                                        <span class="circle">
+                                            <span class="check"></span>
+                                        </span>
+                                    </label>
+                                </div>
+                                <span class="error">Send Type required</span>
+
+                            </div>
+
+                            <div class="mb-3 col-lg-3">
+                                <label class="fs-5 fw-normal text-dark">Transporter :</label>
+                                <div class="form-group  row">
+                                    @Html.DropDownList("CourierID", (IEnumerable<SelectListItem>)ViewBag.CourierID, new
+                                       {
+                                           @onchange = "checkCourierState(this.value);",@*@onchange = "currencySelected();",*@@class = "form-control fs-5 dropdown-textbox",
+style = "border:none;background:none;height:35px",
+id = "CourierID"
+})
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row" style="margin-bottom:10px">
+                            <div class="mb-3 col-lg-4">
+                                <label class="fs-5 fw-normal text-dark">Category :</label>
+                                <div class="form-group  row">
+                                    @Html.DropDownList("SubGroupID", (IEnumerable<SelectListItem>)ViewBag.SubGroupID, new { @onchange = "currencySelected();", @class = "form-control fs-5 dropdown-textbox", style = "border:none;background:none;height:35px" })
+
+                                </div>
+                            </div>
+                            <div class="mb-3 col-lg-4">
+                                <label class="fs-5 fw-normal text-dark">Yearly Business (₹) :</label>
+                                <input type="text" class="form-control fs-5 input-text-box" id="editYearlyBusiness">
+
+                            </div>
+
+                            <div class="mb-3 col-lg-4">
+                                <label class="fs-5 fw-normal text-dark">Frequency of Purchase :</label>
+                                @*<input type="text" class="form-control" id="editFrequencyPurId">*@
+                                <div class="form-group  row">
+                                    @Html.DropDownList("FrequencyPurId", (IEnumerable<SelectListItem>)ViewBag.FrequencyPurId, new { @onchange = "currencySelected();", @class = "form-control fs-5 dropdown-textbox", style = "border:none;background:none;height:35px" })
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" style="outline:none" class="btn btn-success btn-round create-bttn custo-inner" data-bs-dismiss="modal" id="saveBusinessTermBtn">Update@*Create*@</button>
+                        <button type="button" style="outline:none" class="btn btn-success btn-round create-bttn custo-inner" onclick="closeModal('Businessterm')">Close</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Single modal Popup for contact person details -->
+        <!-- Overlay -->
+        <div class="modalOverl" id="ContactPersonModalOverlay" onclick="closeModal('ContactPersonModal')"></div>
+
+        <!-- Modal -->
+        <div class="modal" id="ContactPersonModal" style=" backdrop-filter: blur(1px); background: rgba(0, 0, 0, 0.5); opacity: 1;">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header m-3 p-3" style="background-color: #e5e6e7; box-shadow: 6px 6px 6px #bfc3cf;">
+                        <h3 class="modal-title " style=" font-family: Helvetica; color: midnightblue">Add Contact Person</h3>
+
+                        <i class="material-icons" data-dismiss="modal" aria-label="Close" onclick="closeModal('ContactPersonModal')"
+                           style="color: midnightblue; font-size: 25px; cursor: pointer;">cancel</i>
+
+
+                    </div>
+                    <div class="modal-body ">
+                        <input type="hidden" id="CpersonAddressTitleID" />
+                        <input type="hidden" id="contactPersonId" />
+                        <input type="hidden" id="designationfoid" />
+                        <input type="hidden" id="OwnerDetails" />
+                        <div class=" row" style="margin-bottom:10px">
+                            <div class="mb-2 col-lg-1 ">
+                                <label class="fs-5 fw-normal text-dark">Title :</label>
+                                @Html.DropDownList("personTitle", (IEnumerable<SelectListItem>)ViewBag.Title1, new
+                                {
+                                    @class = " form-control fs-5 dropdown-textbox",
+                                    @onchange = "currencySelected();",@*id = "personDesignationId",*@@style = "height:35px;"
+})
+                            </div>
+                            @*<div class="mb-2 col-lg-1 "><label class="fs-5 fw-normal text-dark">Title </label><input class="form-control fs-5 input-text-box" id="personTitle" /></div>*@
+                            @*<div class="mb-2 col-lg-3 "><label class="fs-5 fw-normal text-dark">First Name :</label><input class=" capitalize-first form-control fs-5 input-text-box" id="personFirstName" /></div>
+                                <div class="mb-2 col-lg-2 "><label class="fs-5 fw-normal text-dark">Middle Name :</label><input class=" capitalize-first form-control fs-5 input-text-box" id="personMiddleName" /></div>
+                                <div class="mb-2 col-lg-3 "><label class="fs-5 fw-normal text-dark">Last Name :</label><input class="capitalize-first form-control fs-5 input-text-box" id="personLastName" /></div>*@
+
+                            <div class="mb-2 col-lg-3">
+                                <label class="fs-5 fw-normal text-dark">First Name :</label>
+                                <input type="text"
+                                       id="personFirstName"
+                                       class="form-control fs-5 input-text-box"
+                                       oninput="allowOnlyLetters(this)"
+                                       required />
+                            </div>
+
+                            <div class="mb-2 col-lg-2">
+                                <label class="fs-5 fw-normal text-dark">Middle Name :</label>
+                                <input type="text"
+                                       id="personMiddleName"
+                                       class="form-control fs-5 input-text-box"
+                                       oninput="allowOnlyLetters(this)" />
+                            </div>
+
+                            <div class="mb-2 col-lg-3">
+                                <label class="fs-5 fw-normal text-dark">Last Name :</label>
+                                <input type="text"
+                                       id="personLastName"
+                                       class="form-control fs-5 input-text-box"
+                                       oninput="allowOnlyLetters(this)"
+                                       required />
+                            </div>
+                            <div class="mb-2 col-lg-3 ">
+                                <label class="fs-5 fw-normal text-dark">Designation :</label>
+                                @Html.DropDownList("DesignationId", (IEnumerable<SelectListItem>)ViewBag.DesignationId, new { @class = " form-control fs-5 dropdown-textbox", @onchange = "currencySelected();", id = "personDesignationId", @style = "height:35px;" })
+                            </div>
+                        </div>
+                        <div class=" row" style="margin-bottom:10px">
+                            <div class="mb-2 col-lg-1"><label class="fs-5 fw-normal text-dark">Code. :</label><input class="form-control fs-5 input-text-box" id="CountryCode1" /></div>
+                            @*<div class="mb-2 col-lg-3">
+                                    <label class="fs-5 fw-normal text-dark">Office Contact :</label>
+                                    <input type="text" maxlength="10" pattern="\d*" inputmode="numeric"
+                                           class="email-input form-control fs-5 input-text-box"
+                                           id="personOfficeMobile" />
+
+                                    <small class="text-danger d-none email-error">Please enter a valid email address.</small>
+                                </div>*@
+                            <div class="mb-2 col-lg-3">
+                                <label class="fs-5 fw-normal text-dark">Office Contact :</label>
+                                <input type="text"
+                                       maxlength="10"
+                                       class="form-control fs-5 input-text-box"
+                                       id="personOfficeMobile"
+                                       placeholder="Enter mobile number"
+                                       oninput="allowOnlyNumbers(this)" />
+                            </div>
+
+                            <div class="mb-2 col-lg-4">
+                                <label class="fs-5 fw-normal text-dark">Office Email : <span style="position:absolute;right:20px;top:0;display:flex">CC : <input id="personOfficeCC" type="checkbox" value="true" name="offcEmailCC" style="transform: scale(1.1);" /></span></label>
+                                <input class=" form-control fs-5 input-text-box" id="personOfficeEmail" />
+                                <span id="personOfficeEmailError"></span>
+                            </div>
+                            <div class="mb-2 col-lg-1"><label class="fs-5 fw-normal text-dark">Code. :</label><input class="form-control fs-5 input-text-box" id="CountryCode2" /></div>
+                            <div class="mb-2 col-lg-3"><label class="fs-5 fw-normal text-dark">Personal Mobile :</label><input type="number" maxlength="10" class="form-control fs-5 input-text-box" id="personPersonalMobile" /></div>
+                            @*<div class="mb-2"><label>Office Email (CC)</label><input class="form-control" id="personOfficeCC" /></div>*@
+                            @*<div class="mb-2"><label>Personal Email (CC)</label><input class="form-control" id="personPersonalCC" /></div>*@
+                        </div>
+                        <div class=" row" style="margin-bottom:10px">
+                            <div class="mb-2 col-lg-4">
+                                <label class="fs-5 fw-normal text-dark">Personal Email : <span style="position:absolute;right:20px;top:0;display:flex">CC : <input id="personPersonalCC" type="checkbox" value="true" name="persnlEmailCC" style="transform: scale(1.1);" /></span></label>
+                                <input class="form-control fs-5 input-text-box" id="personPersonalEmail" />
+                                <span id="personPersonalEmailError"></span>
+
+                            </div>
+
+                            <div class="mb-2 col-lg-4">
+                                <label class="fs-5 fw-normal text-dark">Alternate Email :<span style="position:absolute;right:20px;top:0;display:flex">CC : <input id="personAltCC" type="checkbox" value="true" name="persnlaltrCC" style="transform: scale(1.1);" /></span></label>
+                                <input class="form-control  fs-5 input-text-box" id="personAltEmail" />
+                                <span id="personAltEmailError"></span>
+                            </div>
+                            @*<div class="mb-2"><label class="fs-5 fw-normal text-dark">Alternate Email (CC)</label><input class="form-control" id="personAltCC" /></div>*@
+
+                            <div class="mb-2 col-lg-4"><label class="fs-5 fw-normal text-dark">DOB</label><input type="date" class="form-control fs-5 input-text-box" id="personDOB" /></div>
+
+                        </div>
+                        <div class=" row" style="margin-bottom:10px">
+                            <div class="mb-2  col-lg-2 ">
+                                <label class="fs-5 fw-normal text-dark pt-2">Default Person :</label>
+                                <br />
+                                <input id="personDefault" type="checkbox" value="true" name="defltpern" style="transform: scale(1.5);margin-left:7px;color:blue" />
+                            </div>
+                            <div class="mb-2 col-lg-2 "><label class="fs-5 fw-normal text-dark">STD Code</label><input type="number" class="form-control fs-5 input-text-box" id="personSTD" /></div>
+                            <div class="mb-2 col-lg-4"><label class="fs-5 fw-normal text-dark">Landline No 1</label><input type="number" class="form-control fs-5 input-text-box" id="personLandline1" /></div>
+                            <div class="mb-2 col-lg-4"><label class="fs-5 fw-normal text-dark">Landline No 2</label><input type="number" class="form-control fs-5 input-text-box" id="personLandline2" /></div>
+                        </div>
+                        <div class=" row" style="margin-bottom:10px">
+                            <div class="mb-2 col-lg-12"><label class="fs-5 fw-normal text-dark">Home Address</label><input class="sentence-case-input form-control fs-5 input-text-box" id="personHomeAddress" /></div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-success btn-round create-bttn custo-inner " id="update-contact-persons" style="outline:none">Update</button>
+                        <button type="button" class="btn btn-success btn-round create-bttn custo-inner" onclick="closeModal('ContactPersonModal')" style="outline:none">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modalOverl" id="PreferredItemModalOverlay" onclick="closeModal('PreferredItemModal')"></div>
+        <!-- Preferred Item Edit Modal -->
+        <div id="PreferredItemModal" class="modal" style=" backdrop-filter: blur(1px); background: rgba(0, 0, 0, 0.5); opacity: 1;">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content shadow-lg rounded-4">
+                    <div class="modal-header m-3 p-3" style="background-color: #e5e6e7; box-shadow: 6px 6px 6px #bfc3cf;">
+                        <h3 class="modal-title" style=" font-family: Helvetica; color: midnightblue">Edit Purchase Preferred Items</h3>
+                        <i class="material-icons" data-dismiss="modal" aria-label="Close" onclick="closeModal('PreferredItemModal')"
+                           style="color: midnightblue; font-size: 25px; cursor: pointer;">cancel</i>
+
+                    </div>
+                    <div class="modal-body">
+                        <div id="preferredItemForm">
+                            <input class="d-none" type="text" id="editAddressTitleID" />
+                            <input class="d-none" type="text" id="editLedgerID" />
+                            <input class="d-none" type="text" id="editPrefItemid" />
+                            <div class=" row" style="margin-bottom:10px">
+                                <div class=" col-lg-12">
+                                    <label for="editPreferredItemId" class="col-lg-2 fs-3 fw-normal text-dark mt-3" style="text-align:right">
+                                        Items :
+                                    </label>
+                                    @Html.DropDownList("editPreferredItemId", (IEnumerable<SelectListItem>)ViewBag.ItemID, new { @class = "col-lg-10 form-control dropdown-textbox", @onchange = "GetCode(this.value);", style = "height:35px;width:100%" })
+                                </div>
+                            </div>
+
+                            <div class=" row">
+                                <div class=" col-lg-12">
+                                    <label for="editPreferredQuantity" class="col-lg-3 fs-3 fw-normal text-dark mt-3" style="text-align:right">Preferred Quantity :</label>
+                                    <input type="number" class="col-lg-3 form-control fs-5 input-text-box" id="editPreferredQuantity" style="height:35px">
+
+                                    <label for="editPreferredRate" class="col-lg-3 fs-3 fw-normal text-dark mt-3" style="text-align:right">Agreed Rate :</label>
+                                    <input type="number" class="col-lg-3 form-control fs-5 input-text-box" id="editPreferredRate" style="height:35px">
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer ">
+                        <input type="button" id="updatePreferredItemBtn" value="Update" class="btn btn-success btn-round create-bttn custo-inner" style="outline:none" />
+                        <button type="button" class="btn btn-success btn-round create-bttn custo-inner" onclick="closeModal('PreferredItemModal')" style="outline:none">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modalOverl" id="BankDetailsModalOverlay" onclick="closeModal('BankDetailsModal')"></div>
+
+        <div id="BankDetailsModal" class="modal" style="backdrop-filter: blur(1px); background: rgba(0, 0, 0, 0.5); opacity: 1;">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content shadow-lg rounded-4">
+                    <div class="modal-header m-3 p-3" style="background-color: #e5e6e7; box-shadow: 6px 6px 6px #bfc3cf;">
+                        <h3 class="modal-title" style="font-family: Helvetica; color: midnightblue">Add Bank Details</h3>
+                        <i class="material-icons" data-dismiss="modal" aria-label="Close" onclick="closeModal('BankDetailsModal')"
+                           style="color: midnightblue; font-size: 25px; cursor: pointer;">cancel</i>
+                    </div>
+
+                    <div class="modal-body">
+                        <div id="preferredItemForm">
+                            <!-- Hidden fields -->
+                            <input type="hidden" id="editAddressTitleID" />
+                            <input type="hidden" id="editLedgerID" />
+                            <input type="hidden" id="hiddenChequeCopy" />
+                            <input type="hidden" id="hiddenGSTCertificate" />
+
+                            <div class="form-group row mb-3">
+                                <div class="col-lg-4">
+                                    <label id="label">IFSC</label>
+                                    @Html.EditorFor(model => model.BusinessAddress.IFSCCode, new
+                                    {
+                                        htmlAttributes = new
+                                        {
+                                            @class = "form-control",
+                                            id = "editpurifsccode",
+                                            placeholder = "IFSC Code",
+                                            @onkeyup = "ToUpper(this.id)",
+                                            @onchange = "GetBankInfo(this.value);",
+                                            @maxlength = "11"
+                                        }
+                                    })
+                                    @*@Html.ValidationMessageFor(model => model.Ledger.PurIFSCCode, "", new { @class = "text-danger" })*@
+                                </div>
+
+                                @*<div class="col-lg-4">
+                                        <label id="label">Bank Name</label>
+                                        @Html.HiddenFor(model => model.BusinessAddress.PurBankID, new
+                                        {
+                                            htmlAttributes = new { @class = "form-control", id = "editpurbankid" }
+                                        })
+                                        @Html.EditorFor(model => model.BusinessAddress.PurBankName, new
+                                        {
+                                            htmlAttributes = new { @class = "form-control", id = "BankName", placeholder = "Bank Name" }
+                                        })
+                                        @Html.ValidationMessageFor(model => model.BusinessAddress.PurBankID, "", new { @class = "text-danger", id = "editpurbankid" })
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <label id="label">Branch Name</label>
+                                        @Html.EditorFor(model => model.BusinessAddress.PurBranchName, new
+                                        {
+                                            htmlAttributes = new { @class = "form-control", id = "editpurbranchname", placeholder = "Branch Name" }
+                                        })
+                                        @Html.ValidationMessageFor(model => model.BusinessAddress.PurBranchName, "", new { @class = "text-danger", id = "editpurbranchname" })
+                                    </div>*@
+
+
+
+                                <input type="hidden" id="editpurbankid" />
+
+                                <div class="col-lg-4">
+                                    <label>Bank Name</label>
+
+                                    <input type="text"
+                                           id="BankName"
+                                           class="form-control"
+                                           placeholder="Bank Name"
+                                           readonly />
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <label>Branch Name</label>
+
+                                    <input type="text"
+                                           id="editpurbranchname"
+                                           class="form-control"
+                                           placeholder="Branch Name"
+                                           readonly />
+                                </div>
+                            </div>
+
+                            <div class="form-group row mb-3">
+                                <div class="col-lg-4">
+                                    <label id="label">Account Number</label>
+                                    @Html.EditorFor(model => model.BusinessAddress.AccountNo, new
+                                    {
+                                        htmlAttributes = new { @class = "form-control", id = "editpuraccountno", placeholder = "Account Number" }
+                                    })
+                                    @Html.ValidationMessageFor(model => model.BusinessAddress.AccountNo, "", new { @class = "text-danger", id = "editpuraccountno" })
+                                </div>
+                            </div>
+
+                            <!-- 🔹 Cheque Scan Copy Upload -->
+                            <div class="form">
+                                <div class="col-lg-3">
+                                    <label id="label">Cheque Scan Copy</label>
+                                    <input type="file" id="pdfInput" name="CustomPhotoFile" accept=".png, .jpg, .jpeg, .pdf" onchange="handleFileChange()" />
+                                    <p style="font-size:12px"><b>Note:</b> File size must be between 10 KB and 200 KB.</p>
+                                </div>
+                                <div class="col-lg-3" id="previewButtonContainer" style="display: none;">
+                                    <label>&nbsp;</label><br />
+                                    @*<button type="button" class="btn btn-primary mb-2" onclick="previewPdf()">Preview File</button><br />*@
+                                    <a href="#" id="existingChequeLink" target="_blank">
+                                        <img id="chequeImgPreview" src="" style="width: 60px; border: 1px solid #ccc; display: none;" />
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- 🔹 GST Certificate Upload -->
+                            <div class="form">
+                                <div class="col-lg-3">
+                                    <label id="label">GST Certificate Copy</label>
+                                    <input type="file" id="pdfInput1" name="CustomPhotoFile1" accept=".png, .jpg, .jpeg, .pdf" onchange="handleFileChange1()" />
+                                    <p style="font-size:12px"><b>Note:</b> File size must be between 10 KB and 200 KB.</p>
+                                </div>
+                                <div class="col-lg-3" id="previewButtonContainer1" style="display: none;">
+                                    <label>&nbsp;</label><br />
+                                    @*<button type="button" class="btn btn-primary mb-2" onclick="previewPdf1()">Preview File</button><br />*@
+                                    <a href="#" id="existingGSTLink" target="_blank">
+                                        <img id="gstImgPreview" src="" style="width: 60px; border: 1px solid #ccc; display: none;" />
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <input type="button" id="updateBankDetailsBtn" value="Update" class="btn btn-success btn-round create-bttn custo-inner" style="outline:none" />
+                        <button type="button" class="btn btn-success btn-round create-bttn custo-inner" onclick="closeModal('BankDetailsModal')" style="outline:none">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        @*---------------------------------------------DefaultNote-------------------------------------------*@
+
+
+        <div class="modalOverl" id="DefaultNoteModalOverlay" onclick="closeModal('DefaultNoteModal')"></div>
+        <!-- DefaultNote Edit Modal -->
+        <div id="DefaultNoteModal" class="modal" style=" backdrop-filter: blur(1px); background: rgba(0, 0, 0, 0.5); opacity: 1;">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content shadow-lg rounded-4">
+                    <div class="modal-header m-3 p-3" style="background-color: #e5e6e7; box-shadow: 6px 6px 6px #bfc3cf;">
+                        <h3 class="modal-title" style=" font-family: Helvetica; color: midnightblue">Edit Default Note</h3>
+                        <i class="material-icons" data-dismiss="modal" aria-label="Close" onclick="closeModal('DefaultNoteModal')"
+                           style="color: midnightblue; font-size: 25px; cursor: pointer;">cancel</i>
+
+                    </div>
+                    <div class="modal-body">
+                        <div id="DefaultNoteForm">
+                            <input class="d-none" type="text" id="editLedgerid" />
+                            <div class="row">
+                                <div class="d-inline ">
+                                    <label for="editDefaultNote" class=" fs-3 fw-normal text-dark" style="text-align:right">
+                                        Default Note :
+                                    </label>
+                                    <input class="form-control fs-5 input-text-box" id="editDefaultNote" />
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer ">
+                        <input type="button" id="UpdateDefaultNote" value="Update" class="btn btn-success btn-round create-bttn custo-inner" style="outline:none" />
+                        <button type="button" class="btn btn-success btn-round create-bttn custo-inner" onclick="closeModal('DefaultNoteModal')" style="outline:none">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*---------------------------------------------Specific-------------------------------------------*@
+
+        <div class="modalOverl" id="SpeciInstructionModalOverlay" onclick="closeModal('SpeciInstructionModal')"></div>
+        @*DefaultNote Edit Modal*@
+        <div id="SpeciInstructionModal" class="modal" style=" backdrop-filter: blur(1px); background: rgba(0, 0, 0, 0.5); opacity: 1;">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content shadow-lg rounded-4">
+                    <div class="modal-header m-3 p-3" style="background-color: #e5e6e7; box-shadow: 6px 6px 6px #bfc3cf;">
+                        <h3 class="modal-title" style=" font-family: Helvetica; color: midnightblue">Edit Instruction</h3>
+                        <i class="material-icons" data-dismiss="modal" aria-label="Close" onclick="closeModal('SpeciInstructionModal')"
+                           style="color: midnightblue; font-size: 25px; cursor: pointer;">cancel</i>
+
+                    </div>
+                    <div class="modal-body">
+                        <div id="SpecificInstructionForm">
+                            <input class="d-none" type="text" id="editLedgeriD" />
+                            <input class="d-none" type="text" id="addressTitleID" />
+                            <div class="row">
+                                <div class="d-inline ">
+                                    <label for="editSInstruction" class=" fs-3 fw-normal text-dark" style="text-align:right">
+                                        Specific Instructions to Vendor :
+                                    </label>
+                                    <input class="sentence-case-input form-control fs-5 input-text-box" id="editSInstruction" maxlength="500"
+                                           rows="4" />
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer ">
+                        <input type="button" id="UpdateSpecificInstruction" value="Update" class="btn btn-success btn-round create-bttn custo-inner" style="outline:none" />
+                        <button type="button" class="btn btn-success btn-round create-bttn custo-inner" onclick="closeModal('SpeciInstructionModal')" style="outline:none">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*---------------------------------------------Opening Balance Amount-------------------------------------------*@
+
+        <div class="modalOverl" id="OpnBalAmtModalOverlay" onclick="closeModal('OpnBalAmtModal')"></div>
+        <!-- DefaultNote Edit Modal -->
+        <div id="OpnBalAmtModal" class="modal" style=" backdrop-filter: blur(1px); background: rgba(0, 0, 0, 0.5); opacity: 1;">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content shadow-lg rounded-4">
+                    <div class="modal-header m-3 p-3" style="background-color: #e5e6e7; box-shadow: 6px 6px 6px #bfc3cf;">
+                        <h3 class="modal-title" style=" font-family: Helvetica; color: midnightblue">Edit Amount Details</h3>
+                        <i class="material-icons" data-dismiss="modal" aria-label="Close" onclick="closeModal('OpnBalAmtModal')"
+                           style="color: midnightblue; font-size: 25px; cursor: pointer;">cancel</i>
+
+                    </div>
+                    <div class="modal-body">
+                        <div id="OpeningBalanceForm">
+                            <input class="d-none" type="text" id="editLedgeriid" />
+                            <input class="d-none" type="text" id="addresstitleid" />
+                            <input class="d-none" type="text" id="editAddressTytle" />
+                            <div class="row">
+                                <div class="col-lg-3 ">
+                                    <label for="editAmount" class=" fs-4 fw-normal text-dark">
+                                        Amount :
+                                    </label>
+                                    <input class="form-control fs-5 input-text-box" id="editAmount" />
+                                </div>
+                                <div class="col-lg-3 ">
+                                    <label for="editReferNo" class=" fs-4 fw-normal text-dark">
+                                        Ref. No. :
+                                    </label>
+                                    <input class="form-control fs-5 input-text-box" id="editReferNo" />
+                                </div>
+                                <div class="col-lg-3">
+                                    <label class=" fs-4 fw-normal text-dark">Account Type :</label>
+                                    <div class="form-check" style="margin-left:-20px">
+                                        <label class="form-check-label" style="color:#0077B3;font-size:small">
+                                            <input class="form-check-input" type="radio" name="editAmountType" value="Credit" id="ByCredit" onchange="checkaccounttype(this.value);"> Credit
+                                            <span class="circle"><span class="check"></span></span>
+                                        </label>
+                                        <label class="form-check-label" style="color:#0077B3;font-size:small">
+                                            <input class="form-check-input" type="radio" name="editAmountType" value="Debit" checked id="ByDebit" onchange="checkaccounttype(this.value);"> Debit
+                                            <span class="circle"><span class="check"></span></span>
+                                        </label>
+                                    </div>
+
+                                </div>
+                                <div class="col-lg-3 ">
+                                    <label for="editDateOpn" class=" fs-3 fw-normal text-dark" style="text-align:right">
+                                        Date :
+                                    </label>
+                                    <input type="date" id="editDateOpn" name="Date" class="form-control fs-5 input-text-box">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer ">
+                        <input type="button" id="UpdateOpnBalAmt" value="Update" class="btn btn-success btn-round create-bttn custo-inner" style="outline:none" />
+                        <button type="button" class="btn btn-success btn-round create-bttn custo-inner" onclick="closeModal('OpnBalAmtModal')" style="outline:none">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+}
+<style>
+    .user-access {
+        background-color: whitesmoke;
+    }
+
+    .carousel-control-next, .carousel-control-prev {
+        background-color: midnightblue;
+        width: 2%;
+        height: 20%;
+        top: 30%;
+    }
+
+    .zoom {
+        transition: transform .1s;
+    }
+
+        .zoom:hover {
+            -ms-transform: scale(1.5); /* IE 9 */
+            -webkit-transform: scale(1.5); /* Safari 3-8 */
+            transform: scale(1.02);
+        }
+
+
+    h3, h4 {
+        color: midnightblue
+    }
+
+    input.error {
+        border: 1px solid red;
+    }
+</style>
+<script>
+    /*Setting Button colour apply*/
+    $(document).ready(function () {
+
+        /*module button*/
+        $.ajax({
+            url: '/Settings/GetAllColors',
+            type: 'GET',
+            success: function (colors) {
+                // Example: Apply Inner Button colors
+                var bgColor5 = colors.InnerButtonColor; // inner
+                var fontColor5 = colors.InnerButtonFontColor; // inner text
+
+                // Example for all preview boxes (optional)
+                $('.custo-inner').css('background', bgColor5);//  inner
+                $('.custo-inner').css('color', fontColor5);// inner text
+            },
+            error: function () {
+                console.error("Failed to load color settings.");
+            }
+        });
+
+    });
+
+    /* for 1st Character uppercase of word*/
+    $('.capitalize-first').on('input', function () {
+        let val = $(this).val();
+        if (val.length > 0) {
+            $(this).val(val.charAt(0).toUpperCase() + val.slice(1).toLowerCase());
+        }
+    });
+
+
+    /*Convert to sentence case while inputing*/
+    //function toSentenceCaseLive(text) {
+    //    return text
+    //        .toLowerCase()
+    //        // Capitalize first letter of string and letter after punctuation (.,!?)
+    //        .replace(/(^\s*\w|[.!?,]\s*\w)/g, function (match) {
+    //            return match.toUpperCase();
+    //        })
+    //        // Ensure exactly one space after commas, periods, exclamation marks and question marks
+    //        .replace(/([.!?,])\s*/g, '$1 ');
+    //}
+    //function toSentenceCaseLive(text) {
+    //    return text
+    //        .replace(/,{2,}/g, ',')          // block multiple commas anywhere
+    //        .replace(/\s*,/g, ', ')          // normalize comma spacing
+    //        .replace(/(,\s*){2,}$/g, ',')   // ✅ allow ONLY ONE comma at end
+    //        .toLowerCase()
+    //        .replace(/(^\w|\.\s*\w)/g, c => c.toUpperCase());
+    //}
+
+    function toSentenceCaseLive(text) {
+        return text
+            .replace(/,{2,}/g, ',')
+            .replace(/\s*,/g, ', ')
+            .replace(/(,\s*){2,}$/g, ',')
+            .toLowerCase()
+            .replace(/(^|\s)([a-z])/g, function (match, space, letter) {
+                return space + letter.toUpperCase();
+            });
+    }
+    $(document).ready(function () {
+        $('.sentence-case-input').each(function () {
+            $(this).data('lastVal', $(this).val() || '');
+        });
+
+        $('.sentence-case-input').on('input', function () {
+            const $this = $(this);
+            const val = $this.val();
+            const lastVal = $this.data('lastVal') || '';
+
+            const isDeleting = val.length < lastVal.length;
+
+            if (isDeleting) {
+                $this.data('lastVal', val);
+                return;
+            }
+
+            const el = this;
+            const start = el.selectionStart;
+            const end = el.selectionEnd;
+
+            let newVal = toSentenceCaseLive(val);
+
+            // Fix cursor position after fixing spaces after punctuation marks
+            const beforeCursorOriginal = val.slice(0, start);
+            const beforeCursorFixed = beforeCursorOriginal.replace(/([.!?,])\s*/g, '$1 ');
+            const cursorDiff = beforeCursorFixed.length - beforeCursorOriginal.length;
+
+            newVal = newVal.replace(/([.!?,])\s*/g, '$1 ');
+
+            if (val !== newVal) {
+                $this.val(newVal);
+                el.setSelectionRange(start + cursorDiff, end + cursorDiff);
+            }
+
+            $this.data('lastVal', newVal);
+        });
+    });
+
+
+
+</script>

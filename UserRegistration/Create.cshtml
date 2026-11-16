@@ -1,0 +1,1038 @@
+﻿@model ERPEntities.User
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_SwipfeMaster.cshtml";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<style>
+    /*Adding some css for looks good*/
+    #label {
+        font-size: 15px;
+        color: #0077B3;
+        font-weight: 500
+    }
+
+    h4 {
+        font-size: 18px;
+        padding: 10px 0;
+        font-weight: 600;
+    }
+
+    .form-head h4 {
+        padding: 10px 10px;
+        font-size: 16px;
+        font-weight: 600;
+        background-color: #C1D5BD;
+    }
+
+
+    .body-panel {
+        border: 1px solid black;
+        /*background-color: whitesmoke;*/
+        margin-top: -10px;
+        border-radius: 5px;
+        background-color: floralwhite;
+    }
+
+    .submit-btn {
+        display: inline-flex;
+        padding: 7px;
+    }
+
+
+        .submit-btn button {
+            border-radius: 30px;
+            padding: 5px 5px;
+        }
+
+
+
+    .save-btn input {
+        /*border-radius: 30px;*/
+        font-size: 14px;
+    }
+
+    .tablecontainer table {
+        width: 100%;
+        border-collapse: collapse;
+        border-top: 1px solid #fff;
+        border-right: 1px solid #fff;
+        background-color: #fff
+    }
+
+    .tablecontainer th {
+        border-bottom: 2px solid #fff !important;
+        background-color: lightblue;
+        font-size: small;
+        font-weight: normal;
+        color: midnightblue;
+        text-align: center;
+        height: 30px;
+    }
+
+    .tablecontainer th, .tablecontainer td {
+        /*text-align: left;*/
+        border-left: 2px solid #fff;
+        padding: 5px;
+        border-bottom: 2px solid #fff;
+        font-size: small;
+    }
+
+
+    fieldset {
+        border: 1px solid #ddd !important;
+        margin: 10px;
+        /*max-width:0;*/
+        padding: 5px;
+        /* position:relative;*/
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        /*background-color: whitesmoke;*/
+        /* background-color: white;*/
+        background-color: white;
+    }
+
+
+    .button {
+        display: inline-block;
+        /*padding: 5px 6px;*/
+        /*font-size: 5px;*/
+        padding: 20px;
+        font-size: 16px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        outline: none;
+        border: none;
+        box-shadow: 0 9px #999;
+        height: 3px;
+        width: auto;
+        margin: 4px 2px;
+    }
+
+        .button:hover {
+            /*background-color: #3e8e41*/
+            background-color: cyan;
+        }
+
+        .button:active {
+            background-color: cyan;
+            box-shadow: 0 5px #666;
+            transform: translateY(4px);
+        }
+
+    .button1 {
+        border-radius: 50%;
+    }
+
+    span.error {
+        display: block;
+        visibility: hidden;
+        color: red;
+        font-size: 60px;
+    }
+
+
+    .ui-widget {
+        font-size: 12px !important;
+    }
+
+    .reqError {
+        color: #ff0000; /*Red Color*/
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .backsubmitbtn {
+        background-image: linear-gradient(to right,#35d3e1,midnightblue);
+        padding: 5px 20px 5px 20px;
+        color: white;
+        font-family: Helvetica;
+        box-shadow: -4px -4px 8px rgba(255, 255, 255, 0.7), 4px 4px 8px rgba(128, 128, 128, 0.7);
+        outline-style: none;
+        border: none
+    }
+
+    .dshapefieldset {
+        background-color: #e5e6e7;
+        border: 2px solid #ddd;
+        border-radius: 0px 25px 25px 0px;
+        margin-bottom: 20px
+    }
+
+    .field-heading {
+        font-size: 18px;
+        color: midnightblue;
+        font-family: Helvetica;
+        font-weight: bold;
+        display: flex
+    }
+
+    .route-path1 {
+        cursor: pointer;
+        clip-path: polygon(0% 0%, 80% 0%, 100% 50%, 80% 100%, 0% 100%);
+        background-color: #003399;
+        color: white;
+        padding: 5px 15px 5px 5px
+    }
+
+    .route-path2 {
+        cursor: pointer;
+        color: white;
+        clip-path: polygon(92% 0%, 100% 50%, 92% 100%, 0% 100%, 8% 50%, 0% 0%);
+        background-color: #003399;
+        padding: 5px 15px 5px 15px;
+    }
+
+    .route-path3 {
+        cursor: pointer;
+        color: white;
+        clip-path: polygon(90% 0%, 100% 50%, 90% 100%, 0% 100%, 10% 50%, 0% 0%);
+        background-color: #003399;
+        padding: 5px 15px 5px 15px;
+    }
+
+    .cross-btn {
+        font-size: 30px;
+        cursor: pointer;
+        color: midnightblue;
+        position: absolute;
+        top: 35px;
+        right: 15px;
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+<link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css"
+      rel="Stylesheet" type="text/css" />
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="Stylesheet" type="text/css" />
+@*AP external CSS*@
+<link href="~/Content/ERPStyle.css" rel="stylesheet" type="text/css" />
+<script>   //Save button click function
+    function SaveUserReg() {
+        //validation of order
+        var isAllValid = true;
+        // ---------- FIRST NAME VALIDATION ----------
+        var firstName =
+            $('#FirstNameDDL').is(':visible')
+                ? $('#FirstNameDDL option:selected').text()
+                : $('#FirstNameTxt').val();
+
+        if (!firstName || firstName.trim() === "") {
+            isAllValid = false;
+            $("#errorFirst1").html('<span style="color:red">Enter FirstName</span>').show();
+        }
+        else {
+            var nameRegex = /^[A-Za-z]+$/;
+            if (!nameRegex.test(firstName)) {
+                isAllValid = false;
+                $("#emailerrorFirst1").html('<span style="color:red">Enter Only Character</span>').show();
+            } else {
+                $("#errorFirst1").hide();
+                $("#emailerrorFirst1").hide();
+            }
+        }
+
+
+        // ---------- LAST NAME VALIDATION ----------
+        var lastName = $('#LastNameTxt').val();
+
+        if (!lastName || lastName.trim() === "") {
+            isAllValid = false;
+            $("#errorLast1").html('<span style="color:red">Enter LastName</span>').show();
+        }
+        else {
+            var nameRegex = /^[A-Za-z]+$/;
+            if (!nameRegex.test(lastName)) {
+                isAllValid = false;
+                $("#emailerrorLast1").html('<span style="color:red">Enter Only Character</span>').show();
+            } else {
+                $("#errorLast1").hide();
+                $("#emailerrorLast1").hide();
+            }
+        }
+        //if ($('#FirstName').val().trim() == "") {
+        //    $('#FirstName').siblings('span.error').css('visibility', 'visible');
+        //    isAllValid = false;
+        //    $('#FirstName').focus();
+        //    $("#errorFirst1").html('<span style="color:red">Enter FirstName</span>');
+        //    $("#errorFirst1").show();
+        //}
+        //else {
+        //    $('#FirstName').siblings('span.error').css('visibility', 'hidden');
+        //    $("#errorFirst1").html("");
+        //    $("#errorFirst1").hide();
+        //    var FirstName = /^[A-Za-z]+$/;
+        //    if ($('#FirstName').val().match(FirstName)) {
+        //        $('#FirstName').siblings('span.error').css('visibility', 'hidden');
+        //        $("#emailerrorFirst1").html("");
+        //        $("#emailerrorFirst1").hide();
+        //        $("#errorFirst1").html("");
+        //        $("#errorFirst1").hide();
+        //    }
+        //    else {
+        //        $('#FirstName').siblings('span.error').css('visibility', 'visible');
+        //        $("#emailerrorFirst1").html('<span style="color:red">Enter Only Character</span>');
+        //        $("#emailerrorFirst1").show();
+        //        $("#errorFirst1").html("");
+        //        $("#errorFirst1").hide();
+        //    }
+        //}
+        //if ($('#LastName').val().trim() == "") {
+        //    $('#LastName').siblings('span.error').css('visibility', 'visible');
+        //    isAllValid = false;
+        //    $('#LastName').focus();
+        //    $("#errorLast1").html('<span style="color:red">Enter LastName</span>');
+        //    $("#errorLast1").show();
+        //}
+        //else {
+        //    $('#LastName').siblings('span.error').css('visibility', 'hidden');
+        //    $("#errorLast1").html("");
+        //    $("#errorLast1").hide();
+        //    var LastName = /^[A-Za-z]+$/;
+        //    if ($('#LastName').val().match(LastName)) {
+        //        $('#LastName').siblings('span.error').css('visibility', 'hidden');
+        //        $("#emailerrorLast1").html("");
+        //        $("#emailerrorLast1").hide();
+        //        $("#errorLast1").html("");
+        //        $("#errorLast1").hide();
+        //    }
+        //    else {
+        //        $('#LastName').siblings('span.error').css('visibility', 'visible');
+        //        $("#emailerrorLast1").html('<span style="color:red">Enter Only Character</span>');
+        //        $("#emailerrorLast1").show();
+        //        $("#errorLast1").html("");
+        //        $("#errorLast1").hide();
+        //    }
+        //}
+        //if ($('#LoginEmailId').val().trim() == "") {
+        //    $('#LoginEmailId').siblings('span.error').css('visibility', 'hidden');
+        //    isAllValid = false;
+        //    $('#LoginEmailId').focus();
+        //    $("#error1").html('<span style="color:red">Enter EmailID</span>');
+        //    $("#error1").show();
+        //}
+        //else {
+        //    if ($('#LoginEmailId').val().trim() != "") {
+        //        $('#LoginEmailId').siblings('span.error').css('visibility', 'hidden');
+        //        $("#error1").html("");
+        //        $("#error1").hide();
+        //        var EmailID = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+        //        if ($('#LoginEmailId').val().match(EmailID)) {
+        //            $('#LoginEmailId').siblings('span.error').css('visibility', 'hidden');
+        //            $("#error1").html("");
+        //            $("#error1").hide();
+        //            $("#emailerror1").html("");
+        //            $("#emailerror1").hide();
+        //        }
+        //        else {
+        //            $('#LoginEmailId').siblings('span.error').css('visibility', 'visible');
+        //            //$("#EmailID").siblings().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter Correct Email</div>");
+        //            $("#emailerror1").html('<span style="color:red">Invalid Email</span>');
+        //            isAllValid = false;
+        //            //$result.css("color", "red");
+        //            $("#emailerror1").show();
+        //            $("#error1").html("");
+        //            $("#error1").hide();
+        //        }
+        //    }
+        //}
+        if ($('#DesignationId').val().trim() == "") {
+            $('#DesignationId').siblings('span.error').css('visibility', 'visible');
+            isAllValid = false;
+            $("#errorDesignn").html('<span style="color:red">Select Designation</span>');
+            $("#errorDesignn").show();
+        }
+        else {
+            $('#DesignationId').siblings('span.error').css('visibility', 'hidden');
+            $("#errorDesignn").html("");
+            $("#errorDesignn").hide();
+        }
+
+        if ($('#TitleID').val().trim() == "") {
+            $('#TitleID').siblings('span.error').css('visibility', 'visible');
+            isAllValid = false;
+            $("#errorTitleID").html('<span style="color:red">Select Designation</span>');
+            $("#errorTitleID").show();
+        }
+        else {
+            $('#TitleID').siblings('span.error').css('visibility', 'hidden');
+            $("#errorTitleID").html("");
+            $("#errorTitleID").hide();
+        }
+
+        if ($('#LoginPassword').val().trim() == "") {
+            $('#LoginPassword').siblings('span.error').css('visibility', 'visible');
+            isAllValid = false;
+            $("#errorpass").html('<span style="color:red">Password Required</span>');
+            $("#errorpass").show();
+        }
+        else {
+            $('#LoginPassword').siblings('span.error').css('visibility', 'hidden');
+            $("#errorpass").html("");
+            $("#errorpass").hide();
+        }
+
+        if ($('#Department').val().trim() == "Please Select") {
+            $('#Department').siblings('span.error').css('visibility', 'visible');
+            isAllValid = false;
+            $("#errorDept").html('<span style="color:red">Department Required</span>');
+            $("#errorDept").show();
+
+        }
+        else {
+            $('#Department').siblings('span.error').css('visibility', 'hidden');
+            $("#errorDept").html("");
+            $("#errorDept").hide();
+        }
+
+        if ($('#Zone').val().trim() == "Please Select") {
+
+            $('#Zone').siblings('span.error').css('visibility', 'visible');
+            isAllValid = false;
+            $("#errorzn").html('<span style="color:red">Zone Required</span>');
+            $("#errorzn").show();
+
+        }
+        else {
+
+            $('#Zone').siblings('span.error').css('visibility', 'hidden');
+
+            $("#errorzn").html("");
+            $("#errorzn").hide();
+        }
+
+
+        var b = "N";
+        //Save if valid
+        if (isAllValid) {
+            var officialEmail =
+                $('#OfficialEmailDDL').is(':visible')
+                    ? $('#OfficialEmailDDL').val()
+                    : $('#OfficialEmailTxt').val();
+
+            var officialMobile =
+                $('#OfficialMobileDDL').is(':visible')
+                    ? $('#OfficialMobileDDL').val()
+                    : $('#OfficialMobileTxt').val();
+            var firstName =
+                $('#FirstNameDDL').is(':visible')
+                    ? $('#FirstNameDDL option:selected').text()
+                    : $('#FirstNameTxt').val();
+
+            var lastName = $('#LastNameTxt').val();
+            var data = {
+
+                UserId: $('#UserId').val().trim(),
+                EmployeeId: $('#EmployeeId').val(),
+                FirstName: firstName,
+                LastName: lastName,
+                //EmployeeId: $('#EmployeeId').val(),
+                //FirstName: $('#FirstName').val().trim(),
+                //LastName: $('#LastName').val().trim(),
+                //LoginEmailId: $('#LoginEmailId').val().trim(),
+                DesignationId: $('#DesignationId').val().trim(),
+                TitleID: $('#TitleID').val().trim(),
+                // MobileNo: $('#MobileNo').val().trim(),
+                LoginPassword: $('#LoginPassword').val().trim(),
+                Zone: $('#Zone').val().trim(),
+                SaleType: $('#SaleType').val().trim(),
+                Department: $('#Department').val().trim(),
+                WorkFunction: $('#WorkFunction').val(),
+                // ✅ NEW FIELDS (JobProfile-based)
+
+                LoginEmailId: officialEmail,
+                MobileNo: officialMobile,
+                To: $('#To').val(),
+                From: $('#From').val(),
+                Admin: b,
+                Inventory: b,
+                SalesCRM: b,
+                Accounts: b,
+                Purchase: b,
+                Production: b,
+                HR: b
+
+            }
+
+            $(this).val('Please wait...');
+
+            $.ajax({
+                url: '/UserRegistration/SaveUser',
+                type: "POST",
+                data: JSON.stringify(data),
+                dataType: "JSON",
+                contentType: "application/json",
+                success: function (d) {
+
+                    //check is successfully save to database
+                    if (d.status == true) {
+                        //will send status from server side
+                        alert('Successfully done');
+
+                        $('#UserId').val('');
+                        $('#EmployeeId').val('');
+                        $('#FirstNameTxt, #LastNameTxt').val('');
+                        $('#FirstNameDDL, #LastNameDDL').val('');
+                        //$('#FirstName').val('');
+                        //$('#LastName').val('');
+                        //$('#LoginEmailId').val('');
+                        $('#DesignationId').val('');
+                        $('#TitleID').val('');
+                        $('#MobileNo').val('');
+                        $('#LoginPassword').val('');
+                        $('#Zone').val('');
+
+                        $('#Department').val('');
+                        $('#WorkFunction').val('');
+                        $('#To').val('');
+                        $('#From').val('');
+
+                        alert('Successfully done');
+                        window.location.href = '/UserRegistration/Index';
+                    }
+                    else {
+                        alert('Failed');
+                    }
+                    $('#submit').val('Save');
+                },
+                error: function () {
+                    alert('Error. Please try again.');
+                    $('#submit').val('Save');
+                }
+            });
+        }
+    }
+    ///First Letter Uppercase
+    function myFunction(id) {
+        var txt = document.getElementById(id);
+        txt.value = txt.value.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1); });
+    }
+    /////punchuation marks after space and before remove space
+    $(document).ready(function () {
+        $('#FirstName,#LastName,#Company,#Designation').keyup(function () {
+            str = this.value.replace(/(?=\S)[,.!?:;)](?=\S)/g, '$& ');
+            str1 = this.value.replace(/\s+([,.!?:;)])/g, "$1");
+            str2 = this.value.replace(/(?=\S)[&](?=\S)/g, ' & ', '$& ');
+            str3 = this.value.replace(/\b[(]/g, ' (', "(");
+
+            if (str != this.value) this.value = str;
+            else
+                if (str1 != this.value) this.value = str1;
+                else
+                    if (str2 != this.value) this.value = str2;
+                    else
+                        if (str3 != this.value) this.value = str3;
+        });
+    });
+    ///textbox starting remove blank space
+    $(function () {
+        $('#FirstName,#LastName,#Company,#Designation').blur(function () {
+            $(this).val(
+                $.trim($(this).val())
+            );
+        });
+    });
+</script>
+<br>
+@using (Html.BeginForm("Create", "Register", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+<form id="TypeValidation" class="form-horizontal" action="#" method="">
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="d-flex" style="margin-top:-20px">
+                <h4 class="route-path1" onclick="location.href='@Url.Action("Index","Admin")'">Admin </h4>
+                <h4 class="route-path2 " onclick="location.href='@Url.Action("Index","UserRegistration")'">UserRegistration</h4>
+                <h4 class="route-path3 " onclick="location.reload()">Create</h4>
+            </div>
+            <br />
+            <input type="hidden" id="EmployeeId" />
+            <div class="panel panel-default outer-main-container">
+                <div class=" main-heading">
+                    <div class=" d-flex pr-5">
+                        <i class="material-icons" style="font-size: 32px; margin-right: 10px;">feed</i>
+                        ERP Registration Form
+                        <i class="material-icons cross-btn" onclick="history.back()">cancel</i>
+                    </div>
+                </div>
+
+
+                <div class="panel-body">
+                    <div class="form-group row">
+                        <div class="col-lg-3 col-sm-6 col-md-4 col-xxl-2">
+                            <label id="label">
+                                Department :
+                            </label>
+                            @*<div class="form-group row">*@
+                            <div class="form-group">
+                                @Html.DropDownList("Department", (IEnumerable<SelectListItem>)ViewBag.DepartmentList,
+                                "Select Department", new { @class = "form-control fs-4 pl-3 input-text-box", style = "font-size:small;height:30px;width:80%" })
+                            </div>
+                            @*@Html.DropDownList("EmployeeId", (IEnumerable<SelectListItem>)ViewBag.EmployeeId, "Please Select", new { @class = "form-control", placeholder = "Country", style = "font-size:small;height:35px", @onchange = "GetEmployeeInfo(this.value);" })*@
+                            @*</div>*@
+                            <br />
+                            <br />
+                            <span id="errorDept"></span>
+                        </div>
+                        <div class="col-lg-3">
+                            <label id="label"> Designation :</label>
+                            <div class="form-group row">
+                                @*@Html.DropDownList("DesignationId", (IEnumerable<SelectListItem>)ViewBag.DesignationId, "Please Select", new { @class = "form-control", style = "font-size:small;height:30px" })*@
+                                @*@Html.TextBox("DesignationId", null, new { @onkeyup = "myFunction(this.id)", @class = "form-control" })*@
+                                @Html.DropDownList("DesignationId", Enumerable.Empty<SelectListItem>(), "Select Designation.", new { @class = "form-control fs-4 pl-3 input-text-box", style = "font-size:small;height:30px;width:70%" })
+                            </div>
+                            <br />
+                            <br />
+                            <span id="errorDesignn"></span>
+                        </div>
+                        <!--<div class="col-lg-3">
+                <label id="label">Office Email : </label>
+
+                @Html.EditorFor(model => model.LoginEmailId, new { htmlAttributes = new { @placeholder = "Email Name", @class = "form-control fs-4 pl-3 input-text-box" } })
+                <input type="text" id="OfficialEmailTxt" class="form-control" style="display:none;" />
+                <select id="OfficialEmailDDL" class="form-control" style="display:none;"></select>
+                <span id="error1"></span>-->
+                        @*<span id="emailerror1"></span>*@
+                        <!--</div>-->
+                        @*<div class="col-lg-3">
+                        <label id="label">Office Email :</label>
+
+                        @Html.TextBoxFor(model => model.LoginEmailId,
+                            new
+                            {
+                                @class = "form-control",
+                                style = "font-size:small;height:30px;width:70%",
+                                @id = "OfficialEmailTxt",
+                                @placeholder = "Email Name",
+                                @type = "email"
+                            })
+
+                        <span id="error1"></span>
+                    </div>*@
+
+
+
+                        @*<div class="col-lg-3">
+                    <label id="label">Office Email </label>
+                    @Html.EditorFor(model => model.LoginEmailId, new { htmlAttributes = new { @placeholder = "Email Name", @class = "form-control" } })
+                    <input type="text" id="OfficialEmailTxt" class="form-control" style="display:none;" />
+                    <select id="OfficialEmailDDL" class="form-control" style="display:none;"></select>
+                    <span id="error1"></span>
+                    </div>*@
+
+                        <div class="col-lg-3">
+                            <label id="label">Office Email :</label>
+                            @*@Html.EditorFor(model => model.LoginEmailId, new { htmlAttributes = new { @placeholder = "Email Name", @class = "form-control" } })*@
+                            <div class="form-group">
+                                <input type="text" id="OfficialEmailTxt" class="form-control fs-4 pl-3 input-text-box" style="display: none; height: 30px; width: 90%;" />
+                                <select id="OfficialEmailDDL" class="form-control fs-4 pl-3 input-text-box" style="display: none; height: 30px; width: 90%;"></select>
+                                <span id="error1"></span>
+                                @*<span id="emailerror1"></span>*@
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <label id="label">Office Mobile Number :</label>
+                            <div class="form-group">
+                                <input type="text" id="OfficialMobileTxt" class="form-control fs-4 pl-3 input-text-box" style="display: none; height: 30px; width: 60%;" />
+                                <select id="OfficialMobileDDL" class="form-control fs-4 pl-3 input-text-box" style="display: none; height: 30px; width: 60%;  "></select>
+                            </div>
+                        </div>
+                        @*<div class="col-lg-2">
+                        <label id="label">Office Mobile Number :</label>
+
+                        @Html.TextBoxFor(model => model.MobileNo,
+                            new
+                            {
+                                @class = "form-control",
+                                style = "font-size:small",
+                                @id = "OfficialMobileTxt",
+                                @placeholder = "Mobile Number",
+                                @type = "tel"
+                            })
+
+                    </div>*@
+                        @*</div>*@
+                        <div class="form-group row">
+                            @Html.HiddenFor(model => model.UserId)
+                            <div class="col-lg-2">
+                                <label id="label">Title : </label>
+                                <div class="form-group row">
+                                    @*@Html.DropDownList("Title1", (IEnumerable<SelectListItem>)ViewBag.DDU, new { @class = "form-control", style = "font-size:small;height:30px" })*@
+                                    @Html.DropDownList("TitleID", (IEnumerable<SelectListItem>)ViewBag.Title1, new { @class = "form-control fs-4 pl-3 input-text-box", style = "font-size:small;height:30px; width:40%" })
+                                </div>
+                                @*@Html.DropDownList("Title", (IEnumerable<SelectListItem>)ViewBag.Title, "Please Select", new { @class = "form-control", style = "font-size:small;height:30px" })*@
+                                <br />
+                                <span id="errorTitleID"></span>
+                            </div>
+                            <div class="col-lg-3">
+                                <label id="label">First Name :</label>
+                                <div class="form-group">
+                                    @*@Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @placeholder = "First Name", @class = "form-control fs-4 pl-3 input-text-box", style = "font-size:small;height:30px; width:70%", @onkeyup = "myFunction(this.id)" } })*@
+                                    <input type="text" id="FirstNameTxt" class="form-control fs-4 pl-3 input-text-box" style="display: none; height: 30px; width: 90%;" />
+                                    <select id="FirstNameDDL" class="form-control fs-4 pl-3 input-text-box" style="display: none; height: 30px; width: 90%;"></select>
+                                    <span id="emailerrorFirst1"></span>
+                                    <span id="errorFirst1"></span>
+                                </div>
+                            </div>
+                                <div class="col-lg-3">
+                                    <label id="label">Last Name :</label>
+                                    @*@Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @placeholder = "Last Name", @class = "form-control fs-4 pl-3 input-text-box", style = "font-size:small;height:30px;width:70%", @onkeyup = "myFunction(this.id)" } })*@
+                                    <input type="text" id="LastNameTxt" class="form-control fs-4 pl-3 input-text-box" style="display: none; height: 30px; width: 90%;" readonly />
+                                    <select id="LastNameDDL" class="form-control fs-4 pl-3 input-text-box" style="display: none; height: 30px; width: 90%;" disabled></select>
+                                    <span id="emailerrorLast1"></span>
+                                    <span id="errorLast1"></span>
+                                </div>
+
+
+
+                                <div class="col-lg-3">
+                                    <label id="label">Password :</label>
+                                    @Html.TextBoxFor(model => model.LoginPassword, new
+                               {
+                                   @class = "form-control fs-4 pl-3 input-text-box",
+                                   style = "font-size:small;height:30px;width:50%",
+                                   type = "password",
+                                   id = "LoginPassword",
+                                   autocomplete = "new-password"
+                               })
+
+                                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                <div class="form-group row">
+                                    <div class="col-lg-2">
+                                        <label id="label">Zone :</label>
+                                        <div class="form-group">
+                                            @Html.DropDownList("Zone", new List<SelectListItem>
+                                                    {
+                                                    new SelectListItem{ Text="Please Select", Value = "Please Select" },
+                                                        new SelectListItem{ Text="South", Value = "South" },
+                                                        new SelectListItem{ Text="East", Value = "East" },
+                                                        new SelectListItem{ Text="West", Value = "West" },
+                                                        new SelectListItem{ Text="North", Value = "North" },
+                                                         new SelectListItem{ Text="All India Zone", Value = "All India Zone" },
+                                                     }, new { @class = "form-control fs-4 pl-3 input-text-box", style = "font-size:small;height:30px;width:82%" })
+                                        </div>
+                                        <br />
+                                        <br />
+                                        <span id="errorzn"></span>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <label id="label">Sale Type :</label>
+                                        <div class="form-group">
+                                            @Html.DropDownList("SaleType", new List<SelectListItem>
+                                                       {
+                                                       new SelectListItem{ Text="Please Select", Value = "Please Select" },
+                                                           new SelectListItem{ Text="Dependent", Value = "Dependent" },
+                                                           new SelectListItem{ Text="Independent", Value = "Independent" },
+                                                    }, new { @class = "form-control fs-4 pl-3 input-text-box", style = "font-size:small;height:30px;width:109%" })
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="form-group row ">
+                                    <div class="col-md-2 col-lg-3 px-4">
+                                        @*<input type="button" id="submit" value="Create" class="button" onclick="SaveUserReg();" />*@
+
+                                        <input type="button" id="submit" value="Create" class=" btn btn-success btn-round create-bttn custo-inner" style="outline:none" onclick="SaveUserReg();" />
+                                    </div>
+                                    <div class="col-md-2 col-lg-3 px-4">
+                                        <input type="button" value="Close" class=" btn btn-success btn-round create-bttn custo-inner" style="outline:none" onclick="history.back();" />
+                                    </div>
+                                </div>
+
+                            </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        </div>
+</form>
+}
+<script>
+    $(document).ready(function () {
+
+        $('#Department').change(function () {
+
+            var departmentName = $(this).val();
+
+            $('#DesignationId').empty();
+            $('#DesignationId').append('<option value="">Please Select</option>');
+
+            if (departmentName === "" || departmentName === "Please Select") {
+                return;
+            }
+
+            $.ajax({
+                url: '/UserRegistration/GetDesignationsByDepartment',
+                type: 'GET',
+                data: { departmentName: departmentName },
+                success: function (data) {
+
+                    $.each(data, function (i, item) {
+                        $('#DesignationId').append(
+                            $('<option>', {
+                                value: item.DesignationId,
+                                text: item.Designation
+                            })
+                        );
+                    });
+                },
+                error: function () {
+                    alert('Error loading designations');
+                }
+            });
+        });
+
+    });
+</script>
+<script>
+    //$('#DesignationId').change(function () {
+
+    //    var designationId = $(this).val();
+
+    //    // Reset
+    //    $('#OfficialEmailTxt, #OfficialMobileTxt')
+    //        .val('')
+    //        .hide();
+
+    //    $('#OfficialEmailDDL, #OfficialMobileDDL')
+    //        .empty()
+    //        .hide();
+
+    //    if (!designationId) return;
+
+    //    $.ajax({
+    //        url: '/UserRegistration/GetJobProfileByDesignation',
+    //        type: 'GET',
+    //        data: { designationId: designationId },
+    //        success: function (data) {
+
+    //            // ---------- EMAIL ----------
+    //            var emails = [...new Set(
+    //                data.map(x => x.OfficialEmailId)
+    //                    .filter(x => x)
+    //            )];
+
+    //            if (emails.length === 0) {
+    //                $('#OfficialEmailTxt').show();
+    //            }
+    //            else if (emails.length === 1) {
+    //                $('#OfficialEmailTxt').val(emails[0]).show();
+    //            }
+    //            else {
+    //                $('#OfficialEmailDDL')
+    //                    .append('<option value="">Select Email</option>');
+    //                $.each(emails, function (i, e) {
+    //                    $('#OfficialEmailDDL').append(
+    //                        `<option value="${e}">${e}</option>`
+    //                    );
+    //                });
+    //                $('#OfficialEmailDDL').show();
+    //            }
+
+    //            // ---------- MOBILE ----------
+    //            var mobiles = [...new Set(
+    //                data.map(x => x.OfficialMobileNo)
+    //                    .filter(x => x)
+    //            )];
+
+    //            if (mobiles.length === 0) {
+    //                $('#OfficialMobileTxt').show();
+    //            }
+    //            else if (mobiles.length === 1) {
+    //                $('#OfficialMobileTxt').val(mobiles[0]).show();
+    //            }
+    //            else {
+    //                $('#OfficialMobileDDL')
+    //                    .append('<option value="">Select Mobile</option>');
+    //                $.each(mobiles, function (i, m) {
+    //                    $('#OfficialMobileDDL').append(
+    //                        `<option value="${m}">${m}</option>`
+    //                    );
+    //                });
+    //                $('#OfficialMobileDDL').show();
+    //            }
+    //        }
+    //    });
+    //});
+    var jobProfileData = [];
+
+    $('#DesignationId').change(function () {
+
+        var designationId = $(this).val();
+
+        $('#OfficialEmailTxt, #OfficialMobileTxt').val('').hide();
+        $('#OfficialEmailDDL, #OfficialMobileDDL').empty().hide();
+
+        if (!designationId) return;
+
+        $.ajax({
+            url: '/UserRegistration/GetJobProfileByDesignation',
+            type: 'GET',
+            data: { designationId: designationId },
+            success: function (data) {
+
+                jobProfileData = data;   // 👈 STORE FULL DATA
+
+                if (data.length === 0) {
+                    $('#OfficialEmailTxt').show();
+                    $('#OfficialMobileTxt').show();
+                }
+                else if (data.length === 1) {
+
+                    $('#OfficialEmailTxt').val(data[0].OfficialEmailId).show();
+                    $('#OfficialMobileTxt').val(data[0].OfficialMobileNo).show();
+                }
+                else {
+
+                    $('#OfficialEmailDDL')
+                        .append('<option value="">Select Email</option>');
+
+                    $.each(data, function (i, item) {
+                        $('#OfficialEmailDDL').append(
+                            `<option value="${item.OfficialEmailId}">
+                            ${item.OfficialEmailId}
+                         </option>`
+                        );
+                    });
+
+                    $('#OfficialEmailDDL').show();
+                    $('#OfficialMobileTxt').show(); // mobile auto fill
+                }
+            }
+        });
+    });
+    $('#OfficialEmailDDL').change(function () {
+
+        var selectedEmail = $(this).val();
+
+        var selectedProfile = jobProfileData.find(x =>
+            x.OfficialEmailId === selectedEmail
+        );
+
+        if (selectedProfile) {
+            $('#OfficialMobileTxt')
+                .val(selectedProfile.OfficialMobileNo)
+                .show();
+        } else {
+            $('#OfficialMobileTxt').val('');
+        }
+    });
+</script>
+<script>
+    var employeeData = [];
+
+    $('#DesignationId').change(function () {
+
+        var designationId = $(this).val();
+
+        $('#FirstNameTxt, #LastNameTxt').val('').hide();
+        $('#FirstNameDDL, #LastNameDDL').empty().hide();
+        $('#EmployeeId').val('');
+
+        if (!designationId) return;
+
+        $.ajax({
+            url: '/UserRegistration/GetEmployeesByDesignation',
+            type: 'GET',
+            data: { designationId: designationId },
+            success: function (data) {
+
+                employeeData = data;
+
+                if (data.length === 0) {
+                    $('#FirstNameTxt, #LastNameTxt').show();
+                }
+                //else if (data.length === 1) {
+
+                //    $('#FirstNameTxt').val(data[0].FirstName).show();
+                //    $('#LastNameTxt').val(data[0].LastName).show();
+                //    $('#EmployeeId').val(data[0].EmployeeId);
+
+                //}
+                else if (data.length === 1) {
+
+                    $('#FirstNameTxt').val(data[0].FirstName).show();
+                    $('#LastNameTxt').val(data[0].LastName).show();
+                    $('#EmployeeId').val(data[0].EmployeeId);
+                    $('#TitleID').val(data[0].TitleID);   // 👈 auto select title
+                }
+                else {
+
+                    $('#FirstNameDDL')
+                        .append('<option value="">Select First Name</option>');
+
+                    $.each(data, function (i, item) {
+                        $('#FirstNameDDL').append(
+                            `<option value="${item.EmployeeId}">${item.FirstName}</option>`
+                        );
+                    });
+
+                    $('#FirstNameDDL').show();
+                    $('#LastNameTxt').show(); // last name auto filled
+                }
+            }
+        });
+    });
+  
+    $('#FirstNameDDL').change(function () {
+
+        var empId = $(this).val();
+        $('#EmployeeId').val(empId);
+
+        var selectedEmp = employeeData.find(x => x.EmployeeId == empId);
+
+        if (selectedEmp) {
+            $('#LastNameTxt').val(selectedEmp.LastName);
+            $('#TitleID').val(selectedEmp.TitleID);   // 👈 set title
+        } else {
+            $('#LastNameTxt').val('');
+            $('#TitleID').val('');
+        }
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+

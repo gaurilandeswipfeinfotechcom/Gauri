@@ -1,0 +1,462 @@
+﻿
+@model ERPEntities.WorkRegister
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_SwipfeMaster.cshtml";
+}
+
+<style>
+    /*Adding some css for looks good*/
+    #label {
+        font-size: 15px;
+        color: #0077B3;
+        font-weight: 500
+    }
+
+    h4 {
+        font-size: 18px;
+        padding: 10px 0;
+        font-weight: 600;
+    }
+
+    .form-head h4 {
+        padding: 10px 10px;
+        font-size: 16px;
+        font-weight: 600;
+        background-color: #C1D5BD;
+    }
+
+
+    .body-panel {
+        border: 1px solid black;
+        /*background-color: whitesmoke;*/
+        margin-top: -10px;
+        border-radius: 5px;
+        background-color: floralwhite;
+    }
+
+    .submit-btn {
+        display: inline-flex;
+        padding: 7px;
+    }
+
+
+        .submit-btn button {
+            border-radius: 30px;
+            padding: 5px 5px;
+        }
+
+
+
+    .save-btn input {
+        /*border-radius: 30px;*/
+        font-size: 14px;
+    }
+
+    .tablecontainer table {
+        width: 100%;
+        border-collapse: collapse;
+        border-top: 1px solid #fff;
+        border-right: 1px solid #fff;
+        background-color: #fff
+    }
+
+    .tablecontainer th {
+        border-bottom: 2px solid #fff !important;
+        background-color: lightblue;
+        font-size: small;
+        font-weight: normal;
+        color: midnightblue;
+        text-align: center;
+        height: 30px;
+    }
+
+    .tablecontainer th, .tablecontainer td {
+        /*text-align: left;*/
+        border-left: 2px solid #fff;
+        padding: 5px;
+        border-bottom: 2px solid #fff;
+        font-size: small;
+    }
+
+
+    fieldset {
+        border: 1px solid #ddd !important;
+        margin: 10px;
+        /*max-width:0;*/
+        padding: 5px;
+        /* position:relative;*/
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        /*background-color: whitesmoke;*/
+        /* background-color: white;*/
+        background-color: white;
+    }
+
+
+    .button {
+        display: inline-block;
+        /*padding: 5px 6px;*/
+        /*font-size: 5px;*/
+        padding: 20px;
+        font-size: 16px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        outline: none;
+        border: none;
+        box-shadow: 0 9px #999;
+        height: 3px;
+        width: auto;
+        margin: 4px 2px;
+    }
+
+        .button:hover {
+            /*background-color: #3e8e41*/
+            background-color: cyan;
+        }
+
+        .button:active {
+            background-color: cyan;
+            box-shadow: 0 5px #666;
+            transform: translateY(4px);
+        }
+
+    .button1 {
+        border-radius: 50%;
+    }
+
+    span.error {
+        display: block;
+        visibility: hidden;
+        color: red;
+        font-size: 60px;
+    }
+
+
+    .ui-widget {
+        font-size: 12px !important;
+    }
+
+    .reqError {
+        color: #ff0000; /*Red Color*/
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .backsubmitbtn {
+        background-image: linear-gradient(to right,#35d3e1,midnightblue);
+        padding: 5px 20px 5px 20px;
+        color: white;
+        font-family: Helvetica;
+        box-shadow: -4px -4px 8px rgba(255, 255, 255, 0.7), 4px 4px 8px rgba(128, 128, 128, 0.7);
+        outline-style: none;
+        border: none
+    }
+
+    .dshapefieldset {
+        background-color: #e5e6e7;
+        border: 2px solid #ddd;
+        border-radius: 0px 25px 25px 0px;
+        margin-bottom: 20px
+    }
+
+    .field-heading {
+        font-size: 18px;
+        color: midnightblue;
+        font-family: Helvetica;
+        font-weight: bold;
+        display: flex
+    }
+
+    .route-path1 {
+        cursor: pointer;
+        clip-path: polygon(0% 0%, 80% 0%, 100% 50%, 80% 100%, 0% 100%);
+        background-color: #003399;
+        color: white;
+        padding: 5px 15px 5px 5px
+    }
+
+    .route-path2 {
+        cursor: pointer;
+        color: white;
+        clip-path: polygon(89% 0%, 100% 50%, 89% 100%, 0% 100%, 11% 50%, 0% 0%);
+        background-color: #003399;
+        padding: 5px 15px 5px 15px;
+    }
+
+    .route-path3 {
+        cursor: pointer;
+        color: white;
+        clip-path: polygon(91% 0%, 100% 50%, 91% 100%, 0% 100%, 9% 50%, 0% 0%);
+        background-color: #003399;
+        padding: 5px 15px 5px 15px;
+    }
+
+    .cross-btn {
+        font-size: 30px;
+        cursor: pointer;
+        color: midnightblue;
+        position: absolute;
+        top: 35px;
+        right: 15px;
+    }
+</style>
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="Stylesheet" type="text/css" />
+@*AP external CSS*@
+<link href="~/Content/ERPStyle.css" rel="stylesheet" type="text/css" />
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@using (Html.BeginForm("Create", "WorkRegister", FormMethod.Post))
+{
+   
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="d-flex" style="margin-top:-20px">
+                <h4 class="route-path1">HR </h4>
+                <h4 class="route-path2" onclick="location.href='@Url.Action("Index","WorkRegister")'">Work Register</h4>
+                <h4 class="route-path3 " onclick="location.reload()">Create</h4>
+            </div>
+            <br />
+
+            <div class="panel panel-default outer-main-container">
+                <div class=" main-heading">
+                    <div class=" d-flex pr-5">
+                        <i class="material-icons" style="font-size: 32px; margin-right: 10px;">feed</i>
+                        Work Register Creation
+                        <i class="material-icons cross-btn" onclick="history.back()">cancel</i>
+                    </div>
+                </div>
+                <div class="" style="padding-inline:20px">
+
+                    <div class="form-group row mb-5 mb-md-0">
+                        <div class="col-md-3 col-xl-3 col-sm-7">
+                            <label id="label">Employee Name :</label>
+                            <div class="form-group row">
+                                @Html.DropDownListFor(m => m.EmployeeId, ViewBag.EmployeeId as IEnumerable<SelectListItem>, "-- Select Employee --",
+                                new { @class = "form-control fs-4 pl-3", style = "height:35px" }
+                                )
+                                )
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-xl-2 col-sm-5 pt-5 pt-sm-0">
+                            <label id="label">Work Date :</label>
+                            <div class="form-group row">
+                                @Html.TextBoxFor(m => m.WorkDate, new { @type = "date", @Value = ViewBag.CurrentDate, @class = "form-control fs-4 pl-3 dropdown-textbox", style = "height:35px;margin-top:-5px" })
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div id="itemSectionContainer">
+                        <div class="itemSection">
+                            <fieldset class="dshapefieldset px-2">
+                                <div class="form-group row">
+                                    <div class="col-xl-4 col-lg-6 col-md-8 col-sm-12 pb-5">
+                                        <label id="label">Work Function Name :</label>
+                                        <div class="form-group row">
+                                            <select name="WorkFunctionName"
+                                                    class="itemName form-control fs-4 pl-3 dropdown-textbox"
+                                                    style="height:35px">
+                                                <option value="">-- Select Work Function --</option>
+                                                @foreach (var item in (IEnumerable<SelectListItem>)ViewBag.WorkFunctionName)
+                                                {
+                                                    <option value="@item.Text">@item.Text</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-1 col-lg-3 col-md-4 col-sm-6">
+                                        <label id="label">Quantity</label>
+                                        <input type="number" name="Quantities" class="quantity form-control fs-4 pl-3 input-text-box" style="height:35px" @*onchange="recalculateAmounts()"*@ />
+                                    </div>
+                                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                                        <label id="label">TotalWorkOutputTime :</label>
+                                        <input type="number" name="TotalWorkOutputTime" class="TotalWorkOutputTime form-control fs-4 pl-3 " readonly style="height:35px" @*onchange="recalculateAmounts()"*@ />
+                                    </div>
+
+
+                                    <div class="col-lg-3 col-md-4 col-sm-6 pt-lg-4 ">
+                                        <button type="button" style="outline: none; margin-top: 4%; padding: 5px 30px 5px 30px; font-family: Helvetica;" onclick="removeItemRow(this)" class=" btn btn-success btn-round btn-danger custo-inner">Remove</button>
+
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        @*<button type="button" onclick="addItemRow()" class="d-inline-flex fs-4 create-bttn mb-4 custo-inner pl-0"><i class="material-icons" style="font-size: 20px;padding-left:5px">add</i>&nbsp;Another WorkFuntion</button>*@
+                    </div>
+                    <button type="button" onclick="addItemRow()" class="d-inline-flex fs-4 create-bttn mb-4 custo-inner pl-0"><i class="material-icons" style="font-size: 20px;padding-left:5px">add</i>&nbsp;Add Another WorkFuntion</button>
+                    <fieldset class="dshapefieldset px-4">
+                        @*<p class="field-heading">
+                                <i class="material-icons">double_arrow</i>
+                                Total Debit
+                            </p>*@
+                        <div class="form-group row">
+                            <div class="col-xl-3 col-md-4 col-sm-6">
+                                <label id="label">TotalWorkTimeInMins :</label>
+                                <input type="number" name="TotalWorkTimeInMins" class="TotalWorkTimeInMins form-control fs-4 pl-3 " readonly style="height:35px" @*onchange="recalculateAmounts()"*@ />
+                                @*@Html.TextBoxFor(m => m.TotalWorkTimeInMins, new
+                                                                    {@class = "form-control fs-4 pl-3 input-text-box",
+                                    type = "number",
+                                    style = "height:35px;text-align:right"
+                                    })*@
+                            </div>
+                            <div class="col-xl-3 col-md-4 col-sm-6">
+                                <label id="label">EfficiencyofWorkInPercent :</label>
+                                @*@Html.TextBoxFor(m => m.EfficiencyofWorkInPercent, new { @class = "form-control fs-4 bg-light pl-3 input-text-box", style = "height:35px;text-align:right" })*@
+                                @Html.TextBoxFor(
+        m => m.EfficiencyofWorkInPercent,
+        new
+{
+                 @readonly = "readonly",
+              @class = "form-control fs-4 bg-light",
+              style = "height:35px;text-align:right"
+}
+    )
+                            </div>
+
+                        </div>
+                    </fieldset>
+                    <div class="form-group row ">
+                        <div class="col-md-2 col-lg-2 p-4">
+                            <input type="submit" value="Create" class=" btn btn-success btn-round create-bttn custo-inner" style="outline:none" />
+                        </div>
+                        <div class="col-md-2 col-lg-2 p-4">
+                            <input type="button" value="Close" class=" btn btn-success btn-round create-bttn custo-inner" style="outline:none" onclick="location.href='@Url.Action("Index", "WorkRegister")';" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    function addItemRow() {
+        var html = $('.itemSection').first().clone();
+        html.find('input, select').val('');
+        $('#itemSectionContainer').append(html);
+    }
+
+    function removeItemRow(button) {
+        if ($('#itemSectionContainer .itemSection').length > 1) {
+            $(button).closest('.itemSection').remove();
+            recalculateAmounts();
+        }
+    }
+</script>
+<script>
+    function convertToMinutes(value, unit) {
+        if (!value) return 0;
+
+        unit = unit.toLowerCase();
+
+        switch (unit) {
+            case "minute":
+            case "minutes":
+            case "min":
+                return value;
+
+            case "hour":
+            case "hours":
+            case "hr":
+                return value * 60;
+
+            case "second":
+            case "seconds":
+            case "sec":
+                return value / 60;
+
+            case "day":
+            case "days":
+                return value * 1440;
+
+            default:
+                return value; // fallback
+        }
+    }
+</script>
+<script>
+    $(document).on('change', '.itemName, .quantity', function () {
+
+        let row = $(this).closest('.itemSection');
+        let workFunction = row.find('.itemName').val();
+        let qty = parseFloat(row.find('.quantity').val()) || 0;
+
+        if (!workFunction || qty <= 0) return;
+
+        $.getJSON('/WorkRegister/GetWorkFunctionDetails',
+            { workFunctionName: workFunction },
+            function (data) {
+
+                if (!data) return;
+
+                let recommendedMin =
+                    convertToMinutes(data.RecommendedTime, data.RecommendedUnit);
+
+                let setupMin =
+                    convertToMinutes(data.SetupTime, data.SetupUnit);
+
+                let totalMinutes =
+                    (recommendedMin * qty) + setupMin;
+                // 🔥 ROUND UP TIME (partial minute → full minute)
+                row.find('.TotalWorkOutputTime')
+                    .val(Math.ceil(totalMinutes));
+
+                //row.find('.TotalWorkOutputTime')
+                //    .val(totalMinutes.toFixed(2));
+
+                calculateGrandTotal();
+            });
+    });
+</script>
+<script>
+    function calculateGrandTotal() {
+        let sum = 0;
+        $('.TotalWorkOutputTime').each(function () {
+            sum += parseFloat($(this).val()) || 0;
+        });
+
+        $('input[name="TotalWorkTimeInMins"]').val(sum.toFixed(2));
+        // 🔥 calculate efficiency
+        calculateEfficiency();
+    }
+</script>
+<script>
+    function calculateEfficiency() {
+        let totalMinutes =
+            parseFloat($('input[name="TotalWorkTimeInMins"]').val()) || 0;
+
+        let efficiency =
+            (totalMinutes / 480) * 100;
+
+        $('input[name="EfficiencyofWorkInPercent"]')
+            .val(efficiency.toFixed(2));
+    }
+</script>
+@if (!ViewData.ModelState.IsValid)
+{
+    string error = null;
+
+    foreach (var state in ViewData.ModelState.Values)
+    {
+        if (state.Errors.Count > 0)
+        {
+            error = state.Errors[0].ErrorMessage;
+            break;
+        }
+    }
+
+    if (!string.IsNullOrEmpty(error))
+    {
+        <script>
+            Swal.fire({
+                icon: 'warning',
+                title: 'Duplicate Entry',
+                text: '@error',
+                confirmButtonText: 'OK'
+            });
+        </script>
+    }
+}

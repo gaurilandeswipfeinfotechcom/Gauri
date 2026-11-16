@@ -1,0 +1,175 @@
+﻿@model List<ERPModels.StockRegisterSearch>
+
+@{
+    ViewBag.Title = "Stock Journal Month Details";
+    Layout = "~/Views/Shared/_SwipfeMaster.cshtml";
+
+    decimal totalInQty = 0;
+    decimal totalOutQty = 0;
+    decimal totalAmount = 0;
+}
+
+<style>
+
+    .header-box {
+        background: linear-gradient(45deg,#1565c0,#42a5f5);
+        color: white;
+        padding: 18px;
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    .table th {
+        background: linear-gradient(45deg,#0d47a1,#1976d2);
+        color: white;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .table tbody tr:hover {
+        background: #f5faff;
+    }
+
+    .amount {
+        text-align: right;
+        font-weight: 600;
+    }
+
+    .voucher-link {
+        color: #003399;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+        .voucher-link:hover {
+            text-decoration: underline;
+        }
+</style>
+
+<div class="container-fluid mt-4">
+
+    <div class="header-box">
+
+        @ViewBag.MonthName Stock Journal Details
+
+        <br />
+
+        <small style="font-size:15px;">
+
+            Financial Year :
+            @ViewBag.SelectedYear -
+            @((Convert.ToInt32(ViewBag.SelectedYear) + 1).ToString().Substring(2))
+
+        </small>
+
+    </div>
+
+    <div class="table-responsive">
+
+        <table id="stockTable" class="table table-bordered table-hover">
+
+            <thead>
+
+                <tr>
+                    <th>Date</th>
+                    <th>Voucher No</th>
+                    <th>In Qty</th>
+                    <th>Out Qty</th>
+                    <th>Amount</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @if (Model != null && Model.Count > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        decimal inQty = item.InQty;
+                        decimal outQty = item.OutQty;
+                        decimal amount = item.InAmount + item.OutAmount;
+
+                        totalInQty += inQty;
+                        totalOutQty += outQty;
+                        totalAmount += amount;
+
+                        <tr>
+
+                            <td class="amount">
+                                @(item.VoucherDate.ToString("dd-MM-yyyy"))
+                            </td>
+
+                            <td>
+                                <a href="@Url.Action("Details", "StockJournal", new { sono = item.VoucherNo })"
+                                   class="voucher-link">
+
+                                    @item.VoucherNo
+
+                                </a>
+                            </td>
+
+                            <td class="amount">
+                                @inQty.ToString("N2")
+                            </td>
+
+                            <td class="amount">
+                                @outQty.ToString("N2")
+                            </td>
+
+                            <td class="amount">
+                                ₹ @amount.ToString("N2")
+                            </td>
+
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="text-center text-danger">
+                            No Records Found
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+
+            <tfoot>
+
+                <tr style="font-weight:bold;background:#d9edf7;">
+
+                    <td colspan="2">Grand Total</td>
+
+                    <td class="amount">
+                        @totalInQty.ToString("N2")
+                    </td>
+
+                    <td class="amount">
+                        @totalOutQty.ToString("N2")
+                    </td>
+
+                    <td class="amount">
+                        ₹ @totalAmount.ToString("N2")
+                    </td>
+
+                </tr>
+
+            </tfoot>
+
+        </table>
+
+    </div>
+
+    <div class="text-center mt-3">
+
+        <button onclick="history.back()" class="btn btn-info">
+            Back
+        </button>
+
+    </div>
+
+</div>

@@ -1,0 +1,1238 @@
+﻿@model ERPEntities.StockJournal
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_SwipfeMaster.cshtml";
+}
+
+
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+<link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css"
+      rel="Stylesheet" type="text/css" />
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<style>
+    /*Adding some css for looks good*/
+    #label {
+        font-size: 15px;
+        color: #0077B3;
+        font-weight: 500
+    }
+
+    h4 {
+        font-size: 18px;
+        padding: 10px 0;
+        font-weight: 600;
+    }
+
+    .form-head h4 {
+        padding: 10px 10px;
+        font-size: 16px;
+        font-weight: 600;
+        background-color: #C1D5BD;
+    }
+
+
+    .body-panel {
+        border: 1px solid black;
+        /*background-color: whitesmoke;*/
+        margin-top: -10px;
+        border-radius: 5px;
+        background-color: floralwhite;
+    }
+
+    .submit-btn {
+        display: inline-flex;
+        padding: 7px;
+    }
+
+
+        .submit-btn button {
+            border-radius: 30px;
+            padding: 5px 5px;
+        }
+
+
+
+    .save-btn input {
+        /*border-radius: 30px;*/
+        font-size: 14px;
+    }
+
+    .tablecontainer table {
+        width: 100%;
+        border-collapse: collapse;
+        border-top: 1px solid #fff;
+        border-right: 1px solid #fff;
+        background-color: #fff
+    }
+
+    .tablecontainer .table thead th {
+        border-bottom: 2px solid #fff !important;
+        background-color: lightblue;
+        font-size: small;
+        font-weight: normal;
+        color: midnightblue;
+        text-align: center;
+        height: 30px;
+    }
+
+    .tablecontainer .table thead th {
+        /*text-align: left;*/
+        border-left: 2px solid #fff;
+        padding: 5px;
+        border-bottom: 2px solid #fff;
+        font-size: small;
+    }
+
+    .tablecontainer .table tbody td {
+        /*text-align: left;*/
+        border-left: 2px solid #fff;
+        padding: 5px;
+        border-bottom: 2px solid #fff;
+        font-size: small;
+    }
+
+
+    fieldset {
+        border: 1px solid #ddd !important;
+        margin: 10px;
+        padding: 5px;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        background-color: white;
+    }
+
+
+    .button {
+        display: inline-block;
+        /*padding: 5px 6px;*/
+        /*font-size: 5px;*/
+        padding: 20px;
+        font-size: 16px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        outline: none;
+        border: none;
+        box-shadow: 0 9px #999;
+        height: 3px;
+        width: auto;
+        margin: 4px 2px;
+    }
+
+        .button:hover {
+            /*background-color: #3e8e41*/
+            background-color: cyan;
+        }
+
+        .button:active {
+            background-color: cyan;
+            box-shadow: 0 5px #666;
+            transform: translateY(4px);
+        }
+
+    .button1 {
+        border-radius: 50%;
+    }
+
+    span.error {
+        display: block;
+        visibility: hidden;
+        color: red;
+        font-size: 60px;
+    }
+
+
+    .ui-widget {
+        font-size: 12px !important;
+    }
+
+    .reqError {
+        color: #ff0000; /*Red Color*/
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .backsubmitbtn {
+        background-image: linear-gradient(to right,#35d3e1,midnightblue);
+        padding: 5px 20px 5px 20px;
+        color: white;
+        font-family: Helvetica;
+        box-shadow: -4px -4px 8px rgba(255, 255, 255, 0.7), 4px 4px 8px rgba(128, 128, 128, 0.7);
+        outline-style: none;
+        border: none
+    }
+
+    .dshapefieldset {
+        background-color: #e5e6e7;
+        border: 2px solid #ddd;
+        border-radius: 0px 25px 25px 0px;
+        margin-bottom: 20px
+    }
+
+    .field-heading {
+        font-size: 18px;
+        color: midnightblue;
+        font-family: Helvetica;
+        font-weight: bold;
+        display: flex
+    }
+
+    .route-path1 {
+        cursor: pointer;
+        clip-path: polygon(0% 0%, 90% 0%, 100% 50%, 90% 100%, 0% 100%);
+        background-color: #003399;
+        color: white;
+        padding: 5px 15px 5px 5px
+    }
+
+    .route-path2 {
+        cursor: pointer;
+        color: white;
+        clip-path: polygon(94% 0%, 100% 50%, 94% 100%, 0% 100%, 6% 50%, 0% 0%);
+        background-color: #003399;
+        padding: 5px 15px 5px 15px;
+    }
+
+    .route-path3 {
+        cursor: pointer;
+        color: white;
+        clip-path: polygon(87% 0%, 100% 50%, 87% 100%, 0% 100%, 13% 50%, 0% 0%);
+        background-color: #003399;
+        padding: 5px 15px 5px 15px;
+    }
+
+    .cross-btn {
+        font-size: 30px;
+        cursor: pointer;
+        color: midnightblue;
+        position: absolute;
+        top: 35px;
+        right: 15px;
+    }
+</style>
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="Stylesheet" type="text/css" />
+@*AP external CSS*@
+<link href="~/Content/ERPStyle.css" rel="stylesheet" type="text/css" />
+
+@using (Html.BeginForm("Edit", "StockJournal", FormMethod.Post, new { id = "bomForm" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.StockJournalNo)
+
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="d-flex" style="margin-top:-20px">
+                <h4 class="route-path1">Inventory </h4>
+                <h4 class="route-path2 " onclick="location.href='@Url.Action("Index","StockJournal")'">Stock Journal</h4>
+                <h4 class="route-path3 " onclick="location.href='@Url.Action("Edit","StockJournal", new { sono = Model.StockJournalNo })'">Edit</h4>
+            </div>
+            <br />
+
+            <div class="panel panel-default outer-main-container">
+                <div class=" main-heading">
+                    <div class=" d-flex ">
+                        <i class="material-icons" style="font-size: 32px; margin-right: 10px;">edit_note</i>
+                        Stock Journal Edit
+                        <i class="material-icons cross-btn" onclick="history.back();">cancel</i>
+                    </div>
+                </div>
+
+                <div class="" style="padding-inline:20px">
+                    <div class="form-group row">
+                        <div class="col-lg-3 col-sm-6 col-md-4 col-xxl-2 ">
+                            <label id="label">Stock Journal No. :</label>
+                            @Html.EditorFor(model => model.StockJournalNo, new
+                       {
+                           htmlAttributes = new
+                           {
+                               @readonly = "readonly",
+                               @class = "form-control bg-light fs-4 pl-3 dropdown-textbox",
+                               style = "height:35px"
+                           }
+                       })
+                            @Html.ValidationMessageFor(model => model.StockJournalNo, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-md-4 col-xxl-2">
+                            <label id="label">Stock Journal Date :</label>
+                            @{
+                                string formatedDate = Model.StockJournalDate != null ? Model.StockJournalDate.Value.ToString("yyyy-MM-dd") : "";
+                            }
+                            <input type="date" class="form-control fs-4 pl-3 dropdown-textbox" style="height:35px" id="StockJournalDate" name="StockJournalDate" value="@formatedDate" />
+                            @Html.ValidationMessageFor(model => model.StockJournalDate, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <fieldset class="dshapefieldset px-2 outer-main-container" style="border-radius:unset;background-color:#e5e6e7">
+                                <p class="field-heading">
+                                    <i class="material-icons">double_arrow</i>
+                                    Inward Stock Item
+                                </p>
+                                <div class="form-group row px-3">
+                                    <div class="col-md-12 ">
+                                        <label id="label">Item Name :</label>
+                                        <div class="form-group row mx-0 pb-5">
+                                            @Html.DropDownList("InItem", (IEnumerable<SelectListItem>)ViewBag.MainItemId, "Please Select", new
+                                            { @class = "form-control fs-4 pl-3 dropdown-textbox", style = "height:35px", id = "InItem" })
+                                        </div>
+                                        @Html.ValidationMessage("InItem", "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-md-8 col-lg-8 col-xxl-9">
+                                        <label id="label">Description :</label>
+                                        @Html.Editor("InDiscription", new
+                                   {
+                                       htmlAttributes = new
+                                       { @disabled = "disabled", @class = "form-control bg-light fs-4 pl-3 input-text-box", id = "InDiscription", @style = "height:35px;" }
+                                   })
+                                        @Html.ValidationMessage("Discription", "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-lg-4 col-xxl-3">
+                                        <label id="label">Quantity :</label>
+                                        @*@Html.Editor("InQuantity", new
+        { htmlAttributes = new { @class = "form-control fs-4 pl-3 input-text-box", style = "height:35px", @id = "InQuantity" } })*@
+
+                                        @Html.TextBox("InQuantity", "1", new
+                                        {
+                                            @class = "form-control fs-4 pl-3 input-text-box",
+                                            style = "height:35px",
+                                            @id = "InQuantity",
+                                            type = "number",
+                                            min = "1"
+                                        })
+
+                                        @Html.ValidationMessage("Quantity", "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class=" col-md-6 col-lg-3" style="display:none">
+                                        <label id="label">Item Code :</label>
+                                        @Html.Editor("InItemCode", new { htmlAttributes = new { @class = "form-control fs-4 pl-3 input-text-box", style = "height:35px", @id = "InItemCode" } })
+                                        @Html.ValidationMessage("InItemCode", "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-lg-3 col-md-6" style="display:none">
+                                        <label id="label">Rate :</label>
+                                        @Html.Editor("InRate", new { htmlAttributes = new { @class = "form-control fs-4 pl-3 input-text-box", style = "height:35px", @id = "InRate" } })
+                                        @Html.ValidationMessage("InRate", "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-lg-3 col-md-6" style="display:none">
+                                        <label id="label">Amount :</label>
+                                        @Html.Editor("InAmount", new { htmlAttributes = new { @class = "form-control fs-4 pl-3 input-text-box", style = "height:35px", @id = "InAmount" } })
+                                        @Html.ValidationMessage("InAmount", "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-lg-3 col-md-6" style="display:none">
+                                        <label id="label" style="display:none">ItemType :</label>
+                                        @Html.Editor("InItemType", new { htmlAttributes = new { @class = "form-control fs-4 pl-3 input-text-box", style = "height:35px", @id = "InItemType" } })
+                                        @Html.ValidationMessage("InAmount", "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-sm-6 col-lg-6 col-md-6 col-xxl-5">
+                                        <label id="label">Godown :</label>
+                                        <div class="form-group row pb-5">
+                                            @Html.DropDownList("InGodown", (SelectList)ViewBag.Godown, "Please Select Godown", new
+                                            {
+                                                @class = "form-control fs-4 pl-3 pl-md-1 pl-lg-3 dropdown-textbox",
+                                           style = "height:35px",
+                                                @id = "InGodown"
+                                            })
+                                            @Html.ValidationMessage("InGodown", "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-lg-6 col-md-6 col-xxl-4">
+                                        <label id="label">Total In Amount :</label>
+                                        @Html.EditorFor(model => model.TotInAmount, new { htmlAttributes = new { @class = "form-control fs-4 pl-3 input-text-box text-end", style = "height:35px", @id = "TotInAmount" } })
+                                        @Html.ValidationMessageFor(model => model.TotInAmount, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    <div class="col-sm-6 col-md-6 col-xxl-3  align-items-end d-flex">
+                                        <input type="button" id="addItemButton1" value="Add" class="mb-sm-2 mt-md-4 btn btn-success btn-round create-bttn custo-inner" style="outline-style:none;border:none;" />
+                                    </div>
+                                </div>
+
+                                <div class="table-responsive tablecontainer">
+                                    <table id="itemTable1" class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Item Name</th>
+                                                <th>ItemCode</th>
+                                                <th>Godown</th>
+                                                <th>Quantity</th>
+                                                <th>Rate</th>
+                                                <th>Amount</th>
+                                                <th>ItemType</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Table rows will be added dynamically here -->
+                                        </tbody>
+                                    </table>
+                                    <input type="hidden" id="tableData1" name="tableData1" />
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-md-6">
+                            <fieldset class="dshapefieldset px-2 outer-main-container" style="border-radius:unset;background-color:#e5e6e7">
+                                <p class="field-heading">
+                                    <i class="material-icons">double_arrow</i>
+                                    Outward Stock Item
+                                </p>
+                                <div class="form-group row px-3">
+                                    <div class="col-md-12 ">
+                                        <label id="label">Item Name :</label>
+                                        <div class="form-group row mx-0 pb-5">
+                                            @Html.DropDownList("OutItem", (IEnumerable<SelectListItem>)ViewBag.OutItem, "Please Select Item", new
+                                            { @class = "form-control fs-4 pl-3 dropdown-textbox", style = "height:35px", id = "OutItem" })
+                                        </div>
+                                        @Html.ValidationMessage("InItem", "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-md-8 col-lg-8 col-xxl-9">
+                                        <label id="label">Description :</label>
+                                        @Html.Editor("OutDiscription", new
+                                        {
+                                            htmlAttributes = new
+                                            { @disabled = "disabled", @class = "form-control bg-light fs-4 pl-3 input-text-box", id = "OutDiscription" }
+                                        })
+                                        @Html.ValidationMessage("Discription", "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-lg-4 col-xxl-3">
+                                        <label id="label">Quantity :</label>
+                                        @*@Html.Editor("OutQuantity", new
+        { htmlAttributes = new { @class = "form-control fs-4 pl-3 input-text-box", style = "height:35px", @id = "OutQuantity" } })*@
+                                        @Html.TextBox("OutQuantity", "1", new
+                                        {
+                                            @class = "form-control fs-4 pl-3 input-text-box",
+                                            style = "height:35px",
+                                            @id = "OutQuantity",
+                                            type = "number",
+                                            min = "1"
+                                        })
+                                        @Html.ValidationMessage("Quantity", "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class=" col-md-6 col-lg-3" style="display:none">
+                                        <label id="label">Item Code :</label>
+                                        @Html.Editor("OutItemCode", new { htmlAttributes = new { @class = "form-control fs-4 pl-3 input-text-box", style = "height:35px", @id = "OutItemCode" } })
+                                        @Html.ValidationMessage("InItemCode", "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-lg-3 col-md-6" style="display:none">
+                                        <label id="label">Rate :</label>
+                                        @Html.Editor("OutRate", new { htmlAttributes = new { @class = "form-control fs-4 pl-3 input-text-box", style = "height:35px", @id = "OutRate" } })
+                                        @Html.ValidationMessage("OutRate", "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-lg-3 col-md-6" style="display:none">
+                                        <label id="label">Amount :</label>
+                                        @Html.Editor("OutAmount", new { htmlAttributes = new { @class = "form-control fs-4 pl-3 input-text-box", style = "height:35px", @id = "OutAmount" } })
+                                        @Html.ValidationMessage("InAmount", "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-lg-3 col-md-6" style="display:none">
+                                        <label id="label" style="display:none">ItemType :</label>
+                                        @Html.Editor("OutItemType", new { htmlAttributes = new { @class = "form-control fs-4 pl-3 input-text-box", style = "height:35px", @id = "OutItemType" } })
+                                        @Html.ValidationMessage("InAmount", "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-sm-6 col-lg-6 col-md-6 col-xxl-5">
+                                        <label id="label">Godown :</label>
+                                        <div class="form-group row pb-5">
+                                            @Html.DropDownList("OutGodown", (SelectList)ViewBag.Godown, "Please Select Godown", new
+                                            { @class = "form-control fs-4 pl-3 pl-md-1 pl-lg-3 dropdown-textbox", style = "height:35px", @id = "OutGodown" })
+                                            @Html.ValidationMessage("OutGodown", "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-lg-6 col-md-6 col-xxl-4">
+                                        <label id="label">Total In Amount :</label>
+                                        @Html.EditorFor(model => model.TotOutAmount, new { htmlAttributes = new { @readonly = "true", @class = "form-control bg-light fs-4 pl-3 input-text-box text-end", style = "height:35px", @id = "TotOutAmount" } })
+                                        @Html.ValidationMessageFor(model => model.TotOutAmount, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    <div class="col-sm-6 col-md-6 col-xxl-3  align-items-end d-flex">
+                                        <input type="button" id="addItemButton2" value="Add"  class="mb-sm-2 mt-md-4 btn btn-success btn-round create-bttn custo-inner" style="outline-style:none;border:none;" />
+                                    </div>
+                                </div>
+
+                                <div class="table-responsive tablecontainer">
+                                    <table id="itemTable2" class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Item Name</th>
+                                                <th>ItemCode</th>
+                                                <th>Godown</th>
+                                                <th>Quantity</th>
+                                                <th>Rate</th>
+                                                <th>Amount</th>
+                                                <th>ItemType</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Table rows will be added dynamically here -->
+                                        </tbody>
+                                    </table>
+                                    <input type="hidden" id="tableData2" name="tableData2" />
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+
+                    <fieldset class="dshapefieldset">
+                        <p class="field-heading pt-3">
+                            <i class="material-icons">double_arrow</i>
+                            Remark
+                        </p>
+                        <div class="form-group row">
+                            <div class="col-lg-12">
+                                @Html.EditorFor(model => model.Remark, new { htmlAttributes = new { @class = "form-control fs-4 pl-3 input-text-box" } })
+                                @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </fieldset>
+
+
+                    <div class="form-group row ">
+                        <div class="col-md-2 col-lg-2 p-4">
+                            <input type="submit" id="submit" value="Update" class=" btn btn-success btn-round create-bttn custo-inner" style="outline:none" onclick="updateAndFlagRefresh()" />
+                        </div>
+                        <div class="col-md-2 col-lg-2 p-4">
+                            <input type="button" value="Close" class=" btn btn-success btn-round create-bttn custo-inner" style="outline:none" onclick="window.close()" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+}
+
+<script>
+    $(document).ready(function () {
+        $("#InItem, #OutItem").on("change", function () {
+            var inItemValue = $("#InItem").val();
+            var outItemValue = $("#OutItem").val();
+
+            if (inItemValue === outItemValue) {
+                alert("The MainItem and SubItem cannot be the same. Please select different values.");
+                // Reset the selection to "Please Select" or some other default value.
+                $("#InItem").val("Please Select");
+                $("#OutItem").val("Please Select");
+            }
+        });
+    });
+</script>
+
+
+
+
+<script>
+    $(document).ready(function () {
+        var isEditing = false;
+        var editedRow = null;
+        var itemIdToNameMapping = {}; // Mapping of itemId to itemName
+        itemIdToNameMapping[item.ItemId] = item.ItemName;
+        updateTotalAmount();
+        updateTotalAmount2();
+
+        $("#InItemType").val("Inward");
+        $("#OutItemType").val("Outward");
+
+
+
+function loadData() {
+    var stockJournalNo = "@Model.StockJournalNo"; // Get the StockJournalNo from your model
+
+    $.ajax({
+        url: '/StockJournal/GetStockJournalItemDetails', // Replace 'YourControllerName' with the actual controller name
+        type: 'GET',
+        data: { stockJournalNo: stockJournalNo },
+        success: function (data) {
+            $.each(data.InwardItems, function (index, item) {
+                 itemIdToNameMapping[item.ItemId] = item.ItemName;
+            });
+
+                populateTable(data.InwardItems, "#itemTable1");
+                populateTable(data.OutwardItems, "#itemTable2");
+        },
+        error: function () {
+                alert("An error occurred while fetching data.");
+        }
+    });
+}
+
+loadData();
+
+         function populateTable(data, tableId) {
+            var table = $(tableId + " tbody");
+            table.empty();
+
+             $.each(data, function (index, item) {
+
+                 var quantity = 0;
+
+                 // Decide which quantity to show
+                 if (tableId === "#itemTable1") {
+                     quantity = item.InQty || 0;
+                 } else if (tableId === "#itemTable2") {
+                     quantity = item.OutQty || 0;
+                 }
+
+                var newRow = $("<tr>");
+                newRow.append("<td style='font-size:small'>" + (item.ItemName || "") + "</td>");
+                newRow.append("<td style='font-size:small'>" + (item.ItemCode || "") + "</td>");
+                newRow.append("<td style='text-align:center;font-size:small'>" + (item.GodownName || "") + "</td>");
+                 newRow.append("<td style='text-align:center;font-size:small'>" + quantity + "</td>");
+                newRow.append("<td style='text-align:right;font-size:small'>" + (item.RatePerUnit || 0) + "</td>");
+                newRow.append("<td style='text-align:right;font-size:small'>" + (item.Amount || 0) + "</td>");
+                newRow.append("<td style='text-align:center;font-size:small'>" + (item.ItemType || "") + "</td>");
+                newRow.append("<td style='text-align:center'><i class='material-icons editItem'>edit_note<i>  <i class='material-icons removeItem text-danger'>close<i></td>");
+
+                newRow.append("<input type='hidden' name='ItemId' value='" + (item.ItemId || "") + "' />");
+                newRow.append("<input type='hidden' name='StockJournalNo' value='" + ($("#StockJournalNo").val() || "") + "' />");
+
+                table.append(newRow);
+
+                // Store the mapping of itemId to itemName
+                if (item.ItemId && item.ItemName) {
+                    itemIdToNameMapping[item.ItemId] = item.ItemName;
+                }
+
+                updateTotalAmount();
+                updateTotalAmount2();
+            });
+        }
+
+
+        $("#addItemButton1").click(function () {
+              var itemId = $("#InItem").val();
+              var itemName = $("#InItem option:selected").text();
+
+              if (itemId === "") {
+                  alert("Please select an item first.");
+                  return;
+              }
+
+              var quantity = $("#InQuantity").val().trim();
+
+              if (quantity === "") {
+                  alert("Quantity is required. Please fill it.");
+                  return;
+              }
+
+              if (isEditing) {
+                  isEditing = false;
+              $("#message").text("Please finish editing before adding a new item.");
+                  return false;
+              }
+
+              var itemCode = $("#InItemCode").val();
+              var quantity = $("#InQuantity").val();
+              var rate = $("#InRate").val();
+              var amount = $("#InAmount").val();
+              var godownSub = $("#InGodown").val();
+              var inItemType = $("#InItemType").val();
+
+              var newRow = $("<tr>");
+            newRow.append("<td style='font-size:small'>" + itemName + "</td>");
+            newRow.append("<td style='font-size:small'>" + itemCode + "</td>");
+            newRow.append("<td style='text-align:center;font-size:small'>" + godownSub + "</td>");
+            newRow.append("<td style='text-align:center;font-size:small'>" + quantity + "</td>");
+            newRow.append("<td style='text-align:right;font-size:small'>" + rate + "</td>");
+            newRow.append("<td style='text-align:right;font-size:small'>" + amount + "</td>");
+            newRow.append("<td style='text-align:center;font-size:small'>" + inItemType + "</td>");
+
+            newRow.append("<td style='text-align:center'><i class='material-icons editItem'>edit_note<i> <i class='material-icons removeItem text-danger'>close<i></td>");
+
+            newRow.append("<input type='hidden' name='StockJournalNo' value='" + $("#StockJournalNo").val() + "' />");
+
+            if (editedRow !== null) {
+                editedRow.replaceWith(newRow);
+                editedRow = null;
+            } else {
+            $("#itemTable1 tbody").append(newRow);
+            }
+
+            itemIdToNameMapping[itemId] = itemName;
+            updateTotalAmount();
+            $("#InItem").val('');
+            $("#InQuantity").val('1');
+            $("#InItemCode").val('');
+            $("#InGodown").val('');
+            $("#InRate").val('');
+            $("#InAmount").val('');
+            $("#InItemType").val('Inward');
+
+               isEditing = false;
+          });
+        $("#addItemButton2").click(function () {
+              var itemId = $("#OutItem").val();
+              var itemName = $("#OutItem option:selected").text();
+
+              if (itemId === "") {
+                  alert("Please select an item first.");
+                  return;
+              }
+
+              var quantity = $("#OutQuantity").val().trim();
+
+              if (quantity === "") {
+                  alert("Quantity is required. Please fill it.");
+                  return;
+              }
+
+              if (isEditing) {
+                  isEditing = false;
+                $("#message").text("Please finish editing before adding a new item.");
+                 return false;
+             }
+
+             var itemCode = $("#OutItemCode").val();
+             var quantity = $("#OutQuantity").val();
+             var rate = $("#OutRate").val();
+             var amount = $("#OutAmount").val();
+             var godownSub = $("#OutGodown").val();
+             var outItemType = $("#OutItemType").val();
+
+             var newRow = $("<tr>");
+             newRow.append("<td>" + itemName + "</td>");
+             newRow.append("<td>" + itemCode + "</td>");
+             newRow.append("<td>" + godownSub + "</td>");
+             newRow.append("<td>" + quantity + "</td>");
+             newRow.append("<td>" + rate + "</td>");
+             newRow.append("<td>" + amount + "</td>");
+             newRow.append("<td>" + outItemType + "</td>");
+
+             newRow.append("<td><button class='btn btn-primary btn-sm editItem'>Edit</button> <button class='btn btn-danger btn-sm removeItem'>Remove</button></td>");
+
+             newRow.append("<input type='hidden' name='StockJournalNo' value='" + $("#StockJournalNo").val() + "' />");
+
+             if (editedRow !== null) {
+                 editedRow.replaceWith(newRow);
+                 editedRow = null;
+             } else {
+                $("#itemTable2 tbody").append(newRow);
+             }
+
+             itemIdToNameMapping[itemId] = itemName;
+             updateTotalAmount2();
+            $("#OutItem").val('');
+            $("#OutQuantity").val('1');
+            $("#OutItemCode").val('');
+            $("#OutGodown").val('');
+            $("#OutRate").val('');
+            $("#OutAmount").val('');
+            $("#OutItemType").val('Outward');
+
+                isEditing = false;
+            });
+
+        $("#itemTable1").on("click", ".editItem", function () {
+            var row = $(this).closest("tr");
+            var cells = row.find("td");
+
+            var itemName = cells.eq(0).text();
+            var itemId = getSelectedItemId(itemName);
+
+            $("#InItem option").filter(function () {
+                return $(this).text() === itemName;
+            }).prop("selected", true);
+
+            $("#InItemCode").val(cells.eq(1).text());
+            $("#InGodown").val(cells.eq(2).text());
+            $("#InQuantity").val(cells.eq(3).text());
+            $("#InRate").val(cells.eq(4).text());
+            $("#InAmount").val(cells.eq(5).text());
+
+                editedRow = row;
+                isEditing = true;
+                updateTotalAmount();
+                return false;
+            });
+        $("#itemTable2").on("click", ".editItem", function () {
+             var row = $(this).closest("tr");
+             var cells = row.find("td");
+
+             var itemName = cells.eq(0).text();
+             var itemId = getSelectedItemId(itemName);
+
+            $("#OutItem option").filter(function () {
+                return $(this).text() === itemName;
+            }).prop("selected", true);
+
+            $("#OutItemCode").val(cells.eq(1).text());
+            $("#OutGodown").val(cells.eq(2).text());
+            $("#OutQuantity").val(cells.eq(3).text());
+            $("#OutRate").val(cells.eq(4).text());
+            $("#OutAmount").val(cells.eq(5).text());
+
+                 editedRow = row;
+                 isEditing = true;
+                 updateTotalAmount2();
+                 return false;
+             });
+
+        $("#itemTable1").on("click", ".removeItem", function () {
+                var row = $(this).closest("tr");
+                row.remove();
+                updateTotalAmount();
+                return false;
+            });
+        $("#itemTable2").on("click", ".removeItem", function () {
+             var row = $(this).closest("tr");
+             row.remove();
+             updateTotalAmount2();
+             return false;
+         });
+
+         var deleteOperationPerformed = false; // Flag to track whether delete operation has been performed
+         var formSubmitted = false; // Flag to track whether the form has been submitted
+
+    $('#bomForm').submit(function (event) {
+        event.preventDefault();
+
+        if (window.formSubmitted) return; // prevent multiple submissions
+        window.formSubmitted = true;
+
+        // Update ItemIds before saving
+        updateItemNamesToIds();
+
+        var stockJournalNo = $("#StockJournalNo").val();
+
+        // Step 1: Delete existing items
+        $.ajax({
+            url: '@Url.Action("DeleteSJItems", "StockJournal")',
+            type: 'POST',
+            data: { StockJournalNo: stockJournalNo },
+            success: function () {
+                console.log("Existing BOMSubItems deleted.");
+
+                // Step 2: Create/Update StockJournal
+                createStockJournal().then(function () {
+                    console.log("StockJournal updated.");
+
+                    // If Inward table has rows
+                    if ($("#itemTable1 tbody tr").length > 0) {
+                        saveItemDetails("#itemTable1", "Inward");
+                    }
+
+                    // If Outward table has rows
+                    if ($("#itemTable2 tbody tr").length > 0) {
+                        saveItemDetails("#itemTable2", "Outward");
+                    }
+
+
+                    //// Step 3: Save item details for both tables sequentially
+                    //saveItemDetails("#itemTable1").then(function () {
+                    //    return saveItemDetails("#itemTable2");
+                    //}).then(function () {
+                    //    alert("StockJournal and all items updated successfully.");
+
+                    //    // Refresh index page if needed
+                    //    sessionStorage.setItem("refreshIndexPage", "true");
+
+                    //    // Close or redirect
+                    //    var referrerUrl = document.referrer;
+                    //    window.location.href = referrerUrl;
+                    //}).catch(function () {
+                    //    alert("An error occurred while saving item details.");
+                    //    window.formSubmitted = false; // allow retry
+                    //});
+
+                }).catch(function () {
+                    alert("An error occurred while updating StockJournal.");
+                    window.formSubmitted = false; // allow retry
+                });
+
+            },
+            error: function () {
+                alert("An error occurred while deleting existing BOMSubItems.");
+                window.formSubmitted = false; // allow retry
+            }
+        });
+    });
+
+    function createStockJournal() {
+        var formData = $('#bomForm').serialize();
+
+        return $.ajax({
+            type: 'POST',
+            url: '@Url.Action("Edit", "StockJournal")',
+            data: formData
+        });
+    }
+
+     function saveItemDetails(tableId, type) {
+        return new Promise(function (resolve, reject) {
+            var tableData = [];
+            var stockJournalDate = $("#StockJournalDate").val();
+
+            $(tableId + " tbody tr").each(function () {
+                var row = $(this);
+                var itemName = row.find("td:eq(0)").text();
+                var itemId = getSelectedItemId(itemName);
+
+                var quantity = parseFloat(row.find("td:eq(3)").text().trim()) || 0;
+
+                var InQty = null;
+                var OutQty = null;
+
+                if (type === "Inward") {
+                    InQty = quantity;
+                } else {
+                    OutQty = quantity;
+                }
+
+                var rowData = {
+                    ItemId: itemId,
+                    ItemName: itemName,
+                    ItemCode: row.find("td:eq(1)").text(),
+                    GodownName: row.find("td:eq(2)").text(),
+                    //Quantity: row.find("td:eq(3)").text(),
+                    InQty: InQty,
+                    OutQty: OutQty,
+                    RatePerUnit: row.find("td:eq(4)").text(),
+                    Amount: row.find("td:eq(5)").text(),
+                    ItemType: row.find("td:eq(6)").text(),
+                    VoucherNo: $("#StockJournalNo").val(),
+                    VoucherDate: stockJournalDate
+                };
+
+                tableData.push(rowData);
+            });
+
+            $.ajax({
+                url: '@Url.Action("AddSJSubItems", "StockJournal")',
+                type: 'POST',
+                data: JSON.stringify(tableData),
+                contentType: 'application/json; charset=utf-8',
+                success: function () {
+                    console.log("Items saved for table: " + tableId);
+                    resolve();
+                    window.location.href = '@Url.Action("Index", "StockJournal")';
+                },
+                error: function () {
+                    reject();
+                }
+            });
+        });
+    }
+
+
+
+        function updateItemNamesToIds() {
+            // Convert all item names to item IDs and update the mapping for InwardItems
+            $("#itemTable1 tbody tr").each(function () {
+                var row = $(this);
+                var itemName = row.find("td:eq(0)").text();
+                var itemId = getSelectedItemId(itemName); // Get the ItemId for the ItemName
+
+                // Update the input field with the corresponding item ID
+                row.find("input[name='ItemId']").val(itemId);
+
+                // Update the mapping
+                itemIdToNameMapping[itemId] = itemName;
+            });
+
+            // Repeat the same for the second table (#itemTable2) for OutwardItems
+            $("#itemTable2 tbody tr").each(function () {
+                var row = $(this);
+                var itemName = row.find("td:eq(0)").text();
+                var itemId = getSelectedItemId(itemName);
+
+                row.find("input[name='ItemId']").val(itemId);
+                itemIdToNameMapping[itemId] = itemName;
+            });
+        }
+
+
+        function getSelectedItemId(itemName) {
+            for (var itemId in itemIdToNameMapping) {
+               if (itemIdToNameMapping[itemId] === itemName) {
+                   return itemId;
+               }
+           }
+           return null;
+       }
+
+
+
+           function updateTotalAmount() {
+               var totalAmount = 0;
+
+            $("#itemTable1 tbody tr").each(function () {
+                var row = $(this);
+                var rate = parseFloat(row.find("td:eq(5)").text()); // Assuming the rate is numeric
+
+                if (!isNaN(rate)) {
+                    totalAmount += rate;
+                }
+            });
+
+            $("#TotInAmount").val(totalAmount);
+        }
+        function updateTotalAmount2() {
+                                        var totalAmount = 0;
+
+            $("#itemTable2 tbody tr").each(function () {
+                var row = $(this);
+                var rate = parseFloat(row.find("td:eq(5)").text()); // Assuming the rate is numeric
+
+                if (!isNaN(rate)) {
+                    totalAmount += rate;
+                }
+            });
+
+            $("#TotOutAmount").val(totalAmount);
+        }
+
+    });
+
+
+    $(document).ready(function () {
+           var rateInput = $("#InRate");
+           var subQuantityInput = $("#InQuantity");
+           var amountInput = $("#InAmount");
+
+           function updateAmount() {
+               var rate = parseFloat(rateInput.val()) || 0;
+               var subQuantity = parseFloat(subQuantityInput.val()) || 0;
+               var amount = rate * subQuantity;
+               amountInput.val(amount);
+           }
+
+           updateAmount();
+
+           rateInput.on("input", updateAmount);
+           subQuantityInput.on("input", updateAmount);
+    });
+
+    $(document).ready(function () {
+           var rateInput = $("#OutRate");
+           var subQuantityInput = $("#OutQuantity");
+           var amountInput = $("#OutAmount");
+
+           function updateAmount2() {
+               var rate = parseFloat(rateInput.val()) || 0;
+               var subQuantity = parseFloat(subQuantityInput.val()) || 0;
+               var amount = rate * subQuantity;
+               amountInput.val(amount);
+           }
+
+           updateAmount2();
+
+           rateInput.on("input", updateAmount2);
+           subQuantityInput.on("input", updateAmount2);
+    });
+
+</script>
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $("#InItem").change(function () {
+            var selectedItemId = $(this).val();
+            $.ajax({
+                url: '@Url.Action("GetRateAmount", "StockJournal")',
+                type: 'POST',
+                data: { itemId: selectedItemId },
+                success: function (data) {
+                      if (data.success) {
+                        $("#InRate").val(data.rate || "");
+                            //$("#Amount").val(data.itemcode || "");
+
+                        } else {
+                        $("#InRate").val("");
+                              /* $("#Amount").val("");*/
+                          }
+                      },
+                error: function () {
+                    $("#Rate").val("");
+                    /*$("#Amount").val("");*/
+                }
+            });
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $("#InItem").change(function () {
+            var selectedItemId = $(this).val();
+            $.ajax({
+                url: '@Url.Action("GetBOMValues", "StockJournal")',
+                type: 'POST',
+                data: { itemId: selectedItemId },
+                success: function (data) {
+                    if (data.success) {
+                        $("#InItemCode").val(data.itemcode || "");
+
+                    } else {
+                        $("#InItemCode").val("");
+                    }
+                },
+                error: function () {
+                    $("#InItemCode").val("");
+                }
+            });
+        });
+    });
+</script>
+<script>
+   $(document).ready(function () {
+    $("#InItem").change(function () {
+        var selectedItemId = $(this).val();
+        $.ajax({
+            url: '@Url.Action("GetMJValue", "StockJournal")',
+            type: 'POST',
+            data: { itemId: selectedItemId },
+            success: function (data) {
+                if (data.success) {
+                    // Set the selected value of the dropdown to the fetched Godown Name
+                    $("#InGodown").val(data.godown || "").change();
+                } else {
+                    $("#InGodown").val("");
+                }
+            },
+            error: function () {
+                $("#InGodown").val("");
+               }
+           });
+       });
+   });
+
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#OutItem").change(function () {
+            var selectedItemId = $(this).val();
+            $.ajax({
+                url: '@Url.Action("GetBOMValues", "StockJournal")',
+                type: 'POST',
+                data: { itemId: selectedItemId },
+                success: function (data) {
+                    if (data.success) {
+                        $("#OutItemCode").val(data.itemcode || "");
+
+                    } else {
+                        $("#OutItemCode").val("");
+                    }
+                },
+                error: function () {
+                    $("#OutItemCode").val("");
+            }
+        });
+    });
+});
+</script>
+<script>
+   $(document).ready(function () {
+    $("#OutItem").change(function () {
+        var selectedItemId = $(this).val();
+        $.ajax({
+            url: '@Url.Action("GetMJValue", "StockJournal")',
+            type: 'POST',
+            data: { itemId: selectedItemId },
+            success: function (data) {
+                if (data.success) {
+                    // Set the selected value of the dropdown to the fetched Godown Name
+                    $("#OutGodown").val(data.godown || "").change();
+                } else {
+                    $("#OutGodown").val("");
+                }
+            },
+            error: function () {
+                $("#OutGodown").val("");
+            }
+        });
+    });
+});
+
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#OutItem").change(function () {
+            var selectedItemId = $(this).val();
+            $.ajax({
+                url: '@Url.Action("GetRateAmount", "StockJournal")',
+                type: 'POST',
+                data: { itemId: selectedItemId },
+                success: function (data) {
+                    if (data.success) {
+                        $("#OutRate").val(data.rate || "");
+                        //$("#Amount").val(data.itemcode || "");
+
+                    } else {
+                        $("#OutRate").val("");
+                        /* $("#Amount").val("");*/
+                    }
+                },
+                error: function () {
+                    $("#OutRate").val("");
+                /*$("#Amount").val("");*/
+            }
+        });
+    });
+});
+
+</script>
+
+
+@*<script>
+        function updateAndFlagRefresh() {
+            // Serialize the form data
+            var formData = $("form").serialize();
+
+            // Make an AJAX POST request
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Edit")", // Replace with the actual URL for the Edit action
+                data: formData,
+                success: function(result) {
+                    // Handle the response if needed
+                    console.log("AJAX request successful.");
+                    // Set a flag to indicate that a refresh is needed on the index page
+                    sessionStorage.setItem("refreshIndexPage", "true");
+
+                    // Close the current tab/window
+                    window.close();
+                },
+                error: function() {
+                    // Handle errors if needed
+                    console.log("AJAX request failed.");
+                }
+            });
+        }
+    </script>*@
+
+<script>
+    $(document).ready(function () {
+
+        /*module button*/
+        $.ajax({
+            url: '/Settings/GetAllColors',
+            type: 'GET',
+            success: function (colors) {
+                // Example: Apply Inner Button colors
+                var bgColor5 = colors.InnerButtonColor; // inner
+                var fontColor5 = colors.InnerButtonFontColor; // inner text
+
+                // Example for all preview boxes (optional)
+                $('.custo-inner').css('background', bgColor5);//  inner
+                $('.custo-inner').css('color', fontColor5);// inner text
+            },
+            error: function () {
+                console.error("Failed to load color settings.");
+            }
+        });
+
+    });
+</script>

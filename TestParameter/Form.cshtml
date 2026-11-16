@@ -1,0 +1,124 @@
+﻿@model ERPEntities.TestParameter
+
+<div class="row">
+    <div class="col-md-12">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-row">
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(m => m.UnitId)
+                @Html.TextBoxFor(m => m.UnitId, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(m => m.ItemId)
+                @Html.TextBoxFor(m => m.ItemId, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(m => m.RatedCurrent)
+                @Html.TextBoxFor(m => m.RatedCurrent, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(m => m.Frequency)
+                @Html.TextBoxFor(m => m.Frequency, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(m => m.Poles)
+                @Html.TextBoxFor(m => m.Poles, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(m => m.Duty)
+                @Html.TextBoxFor(m => m.Duty, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(m => m.InsulationClass)
+                @Html.TextBoxFor(m => m.InsulationClass, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(m => m.Capacitor)
+                @Html.TextBoxFor(m => m.Capacitor, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(m => m.SupplyVolt1)
+                @Html.TextBoxFor(m => m.SupplyVolt1, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(m => m.TestFrequency1)
+                @Html.TextBoxFor(m => m.TestFrequency1, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <h4 class="mt-4">No Load Currents</h4>
+        <hr />
+
+        <div class="form-row">
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(m => m.NoLoadCurrentU1)
+                @Html.TextBoxFor(m => m.NoLoadCurrentU1, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(m => m.NoLoadCurrentV1)
+                @Html.TextBoxFor(m => m.NoLoadCurrentV1, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(m => m.NoLoadCurrentW1)
+                @Html.TextBoxFor(m => m.NoLoadCurrentW1, new { @class = "form-control" })
+            </div>
+
+        </div>
+
+        <h4 class="mt-4">Winding Resistances (3 Phase)</h4>
+        <hr />
+
+        <div class="form-row">
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(m => m.WindingResRedWhite)
+                @Html.TextBoxFor(m => m.WindingResRedWhite, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(m => m.WindingResYellowBlue)
+                @Html.TextBoxFor(m => m.WindingResYellowBlue, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(m => m.WindingResBlackBrown)
+                @Html.TextBoxFor(m => m.WindingResBlackBrown, new { @class = "form-control" })
+            </div>
+
+        </div>
+
+        <h4 class="mt-4">Winding Resistances (Single Phase)</h4>
+        <hr />
+
+        <div class="form-row">
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(m => m.WindingResBlackWhite)
+                @Html.TextBoxFor(m => m.WindingResBlackWhite, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(m => m.WindingResBlackRed)
+                @Html.TextBoxFor(m => m.WindingResBlackRed, new { @class = "form-control" })
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+

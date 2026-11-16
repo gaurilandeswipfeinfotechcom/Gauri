@@ -1,0 +1,992 @@
+﻿@model ERPEntities.SalesProcessing
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_SwipfeMaster.cshtml";
+}
+
+<!-- Bootstrap JS --> <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+<link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css"
+      rel="Stylesheet" type="text/css" />
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+
+<script>
+
+    function Approval() {
+
+        var isAllValid = true;
+              var data = {
+
+                  SaleOrderNo: $('#SaleOrderNo').val().trim(),
+                  UserApprovalId: $('#UserApprovalId').val().trim(),
+                  StatusId: 19,
+              }
+
+            $(this).val('Please wait...');
+
+            $.ajax({
+                url: '/SalesOrder/Approval',
+                type: "POST",
+                data: JSON.stringify(data),
+                dataType: "JSON",
+                contentType: "application/json",
+                success: function (d) {
+
+                    if (d.status == true) {
+
+                        alert('Successfully done');
+                        window.location.href = '/SalesOrder/Index';
+                    }
+                    else {
+                        alert('Failed');
+                    }
+                    $('#submit').val('Save');
+                },
+                error: function () {
+                    alert('Error. Please try again.');
+                    $('#submit').val('Save');
+                }
+            });
+
+
+        }
+
+    @*function approval() {
+        var b = '@Session["LoginUserId"]';
+        //var b = 26;
+
+        $.ajax({
+            url: '@Url.Action("GetInfo")',
+            data: { "userId": b },
+            type: "POST",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+
+                if (data.length > 0) {
+
+                    for (var i = 0; i < data.length; i++) {
+
+                        if (data[i].FormName == "SalesOrderApproval") {
+
+                            if (data[i].Create == "Y") {
+
+                                $('#submitSlesApproval').show();
+                                break;
+                            }
+                            else {
+
+                                $('#submitSlesApproval').hide();
+                                break;
+                            }
+
+                        }
+                        else {
+
+                            $('#submitSlesApproval').hide();
+                        }
+
+                    }
+
+                }
+
+            }
+
+
+        });
+    }*@
+
+    var orderItems = [];
+    $(window).load(function () {
+
+        var b = '@Session["LoginUserId"]';
+        //var b = 26;
+        $.ajax({
+            url: '@Url.Action("GetInfo")',
+            data: { "userId": b },
+            type: "POST",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+
+                if (data.length > 0) {
+
+                    for (var i = 0; i < data.length; i++) {
+
+                        if (data[i].FormName == "SalesOrder") {
+
+                            if (data[i].Edit == "Y") {
+
+                                $('#EditSalesOrder').show();
+                                break;
+                            }
+                            else {
+
+                                $('#EditSalesOrder').hide();
+                                break;
+                            }
+
+                        }
+                        else {
+
+                            $('#EditSalesOrder').hide();
+                        }
+
+                        if (data[i].FormName == "SalesOrderApproval") {
+
+                            if (data[i].Create == "Y") {
+
+                                $('#submitSlesApproval').show();
+                                break;
+                            }
+                            else {
+
+                                $('#submitSlesApproval').hide();
+                                break;
+                            }
+
+                        }
+                        else {
+
+                            $('#submitSlesApproval').hide();
+                        }
+
+                }
+
+                }
+
+            }
+        });
+
+
+        /*$('#submitSlesApproval').hide();*/
+        var urlcurrent = $(location).attr('href');
+
+        urlcurrent = unescape(urlcurrent);
+        var i = urlcurrent.split("=");
+
+
+        $.ajax({
+
+            url: '@Url.Action("SOList")',
+            data: { "sono": i[1] },
+
+            type: "POST",
+            dataType: "json",
+            async: false,
+            success: function (resultso) {
+
+                if (resultso[0].QuotationNo == "" || resultso[0].QuotationNo == null) {
+
+                    $.ajax({
+
+                        url: '@Url.Action("DirectProductList")',
+                        data: { "sono": i[1] },
+
+                        type: "POST",
+                        dataType: "json",
+                        async: false,
+                        success: function (result) {
+
+                            var i;
+                            for (i = 0; i < result.length; i++) {
+                                orderItems.push({
+                                    SrNo: i + 1,
+
+                                    ItemName: result[i].ItemName,
+
+                                    Quantity: result[i].Quantity,
+                                    ItemCode: result[i].ItemCode,
+                                    HSNCode: result[i].HSNCode,
+                                    HSNClassification: result[i].HSNClassification,
+                                    GSTRate: result[i].GSTRate,
+                                    RatePerUnit: result[i].RatePerUnit,
+                                    ApplicableRate: result[i].ApplicableRate,
+                                    Amount: result[i].Amount,
+
+                                });
+                            }
+
+                            GeneratedItemsTable();
+                            $("#EnquiryNo").attr("disabled", false);
+                            $("#EnquiryNo").val("Not Applicable");
+                            $("#EnquiryNo").attr("disabled", true);
+
+                            $("#QuotationNo").val("Not Applicable");
+                            $("#QuotationNo").attr("disabled", true);
+
+
+                        },
+                        error: function (reponse) {
+                            alert("error : " + reponse);
+                        }
+                    });
+                }
+
+                else {
+                    $.ajax({
+
+                        url: '@Url.Action("DirectProductList")',
+                        data: { "sono": i[1] },
+
+                        type: "POST",
+                        dataType: "json",
+                        success: function (result) {
+
+                            var i;
+                            for (i = 0; i < result.length; i++) {
+                                orderItems.push({
+                                    SrNo: i + 1,
+                                    ItemName: result[i].ItemName,
+
+                                    Quantity: result[i].Quantity,
+                                    ItemCode: result[i].ItemCode,
+                                    HSNCode: result[i].HSNCode,
+                                    HSNClassification: result[i].HSNClassification,
+                                    GSTRate: result[i].GSTRate,
+                                    RatePerUnit: result[i].RatePerUnit,
+                                    ApplicableRate: result[i].ApplicableRate,
+                                    Amount: result[i].Amount,
+
+
+                                });
+                            }
+
+                            GeneratedItemsTable();
+
+                        },
+                        error: function (reponse) {
+                            alert("error : " + reponse);
+                        }
+                    });
+                }
+
+                console.log("Approval.....", resultso[0].IsApproved);
+                if (resultso[0].IsApproved == "Yes") {
+
+                    $('#submitSlesApproval').hide();
+                }
+                //else {
+                //    $('#submitSlesApproval').show();
+                //}
+
+                if (resultso[0].IsApproved != "Yes" || resultso[0].IsApproved == null) {
+
+                    //approval();
+                    $('#submitSlesApproval').show();
+                }
+
+                $("#CountryCode1").val(resultso[0].CountryCode);
+                $("#CountryCode2").val(resultso[0].CountryCode);
+
+                if (resultso[0].ShippingAddSameAsBillAdd == "Yes") {
+                    $("#shippAddress").hide();
+                    $('input:radio[name="SendType"]').filter('[value="Yes"]').attr('checked', true);
+
+                }
+                else if (resultso[0].ShippingAddSameAsBillAdd == "No") {
+                    $("#shippAddress").show();
+                    $('input:radio[name="ShippAdd"]').filter('[value="No"]').attr('checked', true);
+                    $("#ShippingAddress").val(resultso[0].ShippingAddress);
+
+
+
+                }
+                if (resultso[0].SendType == "By Hand") {
+                    $("#CourierName option:eq(0)").attr('selected', true)
+
+
+                    $('input:radio[name="SendType"]').filter('[value="By Hand"]').attr('checked', true);
+
+                }
+                else if (resultso[0].SendType == "By Courier") {
+
+                    $("input:radio[name=RateType]").attr("disabled", false);
+
+                    $('input:radio[name="SendType"]').filter('[value="By Courier"]').attr('checked', true);
+
+                }
+
+                if (resultso[0].RateType == "Air Rate") {
+
+                    $('input:radio[name="RateType"]').filter('[value="Air Rate"]').attr('checked', true);
+
+                }
+                else if (resultso[0].RateType == "Surface Rate") {
+
+                    $('input:radio[name="RateType"]').filter('[value="Surface Rate"]').attr('checked', true);
+
+                }
+            }
+
+        });
+
+    });
+
+    function GeneratedItemsTable() {
+
+        if (orderItems.length > 0) {
+            var $table = $('<table/>');
+
+            $table.append('<thead><tr><th>No.</th><th>Item Name</th><th>Qty.</th><th>Item Code</th><th>HSN</th><th>GST</th><th>Rate</th><th>Appl. Rate</th><th>Amount</th></tr></thead>');
+            var $tbody = $('<tbody/>');
+            $.each(orderItems, function (i, val) {
+                var $row = $('<tr/>');
+
+                $row.append($('<td style="text-align:center"/>').html(val.SrNo));
+                $row.append($('<td style="text-align:left"/>').html(val.ItemName));
+                $row.append($('<td style="text-align:center"/>').html(val.Quantity));
+                $row.append($('<td style="text-align:center"/>').html(val.ItemCode));
+                $row.append($('<td style="text-align:center"/>').html(val.HSNCode));
+                $row.append($('<td style="text-align:right"/>').html(val.GSTRate));
+                $row.append($('<td style="text-align:right"/>').html(val.RatePerUnit));
+                $row.append($('<td style="text-align:right"/>').html(val.ApplicableRate));
+                $row.append($('<td style="text-align:right"/>').html(val.Amount));
+                $tbody.append($row);
+
+                $tbody.append($row);
+            });
+            console.log("current", orderItems);
+            $table.append($tbody);
+            $('#orderItems').html($table);
+        }
+        else {
+            $('#orderItems').html('');
+        }
+    }
+
+    function Resend() {
+
+        $.ajax({
+
+            url: '@Url.Action("Resend")',
+
+            data: { "sno": $("#SaleOrderNo").val() },
+            type: "POST",
+            //dataType: "json",
+            success: function (result) {
+
+                window.location.href = '/SaleOrderReport.aspx';
+                //}
+
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+
+    }
+</script>
+
+<style>
+    /*Adding some css for looks good*/
+    #label {
+        font-size: 15px;
+        color: #0077B3;
+        font-weight: 500
+    }
+
+    h4 {
+        font-size: 18px;
+        padding: 10px 0;
+        font-weight: 600;
+    }
+
+    .form-head h4 {
+        padding: 10px 10px;
+        font-size: 16px;
+        font-weight: 600;
+        background-color: #C1D5BD;
+    }
+
+
+    .body-panel {
+        border: 1px solid black;
+        /*background-color: whitesmoke;*/
+        margin-top: -10px;
+        border-radius: 5px;
+        background-color: floralwhite;
+    }
+
+    .submit-btn {
+        display: inline-flex;
+        padding: 7px;
+    }
+
+
+        .submit-btn button {
+            border-radius: 30px;
+            padding: 5px 5px;
+        }
+
+
+
+    .save-btn input {
+        /*border-radius: 30px;*/
+        font-size: 14px;
+    }
+
+    .tablecontainer table {
+        width: 100%;
+        border-collapse: collapse;
+        border-top: 1px solid #fff;
+        border-right: 1px solid #fff;
+        background-color: #fff
+    }
+
+    .tablecontainer th {
+        border-bottom: 2px solid #fff !important;
+        background-color: lightblue;
+        font-size: small;
+        font-weight: normal;
+        color: midnightblue;
+        text-align: center;
+        height: 30px;
+    }
+
+    .tablecontainer th, .tablecontainer td {
+        /*text-align: left;*/
+        border-left: 2px solid #fff;
+        padding: 5px;
+        border-bottom: 2px solid #fff;
+        font-size: small;
+    }
+
+
+    fieldset {
+        border: 1px solid #ddd !important;
+        margin: 10px;
+        /*max-width:0;*/
+        padding: 5px;
+        /* position:relative;*/
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        /*background-color: whitesmoke;*/
+        /* background-color: white;*/
+        background-color: white;
+    }
+
+
+    .button {
+        display: inline-block;
+        /*padding: 5px 6px;*/
+        /*font-size: 5px;*/
+        padding: 20px;
+        font-size: 16px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        outline: none;
+        border: none;
+        box-shadow: 0 9px #999;
+        height: 3px;
+        width: auto;
+        margin: 4px 2px;
+    }
+
+        .button:hover {
+            /*background-color: #3e8e41*/
+            background-color: cyan;
+        }
+
+        .button:active {
+            background-color: cyan;
+            box-shadow: 0 5px #666;
+            transform: translateY(4px);
+        }
+
+    .button1 {
+        border-radius: 50%;
+    }
+
+    span.error {
+        display: block;
+        visibility: hidden;
+        color: red;
+        font-size: 60px;
+    }
+
+
+    .ui-widget {
+        font-size: 12px !important;
+    }
+
+    .reqError {
+        color: #ff0000; /*Red Color*/
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .backsubmitbtn {
+        background-image: linear-gradient(to right,#35d3e1,midnightblue);
+        padding: 5px 20px 5px 20px;
+        color: white;
+        font-family: Helvetica;
+        box-shadow: -4px -4px 8px rgba(255, 255, 255, 0.7), 4px 4px 8px rgba(128, 128, 128, 0.7);
+        outline-style: none;
+        border: none
+    }
+
+    .dshapefieldset {
+        background-color: #e5e6e7;
+        border: 2px solid #ddd;
+        border-radius: 0px 25px 25px 0px;
+        margin-bottom: 25px;
+    }
+
+    .field-heading {
+        font-size: 18px;
+        color: midnightblue;
+        font-family: Helvetica;
+        font-weight: bold;
+        display: flex
+    }
+
+    .route-path1 {
+        clip-path: polygon(0% 0%, 85% 0%, 100% 50%, 85% 100%, 0% 100%);
+        background-color: #003399;
+        color: white;
+        padding: 5px 13px 5px 5px
+    }
+
+    .route-path2 {
+        cursor: pointer;
+        color: white;
+        clip-path: polygon(93% 0%, 100% 50%, 93% 100%, 0% 100%, 7% 50%, 0% 0%);
+        background-color: #003399;
+        padding: 5px 15px 5px 15px;
+    }
+
+    .route-path3 {
+        cursor: pointer;
+        color: white;
+        clip-path: polygon(91% 0%, 100% 50%, 91% 100%, 0% 100%, 9% 50%, 0% 0%);
+        background-color: #003399;
+        padding: 5px 15px 5px 15px;
+    }
+
+    .cross-btn {
+        font-size: 30px;
+        cursor: pointer;
+        color: midnightblue;
+        position: absolute;
+        top: 35px;
+        right: 15px;
+    }
+</style>
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="Stylesheet" type="text/css" />
+@*AP external CSS*@
+<link href="~/Content/ERPStyle.css" rel="stylesheet" type="text/css" />
+
+@using (Html.BeginForm("Details", "SalesOrder", FormMethod.Post))
+{
+    <form class="form-horizontal" id="TypeValidation" action="#" method="">
+        <div class="row ">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
+                <div class="d-flex" style="margin-top:-20px">
+                    <h4 class="route-path1">Sales </h4>
+                    <h4 class="route-path2" onclick="location.href='@Url.Action("Index","SalesOrder")'">Sales Order</h4>
+                    <h4 class="route-path3 " onclick="location.reload()">Details</h4>
+                </div>
+                <br />
+
+                <div class="panel panel-default outer-main-container">
+                    <div class=" main-heading">
+                        <div class=" d-flex ">
+                            <i class="material-icons" style="font-size: 32px; margin-right: 10px;">info</i>
+                            Sales Order Details
+
+                            <i class="material-icons cross-btn" onclick="history.back()">cancel</i>
+                        </div>
+                    </div>
+
+                    <div class="" style="padding-inline:20px">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                @Html.EditorFor(model => model.UserApprovalId, new { htmlAttributes = new { @class = "form-control", style = "display: none;" } })
+                            </div>
+                        </div>
+
+                        @*//Sales Order Details Panel//*@
+                        <fieldset class="dshapefieldset">
+                            <p class="field-heading pt-3">
+                                <i class="material-icons">double_arrow</i>
+                                Sales Order Details
+                            </p>
+
+                            <div class="form-group row">
+                                <div class="col-lg-2 col-md-4 col-sm-6">
+                                    <label id="label">Sale Order Number :</label>
+                                    @Html.EditorFor(model => model.SaleOrderNo, new { htmlAttributes = new { @class = "form-control bg-light fs-4 pl-3 input-text-box", @disabled = true, style = "height:35px" } })
+                                    @Html.ValidationMessageFor(model => model.SaleOrderNo, "", new { @class = "text-danger" })
+                                </div>
+
+                                <div class="col-lg-2 col-md-4 col-sm-6">
+                                    <label id="label">Sale Order Date :</label>
+                                    @Html.TextBoxFor(model => model.SaleOrderDate, null, new { style = "height:35px", @class = "form-control bg-light fs-4 pl-3 input-text-box", disabled = "true", @Value = Model.SaleOrderDate.Value.ToString("dd/MM/yyyy") })
+
+                                    @Html.ValidationMessageFor(model => model.SaleOrderDate, "", new { @class = "text-danger" })
+
+                                </div>
+                                <div class="col-lg-2 col-md-4 col-sm-6">
+                                    <label id="label">Purchase Order No. :</label>
+                                    @Html.EditorFor(model => model.CustomerPoNo, new { htmlAttributes = new { @class = "form-control bg-light fs-4 pl-3 input-text-box", @disabled = true, style = "height:35px" } })
+                                    <span id="reqpon"></span>
+                                </div>
+                                <div class="col-lg-2 col-md-4 col-sm-6">
+                                    <label id="label">Purchase Order Date :</label>
+                                    @Html.TextBoxFor(model => model.CustomerPoDate, null, new { style = "height:35px", @class = "form-control bg-light fs-4 pl-3 input-text-box", disabled = "true", @Value = Model.CustomerPoDate.Value.ToString("dd/MM/yyyy") })
+
+                                    <span id="reqpod"></span>
+                                </div>
+                                <div class="col-lg-2 col-md-4 col-sm-6">
+                                    <label id="label">Quotation Number :</label>
+                                    @Html.EditorFor(model => model.QuotationNo, new { htmlAttributes = new { @class = "form-control bg-light fs-4 pl-3 input-text-box", @disabled = true, style = "height:35px" } })
+                                </div>
+                                <div class="col-lg-2 col-md-4 col-sm-6">
+                                    <label id="label">Material Req. Period :</label>
+                                    @Html.TextBoxFor(model => model.MaterialRequiredDate, null, new { style = "height:35px", @class = "form-control bg-light fs-4 pl-3 input-text-box", disabled = "true", @Value = Model.CustomerPoDate.Value.ToString("dd/MM/yyyy") })
+
+                                </div>
+                            </div>
+
+                        </fieldset>
+                        @*//******Company Details Panel***//*@
+
+                        <fieldset class="dshapefieldset">
+                            <p class="field-heading pt-3">
+                                <i class="material-icons">double_arrow</i>
+                                Company Details
+                            </p>
+
+
+                            <div class="form-group row" style="margin-top:-15px">
+                                <div class="col-lg-4  p-3">
+                                    <label id="label">
+                                        Company Name :
+                                    </label>
+
+                                    @Html.TextBox("EntityName", null, new { @class = "form-control bg-light fs-4 pl-3 input-text-box", @disabled = true, style = "height:35px" })
+                                </div>
+
+                                <div class="col-lg-5 p-3">
+                                    <label id="label"> Address :</label>
+
+                                    @Html.TextBox("Address", null, new { @class = "form-control bg-light fs-4 pl-3 input-text-box", @disabled = true, style = "height:50px;maxlength:56px;cols:30px" })
+
+                                </div>
+                                <div class="col-lg-3 col-md-4 col-sm-6 p-3">
+                                    <label id="label"> Locality / Village :</label>
+                                    @Html.TextBox("Locality", null, new { @class = "form-control bg-light fs-4 pl-3 input-text-box", @disabled = true, style = "height:35px" })
+                                </div>
+                                <div class="col-lg-3 col-md-4 col-sm-6 p-3">
+                                    <label id="label"> Taluka / Town / City :</label>
+                                    @Html.TextBox("Taluka", null, new { @class = "form-control bg-light fs-4 pl-3 input-text-box", @disabled = true, style = "height:35px" })
+                                </div>
+                                <div class="col-lg-2 col-md-4 col-sm-6 p-3">
+                                    <label id="label"> Pincode :</label>
+                                    @Html.TextBox("Pincode", null, new { @class = "form-control bg-light fs-4 pl-3 input-text-box", @disabled = true, style = "height:35px" })
+                                </div>
+                                <div class="col-lg-2 col-md-4 col-sm-6 p-3">
+                                    <label id="label"> District :</label>
+                                    @Html.TextBox("District", null, new { @class = "form-control bg-light fs-4 pl-3 input-text-box", @disabled = true, style = "height:35px" })
+                                </div>
+                                <div class="col-lg-3 col-md-4 col-sm-6 p-3">
+                                    <label id="label"> State :</label>
+                                    @Html.TextBox("State", null, new { @class = "form-control bg-light fs-4 pl-3 input-text-box", @disabled = true, style = "height:35px" })
+                                </div>
+                                <div class="col-lg-2 col-md-4 col-sm-6 p-3">
+                                    <label id="label"> Country :</label>
+                                    @Html.TextBox("Country", null, new { @class = "form-control bg-light fs-4 pl-3 input-text-box", @disabled = true, style = "height:35px" })
+                                </div>
+
+                                <div class="col-lg-4 col-md-6 p-3">
+                                    <label id="label"> Contact Person Name :</label>
+                                    @Html.TextBox("ContactPersonName", null, new { @class = "form-control bg-light fs-4 pl-3 input-text-box", @disabled = true, style = "height:35px" })
+                                </div>
+                                <div class="col-lg-1 col-md-2 col-sm-3 p-3">
+                                    <label id="label"> Code </label>
+                                    @Html.TextBox("CountryCode1", null, new { style = "height:35px;", @class = "form-control bg-light fs-4 pl-3 input-text-box", disabled = "true" })
+
+                                </div>
+                                <div class="col-lg-3 col-md-4 col-sm-9 p-3">
+                                    <label id="label"> Office Contact :</label>
+                                    @Html.TextBox("OfficeMobileNo", null, new { @class = "form-control bg-light fs-4 pl-3 input-text-box", @disabled = true, style = "height:35px" })
+                                </div>
+                                <div class="col-lg-4 col-md-5 p-3">
+                                    <label id="label">Office Email :</label>
+                                    @Html.TextBox("OfficeEmailId", null, new { @class = "form-control bg-light fs-4 pl-3 input-text-box", @disabled = true, style = "height:35px" })
+                                </div>
+
+                                @*<div class="col-lg-1">
+                    <label id="label"> Code </label>
+                    @Html.TextBox("CountryCode2", null, new { style = "background-color:azure;height:35px", @class = "form-control input-text-box", disabled = "true" })
+
+                </div>
+                <div class="col-lg-3">
+                    <label id="label">Personal Mobile :</label>
+                    @Html.TextBox("PersonalMobileNo", null, new { @class = "form-control input-text-box", @disabled = true, style = "background-color:azure;height:35px" })
+                </div>
+                <div class="col-lg-4">
+                    <label id="label">Personal Email :</label>
+                    @Html.TextBox("PersonalEmailID", null, new { @class = "form-control input-text-box", @disabled = true, style = "background-color:azure;height:35px" })
+
+                </div>*@
+                                <div class="col-lg-2 col-md-4 col-sm-6 p-3">
+                                    <label id="label">Terms Of Delivery :</label>
+
+                                    @Html.TextBox("TermsOfDelivery", null, new { @class = "form-control bg-light fs-4 pl-3 input-text-box", @disabled = true, style = "height:35px" })
+
+                                </div>
+                                <div class="col-lg-2 col-sm-6 col-md-3 p-3">
+                                    <label id="label">Discount :</label>
+                                    @Html.EditorFor(model => model.DiscountPercent, new { htmlAttributes = new { @class = "form-control bg-light fs-4 pl-3 input-text-box", @disabled = true, style = "text-align:right;height:35px" } })
+
+                                </div>
+
+                                <div class="col-lg-4 col-md-6 p-3">
+                                    <label id="label">Payment Term :</label>
+
+                                    @Html.TextBox("PaymentTerm", null, new { @class = "form-control bg-light fs-4 pl-3 input-text-box", @disabled = true, style = "height:35px" })
+
+                                </div>
+                                <div class="col-lg-4 col-md-6 p-3">
+                                    <label id="label">Shipping Address Same As Billing Address :</label>
+                                    <div class="form-check">
+                                        <label class="form-check-label" style="font-size:15px">
+                                            @*@Html.RadioButton("BOM", "Yes",false) <span>Yes</span>*@
+                                            <input class="form-check-input" checked type="radio" name="ShippAdd" value="Yes" id="ShippAddYes" disabled> Yes
+                                            <span class="circle" style="background-color:#fff">
+                                                <span class="check"></span>
+                                            </span>
+                                        </label>
+
+                                        <label class="form-check-label" style="font-size:15px">
+                                            @*@Html.RadioButton("BOM", "No",true) <span>No</span>*@
+                                            <input class="form-check-input" type="radio" name="ShippAdd" value="No" id="ShippAddNo" disabled> No
+                                            <span class="circle" style="background-color:#fff">
+                                                <span class="check"></span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-8" id="shippAddress">
+                                    <label id="label"> Shipping Address :</label>
+                                    @Html.EditorFor(model => model.ShippingAddress, new { htmlAttributes = new { placeholder = "Shipping Address", @onkeyup = "myFunction(this.id)", @class = "form-control bg-light fs-4 pl-3 input-text-box", @disabled = true } })
+
+                                </div>
+                            </div>
+
+                        </fieldset>
+
+                        @*//Item Details Panel//*@
+                        <fieldset class="dshapefieldset">
+                            <p class="field-heading pt-3">
+                                <i class="material-icons">double_arrow</i>
+                                Item Details
+                            </p>
+                            <div id="orderItems" class="tablecontainer table-responsive" style="background-color:#fff">
+                            </div>
+                            <label></label>
+
+                        </fieldset>
+
+                        @*//Courier Services Panel//*@
+                        <fieldset class="dshapefieldset">
+                            <p class="field-heading pt-3">
+                                <i class="material-icons">double_arrow</i>
+                                Courier Services
+                            </p>
+
+                            <div class="form-group row">
+                                <div class="col-md-4 p-3">
+                                    <label id="label">Courier Name :</label>
+                                    @Html.EditorFor(model => model.TransporterName, new { htmlAttributes = new { @class = "form-control bg-light fs-4 pl-3 input-text-box input-text-box", @disabled = true, style = "height:35px" } })
+
+                                </div>
+                                <div class="col-md-4 col-sm-6 p-3">
+                                    <label id="label">Dispatch Mode :</label>
+
+                                    <div class="form-check">
+                                        <label class="form-check-label" id="label">
+                                            <input class="form-check-input" type="radio" name="SendType" value="By Hand" id="ByHand" onchange="checksendtype(this.value);" disabled> By Hand
+                                            <span class="circle" style="background-color:#fff">
+                                                <span class="check"></span>
+                                            </span>
+                                        </label>
+
+                                        <label class="form-check-label" id="label">
+                                            <input class="form-check-input" type="radio" name="SendType" value="By Courier" id="ByCourier" onchange="checksendtype(this.value);" disabled> By Courier
+                                            <span class="circle" style="background-color:#fff">
+                                                <span class="check"></span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-6 p-3">
+                                    <label id="label">Transport Mode :</label>
+
+                                    <div class="form-check">
+                                        <label class="form-check-label" id="label">
+                                            <input class="form-check-input" type="radio" name="RateType" value="Air Rate" id="AirRate" onchange="checkratetype(this.value);" >By Air
+                                            <span class="circle" style="background-color:#fff">
+                                                <span class="check"></span>
+                                            </span>
+                                        </label>
+
+                                        <label class="form-check-label" id="label">
+                                            <input class="form-check-input" type="radio" name="RateType" value="Surface Rate" id="SurfaceRate" onchange="checkratetype(this.value);" >By Surface
+                                            <span class="circle" style="background-color:#fff">
+                                                <span class="check"></span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-sm-6 p-3">
+                                    <label id="label">Total Weight<br /> In Kg :</label>
+                                    @Html.EditorFor(model => model.TotalWeightInKg, new { htmlAttributes = new { @class = "form-control bg-light fs-4 pl-3 input-text-box", @disabled = true, style = "text-align:right;height:35px" } })
+                                    @Html.ValidationMessageFor(model => model.TotalWeightInKg, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-2 col-sm-6 p-3">
+                                    <label id="label">Docket <br />Charges :</label>
+                                    @Html.EditorFor(model => model.DocketCharges, new { htmlAttributes = new { @class = "form-control bg-light fs-4 pl-3 input-text-box", @disabled = true, style = "text-align:right;height:35px" } })
+                                    @Html.ValidationMessageFor(model => model.DocketCharges, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-2 col-sm-6 p-3">
+                                    <label id="label">Fuel <br />Charges :</label>
+                                    @Html.EditorFor(model => model.FuelCharges, new { htmlAttributes = new { @class = "form-control bg-light fs-4 pl-3 input-text-box", @disabled = true, style = "text-align:right;height:35px" } })
+                                    @Html.ValidationMessageFor(model => model.FuelCharges, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-2 col-sm-6 p-3">
+                                    <label id="label">Other <br />Charges :</label>
+                                    @Html.EditorFor(model => model.OtherCharges, new { htmlAttributes = new { @class = "form-control bg-light fs-4 pl-3 input-text-box", @disabled = true, style = "text-align:right;height:35px" } })
+                                    @Html.ValidationMessageFor(model => model.OtherCharges, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-2 col-sm-6 p-3">
+                                    <label id="label">COD <br />Charges :</label>
+                                    @Html.EditorFor(model => model.CODCharges, new { htmlAttributes = new { @class = "form-control bg-light fs-4 pl-3 input-text-box", @disabled = true, style = "text-align:right;height:35px" } })
+                                    @Html.ValidationMessageFor(model => model.CODCharges, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-2 col-sm-6 p-3">
+                                    <label id="label">FOV <br />Charges :</label>
+                                    @Html.EditorFor(model => model.FOV, new { htmlAttributes = new { @class = "form-control bg-light fs-4 pl-3 input-text-box", @disabled = true, style = "text-align:right;height:35px" } })
+                                    @Html.ValidationMessageFor(model => model.FOV, "", new { @class = "text-danger" })
+                                </div>
+
+
+                            </div>
+                        </fieldset>
+                        <fieldset class="dshapefieldset">
+                            <div class="form-group row">
+                                <div class="col-lg-2 col-sm-6 p-3">
+                                    <label id="label">Product Sub Total :</label>
+                                    @Html.EditorFor(model => model.ProductSubTotal, new { htmlAttributes = new { @class = "form-control bg-light fs-4 pl-3 input-text-box", @disabled = true, style = "text-align:right;height:35px" } })
+                                    @Html.ValidationMessageFor(model => model.ProductSubTotal, "", new { @class = "text-danger" })
+
+                                </div>
+                                <div class="col-lg-2 col-sm-6 p-3">
+                                    <label id="label">Freight Charges:</label>
+
+                                    @Html.EditorFor(model => model.FreightCharges, new { htmlAttributes = new { @class = "form-control bg-light fs-4 pl-3 input-text-box", @disabled = true, style = "text-align:right;height:35px" } })
+                                    @Html.ValidationMessageFor(model => model.FreightCharges, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-2 col-sm-6 p-3">
+                                    <label id="label">IGST :</label>
+                                    @Html.EditorFor(model => model.IGST, new { htmlAttributes = new { @class = "form-control bg-light fs-4 pl-3 input-text-box", @disabled = true, style = "text-align:right;height:35px" } })
+                                    @Html.ValidationMessageFor(model => model.IGST, "", new { @class = "text-danger" })
+
+                                </div>
+                                <div class="col-lg-2 col-sm-6 p-3">
+                                    <label id="label">CGST :</label>
+                                    @Html.EditorFor(model => model.CGST, new { htmlAttributes = new { @class = "form-control bg-light fs-4 pl-3 input-text-box", @disabled = true, style = "text-align:right;height:35px" } })
+                                    @Html.ValidationMessageFor(model => model.CGST, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-2 col-sm-6 p-3">
+                                    <label id="label">SGST :</label>
+
+                                    @Html.EditorFor(model => model.SGST, new { htmlAttributes = new { @class = "form-control bg-light fs-4 pl-3 input-text-box", @disabled = true, style = "text-align:right;height:35px" } })
+                                    @Html.ValidationMessageFor(model => model.SGST, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-2 col-sm-6 p-3">
+                                    <label id="label">Total Amount :</label>
+                                    @Html.EditorFor(model => model.RoundOffTotalAmount, new { htmlAttributes = new { @class = "form-control bg-light fs-4 pl-3 input-text-box", @readonly = "readonly", style = "text-align:right;height:35px" } })
+                                    @Html.ValidationMessageFor(model => model.RoundOffTotalAmount, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </fieldset>
+
+
+                        <fieldset class="dshapefieldset">
+                            <label id="label">Specific Instructions by Customer :</label>
+                            <div class="form-group row">
+                                <div class="col-lg-12">
+                                    @Html.TextAreaFor(model => model.Note, new { rows = 2, cols = 120, disabled = "true", @class = "form-control bg-light fs-4 pl-3 input-text-box" })
+                                    @Html.ValidationMessageFor(model => model.Note, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </fieldset>
+                        <div class="form-group row ">
+                            <div class="col-md-2 col-lg-2 p-4">
+                                <input type="button" id="submit" value="Resend" class=" btn btn-success btn-round create-bttn custo-inner" style="outline:none" onclick="Resend();" />
+                            </div>
+                            <div class="col-md-2 col-lg-2 p-4">
+                                <input type="button"  id="EditSalesOrder" value="Edit"  class=" btn btn-success btn-round create-bttn custo-inner" style="outline:none" onclick="location.href = '@Url.Action("edit", new { sono = Model.SaleOrderNo })'" />
+                            </div>
+                            <div class="col-md-2 col-lg-2 p-4">
+                                <input type="button"id="submitSlesApproval" value="Approve" class=" btn btn-success btn-round create-bttn custo-inner" style="outline:none" onclick="Approval();" />
+                            </div>
+                            <div class="col-md-2 col-lg-2 p-4">
+                                <input type="button" value="Back" class=" btn btn-success btn-round create-bttn custo-inner" style="outline:none" onclick="location.href='@Url.Action("Index","SalesOrder")'" />
+                            </div>
+                        </div>
+                        
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </form>
+
+
+}
+
+
+
+<script>
+    $(document).ready(function () {
+
+        /*module button*/
+        $.ajax({
+            url: '/Settings/GetAllColors',
+            type: 'GET',
+            success: function (colors) {
+                // Example: Apply Inner Button colors
+                var bgColor5 = colors.InnerButtonColor; // inner
+                var fontColor5 = colors.InnerButtonFontColor; // inner text
+
+                // Example for all preview boxes (optional)
+                $('.custo-inner').css('background', bgColor5);//  inner
+                $('.custo-inner').css('color', fontColor5);// inner text
+            },
+            error: function () {
+                console.error("Failed to load color settings.");
+            }
+        });
+
+    });
+</script>

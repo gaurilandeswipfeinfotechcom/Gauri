@@ -1,0 +1,2948 @@
+﻿@*@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}*@
+<!DOCTYPE html>
+<html lang="en">
+<!-- /examples/dashboard.html , Tue, 14 May 2019 06:09:21 GMT -->
+<!-- Added by Material Design -->
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>Swipfe ERP</title>
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="76x76" href="~/assets/img/favicon.ico">
+    <link rel="icon" type="image/png" href="/assets/img/favicon.ico">
+
+    <!-- Meta Tags -->
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no" name="viewport" />
+    <meta name="keywords" content="Material Design, html dashboard, html css dashboard, web dashboard, bootstrap 4 dashboard, bootstrap 4, css3 dashboard, bootstrap 4 admin, material dashboard bootstrap 4 dashboard, frontend, responsive bootstrap 4 dashboard, material design, material dashboard bootstrap 4 dashboard">
+    <meta name="description" content="Material Dashboard PRO is a Premium Material Bootstrap 4 Admin with a fresh, new design inspired by Google's Material Design.">
+    <meta property="og:description" content="Material Dashboard PRO is a Premium Material Bootstrap 4 Admin with a fresh, new design inspired by Google's Material Design." />
+    <meta property="og:site_name" content="Material Design" />
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+    <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="~/Content/material-dashboard.minf066.css" rel="stylesheet" />
+    <!-- CSS Files -->
+    @*<link href="/assets/css/material-dashboard.minf066.css" rel="stylesheet" />*@
+    <link href="~/Content/CSS/SwipfeCRM.css" rel="stylesheet" />
+
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+    <!-- jQuery UI -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css" rel="Stylesheet" type="text/css" />
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="~/assets/js/material-dashboard.js"></script>
+
+    <!-- Chart.js changed upper -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js" type="text/javascript"></script>
+
+
+
+
+    <style>
+        /* Add box-shadow and transition for menu items */
+        .nav-item {
+            transition: all 0.3s ease-in-out;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(0, 0, 0, 0.1); /* Light gray hover effect */
+            transform: scale(1.05); /* Slight zoom effect on hover */
+        }
+
+        .nav-link:focus {
+            background-color: rgba(0, 0, 0, 0.15); /* Slightly darker background on focus */
+        }
+
+        .collapse {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow to collapsible content */
+            transition: all 0.3s ease-in-out;
+        }
+
+        .nav-link {
+            transition: background-color 0.3s ease-in-out, padding 0.3s ease-in-out;
+        }
+
+            /* Adjusting the carets for collapse effect */
+            .nav-link .caret {
+                transition: transform 0.3s ease-in-out;
+            }
+
+        .nav-item .collapse.show {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Stronger shadow when content is expanded */
+        }
+
+        .nav-item .collapse:not(.show) {
+            box-shadow: none;
+        }
+
+        .sidebar .nav i {
+            font-size: 24px;
+            float: left;
+            margin-right: 15px;
+            line-height: 30px;
+            width: 30px;
+            text-align: center;
+            color: #034e4e;
+        }
+
+        .btnone {
+        }
+
+
+        /*changed by chanchal*/
+
+
+        /* ================= DARK MODE ================= */
+
+        /* Add box-shadow and transition for menu items */
+        .nav-item {
+            transition: all 0.3s ease-in-out;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(0, 0, 0, 0.1); /* Light gray hover effect */
+            transform: scale(1.05); /* Slight zoom effect on hover */
+        }
+
+        .nav-link:focus {
+            background-color: rgba(0, 0, 0, 0.15); /* Slightly darker background on focus */
+        }
+
+        .collapse {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow to collapsible content */
+            transition: all 0.3s ease-in-out;
+        }
+
+        .nav-link {
+            transition: background-color 0.3s ease-in-out, padding 0.3s ease-in-out;
+        }
+
+            /* Adjusting the carets for collapse effect */
+            .nav-link .caret {
+                transition: transform 0.3s ease-in-out;
+            }
+
+        .nav-item .collapse.show {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Stronger shadow when content is expanded */
+        }
+
+        .nav-item .collapse:not(.show) {
+            box-shadow: none;
+        }
+
+        .sidebar .nav i {
+            font-size: 24px;
+            float: left;
+            margin-right: 15px;
+            line-height: 30px;
+            width: 30px;
+            text-align: center;
+            color: #034e4e;
+        }
+
+        .btnone {
+        }
+
+
+
+        body.dark-mode {
+            background: #121212 !important;
+            color: #ffffff !important;
+        }
+
+            body.dark-mode .sidebar {
+                /*background: #1f1f1f !important;*/
+                background: #1a1a1a !important;
+            }
+
+            body.dark-mode .sidebar-wrapper {
+                /* background: #1f1f1f !important;*/
+                background: #1a1a1a !important;
+            }
+
+            body.dark-mode .nav-link {
+                color: #ffffff !important;
+            }
+
+            body.dark-mode .collapse ul {
+                background: #2b2b2b !important;
+            }
+
+            body.dark-mode .custo-head {
+                /*background: #1f1f1f !important;*/
+                background: #1a1a1a !important;
+                color: #ffffff !important;
+            }
+
+            body.dark-mode .custo-foot {
+                /*  background: #1f1f1f !important;*/
+                background: #1a1a1a !important;
+                color: #ffffff !important;
+            }
+
+            body.dark-mode input,
+            body.dark-mode select,
+            body.dark-mode textarea {
+                background: #2b2b2b;
+                color: #ffffff !important;
+                border: 1px solid #555;
+            }
+
+
+
+
+
+
+        /* DARK MODE GLOBAL */
+        body.dark-mode {
+            background-color: #121212 !important;
+            color: #ffffff !important;
+        }
+
+            /* MAIN CONTENT AREA */
+            body.dark-mode .container,
+            body.dark-mode .container-fluid,
+            body.dark-mode .card,
+            body.dark-mode .panel,
+            body.dark-mode .content {
+                /* background-color: #1e1e1e !important;
+                color: white !important;*/
+                background: #1e1e1e !important;
+                color: #ffffff !important;
+            }
+
+            /* HEADER */
+            body.dark-mode .custo-head {
+                /*background: #1a1a1a !important;
+                color: white !important;*/
+                background: #1a1a1a !important;
+                color: #ffffff !important;
+            }
+
+            /* SIDEBAR */
+            body.dark-mode .sidebar {
+                background: #1a1a1a !important;
+            }
+
+                body.dark-mode .sidebar a {
+                    color: #ddd !important;
+                }
+
+            /* TABLE */
+            body.dark-mode table {
+                background: #1e1e1e !important;
+                color: #ffffff !important;
+            }
+
+                body.dark-mode table thead {
+                    background: #2a2a2a !important;
+                    color: #ffffff !important;
+                }
+
+                body.dark-mode table tbody tr {
+                    background: #1e1e1e !important;
+                }
+
+            /* INPUT BOXES */
+            body.dark-mode input,
+            body.dark-mode select,
+            body.dark-mode textarea {
+                background: #2a2a2a !important;
+                color: #ffffff !important;
+                border: 1px solid #555 !important;
+            }
+
+            /* SEARCH BAR BOX */
+            body.dark-mode .form-control {
+                background: #2a2a2a !important;
+                color: #ffffff !important;
+            }
+
+            /* BUTTON */
+            body.dark-mode .btn {
+                background-color: unset !important;
+                border-color: unset !important;
+            }
+
+            /* LINKS */
+            body.dark-mode a {
+                color: #4da3ff !important;
+            }
+
+            /* TABLE BORDER */
+            body.dark-mode td,
+            body.dark-mode th {
+                border-color: #444 !important;
+            }
+
+
+
+
+        body.dark-mode {
+            background: #121212 !important;
+            color: #ffffff !important;
+        }
+
+            body.dark-mode .sidebar {
+                background: #1f1f1f !important;
+            }
+
+            body.dark-mode .container,
+            body.dark-mode .card,
+            body.dark-mode .panel {
+                background: #1e1e1e !important;
+            }
+
+            body.dark-mode table {
+                background: #1e1e1e !important;
+                color: #ffffff !important;
+            }
+
+            body.dark-mode input,
+            body.dark-mode select,
+            body.dark-mode textarea {
+                background: #2a2a2a !important;
+                color: #ffffff !important;
+                border: 1px solid #555 !important;
+            }
+
+            /*
+                    body.dark-mode .custo-head {
+                        color: white !important;
+                    }
+
+                        body.dark-mode .custo-head span {
+                            color: white !important;
+                        }
+        */
+            body.dark-mode .custo-head {
+                background: linear-gradient(90deg, #ffffff, #4da3ff);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                font-weight: bold;
+            }
+
+                body.dark-mode .custo-head span {
+                    background: linear-gradient(90deg, #ffffff, #4da3ff);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+
+            /*   body.dark-mode .main-heading {
+                        color: white !important;
+                    }
+
+                        body.dark-mode .main-heading i {
+                            color: white !important;
+                        }*/
+            body.dark-mode .main-heading {
+                color: #ffffff !important;
+                font-weight: 600;
+            }
+
+                body.dark-mode .main-heading i {
+                    color: #4da3ff !important;
+                }
+
+
+            /* DARK MODE TABLE THEME */
+
+            body.dark-mode .panel {
+                background: #121212 !important;
+                color: #ffffff !important;
+            }
+
+            body.dark-mode .panel-body {
+                background: #121212 !important;
+            }
+
+            body.dark-mode .table {
+                background: #121212 !important;
+                color: #ffffff !important;
+            }
+
+                body.dark-mode .table tr {
+                    background: #121212 !important;
+                    border-bottom: 1px solid #333 !important;
+                }
+            body.dark-mode .panel .panel-body .table tr td {
+                border-right: 2px solid #333 !important;
+                border-bottom: 2px solid #333 !important;
+                border: 2px solid #333 !important;
+            }
+
+                body.dark-mode .table th {
+                    background: linear-gradient(90deg, #1a2a4f, #1f3a5f) !important;
+                    color: #ffffff !important;
+                    border-bottom: 2px solid #4da3ff !important;
+                   
+                    font-size: 13px;
+                    letter-spacing: 0.5px;
+                }
+
+         body.dark-mode .btn,
+            body.dark-mode .create-bttn,
+            body.dark-mode .custo-inner {
+                background: linear-gradient(90deg, #1f3a5f, #4da3ff) !important;
+                color: #fff !important;
+                border: none !important;
+             background-image: linear-gradient(90deg, #1f3a5f, #4da3ff) !important;
+                color: #fff !important;
+                -webkit-text-fill-color: #fff !important;
+                border: none !important;
+                box-shadow: none !important; /* optional */
+            }
+            body.dark-mode #click.material-icons {
+                color: #1e90ff !important;
+                -webkit-text-fill-color: #1e90ff !important;
+            }
+
+                /* Hover effect */
+                body.dark-mode .btn:hover {
+                    background: linear-gradient(90deg, #4da3ff, #1f3a5f) !important;
+                }
+
+                body.dark-mode .table td {
+                    background: #121212 !important;
+                    color: #ffffff !important;
+
+                }
+        .material-icons.fs-3 {
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
+        }
+                /* Table borders for dark mode */
+body.dark-mode table#ledger td,
+body.dark-mode table#ledger th {
+    border-right: 2px solid #3a3a3a !important; /* soft dark gray */
+}
+
+/* Header bottom border */
+body.dark-mode table#ledger tr:first-child {
+    border-bottom: 10px solid #2a2a2a !important;
+}
+                body.dark-mode .table tbody tr:hover {
+                    background: #1f1f1f !important;
+                }
+
+            body.dark-mode .dshapefieldset {
+                background: #121212 !important;
+                border: 1px solid #444 !important;
+                border-radius: 8px;
+            }
+
+            body.dark-mode .field-heading {
+                  color: white !important;
+               
+               font-weight: 600;
+            }
+
+                body.dark-mode .field-heading i {
+                    color: #4da3ff !important;
+                }
+
+            body.dark-mode label {
+                color: #e0e0e0 !important;
+            }
+
+            body.dark-mode select,
+            body.dark-mode input,
+            body.dark-mode textarea,
+            body.dark-mode .dropdown-textbox {
+                background: #1f1f1f !important;
+                color: #ffffff !important;
+                border: 1px solid #555 !important;
+            }
+
+                body.dark-mode select option {
+                    background: #121212;
+                    color: #ffffff !important;
+                }
+            /* Dark mode route path text */
+            body.dark-mode .route-path1,
+            body.dark-mode .route-path2,
+            body.dark-mode .route-path3,
+            body.dark-mode .route-path4 {
+                color: #ffffff !important; /* solid white */
+                font-weight: 700 !important; /* bold */
+            }
+
+            /* Floating button container */
+            .theme-fab {
+                position: fixed;
+                bottom: 25px;
+                right: 25px;
+                z-index: 9999;
+            }
+
+        /* Round button */
+        /* Container positioning */
+        .theme-switch-wrapper {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 9999;
+        }
+
+        /* Switch Base */
+        .theme-switch {
+            position: relative;
+            display: inline-block;
+            width: 55px;
+            height: 28px;
+        }
+
+            .theme-switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+
+        /* Slider */
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background-color: #ccc;
+            border-radius: 34px;
+            transition: 0.4s;
+        }
+
+            /* Sliding circle */
+            .slider:before {
+                content: "";
+                position: absolute;
+                height: 22px;
+                width: 22px;
+                left: 3px;
+                bottom: 3px;
+                background-color: white;
+                border-radius: 50%;
+                transition: 0.4s;
+            }
+
+        /* When checked → turn ON (blue) */
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+            /* Move the white circle to right */
+            input:checked + .slider:before {
+                transform: translateX(26px);
+            }
+
+        /* FIELDSET BOX */
+        body.dark-mode fieldset {
+            border: 1px solid #4da3ff !important;
+            border-radius: 8px;
+            padding: 15px;
+            background: #1e1e1e !important;
+            box-shadow: 0 0 10px rgba(77,163,255,0.2);
+        }
+
+        /* LEGEND TITLE */
+        body.dark-mode legend {
+            padding: 5px 15px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 20px;
+            /*  background: linear-gradient(90deg, #1f3a5f, #4da3ff);*/
+            color: #ffffff !important;
+        }
+        body.dark-mode label {
+            color: #ffffff !important;
+            font-weight: 500;
+        }
+        body.dark-mode input,
+        body.dark-mode select,
+        body.dark-mode textarea {
+            background: #2a2a2a !important;
+            color: #ffffff !important;
+            border: 1px solid #777 !important;
+            border-radius: 5px;
+        }
+
+            /* Focus effect */
+            body.dark-mode input:focus,
+            body.dark-mode select:focus,
+            body.dark-mode textarea:focus {
+                border-color: #4da3ff !important;
+                box-shadow: 0 0 5px #4da3ff;
+            }
+        body.dark-mode .content,
+       
+        body.dark-mode .panel {
+            background: #1e1e1e !important;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.6);
+        }
+        body.dark-mode .card {
+            background: #303030 !important; /* much lighter */
+            border: 1px solid #555;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            padding: 15px;
+        }
+        body.dark-mode span.fs-4.text-dark {
+            color: #fff !important; /* force white in dark mode */
+        }
+        body.dark-mode .box-section {
+            background: #262626;
+            border: 1px solid #3a3a3a;
+            border-radius: 8px;
+            padding: 10px;
+            height: 250px;
+            overflow-y: auto;
+        }
+        body.dark-mode h5,
+        body.dark-mode .section-title {
+            color: #4da3ff !important;
+            font-weight: 600;
+        }
+        body.dark-mode .company-name {
+            color: #4da3ff;
+            font-weight: 600;
+            text-align: center;
+        }
+        body.dark-mode label {
+            /*color: #bbbbbb !important;*/
+            color: #ffffff !important;
+            font-size: 13px;
+        }
+
+        body.dark-mode .value-text {
+            color: #ffffff;
+            font-weight: 500;
+        }
+        body.dark-mode i,
+        body.dark-mode .fa,
+        body.dark-mode .glyphicon {
+            color: #4da3ff !important;
+            font-size: 14px;
+        }
+            body.dark-mode i:hover {
+                color: #ffffff !important;
+            }
+        body.dark-mode h4 {
+            color: #0077B3;
+            font-weight: bold;
+        
+        }
+        /* Modal background */
+        /* Modal backdrop for all modals */
+        body.dark-mode .modal {
+            background: rgba(0, 0, 0, 0.7); /* darker blur overlay */
+        }
+
+            /* Modal content */
+            body.dark-mode .modal .modal-content {
+                background-color: #1e1e2f; /* dark slate background */
+                color: #f0f0f0; /* light text */
+                box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            }
+
+            /* Modal header */
+            body.dark-mode .modal .modal-header {
+                background-color: #2c2c3e; /* slightly lighter dark header */
+                color: #ffffff; /* white title */
+                box-shadow: 4px 4px 6px rgba(0,0,0,0.4);
+            }
+
+                /* Modal title and icons */
+                body.dark-mode .modal .modal-header .modal-title,
+                body.dark-mode .modal .modal-header i {
+                    color: #ffffff;
+                }
+
+            /* Labels inside modals */
+            body.dark-mode .modal label {
+                color: #d1d1d1; /* soft light gray for labels */
+            }
+
+                /* Override text-dark inside modals */
+                body.dark-mode .modal label.text-dark {
+                    color: #ffffff !important; /* force white for dark mode */
+                }
+
+            /* Input boxes inside modals */
+            body.dark-mode .modal .input-text-box,
+            body.dark-mode .modal .dropdown-textbox {
+                background-color: #2a2a3a;
+                color: #f0f0f0;
+                border: 1px solid #444;
+                border-radius: 6px;
+            }
+
+                body.dark-mode .modal .input-text-box::placeholder,
+                body.dark-mode .modal .dropdown-textbox::placeholder {
+                    color: #999; /* lighter placeholder text */
+                }
+
+            /* Error messages */
+            body.dark-mode .modal .text-danger {
+                color: #ff6b6b; /* bright red error color */
+            }
+        /* White label for dark mode */
+        body.dark-mode label.text-dark {
+            color: #ffffff !important; /* force white */
+        }
+        /* Make all text-dark white in dark mode */
+        body.dark-mode .text-dark {
+            color: #ffffff !important;
+        }
+        body.dark-mode i.material-icons {
+            color: #1e90ff !important;
+            -webkit-text-fill-color: #1e90ff !important;
+            background: none !important; /* Remove gradient overlay */
+            font-weight: 700 !important;
+        }
+        body.dark-mode .material-icons.fs-3 {
+            color: #1e90ff !important;
+            -webkit-text-fill-color: #000000 !important;
+        }
+        /* FILE COPY icon = midnightblue → turn BLUE */
+        /*body.dark-mode i.material-icons[style*="midnightblue"]:not([aria-label="Close"]) {
+            color: #1e90ff !important;*/ /* bright blue */
+            /*-webkit-text-fill-color: #1e90ff !important;
+        }*/
+       /* body.dark-mode .main-heading > .col-lg-9 > i.material-icons {
+            color: #1e90ff !important;
+            -webkit-text-fill-color: #1e90ff !important;
+            background: none !important;
+        }*/
+        /* Make cancel icon black ONLY in dark mode */
+        body.dark-mode i.material-icons[style*="midnightblue"] {
+            color: #000000 !important; /* black */
+          /*  -webkit-text-fill-color: #000000 !important;*/
+        }
+        body.dark-mode .main-heading label[style],
+        body.dark-mode .main-heading label[style] b,
+        body.dark-mode label[style],
+        body.dark-mode label[style] * {
+            color: #ffffff !important;
+            font-weight: bold !important;
+            -webkit-text-fill-color: #ffffff !important; /* overrides gradient/transparent */
+        }
+        /* Keep SAME design in dark mode */
+        SIDEBAR — DARK MODE
+        /*------------------------------------- */
+        body.dark-mode .sidebar {
+            background: rgba(30, 30, 30, 0.75) !important;
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 4px 4px 10px rgba(0,0,0,0.8), -4px -4px 10px rgba(255,255,255,0.08) !important;
+        }
+
+        /* Each menu item */
+        body.dark-mode .sidebar .nav-link {
+            background: rgba(50, 50, 50, 0.85) !important;
+            border-radius: 15px;
+            color: #ffffff !important;
+            box-shadow: inset 1px 1px 4px rgba(0,0,0,0.5), inset -1px -1px 4px rgba(255,255,255,0.05) !important;
+        }
+
+            /* Hover effect */
+            body.dark-mode .sidebar .nav-link:hover {
+                background: rgba(80, 80, 80, 0.95) !important;
+                transform: translateX(3px);
+                box-shadow: 0 0 6px rgba(0,150,255,0.5), inset 0 0 3px rgba(255,255,255,0.1) !important;
+            }
+
+            /* Active module */
+            body.dark-mode .sidebar .nav-link.active,
+            body.dark-mode .sidebar .nav-link:focus {
+                background: linear-gradient(90deg, #0a4b75, #1e90ff) !important;
+                color: white !important;
+                box-shadow: 0 0 10px rgba(30,144,255,0.6) !important;
+            }
+
+        /* Icons in dark mode */
+        body.dark-mode .sidebar i.material-icons {
+            color: #1e90ff !important;
+            font-weight: bold;
+        }
+
+
+        /* -----------------------------------
+   Caret (expand arrow)
+------------------------------------- */
+        body.dark-mode .sidebar .caret {
+            border-top: 6px solid #1e90ff !important;
+        }
+        /* Make the whole header text white in dark mode */
+        body.dark-mode .d-flex[style*="color: midnightblue"] {
+            color: #ffffff !important;
+        }
+        body.dark-mode td span {
+            border: none !important;
+            background: none !important;
+            color: #4da3ff !important; /* blue */
+            font-size: 15px !important;
+        }
+        body.dark-mode span.text-success,
+        body.dark-mode span.text-success i {
+            color: #28a745 !important; /* Bright Bootstrap green */
+            -webkit-text-fill-color: #28a745 !important;
+        }
+        body.dark-mode span.text-danger,
+        body.dark-mode span.text-danger i {
+            color: #dc3545 !important; /* Bootstrap bright red */
+            -webkit-text-fill-color: #dc3545 !important;
+        }
+        body.dark-mode .glyphicon-edit {
+            color: #28a745 !important;
+        }
+        body.dark-mode .fa-print {
+            color: #c084f5 !important; /* Yellow/gold for print */
+        }
+        body.dark-mode .glyphicon-print {
+            color: #c084f5 !important; /* Lighter purple for visibility */
+        }
+        body.dark-mode .glyphicon-trash {
+            color: #ff6b6b !important; /* Soft bright red for dark background */
+        }
+        body.dark-mode .fa-trash {
+            color: #ff6b6b !important; /* Soft bright red for dark mode */
+        }
+        body.dark-mode .removeItem {
+            background-color: #ff4d4d !important; /* Bright red for dark mode */
+            color: #ffffff !important;
+            border: none !important;
+        }
+        body.dark-mode .editItem {
+            background-color: #b066ff !important; /* Bright purple for dark mode */
+            color: #ffffff !important;
+            border: none !important;
+        }
+        body.dark-mode button.addItemBelow.btn-success {
+            background-color: #32ff7e !important;
+            border-color: #32ff7e !important;
+            color: #000 !important;
+        }
+/* Dark Mode Styles */
+.dark-mode td {
+    color: #ffffff !important;     /* text in white */
+    background-color: #2e2e2e;   /* dark grey background */
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: small;
+    height: 30px;
+}
+        .dark-mode .tablecontainer th {
+            background-color: gray !important; /* soft dark grey */
+            border-bottom: 2px solid #BFAEAE !important;
+            font-size: small;
+            text-align: center;
+            height: 30px;
+            color: white !important; /* text becomes white */
+        }
+
+        .dark-mode .fs-4.px-0 {
+            color: white !important; /* text becomes white in dark mode */
+        }
+        .dark-mode .fs-4.py-0 {
+            color: white !important; /* text becomes white in dark mode */
+        }
+       
+        .dark-mode .tablecontainer i.glyphicon-eye-open {
+            color: #ffdd57 !important;
+        }
+        .dark-mode [class*="glyphicon-eye-open"] {
+            color: white !important;
+        }
+    </style>
+
+
+
+    <script type="text/javascript">
+
+
+
+        $(document).ready(function () {
+
+            var b = '@Session["LoginUserId"]';
+            //var b = 9;
+
+            $.ajax({
+                //url: '/UserAccess/GetAccessInfo/',
+                url: '@Url.Action("GetInfoUser", "UserAccess")',
+                data: { "userId": b },
+                type: "POST",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+
+                    const formMappingPurchase = {
+                        //for Purchase Dashboard....
+                        "PurchaseEntity": "#PurchaseDashBoard",
+                        "PurchaseIndent": "#PurchaseIndent",
+                        "PurchaseInvoice": "#PurchaseInvoice",
+                        "PurchaseOrder": "#PurchaseOrder",
+                        "PurchaseRequisition": "#PurchaseRequisition",
+                        "PurchaseOrderApproval": "#PurchaseOrderApproval",
+                        "AutoPurchaseOrder": "#AutoPurchase",
+                        //"PurchaseBusinesssTerms": "#PurchaseBusinesssTerms",
+                        //"VendoropeningBal": "#VendoropeningBal",
+                        //"DirectPurchaseInvoice": "#",
+                        //"DirectPurchaseOrder": "#",
+                    };
+
+                    const formMappingSales = {
+                        ////for Sales Dashboard...
+                        "Ledger": "#SalesDashboard",
+                        "Enquiry": "#Enquiry",
+                        "Pincode": "#Pincode",
+                        "Courier": "#Courier",
+                        /*"Designation": "#Designation",*/
+                        "Quotation": "#Quotation",
+                        "QuotationFollowUp": "#QuotationFollowUp",
+                        "SalesOrder": "#SalesOrder",
+                        "NominalEnquiry": "#NominalEnquiry",
+                        "TermsOfDelevary": "#TermsOfDelivery",
+                        "CustomerFollowUp": "#CustomerFollowUp",
+                        "CustomerVisit": "#CustomerVisit",
+                        "BusinessTerms":"#OrderStatus",
+                    };
+
+                    const formMappingInventory = {
+
+
+                        //for Inventory Dashboard....
+                        "Unit": "#Unit",
+                        "Item": "#Item",
+                        "HSNCodeTable": "#HSNCodeTable",
+                        "BillOfMaterial": "#BillOfMaterial",
+                        "ManufacturingJournal": "#MfgJournal",
+                        //"MfgJournal": "#ManufacturingJournal",
+                        "GoDown": "#GoDown",
+
+                    }
+
+                        ////"PurchaseEntity": "#",
+                        ////"PurchaseIndent": "#",
+                        ////"PurchaseInvoice": "#",
+                        ////"PurchaseOrder": "#",
+
+                    const formMappingProduction = {
+
+                        ///For Production Dashboard....
+                        "PMDCMotor3": "#PMDCMotor3",
+                        "PMDCMotor4": "#PMDCMotor4",
+                        "PMDCMotor5": "#PMDCMotor5",
+
+                        "GearBox2": "#GearBox2s",
+                        "GearBox3": "#GearBox3s",
+                        "GearBox4": "#GearBox4s",
+                        "GearBox5": "#GearBox5s",
+
+                        "IndMotor3": "#IndMotor3",
+                        "IndMotor4": "#IndMotor4",
+                        "IndMotor5": "#IndMotor5",
+                    }
+
+                    const formMappingAccount = {
+                        //for All Account Section & Account Dashboard.....
+                        "AccountDashBoard": "#AccountDashboard",
+                        "AccounttLedger": "#AccountLedger",
+                        "BalanceSheet": "#BalanceSheet",
+                        "BankCash": "#BankCashBook",
+                        "CashGroup": "#CashGroupMaster",
+                        "AccountCompNameList": "#CompanyNameList",
+                        "DispatchDetails": "#Dispatchdetails",
+                        "AccountJurnal": "#AJournalEntry",
+                        "ledgerGroup": "#LedgerGroupMaster",
+                        "LedgerMaster": "#LedgerMaster",
+                        "PayementTerms": "#PaymentTerms",
+                        "Profit": "#ProfitandLoss",
+                        "ReceiptPayement": "#ReceiptPaymentContra",
+                        "SubGroup": "#SubGroupMaster",
+                        "TaxInvoice": "#TaxInvoice",
+                        "TDS": "#TDS",
+
+                       // "SalesOrderApproval": "#SalesOrderApproval",
+
+                    }
+
+
+                    const formMappingAdmin = {
+                        "AllowDevice": "#AllDevice",
+                        "CompanyConfiguration": "#CompanyConfiguration",
+                        "EmailCampaning": "#EmailCampaigns",
+                        "EmailTemplate": "#EmailTemplate",
+                        "UserRegistration": "#ERPRegistration",
+                        //"Event": "#event",
+                        "AudioPlayList":"#Settings",
+                        "UserAccess":"#UserAccess",
+
+
+
+                        //"Approval": "#",
+                        //"BusinessTerms": "#",use in Form of company profile creation
+                        //"CompopeningBal": "#"use in Form of company profile creation,
+                        //"DirectSalesOrder": "#",
+
+
+                    }
+
+                    const formMappingHR = {
+                        "Employee": "#Employee",
+                        "Leave": "#LeaveApplication",
+                        "WorkReg": "#WorkReg",
+                        "HrDashBoard": "#HrDashBoard",
+                        "WorkFunct": "#WorkFunct",
+                        "Performance": "#Performance",
+                        "Debit": "#Debit",
+                        "PayRoll": "#PayRoll",
+                        "Applicant": "#Applicant",
+                        "Job": "#Job",
+                        "Designation": "#Designation",
+                        "Departments": "#Departments",
+                        "Holiday": "#Holiday",
+                        "AttendanceLog": "#AttendanceLog",
+                    }
+
+                    //};
+
+                    // Flags for both Purchase and Sales visibility checks
+                    let purchaseIndexesAreNo = true;
+                    let salesIndexesAreNo = true;
+                    let InventoryIndexesAreNo = true;
+                    let ProductionIndexesAreNo = true;
+                    let AccountIndexesAreNo = true;
+                    let AdminIndexesAreNo = true;
+                    let HRIndexesAreNo = true;
+
+                    // Purchase Visibility Control
+                    data.forEach(item => {
+                        if (formMappingAdmin[item.FormName]) {
+                            const isVisible = item.Index === "Y";
+                            $(formMappingAdmin[item.FormName]).toggle(isVisible);
+
+                            if (isVisible) {
+                                AdminIndexesAreNo = false; // At least one purchase element is "Y"
+                            }
+                        }
+
+                        if (formMappingHR[item.FormName]) {
+                            const isVisible = item.Index === "Y";
+                            $(formMappingHR[item.FormName]).toggle(isVisible);
+
+                            if (isVisible) {
+                                HRIndexesAreNo = false; // At least one purchase element is "Y"
+                            }
+                        }
+
+                        if (formMappingPurchase[item.FormName]) {
+                            const isVisible = item.Index === "Y";
+                            $(formMappingPurchase[item.FormName]).toggle(isVisible);
+
+                            if (isVisible) {
+                                purchaseIndexesAreNo = false; // At least one purchase element is "Y"
+                            }
+                        }
+
+                        if (formMappingSales[item.FormName]) {
+                            const isVisible = item.Index === "Y";
+                            $(formMappingSales[item.FormName]).toggle(isVisible);
+
+                            if (isVisible) {
+                                salesIndexesAreNo = false; // At least one sales element is "Y"
+                            }
+                        }
+                        if (formMappingInventory[item.FormName]) {
+                            const isVisible = item.Index === "Y";
+                            $(formMappingInventory[item.FormName]).toggle(isVisible);
+
+                            if (isVisible) {
+                                InventoryIndexesAreNo = false; // At least one sales element is "Y"
+                            }
+                        }
+                        if (formMappingProduction[item.FormName]) {
+                            const isVisible = item.Index === "Y";
+                            $(formMappingProduction[item.FormName]).toggle(isVisible);
+
+                            if (isVisible) {
+                                ProductionIndexesAreNo = false; // At least one sales element is "Y"
+                            }
+                        }
+                        if (formMappingAccount[item.FormName]) {
+                            const isVisible = item.Index === "Y";
+                            $(formMappingAccount[item.FormName]).toggle(isVisible);
+
+                            if (isVisible) {
+                                AccountIndexesAreNo = false; // At least one sales element is "Y"
+                            }
+                        }
+                    });
+
+                    // Final Visibility Control for Main Sections
+                    //$('#admin').toggle(!AdminIndexesAreNo);
+                    $('#admin').toggleClass('d-none', AdminIndexesAreNo);
+                    $('#HumanResources').toggleClass('d-none', HRIndexesAreNo);
+                    $('#Purchase').toggleClass('d-none', purchaseIndexesAreNo);
+
+                    $('#SalesCRM').toggleClass('d-none', salesIndexesAreNo);
+                    $('#Inventory').toggleClass('d-none', InventoryIndexesAreNo);
+                    $('#Production').toggleClass('d-none', ProductionIndexesAreNo);
+                    $('#AccountsFinance').toggleClass('d-none', AccountIndexesAreNo);
+
+                    //$('#HumanResources').toggle(!HRIndexesAreNo);
+                    //$('#Purchase').toggle(!purchaseIndexesAreNo);
+                    //$('#SalesCRM').toggle(!salesIndexesAreNo);
+                    //$('#Inventory').toggle(!InventoryIndexesAreNo); // Example: Linked with purchase flag
+                    //$('#Production').toggle(!ProductionIndexesAreNo); // Example: Linked with purchase flag
+                    //$('#AccountsFinance').toggle(!AccountIndexesAreNo); // Example: Linked with purchase flag
+                }
+            });
+        });
+
+
+    </script>
+
+    <script>
+        $(document).ready(function () {
+
+            /*module button*/
+            $.ajax({
+                url: '/Settings/GetAllColors',
+                type: 'GET',
+                success: function (colors) {
+                    // Example: Apply Inner Button colors
+                    var bgColor = colors.ModuleButtonColor; // module buttons
+                    var fontColor = colors.ModuleButtonFontColor; // module buttons
+                    var bgColor1 = colors.ModuleDropdownBgColor; // module dropdown
+                    var fontColor1 = colors.ModuleDropdownFontColor; // module dropdown
+                    var bgColor2 = colors.SidebarBgColor; // sidebar
+                    var bgColor3 = colors.HeaderBgColor; // header
+                    var fontColor3 = colors.HeaderFontColor; // header text
+                    var bgColor4 = colors.FooterBgColor; // footer
+                    var fontColor4 = colors.FooterFontColor; // footer text
+                    var bgColor5 = colors.InnerButtonColor; // inner
+                    var fontColor5 = colors.InnerButtonFontColor; // inner text
+
+                    // Example for all preview boxes (optional)
+                    $('.custo-module').css('background', bgColor);// module buttons
+                    $('.custo-module').css('color', fontColor);// module buttons
+                    $('.custo-drop').css('background', bgColor1);// module dropdown
+                    $('.custo-dropt').css('color', fontColor1);// module dropdown
+                    $('.custo-sidebar').css('background', bgColor2);// module dropdown
+                    $('.custo-head').css('background', bgColor3);//  header
+                    $('.custo-headt').css('color', fontColor3);// header text
+                    $('.custo-foot').css('background', bgColor4);//  footer
+                    $('.custo-foott').css('color', fontColor4);// footer text
+                    $('.custo-inner').css('background', bgColor5);//  inner
+                    $('.custo-inner').css('color', fontColor5);// inner text
+                },
+                error: function () {
+                    console.error("Failed to load color settings.");
+                }
+            });
+
+        });
+    </script>
+
+
+    <style>
+                ul {
+                    list-style-type: none;
+                }
+
+                .nav-link, .nav-sublink {
+                    display: block;
+                    cursor: pointer;
+                }
+
+                .collapse {
+                    display: none;
+                }
+
+                    .collapse.show {
+                        display: block;
+                    }
+
+                .sub-collapse {
+                    margin-top: 10px;
+                }
+
+                body.sidebar-mini .sidebar {
+                    width: 80px !important;
+                }
+
+                    body.sidebar-mini .sidebar .sidebar-wrapper {
+                        overflow: hidden;
+                    }
+
+                body.sidebar-mini .main-panel {
+                    margin-left: 80px !important;
+                }
+                /*loader*/
+              /*  .loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 99999;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loader {
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #007bff;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        .loader-text {
+            color: #fff;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        */
+        .loader-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(255,255,255,0.15); /* lighter overlay */
+            backdrop-filter: blur(2px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+        }
+
+        .text-loader {
+            display: flex;
+            gap: 6px;
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: 5px;
+        }
+
+            /* Blue glowing text */
+            .text-loader span {
+                display: inline-block;
+                color: #0f0f55;
+                text-shadow: 0 0 2px #93c5fd, 0 0 5px #3b82f6, 0 0 8px #1d4ed8;
+                transition: transform 0.2s ease;
+            }
+        @@media (max-width:768px) {
+
+            /* .sidebar{
+        position: fixed !important;
+        top: 60px !important;
+        left: -260px !important;
+        width: 260px !important;
+        height: calc(100vh - 60px) !important;
+        transition: left .3s ease !important;
+        z-index: 9999 !important;
+    }
+
+    .sidebar.mobile-show{
+        left:0 !important;
+    }
+*/
+            .sidebar-wrapper.custo-sidebar {
+                height: 100%;
+                overflow-y: auto;
+            }
+
+            .main-panel {
+                margin-left: 0 !important;
+            }
+
+            body.sidebar-mini .main-panel {
+                margin-left: 0 !important;
+            }
+        }
+
+        /*@@media (max-width:768px) {*/
+
+            /* Hide only on mobile */
+           
+        /*}*/
+
+        @@media (max-width:768px) {
+
+            #mobileToggle {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                z-index: 99999 !important;
+            }
+            .navbar {
+                display: flex !important;
+                align-items: center !important;
+                flex-wrap: nowrap !important;
+            }
+
+            .navbar-wrapper {
+                display: none !important; /* Arrow already hidden */
+            }
+
+            .navbar-brand {
+                flex: 1 1 auto !important;
+                text-align: center !important;
+                font-size: 22px !important;
+                line-height: 50px !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .navbar-nav {
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+                .navbar-nav > li {
+                    display: inline-block !important;
+                    margin-right: 8px !important;
+                }
+
+
+            #homeBtn,
+            #navbarDropdownProfile {
+                padding: 10px !important;
+                margin-right: 6px !important;
+            }
+
+            .navbar-brand {
+                order: 1;
+            }
+
+            .navbar > div:last-child {
+                display: flex !important;
+                align-items: center !important;
+                order: 2;
+                margin-left: auto !important;
+            }
+
+            #mobileToggle {
+                order: 3;
+                margin-left: 8px !important;
+                width: 45px !important;
+            }
+
+            #minimizeSidebar {
+                display: none !important;
+            }
+
+            .custo-headt {
+                flex: 1 !important;
+                min-width: 0 !important;
+                margin-right: 10px;
+            }
+
+                .custo-headt span {
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                }
+        }
+        .custo-headt {
+            overflow: hidden;
+        }
+
+            .custo-headt span {
+                display: block;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+        /* Hide on Desktop */
+        .sidebar-close {
+            display: none !important;
+        }
+
+        /* Mobile */
+        @@media (max-width:991px) {
+
+            .sidebar {
+                display: block !important;
+                left: -260px !important;
+                right: auto !important;
+                transform: none !important;
+                transition: left .3s ease !important;
+            }
+
+                .sidebar.mobile-show {
+                    left: 0 !important;
+                }
+
+            .sidebar-close {
+                display: block !important;
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                width: 35px;
+                height: 35px;
+                border: none;
+                border-radius: 50%;
+                background: #fff;
+                color: #000;
+                font-size: 28px;
+                line-height: 30px;
+                cursor: pointer;
+                z-index: 10001;
+                box-shadow: 0 2px 8px rgba(0,0,0,.3);
+            }
+        }
+        }
+            </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const allToggles = document.querySelectorAll('[data-target]');
+
+            allToggles.forEach(toggle => {
+                toggle.addEventListener('click', function (e) {
+                    const targetId = this.getAttribute('data-target');
+                    const targetElement = document.getElementById(targetId);
+
+                    // If it's a sub-collapse (nested), don't close parent dropdowns
+                    const isSub = this.classList.contains('nav-sublink');
+
+                    // Close unrelated collapses
+                    document.querySelectorAll('.collapse').forEach(el => {
+                        if (el.id !== targetId && (!isSub || el.classList.contains('sub-collapse'))) {
+                            el.classList.remove('show');
+                        }
+                    });
+
+                    // Toggle the current one
+                    if (targetElement) {
+                        targetElement.classList.toggle('show');
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        //document.addEventListener("DOMContentLoaded", function () {
+        //    const homeBtn = document.getElementById("homeBtn");
+
+        //    if (homeBtn) {
+        //        homeBtn.addEventListener("click", function () {
+        //            const path = window.location.pathname.toLowerCase();
+        //            console.log('Current Path:', path); // Debugging to see the actual path
+
+        //            let homeUrl = "/"; // default fallback
+
+        //            // Check for the correct paths
+        //            if (path.includes("/accountledger") || path.includes("/taxinvoice") || path.includes("/balancesheet") || path.includes("/account") || path.includes("/daybookrecords")|| path.includes("/cash")  ) {
+        //                homeUrl = "/AccountInfo/Index";
+        //            }
+        //            else if (path.includes("/companyconfiguration") || path.includes("/settings")) {
+        //                homeUrl = "/Dashboard/AdminDashboard";
+        //            }
+
+        //            console.log('Redirecting to:', homeUrl); // Debugging to see the URL we will redirect to
+
+        //            // Redirect to the determined URL
+        //            window.location.href = homeUrl;
+        //        });
+        //    }
+        //});
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const department = "@Session["Department"]";  // Getting the department from the session
+
+        // Variable to store the home page URL
+        let homeUrl = "/";  // Default fallback
+
+        // Switch-case to assign the appropriate home URL based on the department
+        switch (department.toLowerCase()) {
+            case "accountant":
+                homeUrl = "/AccountInfo/Index";  // Account page URL for Accountant
+                break;
+            case "admin":
+                homeUrl = "/Dashboard/AdminDashboard";  // Admin page URL for Admin
+                break;
+            case "software":
+                homeUrl = "/SalesDashboard/Dashboard";  // Software page URL for Software
+                break;
+            case "assembly":
+                homeUrl = "/Dashboard/InventoryDashboard";  // Assembly page URL for Assembly
+                break;
+            case "production":
+                homeUrl = "/Dashboard/ProductionDashboard";  // Production page URL for Production
+                break;
+            case "sales":
+                homeUrl = "/SalesDashboard/Dashboard";  // Sales page URL for Sales
+                break;
+            case "purchase":
+                homeUrl = "/PurchaseDashboard/Dashboard";  // Purchase page URL for Purchase
+                break;
+            case "store":
+                homeUrl = "/Dashboard/InventoryDashboard";  // Store page URL for Purchase
+                break;
+            default:
+                homeUrl = "/SwipfeHome/Index";  // Fallback URL if no department matches
+        }
+
+        // Add event listener to the home button
+        const homeBtn = document.getElementById("homeBtn");
+        if (homeBtn) {
+            homeBtn.addEventListener("click", function () {
+                window.location.href = homeUrl;  // Redirect to the department-specific home page
+            });
+        }
+    });
+    </script>
+
+
+</head>
+
+
+
+<body class="">
+
+
+    @*Added by Jitendra - to display Page is loading*@
+    @*<div id='ajax_loader' class="loaderStyle">
+            <img src="~/Images/loading.gif" />
+        </div>*@
+    <div class="wrapper">
+        <div class="sidebar" data-color="cyan" style="background-color: lightcyan;">
+
+            <div class="sidebar-wrapper" style="display: flex; align-items: center; background-image: linear-gradient(to left,lightblue,midnightblue); height: 60px; margin-top: -10px; padding: 0 20px; box-shadow: 4px 8px 8px rgba(0, 0, 0, 0.2); ">
+                <a href="" style="text-align: right; font-size: 24px; font-weight: bold; color: white; text-decoration: none; margin-left: 60px; margin-bottom: -10px; outline:none">
+                    SwipfeERP
+                </a>
+            </div>
+
+            <button id="closeSidebar" class="sidebar-close">
+                &times;
+            </button>
+            <div class="sidebar-wrapper custo-sidebar" style="background-color: rgb(240,240,240); box-shadow: 4px 8px 8px rgba(0, 0, 0, 0.2); border-radius: 0 0 15px 0">
+
+                <ul class="nav" id="accordionMenu">
+
+                    <li class="nav-item active" onclick="DashboardAccess()"></li>
+
+
+                    @*// Accounts & Finance menu//*@
+                    <li class="nav-item d-none" id="AccountsFinance">
+
+                        <a href="javascript:void(0);" class="nav-link custo-module" data-target="collapseone" style="box-shadow: 5px 5px 6px #bfc3cf,-5px -5px 6px #fff; background-image: linear-gradient(to right bottom,rgb(239,240,243),rgb(229,230,235));
+                            height: 40px; color: midnightblue; margin-top: 15px; margin-bottom: 9px; padding: 5px; border-radius: 15px; font-family: Verdana, sans-serif; ">
+                            <i class="material-icons custo-module" style="color:midnightblue">account_balance_wallet</i>
+                            <p>
+                                <b>Accounts</b>
+                                <b class="caret"></b>
+                            </p>
+                        </a>
+                        <div id="collapseone" class="collapse" style="box-shadow:none">
+                            <ul class="nav custo-drop" style="margin-top: 2px; margin-left: 10px; width: 90%; border-radius: 0 10px 10px 10px; box-shadow: 5px 5px 5px lightgray;
+                                    background-image: linear-gradient(to right,rgba(198,219,244,0.7),white,white,white,white,white,white,rgba(198,219,244,0.7)); ">
+
+                                <li class="nav-item" id="AccountDashboard">
+                                    <a class="nav-link " onclick="location.href = '@Url.Action("Index", "AccountInfo")'"
+                                       style="margin-top:2px;cursor:pointer; transition: background-color 0.3s ease-in-out;">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px;margin-top:-6px">space_dashboard</i></span>
+                                        <span class="sidebar-normal custo-dropt">Account DashBoard</span>
+                                    </a>
+
+                                </li>
+                                <li class="nav-item" id="AJournalEntry">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("Index", "AccountJournal")'" @*onclick="AJurnal()"*@
+                                       style="margin-top:2px;cursor:pointer; transition: background-color 0.3s ease-in-out;">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">assessment</i></span>
+                                        <span class="sidebar-normal custo-dropt">Account Journals</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="AccountLedger">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("Index", "AccountLedger")'"
+                                       style="margin-top:2px;cursor:pointer; transition: background-color 0.3s ease-in-out;">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top:-6px">assured_workload</i></span>
+                                        <span class="sidebar-normal custo-dropt">Account Ledger</span>
+                                    </a>
+
+                                </li>
+                                @*<li class="nav-item" id="BalanceSheet">
+                                <a class="nav-link" onclick="location.href = '@Url.Action("Index", "BalanceSheet")'"
+                                   style="margin-top:2px;cursor:pointer; transition: background-color 0.3s ease-in-out;">
+                                    <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top:-6px">assignment</i></span>
+                                    <span class="sidebar-normal custo-dropt">Balance Sheet</span>
+                                </a>
+
+                            </li>*@
+
+                                <li class="nav-item" id="BankCashBook">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("BankAccount", "Account")'" @*onclick="Banking()"*@
+                                       style="margin-top:2px;cursor:pointer; transition: background-color 0.3s ease-in-out;">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">book</i></span>
+                                        <span class="sidebar-normal custo-dropt">Bank / Cash Books</span>
+                                    </a>
+
+                                </li>
+
+                                <li class="nav-item" id="BankCashBook">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("Index", "BalanceSheet")'"
+                                       style="margin-top:2px;cursor:pointer; transition: background-color 0.3s ease-in-out;">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">diversity_2</i></span>
+                                        <span class="sidebar-normal custo-dropt">Balance Sheet</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="BankCashBook">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("Index", "CreditNote")'"
+                                       style="margin-top:2px;cursor:pointer; transition: background-color 0.3s ease-in-out;">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">diversity_2</i></span>
+                                        <span class="sidebar-normal custo-dropt">Credit Note</span>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item" id="BankCashBook">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("CreditNoteMonthlyList", "Approval")'"
+                                       style="margin-top:2px;cursor:pointer; transition: background-color 0.3s ease-in-out;">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">diversity_2</i></span>
+                                        <span class="sidebar-normal custo-dropt">Credit Note List</span>
+                                    </a>
+                                </li>
+
+
+
+
+
+                                <!--<li class="nav-item" id="CashGroupMaster">
+                                <a class="nav-link" onclick="location.href = '@Url.Action("Index", "Cash")'"-->
+                                @*onclick="CashGroup()"*@
+                                <!--style="margin-top:2px;cursor:pointer; transition: background-color 0.3s ease-in-out;">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">money</i></span>
+                                        <span class="sidebar-normal custo-dropt">Cash Group Master</span>
+                                    </a>
+                                </li>-->
+                                @*<li class="nav-item" id="CompanyNameList">
+                                        <a class="nav-link" onclick="location.href = '@Url.Action("Index", "AccountCompany")'"
+                                           style="margin-top:2px;cursor:pointer; transition: background-color 0.3s ease-in-out;">
+                                            <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">list</i></span>
+                                            <span class="sidebar-normal custo-dropt">Company Names List</span>
+                                        </a>
+
+                                    </li>*@
+                                <li class="nav-item" id="Dispatchdetails">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("Index", "DispatchDetails")'"
+                                       style="margin-top:2px;cursor:pointer; transition: background-color 0.3s ease-in-out;">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">departure_board</i></span>
+                                        <span class="sidebar-normal custo-dropt">Dispatch Details</span>
+                                    </a>
+                                </li>
+
+
+                                <li class="nav-item" id="LedgerGroupMaster">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("Index", "GroupMaster")'"
+                                       style="margin-top:2px;cursor:pointer; transition: background-color 0.3s ease-in-out;">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">diversity_2</i></span>
+                                        <span class="sidebar-normal custo-dropt">Group Master</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="LedgerMaster">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("Index", "LedgerMaster")'"
+                                       style="margin-top:2px;cursor:pointer; transition: background-color 0.3s ease-in-out;">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">auto_stories</i></span>
+                                        <span class="sidebar-normal custo-dropt">Ledger Master</span>
+                                    </a>
+
+                                </li>
+                                <li class="nav-item" id="PaymentTerms">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("Index", "PaymentTerms")'"
+                                       style="margin-top:2px;cursor:pointer; transition: background-color 0.3s ease-in-out;">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">payment</i></span>
+                                        <span class="sidebar-normal custo-dropt">Payment Terms</span>
+                                    </a>
+                                </li>
+                                @*<li class="nav-item" id="ProfitandLoss">
+                                <a class="nav-link" onclick="location.href = '@Url.Action("Index", "ProfitandLoss")'"
+                                   style="margin-top:2px;cursor:pointer; transition: background-color 0.3s ease-in-out;">
+                                    <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 23px; margin-top: -6px">data_exploration</i></span>
+                                    <span class="sidebar-normal custo-dropt">Profit And Loss</span>
+                                </a>
+                            </li>*@
+                                <li class="nav-item" id="ReceiptPaymentContra">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("Index", "DayBookRecords")'"
+                                       style="margin-top:2px;cursor:pointer; transition: background-color 0.3s ease-in-out;">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 24px; margin-top: -3px">price_change</i></span>
+                                        <span class="sidebar-normal custo-dropt">Receipt / Payment / Contra</span>
+                                    </a>
+                                </li>
+
+
+
+                                <!--<li class="nav-item" id="SubGroupMaster">
+                        <a class="nav-link" onclick="location.href = '@Url.Action("Index", "SubGroup")'"-->
+                                @*onclick="SubGroup()"*@
+                                <!--style="margin-top:2px;cursor:pointer; transition: background-color 0.3s ease-in-out;">
+                                <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">groups</i></span>
+                                <span class="sidebar-normal custo-dropt">Sub Group Master</span>
+                            </a>
+                        </li>-->
+                                <li class="nav-item" id="TaxInvoice">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("Index", "TaxInvoice")'"
+                                       style="margin-top:2px;cursor:pointer; transition: background-color 0.3s ease-in-out;">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">file_copy</i></span>
+                                        <span class="sidebar-normal custo-dropt">Tax Invoice</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="TDS">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("Index", "Tds")'"
+                                       style="margin-top:2px;cursor:pointer; transition: background-color 0.3s ease-in-out;">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">featured_play_list</i></span>
+                                        <span class="sidebar-normal custo-dropt">TDS</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="TDS">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("TDSDeduction", "Tds")'"
+                                       style="margin-top:2px;cursor:pointer; transition: background-color 0.3s ease-in-out;">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">ballot</i></span>
+                                        <span class="sidebar-normal custo-dropt">TDS Deduction</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li class="nav-item d-none" id="admin">
+                        <a href="javascript:void(0);" class="nav-link custo-module" data-target="collapsetwo" style="background-image: linear-gradient(to right bottom,rgb(239,240,243),rgb(229,230,235)); box-shadow: 5px 5px 6px #bfc3cf,-5px -5px 6px #fff;  color: midnightblue; height: 40px; margin-top: 15px; margin-bottom: 9px; padding: 5px; border-radius: 15px; font-family: Verdana, sans-serif;">
+                            <i class="material-icons custo-module" style="color:midnightblue">admin_panel_settings</i>
+                            <p>
+                                <b>Admin</b>
+                                <b class="caret"></b>
+                            </p>
+
+                        </a>
+                        <div id="collapsetwo" class="collapse" style="box-shadow:none">
+                            <ul class="nav custo-drop" style="margin-top: 2px; margin-left: 15px; width: 85%; border-radius: 0 10px 10px 10px; background-image: linear-gradient(to right,rgba(198,219,244,0.7),white,white,white,white,white,white,rgba(198,219,244,0.7)); box-shadow: 5px 5px 5px lightgray ">
+
+                                <li class="nav-item" id="AllDevice">
+                                    <a class="nav-link" onclick="AllowDevice()" style="cursor: pointer; display: flex; align-items: center; padding: 10px; border-radius: 5px; transition: background 0.3s;">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px;">dvr</i></span>
+                                        <span class="custo-dropt">Allow Device</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="CompanyConfiguration">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("Index", "CompanyConfiguration")'" style="cursor: pointer; display: flex; align-items: center; padding: 10px; border-radius: 5px; transition: background 0.3s;">
+                                        <span class="sidebar-mini">
+                                            <i class="material-icons custo-dropt" style="font-size: 20px;">schema</i>
+                                        </span>
+                                        <span class="custo-dropt">Company Configuration</span>
+                                    </a>
+
+                                </li>
+                                <li class="nav-item" id="EmailCampaigns">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("Index", "EmailCampaigns")'" style="cursor: pointer; display: flex; align-items: center; padding: 10px; border-radius: 5px; transition: background 0.3s;">
+                                        <span class="sidebar-mini">
+                                            <i class="material-icons custo-dropt" style="font-size: 20px;">campaign</i>
+                                        </span>
+                                        <span class="custo-dropt">Email Campaigns</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="EmailTemplate">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("Index", "EmailTemplate")'" style="cursor: pointer; display: flex; align-items: center; padding: 10px; border-radius: 5px; transition: background 0.3s;">
+                                        <span class="sidebar-mini">
+                                            <i class="material-icons custo-dropt" style="font-size: 20px">forward_to_inbox</i>
+                                        </span>
+                                        <span class="custo-dropt">Email Template</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="ERPRegistration">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("Index", "UserRegistration")'" style="cursor: pointer; display: flex; align-items: center; padding: 10px; border-radius: 5px; transition: background 0.3s;">
+                                        <span class="sidebar-mini">
+                                            <i class="material-icons custo-dropt" style="font-size: 20px;">how_to_reg</i>
+                                        </span>
+                                        <span class="custo-dropt">ERP Registration</span>
+                                    </a>
+                                </li>
+                                @*<li class="nav-item" id="event">
+                                <a class="nav-link" href="/Festival/MessageTemplate" style="display: flex; align-items: center; padding: 10px; border-radius: 5px; transition: background 0.3s; cursor: pointer">
+                                    <span class="sidebar-mini">
+                                        <i class="material-icons custo-dropt" style="font-size: 20px;">event</i>
+                                    </span>
+                                    <span class="custo-dropt">Event</span>
+                                </a>
+                            </li>*@
+                                <li class="nav-item" id="Settings">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("Index", "Settings")'" style="cursor: pointer; display: flex; align-items: center; padding: 10px; border-radius: 5px; transition: background 0.3s;">
+                                        <span class="sidebar-mini">
+                                            <i class="material-icons custo-dropt" style="font-size: 20px; ">settings</i>
+                                        </span>
+                                        <span class="custo-dropt">Settings</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="UserAccess">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("UserAccess", "UserAccess")'" style="cursor: pointer; display: flex; align-items: center; padding: 10px; border-radius: 5px; transition: background 0.3s;">
+                                        <span class="sidebar-mini">
+                                            <i class="material-icons custo-dropt" style="font-size: 20px;">verified_user</i>
+                                        </span>
+                                        <span class="custo-dropt">User Access</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    @*// HR & PayRoll //*@
+                    <li class="nav-item d-none" id="HumanResources">
+                        <a href="javascript:void(0);" class="nav-link custo-module" data-target="collapsethree" style="background-image: linear-gradient(to right bottom,rgb(239,240,243),rgb(229,230,235)); box-shadow: 5px 5px 6px #bfc3cf,-5px -5px 6px #fff; color: midnightblue; height: 40px; margin-top: 15px; margin-bottom: 9px; padding: 5px; border-radius: 15px; font-family: Verdana, sans-serif;">
+                            <i class="material-icons custo-module" style="color:midnightblue">people</i>
+                            <p>
+                                <b>Human Resources</b>
+                                <b class="caret"></b>
+                            </p>
+                        </a>
+                        <div id="collapsethree" class="collapse" style="box-shadow:none">
+
+                            <ul class="nav custo-drop" style="margin-top: 2px; margin-left: 15px; width: 85%; border-radius: 0 10px 10px 10px; background-image: linear-gradient(to right,rgba(198,219,244,0.7),white,white,white,white,white,white,rgba(198,219,244,0.7)); box-shadow: 5px 5px 5px lightgray">
+                                <li class="nav-item " id="HrDashBoard">
+                                    <a class="nav-link" @*id="emp"*@ href="/HrDashboard/Index" style="margin-top: 2px; cursor: pointer">
+                                        <span class="sidebar-mini"> <i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">space_dashboard</i></span>
+                                        <span class="sidebar-normal custo-dropt"> HR Dashboard </span>
+                                    </a>
+                                </li>
+                                <li class="nav-item " id="Applicant">
+                                    <a class="nav-link" @*id="emp"*@ href="/ApplicantRegistration/Index" style="margin-top: 2px; cursor: pointer">
+                                        <span class="sidebar-mini"> <i class="material-icons custo-dropt" style="font-size: 25px; margin-top: -6px">badge</i></span>
+                                        <span class="sidebar-normal custo-dropt">  Applicant List </span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="AttendanceLog">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("Index", "AttendanceLog")'" style="margin-top: 2px; cursor: pointer">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">assignment_ind</i></span>
+                                        <span class="sidebar-normal custo-dropt"> Attendance Log </span>
+                                    </a>
+
+                                </li>
+                                <li class="nav-item" id="Departments">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("Index", "Department")'" style="margin-top: 2px; cursor: pointer">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">assignment_ind</i></span>
+                                        <span class="sidebar-normal custo-dropt"> Department </span>
+                                    </a>
+
+                                </li>
+                                <li class="nav-item" id="Designation">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("Index", "Designation")'" style="margin-top: 2px; cursor: pointer">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">assignment_ind</i></span>
+                                        <span class="sidebar-normal custo-dropt"> Designation </span>
+                                    </a>
+
+                                </li>
+                                <li class="nav-item " id="Employee">
+                                    <a class="nav-link" @*id="emp"*@ href="/Employee/Index" style="margin-top: 2px; cursor: pointer">
+                                        <span class="sidebar-mini"> <i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">streetview</i></span>
+                                        <span class="sidebar-normal custo-dropt"> Employee Master  </span>
+                                    </a>
+                                </li>
+                                <li class="nav-item " id="Holiday">
+                                    <a class="nav-link" @*id="emp"*@ href="/HolidayCalender/Index" style="margin-top: 2px; cursor: pointer">
+                                        <span class="sidebar-mini"> <i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">streetview</i></span>
+                                        <span class="sidebar-normal custo-dropt"> Holiday Calender  </span>
+                                    </a>
+                                </li>
+                                <li class="nav-item " id="Job">
+                                    <a class="nav-link" @*id="emp"*@ href="/JobProfile/Index" style="margin-top: 2px; cursor: pointer">
+                                        <span class="sidebar-mini"> <i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">streetview</i></span>
+                                        <span class="sidebar-normal custo-dropt"> Job Profile  </span>
+                                    </a>
+                                </li>
+                                <li class="nav-item " id="LeaveApplication">
+                                    <a class="nav-link" @*id="emp"*@ href="/LeaveApplication/Index" style="margin-top: 2px; cursor: pointer">
+                                        <span class="sidebar-mini"> <i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">co_present</i></span>
+                                        <span class="sidebar-normal custo-dropt"> Leave Application </span>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item " id="PayRoll">
+                                    <a class="nav-link" @*id="emp"*@ href="/PayRoll/Index" style="margin-top: 2px; cursor: pointer">
+                                        <span class="sidebar-mini"> <i class="material-icons" style="font-size: 20px;margin-top:-5px">currency_exchange</i></span>
+                                        <span class="sidebar-normal"> Payroll </span>
+                                    </a>
+                                </li>
+                                <li class="nav-item " id="Debit">
+                                    <a class="nav-link" @*id="emp"*@ href="/Debit/Index" style="margin-top: 2px; cursor: pointer">
+                                        <span class="sidebar-mini"> <i class="material-icons" style="font-size: 25px; margin-top: -4px">group_remove</i></span>
+                                        <span class="sidebar-normal"> Debit </span>
+                                    </a>
+                                </li>
+                                <li class="nav-item " id="Performance">
+                                    <a class="nav-link" @*id="emp"*@ href="/PerformanceRemark/Index" style="margin-top: 2px; cursor: pointer">
+                                        <span class="sidebar-mini"> <i class="material-icons" style="font-size: 25px; margin-top: -3px">contact_emergency</i></span>
+                                        <span class="sidebar-normal">
+                                            Performance Remarks
+                                        </span>
+                                    </a>
+                                </li>
+                                <li class="nav-item " id="WorkFunct">
+                                    <a class="nav-link" @*id="emp"*@ href="/WorkFunction/Index" style="margin-top: 2px; cursor: pointer">
+                                        <span class="sidebar-mini"> <i class="material-icons" style="font-size: 25px; margin-top: -3px">contact_emergency</i></span>
+                                        <span class="sidebar-normal">
+                                            Work Function
+                                        </span>
+                                    </a>
+                                </li>
+                                <li class="nav-item " id="WorkReg">
+                                    <a class="nav-link" @*id="emp"*@ href="/WorkRegister/Index" style="margin-top: 2px; cursor: pointer">
+                                        <span class="sidebar-mini"> <i class="material-icons" style="font-size: 25px; margin-top: -3px">contact_emergency</i></span>
+                                        <span class="sidebar-normal">
+                                            Work Register
+                                        </span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li class="nav-item d-none" id="Inventory">
+                        <a href="javascript:void(0);" class="nav-link custo-module" data-target="collapsefour" style="background-image: linear-gradient(to right bottom,rgb(239,240,243),rgb(229,230,235)); box-shadow: 5px 5px 6px #bfc3cf,-5px -5px 6px #fff; color: midnightblue; height: 40px; margin-top: 15px; margin-bottom: 9px; padding: 5px; border-radius: 15px; font-family: Verdana, sans-serif;">
+                            <i class="material-icons custo-module" style="color:midnightblue"> inventory </i>
+                            <p>
+                                <b>Inventory</b>
+                                <b class="caret"></b>
+                            </p>
+                        </a>
+                        <div id="collapsefour" class="collapse" style="box-shadow:none">
+                            <ul class="nav custo-drop" style="margin-top: 2px; margin-left: 15px; width: 85%; border-radius: 0 10px 10px 10px; background-image: linear-gradient(to right,rgba(198,219,244,0.7),white,white,white,white,white,white,rgba(198,219,244,0.7)); box-shadow: 5px 0px 5px lightgray">
+                                <li class="nav-item" id="Approval">
+                                    <a class="nav-link" id="approve" onclick="location.href = '@Url.Action("Index", "Approval")'" style="padding: 8px; cursor: pointer; display: flex; align-items: center;">
+                                        <span class="sidebar-mini">
+                                            <i class="material-icons custo-dropt" style=" font-size: 20px;">beenhere</i>
+                                        </span>
+                                        <span class="custo-dropt">Approved Sales Order</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="BillOfMaterial">
+                                    <a class="nav-link" id="Bi" onclick="location.href = '@Url.Action("Index", "BillOfMaterial")'" style="padding: 8px; cursor: pointer; display: flex; align-items: center;">
+                                        <span class="sidebar-mini">
+                                            <i class="material-icons custo-dropt" style=" font-size: 20px;">history_edu</i>
+                                        </span>
+                                        <span class="custo-dropt">Bill Of Material</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="Godown">
+                                    <a class="nav-link" id="Go" onclick="location.href = '@Url.Action("Index", "Godown")'" style="padding: 8px; cursor: pointer; display: flex; align-items: center;">
+                                        <span class="sidebar-mini">
+                                            <i class="material-icons custo-dropt" style=" font-size: 20px;">villa</i>
+                                        </span>
+                                        <span class="custo-dropt">Godown Master</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="Testprmeter">
+                                    <a class="nav-link" id="Go" onclick="location.href = '@Url.Action("Index", "TestParameters")'" style="padding: 8px; cursor: pointer; display: flex; align-items: center;">
+                                        <span class="sidebar-mini">
+                                            <i class="material-icons custo-dropt" style=" font-size: 20px;">gradient</i>
+                                        </span>
+                                        <span class="custo-dropt">Test Parameter Inward</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="Testprmeter">
+                                    <a class="nav-link" id="Go" onclick="location.href = '@Url.Action("Index1", "TestParameter")'" style="padding: 8px; cursor: pointer; display: flex; align-items: center;">
+                                        <span class="sidebar-mini">
+                                            <i class="material-icons custo-dropt" style=" font-size: 20px;">gradient</i>
+                                        </span>
+                                        <span class="custo-dropt">Test Parameter Outward</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="GRR">
+                                    <a class="nav-link" id="Go" onclick="location.href = '@Url.Action("Index", "GRR")'" style="padding: 8px; cursor: pointer; display: flex; align-items: center;">
+                                        <span class="sidebar-mini">
+                                            <i class="material-icons custo-dropt" style=" font-size: 20px;">chrome_reader_mode</i>
+                                        </span>
+                                        <span class="custo-dropt">Goods Receipt Report</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="HSNCodeTable">
+                                    <a class="nav-link" id="Hsn" onclick="location.href = '@Url.Action("Index", "HSNCodeTable")'" style="padding: 8px; cursor: pointer; display: flex; align-items: center;">
+                                        <span class="sidebar-mini">
+                                            <i class="material-icons custo-dropt" style=" font-size: 20px;">more</i>
+                                        </span>
+                                        <span class="custo-dropt">HSN Code Master</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="InventorySummary">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("Index", "InventorySummary")'" style="padding: 8px; cursor: pointer; display: flex; align-items: center;">
+                                        <span class="sidebar-mini">
+                                            <i class="material-icons custo-dropt" style="font-size: 20px;">summarize</i>
+                                        </span>
+                                        <span class="custo-dropt">Inventory Summary</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="Item">
+                                    <a class="nav-link" id="item" onclick="location.href = '@Url.Action("Index", "ItemMaster")'" style="padding: 8px; cursor: pointer; display: flex; align-items: center;">
+                                        <span class="sidebar-mini">
+                                            <i class="material-icons custo-dropt" style="font-size: 20px;">category</i>
+                                        </span>
+                                        <span class="custo-dropt">Item Master</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="MfgJournal">
+                                    <a class="nav-link" id="Mjour" onclick="location.href = '@Url.Action("Index", "MfgJournal")'" style="padding: 8px; cursor: pointer; display: flex; align-items: center;">
+                                        <span class="sidebar-mini">
+                                            <i class="material-icons custo-dropt" style="font-size: 20px;">engineering</i>
+                                        </span>
+                                        <span class="custo-dropt">Manufacturing Journal</span>
+                                    </a>
+
+                                </li>
+
+
+                                <li class="nav-item" id="MfgRegister">
+
+                                    <a class="nav-link"
+                                       id="Mreg"
+                                       onclick="location.href='@Url.Action("Index", "MfgRegister")'"
+                                       style="padding: 8px; cursor: pointer; display: flex; align-items: center;">
+
+                                        <span class="sidebar-mini">
+                                            <i class="material-icons custo-dropt" style="font-size: 20px;">
+                                                inventory
+                                            </i>
+                                        </span>
+
+                                        <span class="custo-dropt">
+                                            Manufacturing Register
+                                        </span>
+
+                                    </a>
+
+                                </li>
+
+
+                                @*<li class="nav-item">
+                                <a class="nav-link" href="/ReorderStatus/ReorderStatus" style="padding: 8px; cursor: pointer; display: flex; align-items: center;">
+                                    <span class="sidebar-mini">
+                                        <i class="material-icons custo-dropt" style="font-size: 20px;">text_snippet</i>
+                                    </span>
+                                    <span class="custo-dropt">Reorder Status</span>
+                                </a>
+                            </li>*@
+                                <li class="nav-item" id="StockGroup">
+                                    <a class="nav-link" id="Sg" onclick="location.href = '@Url.Action("Index", "StockGroup")'" style="padding: 8px; cursor: pointer; display: flex; align-items: center;">
+                                        <span class="sidebar-mini">
+                                            <i class="material-icons custo-dropt" style="font-size: 20px;">home_work</i>
+                                        </span>
+                                        <span class=" custo-dropt">Stock Group Master</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="StockJournal">
+                                    <a class="nav-link" id="sjour" onclick="location.href = '@Url.Action("Index", "StockJournal")'" style="padding: 8px; cursor: pointer; display: flex; align-items: center;">
+                                        <span class="sidebar-mini">
+                                            <i class="material-icons custo-dropt" style="font-size: 20px;">warehouse</i>
+                                        </span>
+                                        <span class=" custo-dropt">Stock Journal</span>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item" id="StockJournalRegister">
+
+                                    <a class="nav-link"
+                                       id="SJR"
+                                       onclick="location.href='@Url.Action("Index", "StockRegister")'"
+                                       style="padding: 8px; cursor: pointer; display: flex; align-items: center;">
+
+                                        <span class="sidebar-mini">
+                                            <i class="material-icons custo-dropt" style="font-size: 20px;">
+                                                view_list
+                                            </i>
+                                        </span>
+
+                                        <span class="custo-dropt">
+                                            Stock Journal Register
+                                        </span>
+
+                                    </a>
+
+                                </li>
+
+
+                                <li class="nav-item" id="Unit">
+                                    <a class="nav-link" id="uni" onclick="location.href = '@Url.Action("Index", "Unit")'" style="padding: 8px; cursor: pointer; display: flex; align-items: center;">
+                                        <span class="sidebar-mini">
+                                            <i class="material-icons custo-dropt" style="font-size: 20px;">scale</i>
+                                        </span>
+                                        <span class=" custo-dropt">Unit Master</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    @*// Production & Planning Menu //*@
+                    <li class="nav-item d-none" id="Production">
+                        <a href="javascript:void(0);" class="nav-link custo-module" data-target="collapsefive" style="background-image: linear-gradient(to right bottom,rgb(239,240,243),rgb(229,230,235)); box-shadow: 5px 5px 6px #bfc3cf,-5px -5px 6px #fff; color: midnightblue;height: 40px; margin-top: 15px; margin-bottom: 9px; padding: 5px; border-radius: 15px; font-family: Verdana, sans-serif;">
+                            <i class="material-icons custo-module" style="color:midnightblue">factory</i>
+                            <p>
+                                <b>Production</b>
+                                <b class="caret"></b>
+                            </p>
+                        </a>
+                        <div id="collapsefive" class="collapse" style="box-shadow:none">
+
+                            <ul class="nav custo-drop" style="margin-top: 2px; margin-left: 15px; width: 85%; border-radius: 0 10px 10px 10px; background-image: linear-gradient(to right,rgba(198,219,244,0.7),white,white,white,white,white,white,rgba(198,219,244,0.7)); box-shadow: 5px 0px 5px lightgray">
+                                <li class="nav-item">
+                                    <a href="javascript:void(0);" class="nav-sublink" data-target="subcollapseone" style="margin-left:2px">
+                                        <i class="material-icons custo-dropt" style=" margin-top: 5px; font-size: 20px; margin-top: -6px">
+                                            assignment
+                                        </i>
+                                        <p class=" custo-dropt">
+                                            Production Register
+                                            <b class="caret  custo-dropt"></b>
+                                        </p>
+                                    </a>
+                                    <div id="subcollapseone" class="collapse sub-collapse">
+                                        <ul class="nav" style="margin-top:2px;">
+                                            <li class="nav-item" id="IndMotor3">
+                                                <a class="nav-link" href="/ProductRegister/Index?stockid=28" style="margin-top:2px;cursor:pointer">
+                                                    <span class="sidebar-mini custo-dropt"> IM3 </span>
+                                                    <span class="sidebar-normal custo-dropt"> Induction Motor3 </span>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item" id="IndMotor4">
+                                                <a class="nav-link" href="/ProductRegister/Index?stockid=4" style="margin-top: 2px; cursor: pointer">
+                                                    <span class="sidebar-mini custo-dropt"> IM4 </span>
+                                                    <span class="sidebar-normal custo-dropt"> Induction Motor4 </span>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item" id="IndMotor5">
+                                                <a class="nav-link" href="/ProductRegister/Index?stockid=5" style="margin-top: 2px; cursor: pointer">
+                                                    <span class="sidebar-mini custo-dropt"> IM5 </span>
+                                                    <span class="sidebar-normal custo-dropt"> Induction Motor5 </span>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item" id="PMDCMotor3">
+                                                <a class="nav-link" href="/ProductRegister/Index?stockid=32" style="margin-top: 2px; cursor: pointer">
+                                                    <span class="sidebar-mini custo-dropt"> PM3 </span>
+                                                    <span class="sidebar-normal custo-dropt"> PMDC Motor3 </span>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item" id="PMDCMotor4">
+                                                <a class="nav-link" href="/ProductRegister/Index?stockid=6" style="margin-top: 2px; cursor: pointer">
+                                                    <span class="sidebar-mini custo-dropt"> PM4 </span>
+                                                    <span class="sidebar-normal custo-dropt"> PMDC Motor4 </span>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item" id="PMDCMotor5">
+                                                <a class="nav-link" href="/ProductRegister/Index?stockid=7" style="margin-top: 2px; cursor: pointer">
+                                                    <span class="sidebar-mini custo-dropt"> PM5 </span>
+                                                    <span class="sidebar-normal custo-dropt"> PMDC Motor5 </span>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item" id="GearBox2s">
+                                                <a class="nav-link" href="/ProductRegister/Index?stockid=34" style="margin-top: 2px; cursor: pointer">
+                                                    <span class="sidebar-mini custo-dropt"> GB2 </span>
+                                                    <span class="sidebar-normal custo-dropt"> GearBox2 </span>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item" id="GearBox3s">
+                                                <a class="nav-link" href="/ProductRegister/Index?stockid=33" style="margin-top: 2px; cursor: pointer">
+                                                    <span class="sidebar-mini custo-dropt"> GB3 </span>
+                                                    <span class="sidebar-normal custo-dropt"> GearBox3s </span>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item" id="GearBox4s">
+                                                <a class="nav-link" href="/ProductRegister/Index?stockid=8" style="margin-top: 2px; cursor: pointer">
+                                                    <span class="sidebar-mini custo-dropt"> GB4 </span>
+                                                    <span class="sidebar-normal custo-dropt"> GearBox4s </span>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item" id="GearBox5s">
+                                                <a class="nav-link" href="/ProductRegister/Index?stockid=9" style="margin-top: 2px; cursor: pointer">
+                                                    <span class="sidebar-mini custo-dropt"> GB5 </span>
+                                                    <span class="sidebar-normal custo-dropt"> GearBox 5s </span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    @*// Parchase  Menu//*@
+                    <li class="nav-item d-none" id="Purchase">
+                        <a href="javascript:void(0);" class="nav-link custo-module" data-target="collapsesix" style="background-image: linear-gradient(to right bottom,rgb(239,240,243),rgb(229,230,235)); box-shadow: 5px 5px 6px #bfc3cf,-5px -5px 6px #fff; color: midnightblue; height: 40px; margin-top: 15px; margin-bottom: 9px; padding: 5px; border-radius: 15px; font-family: Verdana, sans-serif;">
+                            <i class="material-icons custo-module" style="color:midnightblue">shopping_cart</i>
+                            <p>
+                                <b>Purchase</b>
+                                <b class="caret"></b>
+                            </p>
+                        </a>
+                        <div id="collapsesix" class="collapse" style="box-shadow:none">
+
+                            <ul class="nav custo-drop" style="margin-top: 2px; margin-left: 10px; width: 90%; border-radius: 0 10px 10px 10px; background-image: linear-gradient(to right,rgba(198,219,244,0.7),white,white,white,white,white,white,rgba(198,219,244,0.7)); box-shadow: 5px 0px 5px lightgray">
+
+                                <li class="nav-item" id="PurchaseDashBoard" @*onclick="PurEntity()"*@ style="margin-top:2px;cursor:pointer">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("Dashboard", "PurchaseDashboard")'">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">space_dashboard</i> </span>
+                                        <span class="sidebar-normal custo-dropt"> Purchase Dashboard </span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="AutoPurchase">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("PreparedPurchaseOrder", "PurchaseOrder")'" style="cursor: pointer">
+                                        <span class="sidebar-mini"> <i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -4px">receipt_long</i>@*PO*@ </span>
+                                        <span class="sidebar-normal custo-dropt">System Generated Purchase Order </span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="PurchaseIndent" @*onclick="PurInd()"*@>
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("Index", "PurchaseIndent")'" style="margin-top:2px;cursor:pointer">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">style</i> @*PI*@ </span>
+                                        <span class="sidebar-normal custo-dropt"> Purchase Indent </span>
+                                    </a>
+                                </li>
+                                <li class="nav-item " id="PurchaseInvoice">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("Index", "PurchaseInvoice")'" style="margin-top:2px;cursor:pointer">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">receipt</i> @*PI*@ </span>
+                                        <span class="sidebar-normal custo-dropt"> Purchase Invoice </span>
+                                    </a>
+                                </li>
+                                <li class="nav-item " id="PurchaseOrder">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("index", "PurchaseOrder")'" style="margin-top:2px;cursor:pointer">
+                                        <span class="sidebar-mini"> <i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">shopping_cart_checkout</i>@*PO*@ </span>
+                                        <span class="sidebar-normal custo-dropt"> Purchases Order </span>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item" id="PurchaseRegister">
+                                    <a class="nav-link" onclick="location.href='@Url.Action("Index", "Purchaseregister")'" style="margin-top: 2px; cursor: pointer">
+                                        <span class="sidebar-mini">
+                                            <i class="material-icons custo-dropt"
+                                               style="font-size:22px; margin-top:-6px;">
+                                                receipt_long
+                                            </i>
+                                        </span>
+
+                                        <span class="sidebar-normal custo-dropt">
+                                            Purchase Register
+                                        </span>
+                                    </a>
+                                </li>
+
+
+                                <li class="nav-item ">
+                                    <a class="nav-link" id="PurchaseOrderStatus" onclick="location.href = '@Url.Action("PurchaseOrderStatus", "PurchaseRequisition")'" style="margin-top: 2px; cursor: pointer">
+                                        <span class="sidebar-mini"> <i class="material-icons custo-dropt" style="font-size: 22px; margin-top: -6px">filter_frames</i>@*CI*@ </span>
+                                        <span class="sidebar-normal custo-dropt">Purchase Order Status </span>
+                                    </a>
+                                </li>
+
+
+
+                                <li class="nav-item" id="PurchaseRequisition" @*onclick="PurRequisition()"*@ style="margin-top:2px;cursor:pointer">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("Index", "PurchaseRequisition")'">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 24px; margin-top: -6px">shop_2</i> @*PR*@ </span>
+                                        <span class="sidebar-normal custo-dropt"> Purchase Requisition </span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="vendorprofile" style="margin-top:2px;cursor:pointer">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("Index", "Vendor")'">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 30px; margin-top: -7px">recent_actors</i>  </span>
+                                        <span class="sidebar-normal custo-dropt"> Vendor Profiles List </span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    @*//Sales & CRM menu//*@
+                    <li class="nav-item d-none" id="SalesCRM">
+                        <a href="javascript:void(0);" class="nav-link custo-module" data-target="collapseseven" style="background-image: linear-gradient(to right bottom,rgb(239,240,243),rgb(229,230,235)); box-shadow: 5px 5px 6px #bfc3cf,-5px -5px 6px #fff; color: midnightblue; height: 40px; margin-top: 15px; margin-bottom: 9px; padding: 5px; border-radius: 15px; font-family: Verdana, sans-serif;">
+                            <i class="material-icons custo-module" style="color:midnightblue">leaderboard</i>
+                            <p>
+                                <b>Sales</b>
+                                <b class="caret"></b>
+                            </p>
+                        </a>
+                        <div id="collapseseven" class="collapse" style="box-shadow:none">
+                            <ul class="nav custo-drop" style="margin-top: 2px; margin-left: 15px; width: 85%; border-radius: 0 10px 10px 10px; background-image: linear-gradient(to right,rgba(198,219,244,0.7),white,white,white,white,white,white,rgba(198,219,244,0.7)); box-shadow: 5px 0px 5px lightgray">
+
+                                <li class="nav-item" id="SalesDashboard">
+                                    <a class="nav-link" id="Enti" onclick="location.href = '@Url.Action("Dashboard", "SalesDashboard")'" style="margin-top: 2px; cursor: pointer;">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">space_dashboard</i></span>
+                                        <span class="sidebar-normal custo-dropt"> Sales Dashboard </span>
+                                    </a>
+
+                                </li>
+
+                                <li class="nav-item" id="Courier" style="margin-top: 2px;">
+                                    <a class="nav-link" style="cursor: pointer" onclick="location.href = '@Url.Action("Index", "CourierLedger")'">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">local_shipping</i></span>
+                                        <span class="sidebar-normal custo-dropt"> Courier Ledger </span>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item" id="CustomerFollowUp">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("Index", "CustomerFollowUp")'" style="margin-top: 2px;cursor: pointer">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">graphic_eq</i></span>
+                                        <span class="sidebar-normal custo-dropt"> Customer Follow Up </span>
+                                    </a>
+
+                                </li>
+
+                                <li class="nav-item" id="SalesDashboard">
+                                    <a class="nav-link" onclick="location.href = '@Url.Action("Index", "CompanyLedger")'" style="margin-top: 2px;cursor: pointer">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">contacts</i></span>
+                                        <span class="sidebar-normal custo-dropt"> Customer Profiles </span>
+                                    </a>
+
+                                </li>
+
+                                @*<li class="nav-item" id="Designation">
+                                <a class="nav-link" onclick="location.href = '@Url.Action("Index", "Designation")'" style="margin-top: 2px; cursor: pointer">
+                                    <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">assignment_ind</i></span>
+                                    <span class="sidebar-normal custo-dropt"> Designation </span>
+                                </a>
+
+                            </li>*@
+                                @*<li class="nav-item" id="Destination">
+                                <a class="nav-link" onclick="location.href = '@Url.Action("Index", "Destination")'" style="margin-top: 2px; cursor: pointer">
+                                    <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">explore</i></span>
+                                    <span class="sidebar-normal custo-dropt"> Destination </span>
+                                </a>
+
+                            </li>*@
+
+                                <li class="nav-item" id="Enquiry">
+                                    <a class="nav-link" id="Enqi" onclick="location.href = '@Url.Action("Index", "Enquiry")'" style="margin-top: 2px; cursor: pointer;">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">fact_check</i></span>
+                                        <span class="sidebar-normal custo-dropt"> Enquiry </span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="Pincode">
+                                    <a class="nav-link" id="Pincode" onclick="location.href = '@Url.Action("Index", "Pincode")'" style="margin-top: 2px; cursor: pointer">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">pin</i></span>
+                                        <span class="sidebar-normal custo-dropt"> Pincode List </span>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item" id="Quotation">
+                                    <a class="nav-link" id="Quot" onclick="location.href = '@Url.Action("Index", "Quotation")'" style="margin-top: 2px; cursor: pointer;">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">request_quote</i></span>
+                                        <span class="sidebar-normal custo-dropt"> Quotation </span>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item" id="QuotationFollowUp">
+                                    <a class="nav-link" id="QuoF" onclick="location.href = '@Url.Action("Index", "QuotationFollowUp")'" style="margin-top: 2px; cursor: pointer">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">playlist_add_check_circle</i></span>
+                                        <span class="sidebar-normal custo-dropt"> Quotation Follow Up </span>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item" id="SalesOrder">
+                                    <a class="nav-link" id="Sales" onclick="location.href = '@Url.Action("Index", "SalesOrder")'" style="margin-top: 2px; cursor: pointer;">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">integration_instructions</i></span>
+                                        <span class="sidebar-normal custo-dropt"> Sales Order </span>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" id="OrderStatus" onclick="location.href = '@Url.Action("OrderStatus", "Approval")'" style="margin-top: 2px; cursor: pointer">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">grading</i></span>
+                                        <span class="sidebar-normal custo-dropt"> Sales Order Status </span>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item" id="TermsOfDelivery">
+                                    <a class="nav-link" id="TermsO" onclick="location.href = '@Url.Action("Index", "TermsOfDelivery")'" style="margin-top: 2px; cursor: pointer">
+                                        <span class="sidebar-mini"><i class="material-icons custo-dropt" style="font-size: 20px; margin-top: -6px">payments</i></span>
+                                        <span class="sidebar-normal custo-dropt"> Terms Of Delivery </span>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+
+        @*RECENT CODE<a class="nav-link" data-toggle="collapse" href="#PayRollHRExample" style="background-color: #00bcd4; height: 45px; margin-top: 2px; color: white; align-items: center; border-radius: 4px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: all 0.3s ease-in-out; ">
+                <i class="material-icons">apps</i>
+                <p style="margin: 0; flex: 1;">
+                    Human Resources
+                    <b class="caret" style="transform: rotate(90deg); transition: transform 0.3s;"></b>
+                </p>
+            </a>*@
+        @*recent code
+                <li class="nav-item" id="admin">
+            <a class="nav-link" data-toggle="collapse" href="#AdminExample" style="background-color: #00bcd4; color: white; height: 50px; display: flex; align-items: center; border-radius: 5px; margin-top: 5px; transition: all 0.3s;">
+            <i class="material-icons" style="font-size: 24px; margin-right: 10px;">widgets</i>
+            <b style="flex-grow: 1; margin: 0;">Admin</b>
+            <b class="caret" style="transform: rotate(90deg); transition: transform 0.3s;"></b>
+            </a>*@
+
+        @*RECENT CODE
+            <li class="nav-item" id="Inventory">
+            <a class="nav-link" data-toggle="collapse" href="#InventoryExample" style="background-color: #00bcd4; height: 45px; margin-top: 4px; color: white; display: flex; align-items: center; border-radius: 4px;">
+                <i class="material-icons" style="margin-right: 10px; font-size: 24px;">inventory</i>
+                <p style="margin: 0; flex: 1;">
+                    Inventory
+                </p>
+                <b class="caret" style="transform: rotate(0); transition: transform 0.3s;"></b>
+            </a>*@
+
+        @*RECENT CODE
+            <a class="nav-link" data-toggle="collapse" href="#ProPlanExample" style="background-color: #00bcd4; height: 45px; margin-top: 2px; color: white; align-items: center; border-radius: 4px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: all 0.3s ease-in-out; ">
+            <i class="material-icons">apps</i>
+            <p style="margin: 0; flex: 1;">
+                Production
+                <b class="caret" style="transform: rotate(0); transition: transform 0.3s;"></b>
+            </p>
+            </a>*@
+
+        @*RECENT CODE
+                <a class="nav-link" data-toggle="collapse" href="#PurchaseExample" style="background-color: #00bcd4; height: 45px; margin-top: 2px; color: white; align-items: center; border-radius: 4px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: all 0.3s ease-in-out; ">
+            <i class="material-icons">shopping_cart</i>
+             <p style="margin: 0; flex: 1;">
+                 Purchase
+                <b class="caret" style="transform: rotate(90deg); transition: transform 0.3s;"></b>
+
+                </p>
+                 </a*@
+
+        @*RECENT CODE
+            <li class="nav-item" id="SalesCRM">
+            <a class="nav-link" data-toggle="collapse" href="#SalesCRMExample" style="background-color: #00bcd4; height: 45px; margin-top: 2px; color: ; font-size: 16px; display: flex; align-items: center; border-radius: 4px; ">
+                <i class="material-icons">leaderboard</i>
+                <p style="margin: 0; flex: 1;">
+                    Sales
+                    <b class="caret" style="transform: rotate(90deg); transition: transform 0.3s;"></b>
+                </p>
+            </a>*@
+
+        <!-- Navbar -->
+        <div class="main-panel">
+            <div class="container-fluid custo-head" style=" color: midnightblue; background-image: linear-gradient(to left, lightblue, white); height: 51px; position: sticky; top: 0; z-index: 1">
+
+
+                <nav class="navbar navbar-expand-md justify-content-between navbar-transparent navbar-absolute fixed-top" style="background-color: #00bcd4; margin-top: -4px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); padding: 0 30px;">
+
+                    <div class="navbar-wrapper">
+                        <div class="navbar-minimiz bg-color-green">
+                            <button id="minimizeSidebar" class="btn btn-just-icon btn-white btn-fab-mini btn-round custo-inner" style="outline: none; border: none; background-image: linear-gradient(to right,#35d3e1,midnightblue);color:white">
+
+                                <i class="material-icons text_align-center visible-on-sidebar-regular" style="font-weight: bold">arrow_back</i>
+                                <i class="material-icons design_bullet-list-67 visible-on-sidebar-mini" style="font-weight: bold">arrow_forward</i>
+                            </button>
+                        </div>
+                    </div>
+                    @*RECENT CODE<div class="container-fluid" style="background-color:aliceblue;color:midnightblue; height:50px;position:sticky; top:0;z-index:1">
+                        <nav class="navbar navbar-expand-md justify-content-end navbar-transparent navbar-absolute fixed-top" style="background-color:brown;margin-top:-12px">
+
+
+                            <div class="navbar-wrapper">
+                                <div class="navbar-minimiz bg-color-green">
+                                    <button id="minimizeSidebar" class="btn btn-just-icon  btn-white btn-fab-mini  btn-round" style="outline:none;border:none;">
+                                        <i class="material-icons text_align-center visible-on-sidebar-regular">arrow_back</i>
+                                        <i class="material-icons design_bullet-list-67 visible-on-sidebar-mini">arrow_forward</i>
+                                    </button>
+                                </div>*@
+                    <!-- Centered Company Name with Larger Height -->
+                 
+                    @*13-07-26*@
+                <div class="navbar-brand text-center custo-headt"
+                     style="flex:1; min-width:0; font-size:30px; font-weight:bold; line-height:50px; color:midnightblue;">
+
+
+                    @{
+                        using (var db = new ERPDBContext.ERP_DBContext())
+                        {
+                            var selectedERPName = db.CompanyConfiguration
+                            .Where(x => x.ConfigId == 1)
+                                .Select(vs => vs.CompanyName)
+                                .FirstOrDefault();
+
+                            if (!string.IsNullOrEmpty(selectedERPName))
+                            {
+                                <span>@selectedERPName</span>
+                            }
+                        }
+                    }
+                </div>
+
+                    <button class="navbar-toggler"
+                            id="mobileToggle"
+                            type="button"
+                            style="background-color: #00bcd4; width: 60px;">
+
+                        <span class="sr-only">Toggle navigation</span>
+
+                        <span class="navbar-toggler-icon icon-bar"></span>
+                        <span class="navbar-toggler-icon icon-bar"></span>
+                        <span class="navbar-toggler-icon icon-bar"></span>
+
+                    </button>
+
+                    <div>
+                        <ul class="navbar-nav navbar-right" style=" height: 53px">
+                            <li>
+                                <a class="nav-link custo-inner" id="homeBtn" style="background-image: linear-gradient(to right,#35d3e1,midnightblue); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; padding: 0; margin-right: 10px;">
+                                    <span style="font-size: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.3)" class="glyphicon glyphicon-home"></span>
+                                </a>
+                            </li>
+
+
+
+                            <li class="nav-item dropdowndropdown">
+                                <a data-toggle="dropdown" href="#" class="username custo-inner" id="navbarDropdownProfile" aria-haspopup="true" aria-expanded="false" style="background-image: linear-gradient(to right,#35d3e1,midnightblue); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; padding: 0;">
+                                    <i class="material-icons" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.2); font-size: 20px;">person</i>
+                                </a>
+
+                                <div class="dropdown-menu dropdown-menu-right text-center" aria-labelledby="navbarDropdownProfile" style="box-shadow: 0 6px 10px rgba(0,0,0,0.3); background-color: aliceblue; border-radius: 10px; margin-top: 15px;">
+                                    <div class="panel panel-success" style="background-color:white;margin:5px">
+                                        <form style="padding: 2px; text-align: left;margin-left:2px">
+                                            <center style="border-bottom:1px solid lightblue;color:midnightblue;font-family:Verdana, sans-serif">
+                                                <i class="material-icons">account_circle</i><p><b>User Profile</b></p>
+                                            </center>
+
+                                            <label style="color: black; font-weight: normal;">
+                                                Username:<br />
+                                                <b style="font-size: 16px; color: black; padding-top: 10px; text-align:left; padding-right: 25px">
+                                                    @Session["FisrtN"] @Session["LastN"]
+                                                </b>
+                                            </label>
+                                            <label style="color: black; font-weight: normal;">
+                                                Login Email:
+                                                <b style="font-size: 16px; color: black; padding-top: 10px; text-align: left; padding-right: 25px">
+                                                    @Session["Username"]
+                                                </b>
+                                            </label>
+                                            <label style="color: black; font-weight: normal;">
+                                                Designation:<br />
+                                                <b style="font-size: 16px; color: black; padding-top: 10px; text-align: left; padding-right: 25px">
+                                                    @Session["Department"]
+                                                </b>
+                                            </label>
+                                            <br />
+                                            <label style="color: black; font-weight: normal;">
+                                                Zone:<br />
+                                                <b style="font-size: 16px; color: black; padding-top: 10px; text-align: left; padding-right: 25px">
+                                                    @Session["Zone"]
+                                                </b>
+                                            </label>
+                                            @*<label style="color: black; font-weight: normal;">
+                                                    Mobile no.:
+                                                    <b style="font-size: 16px; color: black; padding-top: 10px; text-align: left; padding-right: 25px">
+                                                        @Session["MobileNo"]
+                                                    </b>
+                                                </label>*@
+                                        </form>
+                                    </div>
+                                    <br />
+                                    <input type="button" value="LogOut" class="custo-inner" style="font-weight: bold; background-image: linear-gradient(to right,#35d3e1,midnightblue); color: white; font-family: Helvetica; box-shadow: -4px -4px 8px rgba(255, 255, 255, 0.7), 4px 4px 8px rgba(128, 128, 128, 0.7); outline-style: none; border: none; padding: 5px 30px 5px 30px;border-radius:15px ;margin-bottom:5px" onclick="location.href='@Url.Action("Logout","LoginAccount")'" />
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+
+
+
+            <!-- Global Loader -->
+            @*<div id="globalLoader" style="display:none;">
+                    <div class="loader-overlay">
+                        <div class="loader"></div>
+                        <div class="loader-text">Please wait...</div>
+                    </div>
+                </div>*@
+            @*deploy*@
+            @*<div id="globalLoader" style="display:none;">
+                    <div class="loader-overlay">
+                        <div class="loader"></div>
+                        <div class="loader-text">Please wait...</div>
+                    </div>
+                </div>*@
+
+            @*<div id="globalLoader" style="display:none;">
+                    <div class="loader-overlay">
+                        <div class="text-loader">
+                            <span>S</span>
+                            <span>W</span>
+                            <span>I</span>
+                            <span>P</span>
+                            <span>F</span>
+                            <span>E</span>
+                        </div>
+                    </div>
+                </div>*@
+
+
+            <!-- Content Section -->
+            <div class="container-fluid" style="background-color: #f1f1f1; padding: 30px;">
+                <div class="row">
+                    <div class="container body-content">
+                        @RenderBody()
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Section -->
+            <div class="custo-foot" style="background-color: #e0f7fa; text-align: center; padding: 20px; box-shadow: 0 -4px 8px rgba(0,0,0,0.2);">
+                <footer class="footer">
+                    <div class="container-fluid custo-foott">
+                        &copy;
+                        <script>document.write(new Date().getFullYear())</script>,
+                        <a href="http://www.swipfeinfotech.com/" target="_blank" style="color: #00796b; font-weight: bold;">Swipfe ERP</a> by Swipfe Infotech Pvt. Ltd.
+                    </div>
+                </footer>
+            </div>
+        </div>
+
+
+
+    </div>
+
+    @*<div class="fixed-plugin">
+            <div class="dropdown show-dropdown">
+                <a href="#" data-toggle="dropdown">
+                    <i class="fa fa-cog fa-2x"> </i>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="header-title"> Sidebar Filters</li>
+                    <li class="adjustments-line">
+                        <a href="javascript:void(0)" class="switch-trigger active-color">
+                            <div class="badge-colors ml-auto mr-auto">
+                                <span class="badge filter badge-purple" data-color="purple"></span>
+                                <span class="badge filter badge-azure" data-color="azure"></span>
+                                <span class="badge filter badge-lightcyan active" data-color="lightcyan"></span>
+                                <span class="badge filter badge-warning" data-color="orange"></span>
+                                <span class="badge filter badge-danger" data-color="danger"></span>
+                                @*<span class="badge filter badge-rose" data-color="rose"></span>
+                            </div>
+                            <div class="clearfix"></div>
+                        </a>
+                    </li>
+                    <li class="header-title">Sidebar Background</li>
+                    <li class="adjustments-line">
+                        <a href="javascript:void(0)" class="switch-trigger background-color">
+                            <div class="ml-auto mr-auto">
+                                <span class="badge filter badge-azure " data-background-color="azure"></span>
+                                <span class="badge filter badge-black" data-background-color="black"></span>
+                                <span class="badge filter badge-lightcyan active" data-background-color="lightcyan"></span>
+                                @*<span class="badge filter badge-red" data-background-color="red"></span>
+
+                            </div>
+                            <div class="clearfix"></div>
+                        </a>
+                    </li>
+                    <li class="adjustments-line">
+                        <a href="javascript:void(0)" class="switch-trigger">
+                            <p>Sidebar Mini</p>
+                            <label class="ml-auto">
+                                <div class="togglebutton switch-sidebar-mini">
+                                    <label>
+                                        <input type="checkbox">
+                                        <span class="toggle"></span>
+                                    </label>
+                                </div>
+                            </label>
+                            <div class="clearfix"></div>
+                        </a>
+                    </li>
+                    <li class="adjustments-line">
+                        <a href="javascript:void(0)" class="switch-trigger">
+                            <p>Sidebar Images</p>
+                            <label class="switch-mini ml-auto">
+                                <div class="togglebutton switch-sidebar-image">
+                                    <label>
+                                        <input type="checkbox" checked="">
+                                        <span class="toggle"></span>
+                                    </label>
+                                </div>
+                            </label>
+                            <div class="clearfix"></div>
+                        </a>
+                    </li>
+                    <li class="header-title">Images</li>
+                    <li class="active">
+                        <a class="img-holder switch-trigger" href="javascript:void(0)">
+                            <img src="/assets/img/sidebar-1.jpg" alt="">
+                        </a>
+                    </li>
+                    <li>
+                        <a class="img-holder switch-trigger" href="javascript:void(0)">
+                            <img src="/assets/img/sidebar-2.jpg" alt="">
+                        </a>
+                    </li>
+                    <li>
+                        <a class="img-holder switch-trigger" href="javascript:void(0)">
+                            <img src="/assets/img/sidebar-3.jpg" alt="">
+                        </a>
+                    </li>
+                    <li>
+                        <a class="img-holder switch-trigger" href="javascript:void(0)">
+                            <img src="/assets/img/sidebar-4.jpg" alt="">
+                        </a>
+                    </li>
+                    <li class="button-container">
+                            <a href="https://codecanyon.net/item/material-dashboard-net-core-admin-template-crud/23834228" target="_blank" class="btn btn-rose btn-block btn-fill">Buy Now</a>
+                            <a href="http://material.retek.vn/Helps/docs/2.2/getting-started/introduction.html" target="_blank" class="btn btn-default btn-block">
+                                Documentation
+                            </a>
+                            <a href="http://material.retek.vn" target="_blank" class="btn btn-info btn-block">
+                                Get Free Demo!
+                            </a>
+                        </li>
+
+
+                </ul>
+                <br />
+            </div>
+        </div>*@
+    <!--   Core JS Files   -->
+    <script src="~/Scripts/jquery-3.x.min.js"></script>
+    <script src="/assets/js/core/jquery.min.js"></script>
+    <script src="/assets/js/core/popper.min.js"></script>
+    <script src="/assets/js/core/bootstrap-material-design.min.js"></script>
+    <script src="/assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+
+    <!-- Plugin for the momentJs  -->
+    <script src="/assets/js/plugins/moment.min.js"></script>
+    <!--  Plugin for Sweet Alert -->
+    <script src="/assets/js/plugins/sweetalert2.js"></script>
+    <!-- Forms Validations Plugin -->
+    <script src="/assets/js/plugins/jquery.validate.min.js"></script>
+    <!-- Plugin for the Wizard, full documentation here: https://github.com/VinceG/twitter-bootstrap-wizard -->
+    <script src="/assets/js/plugins/jquery.bootstrap-wizard.js"></script>
+    <!--	Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select -->
+    <script src="/assets/js/plugins/bootstrap-selectpicker.js"></script>
+    <!--  Plugin for the DateTimePicker, full documentation here: https://eonasdan.github.io/bootstrap-datetimepicker/ -->
+    <script src="/assets/js/plugins/bootstrap-datetimepicker.min.js"></script>
+    <!--  DataTables.net Plugin, full documentation here: https://datatables.net/  -->
+    <script src="/assets/js/plugins/jquery.dataTables.min.js"></script>
+    <!--	Plugin for Tags, full documentation here: https://github.com/bootstrap-tagsinput/bootstrap-tagsinputs  -->
+    <script src="/assets/js/plugins/bootstrap-tagsinput.js"></script>
+    <!-- Plugin for Fileupload, full documentation here: http://www.jasny.net/bootstrap/javascript/#fileinput -->
+    <script src="/assets/js/plugins/jasny-bootstrap.min.js"></script>
+    <!--  Full Calendar Plugin, full documentation here: https://github.com/fullcalendar/fullcalendar    -->
+    <script src="/assets/js/plugins/fullcalendar.min.js"></script>
+    <!-- Vector Map plugin, full documentation here: http://jvectormap.com/documentation/ -->
+    <script src="/assets/js/plugins/jquery-jvectormap.js"></script>
+    <!--  Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
+    <script src="/assets/js/plugins/nouislider.min.js"></script>
+    <!-- Include a polyfill for ES6 Promises (optional) for IE11, UC Browser and Android browser support SweetAlert -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script>
+    <!-- Library for adding dinamically elements -->
+    <script src="/assets/js/plugins/arrive.min.js"></script>
+    <!--  Google Maps Plugin    -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB2Yno10-YTnLjjn_Vtk0V8cdcY5lC4plU"></script>
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!-- Chartist JS -->
+    <script src="/assets/js/plugins/chartist.min.js"></script>
+    <!--  Notifications Plugin    -->
+    <script src="/assets/js/plugins/bootstrap-notify.js"></script>
+    <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+    <script src="/assets/js/material-dashboard.minf066.js?v=2.1.0" type="text/javascript"></script>
+    <!-- Material Dashboard DEMO methods, don't include it in your project! -->
+    <script src="/assets/demo/demo.js"></script>
+    <script>
+        document.getElementById("minimizeSidebar")
+            .addEventListener("click", function () {
+                document.body.classList.toggle("sidebar-mini");
+            });
+    </script>
+
+
+
+    <div class="theme-switch-wrapper">
+        <label class="theme-switch">
+            <input type="checkbox" id="themeToggleBtn">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const toggleBtn = document.getElementById("themeToggleBtn");
+
+            // Apply saved theme
+            const savedTheme = localStorage.getItem("theme");
+
+            if (savedTheme === "dark") {
+                document.body.classList.add("dark-mode");
+                toggleBtn.checked = true;
+            }
+
+            // Toggle theme
+            toggleBtn.addEventListener("change", function () {
+
+                if (this.checked) {
+                    document.body.classList.add("dark-mode");
+                    localStorage.setItem("theme", "dark");
+                } else {
+                    document.body.classList.remove("dark-mode");
+                    localStorage.setItem("theme", "light");
+                }
+            });
+        });
+    </script>
+    @*loader*@
+
+
+    @*<script>
+            let bounceInterval;
+
+            function startTextAnimation() {
+                const letters = $(".text-loader span");
+                let i = 0;
+
+                clearInterval(bounceInterval);
+
+                bounceInterval = setInterval(function () {
+                    letters.css("transform", "translateY(0)");
+                    $(letters[i]).css("transform", "translateY(-12px)");
+                    i = (i + 1) % letters.length;
+                }, 120);
+            }
+
+            function stopTextAnimation() {
+                clearInterval(bounceInterval);
+                $(".text-loader span").css("transform", "translateY(0)");
+            }
+
+            // SHOW loader on AJAX start (NO FADE)
+            $(document).ajaxStart(function () {
+                $("#globalLoader").show();
+                startTextAnimation();
+            });
+
+            // HIDE loader on AJAX stop (NO FADE)
+            $(document).ajaxStop(function () {
+                $("#globalLoader").hide();
+                stopTextAnimation();
+            });
+
+            $(document).ajaxError(function () {
+                $("#globalLoader").hide();
+                stopTextAnimation();
+            });
+
+            // NORMAL NAVIGATION (NO animation)
+            window.addEventListener("beforeunload", function () {
+                $("#globalLoader").show();
+                startTextAnimation();
+            });
+
+            // FIX back/forward cache issue
+            window.addEventListener("pageshow", function () {
+                $("#globalLoader").hide();
+                stopTextAnimation();
+            });
+        </script>*@
+
+
+
+    <script>
+        let bounceInterval;
+
+        function startTextAnimation() {
+            const letters = $(".text-loader span");
+            let i = 0;
+
+            clearInterval(bounceInterval);
+
+            bounceInterval = setInterval(function () {
+                letters.css("transform", "translateY(0)");
+                $(letters[i]).css("transform", "translateY(-12px)");
+                i = (i + 1) % letters.length;
+            }, 120);
+        }
+
+        function stopTextAnimation() {
+            clearInterval(bounceInterval);
+            $(".text-loader span").css("transform", "translateY(0)");
+        }
+
+        function showLoader() {
+            if ($("#globalLoader").is(":visible")) return;
+
+            $("#globalLoader").show();
+            startTextAnimation();
+        }
+
+        function hideLoader() {
+            $("#globalLoader").hide();
+            stopTextAnimation();
+        }
+
+        // AJAX only
+        $(document).ajaxStart(function () {
+            showLoader();
+        });
+
+        $(document).ajaxStop(function () {
+            hideLoader();
+        });
+
+        $(document).ajaxError(function () {
+            hideLoader();
+        });
+
+        // Show when leaving current page
+        window.addEventListener("beforeunload", function () {
+            showLoader();
+        });
+
+        // Hide immediately when new page is ready
+        $(document).ready(function () {
+            hideLoader();
+        });
+
+        $(window).on("load", function () {
+            hideLoader();
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            document.getElementById("mobileToggle").addEventListener("click", function () {
+                document.querySelector(".sidebar").classList.add("mobile-show");
+            });
+
+            document.getElementById("closeSidebar").addEventListener("click", function () {
+                document.querySelector(".sidebar").classList.remove("mobile-show");
+            });
+
+        });
+
+    </script>
+</body>
+
+<!-- /examples/dashboard.html , Tue, 14 May 2019 06:09:50 GMT -->
+</html>
+

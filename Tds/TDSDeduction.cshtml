@@ -1,0 +1,730 @@
+﻿
+@model ERPModels.AccountJournalSearchModel_Paging
+
+@{
+    ViewBag.Title = "TDSDeduction";
+    Layout = "~/Views/Shared/_SwipfeMaster.cshtml";
+}
+
+<style>
+    #label {
+        font-size: small;
+        color: #0077B3;
+    }
+
+
+    th {
+        border-right: 2px solid White;
+        border-left: 1px solid white;
+        text-align: center;
+        font-size: small;
+        height: 30px;
+    }
+    /*table#t01 tr:nth-child(even):active{
+          background-color:aquamarine;
+     }*/
+
+    table#t01 tr:nth-child(even):hover {
+        background-color: gainsboro;
+        /*background-color: #fff;*/
+    }
+
+
+    table#t01 tr:nth-child(odd) {
+        /*background-color: #fff;*/
+        background-color: lightblue;
+    }
+
+    table#t01 th {
+        background-color: deepskyblue;
+        color: white;
+    }
+
+
+    a.cssclassname {
+        background: url(../../Images/edit55.png) no-repeat top left;
+        display: flex;
+        display: block;
+        width: 20px;
+        height: 20px;
+        text-indent: -9999px; /* hides the link text */
+    }
+
+    a.cssclassnamea {
+        background: url(../../Images/delete.png) no-repeat top left;
+        display: block;
+        width: 20px;
+        height: 20px;
+        text-indent: -9999px; /* hides the link text */
+    }
+
+    a.cssclassnamedetail {
+        background: url(../../Images/details10.png) no-repeat;
+        display: block;
+        width: 20px;
+        height: 20px;
+        text-indent: -9999px; /* hides the link text */
+    }
+
+    a.cssclassnamePrint {
+        background: url(../../Images/Print11.png) no-repeat;
+        display: block;
+        width: 20px;
+        height: 20px;
+        text-indent: -9999px; /* hides the link text */
+    }
+
+    .courierCreate:hover {
+        transform: scale(1.1);
+        background-color: Highlight;
+    }
+
+
+    td button {
+        border: none;
+        background: none;
+        color: blue;
+        font-size: 15px;
+    }
+
+    td span i:hover {
+        transform: scale(1.3);
+        color: Highlight;
+    }
+
+    td .glyphicon-list {
+        color: blue;
+        cursor: pointer;
+    }
+
+    td .glyphicon-trash {
+        color: red;
+    }
+
+    td .glyphicon-edit {
+        color: green;
+    }
+
+    .page td a {
+        font-size: 12px;
+    }
+</style>
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+<link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css"
+      rel="Stylesheet" type="text/css" />
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+<script type="text/javascript">
+
+    $(window).load(function () {
+
+        var b = '@Session["LoginUserId"]';
+        //var b = 9;
+        $.ajax({
+            url: '@Url.Action("GetInfo")',
+            data: { "userId": b },
+            type: "POST",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+
+                if (data.length > 0) {
+
+                    for (var i = 0; i < data.length; i++) {
+
+                        if (data[i].FormName == "PurchaseInvocie") {
+
+                        if (data[i].Create == "Y") {
+
+
+                            $('#CreateTds').show();
+                        }
+                        else {
+
+                            $('#CreateTds').hide();
+
+                        }
+                   }
+
+                }
+
+                }
+
+            }
+        });
+    });
+
+
+        function searchTds(id) {
+        var txt = document.getElementById(id);
+        //txt.value = txt.value.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+
+        // var txt = document.getElementById(id);
+        //alert("hi");
+        $.ajax({
+            url: '/Tds/AutocompleteTdsID/',
+            data: { "searchByText": txt.value, "sortBy": $('#SortByColumnName').val() },
+            type: "POST",
+            dataType: "json",
+
+            success: function (data) {
+                $('#json-datalistTds').empty();
+                var jsonOptions = data;
+                var dataList = document.getElementById('json-datalistTds');
+
+                jsonOptions.forEach(function (item) {
+                    var option = document.createElement('option');
+                    option.value = Tds;
+                    dataList.appendChild(option);
+                });
+            },
+            error: function (xhr, status, error) {
+                alert(xhr.responseText);
+            }
+        });
+    } //end of searchSalesOrderNo
+
+    function validate() {
+        if ($('#SearchByText').val() != "") {
+            $('#SortByColumnName').val('Code');
+
+        }
+        else if ($('#SortByColumnName').val() != "Code") {
+            $('#searchTds').val('');
+        }
+    }
+    function funPageNoClicked(requestedPgNo) {
+        $("#isPageNavigationRequested").val("true");
+        $("#RequestedPageNumber").val(requestedPgNo);
+        event.preventDefault();
+        $("#Tds_List").submit();
+    }
+    $(function () {
+        $("#Search").click(function () {
+            $("#isPageNavigationRequested").val("false");
+        });
+    });
+
+
+    window.onload = function () {
+        const exportButton = document.getElementById("exportButton");
+        const exportFormat = document.getElementById("exportFormat");
+        const startDateInput = document.getElementById("startDate");
+        const endDateInput = document.getElementById("endDate");
+
+        exportButton.onclick = function () {
+            const startDate = startDateInput.value;
+            const endDate = endDateInput.value;
+            const format = exportFormat.value;
+
+            if (!startDate || !endDate) {
+                alert("Please select both start and end dates.");
+                return;
+            }
+
+            const url = `/Tds/ExportData?startDate=${startDate}&endDate=${endDate}&exportFormat=${format}`;
+
+            fetch(url, {
+                method: 'GET'
+            })
+                .then(response => {
+                    if (!response.ok) throw new Error("Network error");
+                    return response.blob();
+                })
+                .then(blob => {
+                    const downloadUrl = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = downloadUrl;
+                    a.download = `PurchaseInvoices.${format.toLowerCase()}`;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                })
+                .catch(error => {
+                    console.error("Export failed:", error);
+                    alert("Export failed.");
+                });
+        };
+    };
+
+
+
+    function showInvoicegst() {
+
+        //console.log("mgid id: " + mgid);  // For debugging purposes
+        openModal('gstModal', 'purchaseModalOverl');  // Open the modal
+        // Step 1: AJAX call to fetch the Print page content and show in iframe
+
+    }
+
+
+    // Function to open the modal
+    function openModal(modalId, overlayId) {
+        document.getElementById(modalId).style.display = "block";
+        document.getElementById(overlayId).style.display = "block";
+    }
+
+    // Function to close the modal
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = "none";
+        document.getElementById(modalId + "Overlay").style.display = "none";
+    }
+
+</script>
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+<div id="loader" style="display:none;">
+    @*<p style="color:#fff">Loading...</p>*@<div class="spinner"></div>
+</div>
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+        @*<div class="card" style="background-color:lightslategrey">
+
+            <div class="container-fluid">*@
+
+        <div class="panel panel-default" style="border-bottom:solid;border-bottom-width:2px; border-bottom-color:gray;border-left:solid;border-left-width:2px;border-left-color:gray;border-right:solid;border-right-color:gray;border-right-width:2px;">
+            <div style="display:flex;align-items:center;justify-content:space-evenly; background-color:lightblue; padding:2px">
+                <div></div>
+                <h4 style=""><b>Tds Deduction List</b></h4>
+
+
+                <button class="btn btn-success courierCreate" id="CreateTds" style="border-radius:20px;font-weight:600" onclick="location.href = '@Url.Action("TDSManually", "Tds")'">Create</button>
+                <!--<!-- Export Button -->
+                <button type="button" class="btn btn-success courierCreate" style="border-radius:20px;font-weight:600" onclick="showInvoicegst()">
+                    Export TDS File
+                </button>
+            </div>
+            <div class="panel-body">
+                @Html.TextBox("details", null, new { @onkeyup = "myFunction(this.id)", @class = "form-control", style = "display: none;" })
+                @Html.TextBox("Edit", null, new { @onkeyup = "myFunction(this.id)", @class = "form-control", style = "display: none;" })
+                @using (Html.BeginForm("TDSDeduction", "Tds", FormMethod.Post, new { id = "Tds_List" }))
+                {
+                    <div class="panel panel-success">
+                        <div class="panel-body">
+                            <div class="form-group row">
+                                <div class="col-lg-2">
+                                    <label id="label">Sort/Search By :</label>
+                                    <div class="form-group row">
+                                        @Html.DropDownListFor(m => m.SortByColumnName, new List<SelectListItem>
+                                                                 {
+                                                                  new SelectListItem{ Text="Vendor Name", Value = "EntityName" },
+                                                                  new SelectListItem { Text="Section", Value ="Section"},
+
+
+                                                                 }, new { @class = "form-control", style = "font-size:small;height:30px" })
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <label id="label">Find.:</label>
+
+                                    @Html.TextBoxFor(m => m.SearchByText, null, new
+                               {
+                                   @class = "form-control",
+                                   //@placeholder = "Sales Order No",
+                                   @oninput = "searchTds(this.id)",
+                                   @list = "json-datalistTds",
+                                   style = "width:280px",
+                                   autocomplete = "off" // Add this line to disable autocomplete
+                               })
+                                    <datalist id="json-datalistHSNCode"></datalist>
+
+                                </div>
+
+                                <div class="col-lg-2">
+                                    <label id="label">Order By : </label>
+                                    <div class="form-group row">
+                                        @Html.DropDownListFor(m => m.OrderByType, new List<SelectListItem>
+                                                                 {
+                                                                 //new SelectListItem{ Text="Please Select", Value = "Please Select" },
+                                                                 new SelectListItem{ Text="Z-A", Value = "Z-A" },
+                                                                 new SelectListItem{ Text="A-Z", Value = "A-Z" },
+                                                                 }, new { @class = "form-control", style = "font-size:small;height:30px" })
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-1">
+                                    <label id="label">Page:</label>
+                                    @Html.TextBoxFor(m => m.RecordsPerPage, null, new
+                               {
+                                   @class = "form-control",
+                                   @style = "width:80px"
+                               })
+                                </div>
+                                <div class="col-lg-1">
+                                    <label id="label" style="margin-left:30px">PageN </label>
+                                    @Html.TextBox("Page", null, new
+                               {
+                                   @class = "form-control",
+                                   //@placeholder = "Page No.",
+                                   @style = "width:80px;margin-left:30px"
+
+                               })
+                                </div>
+
+                                <div class="col-lg-1">
+                                    <div class="form-group row">
+                                        <input type="submit" id="Search" value="Search" name="Search" style="outline-style:none;border:none;margin-left:40px" class="btn btn-success btn-round" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*<div class="row" style="margin-top :5px;margin-bottom :5px ">
+
+                                    <label id="label" style="color:#0077B3;margin-left:10px;margin-top :5px;"><strong>Description: </strong></label>
+                                    &nbsp;
+                                    <div style="margin-top :5px;">
+
+                                        @Html.CheckBoxFor(m => m.Description, true)
+                                    </div>
+                                    <label id="label" style="color:#0077B3;margin-left:10px; margin-top :5px;"><strong>Section: </strong></label>
+                                    &nbsp;
+                                    <div style="margin-top :5px;">
+                                        @Html.CheckBoxFor(m => m.Section, true)
+                                    </div>
+                                    <label id="label" style="color:#0077B3;margin-left:10px;margin-top :5px;"><strong>Code: </strong></label>
+                                    &nbsp;
+                                    <div style="margin-top :5px;">
+                                        @Html.CheckBoxFor(m => m.Code, true)
+                                    </div>
+                                    <label id="label" style="color:#0077B3;margin-left:10px;margin-top :5px;"><strong>AmountDeduction: </strong></label>
+                                    &nbsp;
+                                    <div style="margin-top :5px;">
+                                        @Html.CheckBoxFor(m => m.AmountDeduction, true)
+                                    </div>
+                                    <label id="label" style="color:#0077B3;margin-left:10px;margin-top :5px;"><strong>Percents: </strong></label>
+                                    &nbsp;
+                                    <div style="margin-top :5px;">
+                                        @Html.CheckBoxFor(m => m.Percents, true)
+                                    </div>
+
+
+                                </div>*@
+                        </div>
+                    </div>
+
+                    <table id="stockTable" class="table table-bordered table-striped display table-success table-hover text-left">
+                        <thead>
+                            <tr class="bg-primary">
+                                <th >
+                                    Sr No.
+                                </th>
+                                @if (Model.AcountJournalNo == true)
+                                {
+                                    <th  style="border-right: 2px solid #fff">
+                                        Journal No.
+                                    </th>
+                                }
+                                @if (Model.EntityName == true)
+                                {
+                                    <th >
+                                        <!-- Add a data-column attribute -->
+                                        Vendor Name
+                                    </th>
+                                }
+
+
+                                <th  data-column="ItemName">
+                                    Pur. Invoice No.
+                                </th>
+
+
+                                @*<th width="5%" data-column="RatePerUnit">
+                                    Sub Total
+                                </th>*@
+
+                                <th  data-column="RatePerUnit">
+                                    <!-- Add a data-column attribute -->
+                                    Sub Total
+                                </th>
+
+                                <th  data-column="UnitOfMeasure">
+                                    <!-- Add a data-column attribute -->
+                                    Amount Deduction
+                                </th>
+
+                                <th  data-column="UnitOfMeasure">
+                                    <!-- Add a data-column attribute -->
+                                    Percents(%)
+                                </th>
+
+                                <th ></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ int sno = (Model.RequestedPageNumber - 1) * Model.RecordsPerPage + 1;
+                                foreach (var item in Model.AcountJournalSearchedList)
+                                {
+                                    <tr>
+                                        <td class="">
+                                            @sno
+                                            @{ sno++; }
+                                        </td>
+
+                                         @if (Model.AcountJournalNo == true)
+                                        {
+                                            <td class="">
+                                                @Html.DisplayFor(modelItem => item.AcountJournalNo)
+                                            </td>
+                                        }
+
+                                        @if (Model.EntityName == true)
+                                        {
+                                            <td class="">
+                                                @Html.DisplayFor(modelItem => item.EntityName)
+                                            </td>
+                                        }
+
+                                        <td class="">
+                                            @Html.DisplayFor(modelItem => item.PurInvoiceNo)
+                                        </td>
+
+                                        <td class="text-right">
+                                            @Html.DisplayFor(modelItem => item.ProductSubTotal)
+                                        </td>
+
+                                        @*<td class="text-center">
+                                            @Html.DisplayFor(modelItem => item.ProductSubTotal)
+                                        </td>*@
+                                        <td class="text-right">
+                                            @Html.DisplayFor(modelItem => item.TDSAmount)
+                                        </td>
+
+
+                                        <td class="text-right">
+                                            @Html.DisplayFor(modelItem => item.TDSRate)
+                                        </td>
+
+                                        <td>
+                                            <div class="d-flex justify-content-between">
+                                                @*@if (Model.AllowEdit == true)
+                                                {
+                                                    <span><i class="glyphicon glyphicon-edit" id="click" title="Edit" onclick="location.href = '@Url.Action("Edit", new { sono = item.PurInvoiceId })'"></i></span> }
+                                                else
+                                                {
+                                                    <span><i class="glyphicon glyphicon-edit" style="display:none" title="Edit" onclick="location.href = '@Url.Action("edit", new { sono = item.PurInvoiceId })'"></i></span>}
+                                                @if (Model.AllowDetails == true)
+                                                {
+                                                    <span><i class="glyphicon glyphicon-list" title="Details" onclick="location.href = '@Url.Action("Details",new {sono = item.PurInvoiceId })'"></i></span> }
+                                                else
+                                                {
+                                                    <span><i class="glyphicon glyphicon-list" style="display:none" title="Details" onclick="location.href = '@Url.Action("Details",new {sono = item.PurInvoiceId })'"></i></span>}*@
+
+                                            </div>
+                                            @*<div class="row">
+                                                    <div class="col-lg-1">
+                                                        <span><i class="glyphicon glyphicon-edit" style="cursor:pointer" onclick="openEditForm('@Url.Action("Edit", "Tds", new { sono = item.TdsId })')"></i></span>
+                                                    </div>
+                                                    <div class="col-lg-1">
+                                                        <span><i class="glyphicon glyphicon-list" style="cursor:pointer" onclick="location.href='@Url.Action("Details", new { sono = item.TdsId })'"></i></span>
+                                                    </div>
+                                                    <div class="col-lg-1">
+                                                        <span><i class="glyphicon glyphicon-trash" style="cursor:pointer" onclick="openDeleteForm('@Url.Action("Delete", "Tds", new { sono = item.TdsId })')"></i></span>
+                                                    </div>
+                                                </div>*@
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+
+
+
+                    <table align="center">
+                        <tr class="page">
+                            @if (Model.PageCount > 1)
+                            {
+                                @Html.HiddenFor(m => m.PageCount)
+                                <td>
+                                    @if (Model.RequestedPageNumber > 1)
+                                    {
+                                        <a id="FirstPage" href="#" class="btn btn-info" onclick='funPageNoClicked(1);'>First</a>
+                                    }
+                                </td>
+
+                                <td>
+                                    @if (Model.RequestedPageNumber > 1)
+                                    {
+                                        <a id="PreviousPage" href="#" class="btn btn-info" onclick='funPageNoClicked(@Model.RequestedPageNumber - 1);'><<</a>
+                                    }
+                                </td>
+
+                                {
+                                    int startPage;
+                                    int endPage;
+
+                                    if (Model.PageCount <= 10)
+                                    {
+                                        startPage = 1;
+                                        endPage = Model.PageCount;
+                                    }
+                                    else
+                                    {
+                                        if (Model.RequestedPageNumber <= 6)
+                                        {
+                                            startPage = 1;
+                                            endPage = 10;
+                                        }
+                                        else if (Model.RequestedPageNumber >= Model.PageCount - 4)
+                                        {
+                                            startPage = Model.PageCount - 9;
+                                            endPage = Model.PageCount;
+                                        }
+                                        else
+                                        {
+                                            startPage = Model.RequestedPageNumber - 5;
+                                            endPage = Model.RequestedPageNumber + 4;
+                                        }
+                                    }
+
+                                    for (int pgno = startPage; pgno <= endPage; pgno++)
+                                    {
+                                        <td>
+                                            <a id="PageNo" href="#" class="btn btn-secondary @(pgno == Model.RequestedPageNumber ? "active" : "")" onclick='funPageNoClicked(@pgno);'>@pgno.ToString()</a>
+                                        </td>
+                                    }
+                                }
+
+                                <td>
+                                    @if (Model.RequestedPageNumber < Model.PageCount)
+                                    {
+                                        <a id="NextPage" href="#" class="btn btn-info" onclick='funPageNoClicked(@Model.RequestedPageNumber + 1);'>>></a>
+                                    }
+                                </td>
+                                <td>
+                                    @if (Model.RequestedPageNumber < Model.PageCount)
+                                    {
+                                        <a id="LastPage" href="#" class="btn btn-info" onclick='funPageNoClicked(@Model.PageCount);'>Last</a>
+                                    }
+                                </td>
+                            }
+                            @Html.HiddenFor(x => x.isPageNavigationRequested)
+                            @Html.HiddenFor(x => x.RequestedPageNumber)
+                        </tr>
+                    </table>
+
+
+                    {
+                        <div class="pager">
+                            @*@Html.PagedListPager(Model, page => Url.Action("Index", new
+                                {
+                                    page,
+                                    SortBy = ViewBag.SortBy,
+                                    OrderBy = ViewBag.OrderBy,
+                                    RecordPerPage = ViewBag.RecordPerPage,
+                                    SaleOrderDate = ViewBag.SaleOrderDate,
+
+                                    PurchaseOrderNo = ViewBag.PurchaseOrderNo,
+                                    PurchaseOrderDate = ViewBag.PurchaseOrderDate,
+                                    CompanyName = ViewBag.CompanyName
+
+
+                                }))Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount*@
+
+
+                        </div>
+                    }
+                }
+
+
+            </div>
+
+        </div>
+
+
+        <!-- Modal Overlay -->
+        <div class="modalOverl" id="purchaseModalOverl" onclick="closeModal('gstModal')"></div>
+
+        <!-- Modal Content -->
+        <div class="modal" id="gstModal">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="gstModalLabel">Form 26Q - Deduction Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal('gstModal')">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-lg-4">
+                                <label for="startDate">From:</label>
+                                <input type="date" id="startDate" name="startDate" value="@DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd")">
+                            </div>
+                            <div class="col-lg-3">
+                                <label for="endDate">To:</label>
+                                <input type="date" id="endDate" name="endDate" value="@DateTime.Now.ToString("yyyy-MM-dd")">
+                            </div>
+                            <div class="col-lg-2">
+                                <select id="exportFormat" style="width:100%">
+                                    <option value="XLS">Excel</option>
+                                    <option value="PDF">PDF</option>
+                                    <option value="JPEG">JPEG</option>
+                                    <option value="HTML">HTML</option>
+                                </select>
+                            </div>
+
+                            <div class="col-lg-2">
+                                <button id="exportButton">Export</button>
+                            </div>
+                        </div>
+
+                        <!-- iframe for displaying the print page -->
+                        <iframe id="invoiceIframe" style="width: 10%; height: 50px;" frameborder="0"></iframe>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('gstModal')">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*</div>
+            </div>*@
+    </div>
+</div>
+
+<script type="text/javascript">
+    function openEditForm(editFormUrl) {
+        var editTab = window.open(editFormUrl, '_blank');
+
+        // Listen for the edit tab closure
+        editTab.onbeforeunload = function () {
+            // Refresh the index page when the edit tab is closed
+            location.reload();
+        };
+    }
+</script>
+
+<script type="text/javascript">
+    function openDeleteForm(deleteFormUrl) {
+        var editTab = window.open(deleteFormUrl, '_blank');
+
+        // Listen for the edit tab closure
+        editTab.onbeforeunload = function () {
+            // Refresh the index page when the edit tab is closed
+            location.reload();
+        };
+    }
+</script>
+
+
+
+

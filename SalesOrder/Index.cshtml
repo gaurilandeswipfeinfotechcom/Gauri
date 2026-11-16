@@ -1,0 +1,849 @@
+﻿﻿
+@using ERPModels
+@*@model  PagedList.IPagedList <ERPModels.SalesOrderSearch>*@
+@model ERPModels.SalesSearchModel_Paging
+
+
+@{
+    //SalesOrderSearchCriteria objSearch = ViewBag.SearchOrderCriteria;
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_SwipfeMaster.cshtml";
+
+
+}
+
+
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css"
+      rel="Stylesheet" type="text/css" />
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+@*<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />*@
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="Stylesheet" type="text/css" />
+@*AP external CSS*@
+<link href="~/Content/ERPStyle.css" rel="stylesheet" />
+
+
+<script type="text/javascript">
+
+    $(window).load(function () {
+
+        var b = '@Session["LoginUserId"]';
+        //var b = 9;
+        $.ajax({
+            url: '@Url.Action("GetInfo")',
+            data: { "userId": b },
+            type: "POST",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+
+                if (data.length > 0) {
+
+                    for (var i = 0; i < data.length; i++) {
+
+                        if (data[i].FormName == "SalesOrder") {
+
+                            if (data[i].Create == "Y") {
+
+                                $('#CreateSalesOrder').show();
+                            }
+                            else {
+
+                                $('#CreateSalesOrder').hide();
+                            }
+                        }
+
+                    }
+
+                }
+                if (data.length > 0) {
+
+                    for (var i = 0; i < data.length; i++) {
+
+                        if (data[i].FormName == "TaxInvoice") {
+
+                            if (data[i].Create == "Y") {
+
+                                $('#CreateTaxInvoice').show();
+                            }
+                            else {
+
+                                $('#CreateTaxInvoice').hide();
+                            }
+                        }
+
+                    }
+
+                }
+
+            }
+        });
+    });
+
+    @*$(window).load(function () {
+
+        var b = '@Session["LoginUserId"]';
+       // var b = 9;
+        $.ajax({
+            url: '@Url.Action("GetInfo")',
+            data: { "userId": b },
+            type: "POST",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+
+                if (data.length > 0) {
+
+                    for (var i = 0; i < data.length; i++) {
+
+                        if (data[i].FormName == "TaxInvoice") {
+
+                            if (data[i].Create == "Y") {
+
+                                $('#CreateTaxInvoice').show();
+                            }
+                            else {
+
+                                $('#CreateTaxInvoice').hide();
+                            }
+                        }
+
+                    }
+
+                }
+
+            }
+        });
+    });*@
+
+
+    function searchSalesOrderNo(id) {
+        var txt = document.getElementById(id);
+        //txt.value = txt.value.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+
+        // var txt = document.getElementById(id);
+        //alert("hi");
+        $.ajax({
+            url: '/SalesOrder/AutocompleteSalesOrderNo/',
+            data: { "searchByText": txt.value, "sortBy": $('#SortByColumnName').val() },
+            type: "POST",
+            dataType: "json",
+
+            success: function (data) {
+                $('#json-datalistSalesOrderNo').empty();
+                var jsonOptions = data;
+                var dataList = document.getElementById('json-datalistSalesOrderNo');
+
+                jsonOptions.forEach(function (item) {
+                    var option = document.createElement('option');
+                    option.value = item;
+                    dataList.appendChild(option);
+                });
+            },
+            error: function (xhr, status, error) {
+                alert(xhr.responseText);
+            }
+        });
+    } //end of searchSalesOrderNo
+
+    function validate() {
+        if ($('#SearchByText').val() != "") {
+            $('#SortByColumnName').val('SalesOrderNo');
+
+        }
+        else if ($('#SortByColumnName').val() != "SalesOrderNo") {
+            $('#SearchSalesOrderNo').val('');
+        }
+    }
+    function funPageNoClicked(requestedPgNo) {
+
+        $("#isPageNavigationRequested").val("true");
+        $("#RequestedPageNumber").val(requestedPgNo);
+        event.preventDefault();
+        $("#Sales_Order_List").submit();
+    }
+      @*$(function () {
+        $("#Search").click(function () {
+            $("#RequestedPageNumber").val(1); // Reset to first page on search
+            $("#isPageNavigationRequested").val("false");
+        });
+
+        $("#Search").click(function () {
+            var requestedPageNumber = parseInt($("#Page").val());
+            if (!isNaN(requestedPageNumber) && requestedPageNumber > 0 && requestedPageNumber <= @Model.PageCount) {
+                funPageNoClicked(requestedPageNumber);
+            }
+        });
+    });*@
+
+    $(function () {
+        $("#Search").click(function () {
+            $("#isPageNavigationRequested").val("false");
+        });
+    });
+    //function openEditForm(editFormUrl) {
+    //    var editTab = window.open(editFormUrl, '_blank');
+
+    //    // Listen for the edit tab closure
+    //    editTab.onbeforeunload = function () {
+    //        // Refresh the index page when the edit tab is closed
+    //        location.reload();
+    //    };
+    //}
+
+    function showInvoiceAndPrint(element) {
+    var mfgJournalNo = $(element).data("mfgjournalno");
+
+    // Step 1: Call the controller action to set the session
+    $.ajax({
+        url: '@Url.Action("Prints")',
+        type: 'POST',
+        data: { sono: mfgJournalNo },
+        success: function (response) {
+            if (response.success) {
+                // Step 2: Load the report page into iframe
+                $('#invoiceIframe').attr('src', '/SalesOrderReportPrint.aspx');
+
+                // Step 3: Open modal
+                openModal('invoiceModal', 'purchaseModalOverlay');
+            } else {
+                alert("Error: Unable to set session.");
+            }
+        },
+        error: function () {
+            alert('An error occurred while setting the session for the report.');
+        }
+    });
+}
+
+
+// Function to open the modal
+function openModal(modalId, overlayId) {
+    document.getElementById(modalId).style.display = "block";
+    document.getElementById(overlayId).style.display = "block";
+}
+
+// Function to close the modal
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = "none";
+    document.getElementById(modalId + "Overlay").style.display = "none";
+}
+</script>
+
+<style>
+
+    #label {
+        font-size: 15px;
+        color: #0077B3;
+        font-weight: 500
+    }
+
+    .table tr {
+        border: 5px solid #fff;
+        background-color: #e5e6eb
+    }
+
+    .panel .panel-body .table tr td {
+        background-color: #e5e6eb;
+        border-right: 2px solid #fff
+    }
+
+    table td {
+        font-size: 13px;
+    }
+
+    .panel .panel-body .table tr td:hover {
+        background-color: floralwhite
+    }
+
+    td span {
+        border: none;
+        background: none;
+        color: blue;
+        font-size: 15px;
+    }
+
+        td span i:hover {
+            transform: scale(1.3);
+            color: Highlight;
+        }
+
+
+    td .glyphicon-edit {
+        color: green;
+    }
+
+    td .glyphicon-list {
+        color: blue;
+        padding: 0px 4px;
+    }
+
+    .table tr th {
+        text-align: center;
+        background-color: lightblue;
+        font-family: Helvetica, sans-serif;
+        color: midnightblue;
+    }
+
+    td .glyphicon-print {
+        color: blueviolet;
+    }
+
+
+
+    .page td a {
+        font-size: 12px;
+    }
+
+    .route-path1 {
+        clip-path: polygon(0% 0%, 85% 0%, 100% 50%, 85% 100%, 0% 100%);
+        background-color: #003399;
+        color: white;
+        padding: 5px 10px 5px 5px
+    }
+
+    .route-path2 {
+        cursor: pointer;
+        color: white;
+        clip-path: polygon(93% 0%, 100% 50%, 93% 100%, 0% 100%, 7% 50%, 0% 0%);
+        background-color: #003399;
+        padding: 5px 15px 5px 15px;
+    }
+</style>
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/ERPStyle.css" rel="stylesheet" />
+
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="Stylesheet" type="text/css" />
+@*AP external CSS*@
+<link href="~/Content/ERPStyle.css" rel="stylesheet" />
+
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="d-flex" style="margin-top:-20px">
+            <h4 class="route-path1">Sales </h4>
+            <h4 class=" route-path2" onclick="location.href='@Url.Action("Index","SalesOrder")'">Sales Order</h4>
+        </div>
+        <br />
+        <div class="position-absolute top-0 end-0 d-flex p-1">
+            <i class="material-icons fs-2" style="color:midnightblue">file_copy</i>
+            <span class="fs-5">- Create Tax Invoice</span>
+        </div>
+
+        <div class="panel panel-default outer-main-container">
+            <div class="form-group row main-heading">
+
+                <div class="col-lg-9 d-flex ">
+                    <i class="material-icons" style="font-size: 32px; margin-right: 10px;">integration_instructions</i>
+                    Sales Order List
+                </div>
+                <div class="col-lg-3">
+                    <input type="button" id="CreateSalesOrder" value="Create" class="btn btn-success btn-round create-bttn  custo-inner" style="font-size:small;outline:none;" onclick="location.href = '@Url.Action("CreateNew", "SalesOrder")'" />
+                </div>
+
+            </div>
+
+            <div class="panel-body">
+                @Html.TextBox("details", null, new { @onkeyup = "myFunction(this.id)", @class = "form-control", style = "display: none;" })
+                @Html.TextBox("Edit", null, new { @onkeyup = "myFunction(this.id)", @class = "form-control", style = "display: none;" })
+                @using (Html.BeginForm("Index", "SalesOrder", FormMethod.Post, new { id = "Sales_Order_List" }))
+                {
+                    <div class="panel panel-success search-rectangle" style="margin-top:-15px">
+                        <div class="panel-body">
+                            <div class="form-group row" style="margin-top:-15px">
+                                <div class="col-lg-2 col-md-4 p-3">
+                                    <label id="label" class="mt-4">Search By :</label>
+                                    <div class="form-group row">
+                                        @Html.DropDownListFor(m => m.SortByColumnName, new List<SelectListItem>
+                                                                 {
+                                                                  new SelectListItem{ Text="Sales Order No.", Value = "SalesOrderNo" },
+                                                                  new SelectListItem{ Text="Quotation No.", Value = "QuotationNo" },
+                                                                  new SelectListItem { Text="Company Name", Value ="CompanyName"},
+                                                                  new SelectListItem { Text="Status", Value ="Status"},
+                                                                 }, new { @class = "form-control dropdown-textbox ", style = "height:35px;" })
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-8 p-3">
+                                    <label id="label" class="mt-4">Find :</label>
+
+                                    @Html.TextBoxFor(m => m.SearchByText, null, new
+                               {
+                                   @class = "form-control input-text-box fs-4",
+                                   @style = "height:35px;",
+                                   @oninput = "searchSalesOrderNo(this.id)",
+                                   @list = "json-datalistSalesOrderNo",
+
+                               })
+                                    <datalist id="json-datalistSalesOrderNo"></datalist>
+
+                                </div>
+                                <div class="col-lg-4 row p-3">
+                                    <div class="col-md-4 p-3 ">
+                                        <label id="label">Sort:</label>
+                                        <div class="form-group row">
+                                            @Html.DropDownListFor(m => m.OrderByType,
+                                           new List<SelectListItem> { new SelectListItem { Text = "Z-A", Value = "Z-A" },
+                                               new SelectListItem { Text = "A-Z", Value = "A-Z" }, },
+                                           new { @class = "form-control dropdown-textbox ", style = "height:35px;" })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4 p-3">
+                                        <label id="label">Records:</label>
+                                        @Html.TextBoxFor(m => m.RecordsPerPage, null, new
+                                   {
+                                            @class = "form-control input-text-box fs-4",
+                                       style = "height:35px"
+                                        })
+                                    </div>
+                                    <div class="col-md-4 p-3">
+                                        <label id="label">Page No. :</label>
+                                        @Html.TextBox("Page", null, new
+                                   {
+                                       @class = "form-control input-text-box fs-4",
+                                       style = "height:35px",
+                                       @id = "Page"
+                                   })
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-2 mt-5 ">
+                                    <button type="submit" id="Search" value="Search" name="Search" style="outline: none" class="btn btn-success btn-round search-bttn custo-inner">
+                                        Search<i class="material-icons" style="font-size: 20px;padding-left:15px">search</i>
+                                    </button>
+
+                                </div>
+
+                            </div>
+                            @*<div class="form-group row" style="margin-top:-15px">
+                                    <div class="col-md-6 col-lg-3">
+                                        <label id="label" style="color: #0077B3;  margin-top: 5px; font-weight: 500 ">Sale Order Date :</label>
+                                        @Html.CheckBoxFor(m => m.SalesOrderDate, true)
+                                    </div>
+                                    <div class="col-md-6 col-lg-3">
+                                        <label id="label" style="color: #0077B3;  margin-top: 5px; font-weight: 500 ">Purchase Order No :</label>
+                                        @Html.CheckBoxFor(m => m.PurchaseOrderNo, true)
+                                    </div>
+                                    <div class="col-md-6 col-lg-3">
+                                        <label id="label" style="color: #0077B3;  margin-top: 5px; font-weight: 500 ">Purchase Order Date : </label>
+                                        @Html.CheckBoxFor(m => m.PurchaseOrderDate, true)
+                                    </div>
+
+                                    <div class="col-md-6 col-lg-3">
+                                        <label id="label" style="color: #0077B3;  margin-top: 5px; font-weight: 500 ">Company Name: </label>
+                                        @Html.CheckBoxFor(m => m.CompanyName, true)
+                                    </div>
+                                </div>*@
+
+                        </div>
+                    </div>
+                    <div class="panel panel-success" style="box-shadow:inset 4px 4px 4px gray;border-radius:10px">
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table ">
+                                    <tr style=" border-bottom: 10px solid #fff; font-size: small">
+                                        <th width="3%" style="border-right: 2px solid #fff">
+                                            No.
+                                        </th>
+                                        <th width="8%" style=" border-right: 2px solid #fff">
+                                            SO. No.
+                                        </th>
+                                        @if (Model.SalesOrderDate == true)
+                                        {
+                                            <th width="10%" style=" border-right: 2px solid #fff">
+                                                SO. Date
+                                            </th>
+                                        }
+                                        <th width="8%" style=" border-right: 2px solid #fff">
+                                            Qtn. No.
+                                        </th>
+                                        @if (Model.CustomerPoNo == true)
+                                        {
+                                            <th width="11%" style="border-right: 2px solid #fff">
+                                                PO. No.
+                                            </th>
+                                        }
+                                        @if (Model.CustomerPoDate == true)
+                                        {
+                                            <th width="8%" style=" border-right: 2px solid #fff">
+                                                PO. Date
+                                            </th>
+                                        }
+                                        @if (Model.EntityName == true)
+                                        {
+                                            <th width="16%" style=" border-right: 2px solid #fff">
+                                                Company Name
+                                            </th>
+                                        }
+                                        <th width="8%" style=" border-right: 2px solid #fff">
+                                            Total Amount
+                                        </th>
+
+                                        <th width="8%" style=" border-right: 2px solid #fff">
+                                            Status
+                                        </th>
+
+                                        <th width="10%" style=" border-right: 2px solid #fff">
+                                            Reference Date
+                                        </th>
+                                        <th width="10%">
+                                            Action
+                                        </th>
+                                    </tr>
+                                    @{ int sno = (Model.RequestedPageNumber - 1) * Model.RecordsPerPage + 1;
+                                        foreach (var item in Model.EnquirySearchedList)
+                                        {
+
+
+                                            <tr>
+                                                <td style="text-align:center">
+                                                    @sno
+                                                    @{ sno++; }
+                                                </td>
+
+                                                <td style="text-align:center">
+                                                    @Html.DisplayFor(modelItem => item.SaleOrderNo)
+                                                </td>
+
+
+                                                @if (Model.SalesOrderDate == true)
+                                                {
+                                                    <td style="text-align:center">
+                                                        @Convert.ToString(string.Format("{0:dd/MM/yyyy HH:mm }", item.SaleOrderDate))
+
+                                                    </td>
+                                                }
+                                                @if (item.QuoteNo == null)
+
+                                                {
+                                                    <td style="text-align:center">N.A.</td>
+                                                }
+                                                else
+                                                {
+                                                    <td style="text-align:center">
+                                                        @Html.DisplayFor(modelItem => item.QuoteNo)
+                                                    </td>
+                                                }
+                                                @if (Model.CustomerPoNo == true)
+                                                {
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.PurchaseOrderNo)
+                                                    </td>
+                                                }
+                                                @if (Model.CustomerPoDate == true)
+                                                {
+                                                    <td style="text-align:center">
+                                                        @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.CustomerPoDate))
+
+                                                    </td>
+                                                }
+                                                @if (Model.EntityName == true)
+                                                {
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.EntityName)
+                                                    </td>
+                                                }
+                                                <td style="text-align:right">
+                                                    @Math.Round(Convert.ToDouble(item.TotalAmount), 0)
+
+                                                </td>
+
+                                                @if (item.Status == "Partly Dispatched" || item.Status == "Partly Assembly Scheduled" || item.Status == "Partly Ready For Dispatched" || item.Status == "Approved For Assembly")
+                                                {
+                                                    <td style="text-align:center">
+                                                        @Html.DisplayFor(modelItem => item.Status)
+                                                        <span id="CreateTaxInvoice" title="Create Tax Invoice" style=" color: midnightblue; cursor: pointer; padding-left: 30%">
+                                                            <i class="material-icons"
+                                                               onclick="location.href = '@Url.Action("Create", "TaxInvoice",new { Sono = item.SaleOrderNo }, null )'">file_copy</i>
+                                                        </span>
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td style="text-align:center">
+                                                        @Html.DisplayFor(modelItem => item.Status)
+                                                    </td>
+                                                }
+
+                                                <td style="text-align:center">
+
+                                                    @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.AssemblyDate))
+                                                </td>
+                                                <td>
+                                                    <div style="text-align:center">
+                                                        @*@if (Model.AllowEdit == true)
+                                                            {
+                                                                <span><i class="glyphicon glyphicon-edit" id="click" title="Edit" onclick="location.href = '@Url.Action("Edit", new { sono = item.SaleOrderNo })'"></i></span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span><i class="glyphicon glyphicon-edit" style="display:none" title="Edit" onclick="location.href = '@Url.Action("edit", new { sono = item.SaleOrderNo })'"></i></span>
+                                                            }*@
+                                                        @if (Model.AllowDetails == true || Model.AllowEdit == true)
+                                                        {
+                                                            <span><i class="glyphicon glyphicon-list" title="Details" onclick="location.href = '@Url.Action("Edit",new {sono = item.SaleOrderNo })'"></i></span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span><i class="glyphicon glyphicon-list" style="display:none" title="Details" onclick="location.href = '@Url.Action("Edit",new {sono = item.SaleOrderNo })'"></i></span>
+                                                        }
+
+                                                        <span>
+                                                            <i class="glyphicon glyphicon-print" title="View Sales Order"
+                                                               @*data-id="@item.SaleOrderID"*@
+                                                               data-mfgjournalno="@item.SaleOrderNo"
+                                                               onclick="showInvoiceAndPrint(this)">
+                                                            </i>
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                        }
+                                        // Show message if no records are found
+                                        if (!Model.EnquirySearchedList.Any())
+                                        {
+                                            <tr>
+                                                <td colspan="11" class="text-center">No records found.</td>
+                                            </tr>
+                                        }
+
+                                    }
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="goBackButton" class="btn btn-success  back-arrow-bttn" style="display:none">
+                        <i class="material-icons" style="font-size: 20px;padding-right:15px">arrow_back</i>Back
+                    </button>
+
+
+                    <div class="table-responsive p-2">
+                        <table align="center">
+                            <tr class="page">
+                                @if (Model.PageCount > 1)
+                                {
+                                    @Html.HiddenFor(m => m.PageCount)
+                                    <td>
+                                        @if (Model.RequestedPageNumber > 1)
+                                        {
+                                            <a id="FirstPage" href="#" class="btn btn-info custo-inner"
+                                               style="margin-right: 5px; background-image: linear-gradient(to right,#35d3e1,midnightblue); outline-style: none; border: none; padding: 5px 10px 5px 10px; color: #fff; font-size: 15px; font-family: helvetica "
+                                               onclick='funPageNoClicked(1);'>First</a>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @if (Model.RequestedPageNumber > 1)
+                                        {
+                                            <a id="PreviousPage" href="#" class="btn btn-info custo-inner"
+                                               style="margin-right: 10px; background-image: linear-gradient(to right,#35d3e1,midnightblue); outline-style: none; border: none; padding: 5px 10px 5px 10px; color: #fff; font-size: 15px; font-family: helvetica"
+                                               onclick='funPageNoClicked(@Model.RequestedPageNumber - 1);'><b><</b></a>
+                                        }
+                                    </td>
+
+                                    {
+                                        int startPage;
+                                        int endPage;
+
+                                        if (Model.PageCount <= 10)
+                                        {
+                                            startPage = 1;
+                                            endPage = Model.PageCount;
+                                        }
+                                        else
+                                        {
+                                            if (Model.RequestedPageNumber <= 6)
+                                            {
+                                                startPage = 1;
+                                                endPage = 10;
+                                            }
+                                            else if (Model.RequestedPageNumber >= Model.PageCount - 4)
+                                            {
+                                                startPage = Model.PageCount - 9;
+                                                endPage = Model.PageCount;
+                                            }
+                                            else
+                                            {
+                                                startPage = Model.RequestedPageNumber - 5;
+                                                endPage = Model.RequestedPageNumber + 4;
+                                            }
+                                        }
+
+                                        for (int pgno = startPage; pgno <= endPage; pgno++)
+                                        {
+                                            <td>
+                                                <a id="PageNo" href="#" class="btn btn-secondary btn-round @(pgno == Model.RequestedPageNumber ? "active" : "")" onclick='funPageNoClicked(@pgno);'>@pgno.ToString()</a>
+                                            </td>
+                                        }
+                                    }
+
+                                    <td>
+                                        @if (Model.RequestedPageNumber < Model.PageCount)
+                                        {
+                                            <a id="NextPage" href="#" class="btn btn-info custo-inner"
+                                               style="margin-left: 10px; background-image: linear-gradient(to right,#35d3e1,midnightblue); outline-style: none; border: none; padding: 5px 10px 5px 10px; color: #fff; font-size: 15px; font-family: helvetica"
+                                               onclick='funPageNoClicked(@Model.RequestedPageNumber + 1);'><b>></b></a>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (Model.RequestedPageNumber < Model.PageCount)
+                                        {
+                                            <a id="LastPage" href="#" class="btn btn-info custo-inner"
+                                               style="margin-left: 5px; background-image: linear-gradient(to right,#35d3e1,midnightblue); outline-style: none; border: none; padding: 5px 10px 5px 10px; color: #fff; font-size: 15px; font-family: helvetica"
+                                               onclick='funPageNoClicked(@Model.PageCount);'>Last</a>
+                                        }
+                                    </td>
+                                }
+                                @Html.HiddenFor(x => x.isPageNavigationRequested)
+                                @Html.HiddenFor(x => x.RequestedPageNumber)
+                            </tr>
+                        </table>
+                    </div>
+
+                    {
+                        <div class="pager">
+
+                        </div>
+                    }
+                }
+
+            </div>
+
+
+        </div>
+
+
+
+
+        <!-- Modal Overlay -->
+        <div class="modalOverlay" id="purchaseModalOverlay" onclick="closeModal('invoiceModal')"></div>
+
+        <!-- Modal Content -->
+        <div class="modal" id="invoiceModal" style=" backdrop-filter: blur(1px); background: rgba(0, 0, 0, 0.5); opacity: 1;">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content" style="margin-top: -6%; margin-bottom: 20%;">
+                    <div class="modal-header" style="background-color: #e5e6e7; box-shadow: 6px 6px 6px #bfc3cf ;margin-inline:10px">
+                        <h3 class="modal-title" id="invoiceModalLabel" style="margin-top: -15px; font-family: Helvetica; color: midnightblue">Sales Order</h3>
+                        <i class="material-icons" data-dismiss="modal" aria-label="Close" onclick="closeModal('invoiceModal')"
+                           style="float:right;color: midnightblue; font-size: 30px; cursor: pointer;margin-top:-15px">cancel</i>
+
+                    </div>
+                    <div class="modal-body">
+                        <!-- iframe for displaying the print page -->
+                        <iframe id="invoiceIframe" style="width: 100%; height: 400px;" frameborder="0"></iframe>
+                    </div>
+                    <div class="modal-footer" style="padding-bottom:10px">
+                        <button type="button" class="btn btn-success btn-round" onclick="closeModal('invoiceModal')"
+                                style=" background-image: linear-gradient(to right,#35d3e1,midnightblue); color: white; font-family: Helvetica; box-shadow: -4px -4px 8px rgba(255, 255, 255, 0.7), 4px 4px 8px rgba(128, 128, 128, 0.7); outline-style: none; border: none; padding: 5px 20px 5px 20px;">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var searchInput = $("#SearchByText");
+        var goBackButton = $("#goBackButton");
+
+        // Show the "GoBack" button if there's a value in the search input
+        if (searchInput.val()) {
+            goBackButton.show();
+        }
+
+        // Handle the click event of the "GoBack" button
+        goBackButton.on("click", function (event) {
+            event.preventDefault(); // Prevent default behavior
+            window.history.back();
+        });
+    });
+</script>
+<script type="text/javascript">
+    var currentPageNumber;  // Variable to store the current page number
+
+    function openEditForm(detailsFormUrl) {
+        // Store the current page number before opening the edit form
+        currentPageNumber = $("#Page").val();
+
+        var editTab = window.open(detailsFormUrl, '_blank');
+
+        // Listen for the edit tab closure
+        window.addEventListener('beforeunload', function () {
+            // Refresh the index page with the stored page number when the edit tab is closed
+            if (window.opener && !window.opener.closed) {
+                window.opener.location.href = window.opener.location.href + "?page=" + currentPageNumber;
+            }
+        });
+    }
+</script>
+
+<script type="text/javascript">
+    var currentPageNumber;  // Variable to store the current page number
+
+    function openDeleteForm(deleteFormUrl) {
+        // Store the current page number before opening the delete form
+        currentPageNumber = $("#Page").val();
+
+        var deleteTab = window.open(deleteFormUrl, '_blank');
+
+        // Listen for the delete tab closure
+        window.addEventListener('beforeunload', function () {
+            // Refresh the index page with the stored page number when the delete tab is closed
+            if (window.opener && !window.opener.closed) {
+                window.opener.location.href = window.opener.location.href + "?page=" + currentPageNumber;
+            }
+        });
+    }
+</script>
+<script>
+                                    $(function () {
+                                    $("#Search").click(function () {
+                                    var requestedPageNumber = parseInt($("#Page").val());
+                                    if (!isNaN(requestedPageNumber) && requestedPageNumber > 0 && requestedPageNumber <= @Model.PageCount) {
+                                    funPageNoClicked(requestedPageNumber);
+                                    }
+                                    });
+                                    });
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        /*module button*/
+        $.ajax({
+            url: '/Settings/GetAllColors',
+            type: 'GET',
+            success: function (colors) {
+                // Example: Apply Inner Button colors
+                var bgColor5 = colors.InnerButtonColor; // inner
+                var fontColor5 = colors.InnerButtonFontColor; // inner text
+
+                // Example for all preview boxes (optional)
+                $('.custo-inner').css('background', bgColor5);//  inner
+                $('.custo-inner').css('color', fontColor5);// inner text
+            },
+            error: function () {
+                console.error("Failed to load color settings.");
+            }
+        });
+
+    });
+</script>

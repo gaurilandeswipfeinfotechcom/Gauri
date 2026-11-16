@@ -1,0 +1,590 @@
+﻿@model ERPEntities.WorkFunction
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_SwipfeMaster.cshtml";
+}
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+<link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css"
+      rel="Stylesheet" type="text/css" />
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+<style>
+    /*Adding some css for looks good*/
+    #label {
+        font-size: medium;
+        color: #0077B3;
+        font-weight: normal
+    }
+
+    .zoom {
+        transition: transform .1s;
+    }
+
+        .zoom:hover {
+            -ms-transform: scale(1.5); /* IE 9 */
+            -webkit-transform: scale(1.5); /* Safari 3-8 */
+            transform: scale(1.02);
+        }
+
+    h3, h4 {
+        color: midnightblue
+    }
+
+    input.error {
+        border: 1px solid red;
+    }
+
+    .button:hover {
+        /*background-color: #3e8e41*/
+        background-color: cyan;
+    }
+
+    .button:active {
+        background-color: cyan;
+        box-shadow: 0 5px #666;
+        transform: translateY(4px);
+    }
+
+    .button1 {
+        border-radius: 50%;
+    }
+
+    span.error {
+        display: block;
+        visibility: hidden;
+        color: red;
+        font-size: 60px;
+    }
+
+
+    .ui-widget {
+        font-size: 12px !important;
+    }
+
+    .reqError {
+        color: #ff0000; /*Red Color*/
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+
+
+    .save-btn input:hover {
+        background-color: Highlight;
+        transform: scale(1.1);
+    }
+
+    .cross-btn {
+        font-size: 30px;
+        cursor: pointer;
+        color: midnightblue;
+        position: absolute;
+        top: 35px;
+        right: 15px;
+    }
+
+    .modal {
+        backdrop-filter: blur(1px);
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 1;
+    }
+
+    .modal-header {
+        background-color: #e5e6e7;
+        box-shadow: 6px 6px 6px #bfc3cf;
+    }
+
+    .modal-title {
+        font-family: Helvetica;
+        color: midnightblue
+    }
+
+    .modal-cross {
+        color: midnightblue;
+        font-size: 25px;
+        cursor: pointer;
+    }
+
+    .route-path1 {
+        cursor: pointer;
+        clip-path: polygon(0% 0%, 80% 0%, 100% 50%, 80% 100%, 0% 100%);
+        background-color: #003399;
+        color: white;
+        padding: 5px 15px 5px 5px
+    }
+
+    .route-path2 {
+        cursor: pointer;
+        color: white;
+        clip-path: polygon(94% 0%, 100% 50%, 94% 100%, 0% 100%, 6% 50%, 0% 0%);
+        background-color: #003399;
+        padding: 5px 15px 5px 15px;
+    }
+
+    .route-path3 {
+        cursor: pointer;
+        color: white;
+        clip-path: polygon(90% 0%, 100% 50%, 90% 100%, 0% 100%, 10% 50%, 0% 0%);
+        background-color: #003399;
+        padding: 5px 15px 5px 15px;
+    }
+
+    .upload-box {
+        border: 2px dashed #0077B3;
+        padding: 30px;
+        text-align: center;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: 0.3s;
+        background: #f9fbfd;
+    }
+
+        .upload-box:hover {
+            background: #eef6fb;
+            transform: scale(1.02);
+        }
+
+    .upload-icon {
+        font-size: 48px;
+        color: #0077B3;
+    }
+    /* Smaller upload boxes */
+    .upload-box {
+        border: 2px dashed #0077B3;
+        padding: 0px;
+        text-align: center;
+        border-radius: 10px;
+        cursor: pointer;
+        background: #f9fbfd;
+    }
+
+        .upload-box h4 {
+            font-size: 14px;
+            margin: 5px 0;
+        }
+
+        .upload-box p {
+            font-size: 12px;
+            margin: 0;
+            color: #666;
+        }
+
+    .upload-icon {
+        font-size: 32px;
+        color: #0077B3;
+    }
+
+    /* Selected file name text */
+    .selected-file-name {
+        margin-top: 6px;
+        font-size: 13px;
+        color: green;
+        font-weight: 500;
+        text-align: center;
+    }
+</style>
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="Stylesheet" type="text/css" />
+@*AP external CSS*@
+<link href="~/Content/ERPStyle.css" rel="stylesheet" type="text/css" />
+
+<script>
+    let workId;
+    const segments = window.location.pathname.split('/');
+    const worksId = segments[segments.length - 1];
+
+    if (!worksId) {
+        workId = $("#WorkFunctionId").val();
+    } else {
+        workId = parseInt(worksId); // convert to number
+    }
+
+    function Edit() {
+        window.location.href = `/WorkFunction/Details?WorkFunctionId=${workId}`;
+    }
+    console.log();
+    $(document).ready(function () {
+        $.ajax({
+            type: "POST",
+            url: '/WorkFunction/GetWorkFunction/',
+            data: { 'WorkFunctionId': workId }, // send empty object as JSON
+            //contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                var workfunction = data.WorkFunctionName.WorkFunctionName;
+                /*var quantity = data.WorkFunctionName.Quantity;*/
+                var recomtime = data.WorkFunctionName.RecommendedTime;
+                var setuptime = data.WorkFunctionName.SetupTime;
+                var dept = data.WorkFunctionName.Department;
+                var setup = data.WorkFunctionName.SetUpUnitId;
+                var recom = data.WorkFunctionName.RecommendedUnitId;
+                /*GETTING DATA PROCESS START*/
+
+
+                /*DISPLAY DATA ON CARDS START*/
+
+                // Create a row for the first card
+                var row1 = $('<div class="row "></div>');
+                var itemDetailsCard = $(`
+                    <div class="col-12 card-1">
+                        <div class="card zoom my-0" >
+                             <div class="card-body text-center d-inline p-3 ">
+                               <h3 class=" pl-0 pl-lg-2" style=" color: #0077B3; font-weight: bold">${workfunction}</h3>
+                             <div class="fs-4">
+                                  /*<span class="px-2 text-start" style="color: #0077B3;font-weight:500">Quantity : <span class="text-dark pl-0">${quantity || 'Not Avaliable!'}</span></span>*/
+                                  <span class="px-2 text-start"  style=" color: #0077B3;font-weight:500"> Approved Time Per No. : <span class="text-dark">${recomtime}</span></span>
+                                  <span class="px-2 text-start"  style=" color: #0077B3;font-weight:500">Set-Up Time Per No : <span class="text-dark">${setuptime}</span></span>
+                                  <span class="px-2 text-start"  style=" color: #0077B3;font-weight:500">Department : <span class="text-dark">${dept || 'Not Avaliable!'}</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`);
+                row1.append(itemDetailsCard);
+                $('#itemContainer').append(row1);
+
+                /*DISPLAY DATA ON CARDS END*/
+
+                /*PASSING DATA TO MODALS START*/
+
+                $(document).on('click', '.edit-Item-btn', function () {
+                    const button = $(this);
+                    $('#passItemiD').val('');
+                    $('#editWrkN').val(button.data('worknameee'));
+                    /*  $('#editQty').val(button.data('quntiii'));*/
+                    $('#editReTime').val(button.data('recomtime'));
+                    $('#editSetupt').val(button.data('setuptme'));
+                    $('#editDept').val(button.data('depart'));
+                    openModal('ItemEditModal', 'EditItemModalOverlay');
+                    console.log("Modal 1st:", {
+                        worknameee: button.data('worknameee'),
+                        /* quntiii: button.data('quntiii'),*/
+                        recomtime: button.data('recomtime'),
+                        setuptme: button.data('setuptme'),
+                        depart: button.data('depart'),
+                    });
+                });
+
+                /*PASSING DATA TO MODALS END*/
+            },
+            error: function (err) {
+                // Show the overlay
+                $('#EditItemModalOverlay').css('display', 'block');
+
+                // Show the modal
+                $('#ItemEditModal').css('display', 'block');
+            }
+        });
+    });
+    // Function to open the modal
+    function openModal(modalId, overlayId) {
+        document.getElementById(modalId).style.display = "block";
+        document.getElementById(overlayId).style.display = "block";
+    }
+
+    // Function to close the modal
+    function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        const overlay = document.getElementById(modalId + "Overlay");
+
+        if (modal) modal.style.display = "none";
+        if (overlay) overlay.style.display = "none";
+    }
+
+    $(document).on('click', '#UpdateWorkCardFirst', function (e) {
+        e.preventDefault();
+        let errors = [];
+
+        if (!$('#editWrkN').val().trim()) {
+            errors.push("Work Function name is required.");
+        }
+        //if (!$('#editQty').val().trim()) {
+        //    errors.push("Quantity is required.");
+        //}
+        if (!$('#editReTime').val().trim()) {
+            errors.push(" Approved Time Per No. is required.");
+        }
+        if (!$('#editSetupt').val().trim()) {
+            errors.push("Set-Up Per No. Time is required.");
+        }
+        if (!$('#editDept').val().trim()) {
+            errors.push("Department is required.");
+        }
+
+        if (errors.length > 0) {
+            alert(errors.join("\n"));  // display all errors in one alert
+            return;  // stop function here
+        }
+
+        const data = {
+            WorkFunctionName: $('#editWrkN').val(),
+            /*Quantity: $('#editQty').val(),*/
+            RecommendedTime: $('#editReTime').val(),
+            SetupTime: $('#editSetupt').val(),
+            Department: $('#editDept').val(),
+            RecommendedUnitId: $('#UnitId1').val(),
+            SetUpUnitId: $('#UnitId2').val(),
+        };
+
+        CreateWork(data);
+        console.log("🟢 Final Data Sent to Server:", JSON.stringify(data));
+    });
+
+
+    //Ajax call to save data as per user selection
+    function CreateWork(data) {
+        var formData = new FormData();
+
+        // Add form fields
+        for (var key in data) {
+            formData.append(key, data[key]);
+        }
+
+        // Add files
+        var docFile = $('#DocumentFile')[0].files[0];
+        var videoFile = $('#VideoFile')[0].files[0];
+
+        if (docFile) formData.append("DocumentFile", docFile);
+        if (videoFile) formData.append("VideoFile", videoFile);
+        $.ajax({
+            url: '/WorkFunction/CreateWorkFunction', // your correct URL
+            type: 'POST',
+            data: formData, // Send whole object
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                if (response.success) {
+                    alert('Created Successfully!');
+                    window.location.href = `/WorkFunction/Index`;
+
+                } else {
+                    alert('Create failed: ' + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                alert('Error: ' + error);
+            }
+        });
+    }
+
+
+
+
+</script>
+
+@using (Html.BeginForm("Create", "WorkFunction"))
+{
+    @Html.AntiForgeryToken()
+
+
+    <form id="TypeValidation" class="form-horizontal" action="#" method="">
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="d-flex" style="margin-top:-20px">
+                    <h4 class="route-path1">HR </h4>
+                    <h4 class="route-path2 " onclick="location.href='@Url.Action("Index","WorkFunction")'">Work Function</h4>
+                    <h4 class="route-path3 " onclick="location.reload()">Create</h4>
+                </div>
+                <br />
+
+                <div class="panel panel-default outer-main-container">
+                    <div class=" main-heading">
+                        <div class=" d-flex ">
+                            <i class="material-icons" style="font-size: 32px; margin-right: 10px;">feed</i>
+                            Work Function Creation
+                            <i class="material-icons cross-btn" onclick="history.back();">cancel</i>
+                        </div>
+                    </div>
+                    <div class="px-5 ">
+                        <div class="form-group row">
+                            <div class="container " id="itemContainer"></div>
+                        </div>
+                        <input id="passItemiD" class="d-none" />
+                        <div class="form-group row p-5">
+                            <div class="col-lg-3 col-sm-6 col-md-4 col-xxl-2">
+                                <input type="button" value="Close" class="btn btn-success btn-round  create-bttn custo-inner w-auto" style="outline-style: none;" onclick="window.location.href='@Url.Action("Index", "WorkFunction")'" />
+                            </div>
+                            <div class="col-lg-3 col-sm-6 col-md-4 col-xxl-2">
+                                <input type="button" value="View & Edit" class="btn btn-success btn-round  create-bttn custo-inner w-auto" style="outline-style: none;" onclick="Edit()" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!--Item edit Modal -->
+                <div class="modalOverlay" id="EditItemModalOverlay" onclick="closeModal('ItemEditModal')"></div>
+                <div id="ItemEditModal" class="modal">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content shadow-lg rounded-4">
+                            <div class="modal-header m-3 p-3">
+                                <h3 class="modal-title">Create Work Function </h3>
+                                <i class="material-icons modal-cross" data-dismiss="modal" aria-label="Close" onclick="history.back()">cancel</i>
+                            </div>
+                            <div class="modal-body p-4">
+                                <div class="form-group row mx-0">
+                                    <div class="col-md-7 col-sm-4">
+                                        <label for="editWrkN" id="label">Work Function Name :</label>
+                                        <input id="editWrkN" class="form-control input-text-box fs-4 pl-3 " style="height:35px" placeholder="Enter Work Function Name" />
+                                    </div>
+
+                                    <div class="col-md-3 col-sm-4">
+                                        <label for="editReTime" id="label"> Approved Time Per No. :</label>
+                                        <input id="editReTime" class="form-control input-text-box fs-4 pl-3" style="height:35px;" placeholder="Enter  Approved Time Per No." type="number" />
+                                    </div>
+                                    <div class="col-md-2 col-sm-4">
+                                        <label id="label">Unit :</label>
+                                        <div class="form-group row mt-2">
+                                            @Html.DropDownList("UnitId", (IEnumerable<SelectListItem>)ViewBag.UnitId, "Please Select", new
+                                            {
+                                           @class = "form-control bg-light fs-4 pl-3 dropdown-textbox",
+                                           @style = "height:35px",
+                                                id = "UnitId1"
+                                       })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4">
+                                        <label for="editSetupt" id="label">Set-Up Time Per No. :</label>
+                                        <input id="editSetupt" class="form-control input-text-box fs-4 pl-3" style="height:35px;" placeholder="Enter Set-Up Time Per No" type="number" />
+                                    </div>
+                                    <div class="col-md-2 col-sm-4">
+                                        <label id="label">Unit :</label>
+                                        <div class="form-group row mt-2">
+                                            @Html.DropDownList("UnitId", (IEnumerable<SelectListItem>)ViewBag.UnitId1, "Please Select", new
+                                       {
+                                           @class = "form-control bg-light fs-4 pl-3 dropdown-textbox",
+                                           @style = "height:35px",
+                                           id = "UnitId2"
+                                       })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4">
+                                        <label for="editDept" id="label">Department :</label>
+                                        @*<input id="editDept" class="form-control input-text-box fs-4 pl-3" style="height:35px;" placeholder="Enter Itemcode" oninput="this.value = this.value.toUpperCase()" />*@
+                                        <div id="" class="form-group row mt-2">
+                                            @Html.DropDownList("DepartmentName", (IEnumerable<SelectListItem>)ViewBag.DepartmentName, "Please Select", new
+                                       {
+                                           @class = "form-control bg-light fs-4 pl-3 dropdown-textbox",
+                                           @style = "height:35px",
+                                                id = "editDept"
+                                       })
+                                        </div>
+
+                                    </div>
+                                    <div class="row mt-4">
+                                        <!-- DOCUMENT UPLOAD -->
+                                        <div class="col-md-4">
+                                            <div class="upload-box" onclick="$('#DocumentFile').click();">
+                                                <i class="material-icons upload-icon">description</i>
+                                                <h4>Upload Document</h4>
+                                                <p>TXT / PDF / DOC / DOCX</p>
+                                            </div>
+
+                                            <div id="docSelectedName" class="selected-file-name">
+                                                No document selected
+                                            </div>
+
+                                            <input type="file"
+                                                   id="DocumentFile"
+                                                   name="DocumentFile"
+                                                   accept=".txt,.pdf,.doc,.docx"
+                                                   hidden />
+                                        </div>
+
+                                        <!-- DOCUMENT UPLOAD -->
+                                        <!--<div class="col-md-6">
+                                            <div class="upload-box" onclick="$('#DocumentFile').click();">
+                                                <i class="material-icons upload-icon">description</i>
+                                                <h4>Upload Document</h4>
+                                                <p>TXT / PDF / DOC / DOCX</p>
+                                            </div>
+                                            <input type="file"
+                                                   id="DocumentFile"
+                                                   name="DocumentFile"
+                                                   accept=".txt,.pdf,.doc,.docx"
+                                                   hidden />
+                                        </div>-->
+                                        <!-- VIDEO UPLOAD -->
+                                        <!--<div class="col-md-6">
+                                            <div class="upload-box" onclick="$('#VideoFile').click();">
+                                                <i class="material-icons upload-icon">videocam</i>
+                                                <h4>Upload Video</h4>
+                                                <p>MP4 / AVI / MOV</p>
+                                            </div>
+                                            <input type="file"
+                                                   id="VideoFile"
+                                                   name="VideoFile"
+                                                   accept="video/*"
+                                                   hidden />
+                                        </div>-->
+                                        <!-- VIDEO UPLOAD -->
+                                        <div class="col-md-4">
+                                            <div class="upload-box" onclick="$('#VideoFile').click();">
+                                                <i class="material-icons upload-icon">videocam</i>
+                                                <h4>Upload Video</h4>
+                                                <p>MP4 / AVI / MOV</p>
+                                            </div>
+
+                                            <div id="videoSelectedName" class="selected-file-name">
+                                                No video selected
+                                            </div>
+
+                                            <input type="file"
+                                                   id="VideoFile"
+                                                   name="VideoFile"
+                                                   accept="video/*"
+                                                   hidden />
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="modal-footer ">
+                                    <input type="button" value="Create" id="UpdateWorkCardFirst" class="btn btn-success btn-round create-bttn custo-inner" style="outline:none" />
+                                    <button type="button" class="btn btn-success btn-round create-bttn custo-inner" onclick="history.back()" style="outline:none">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+}
+<script>
+    $(document).on('input', '#editWrkN', function () {
+        let val = $(this).val()
+            .toLowerCase()
+            .replace(/\b\w/g, function (char) {
+                return char.toUpperCase();
+            });
+        $(this).val(val);
+    });
+</script>
+<script>
+    // Show selected document name
+    $('#DocumentFile').on('change', function () {
+        if (this.files.length > 0) {
+            $('#docSelectedName').text('📄 ' + this.files[0].name);
+        } else {
+            $('#docSelectedName').text('No document selected');
+        }
+    });
+
+    // Show selected video name
+    $('#VideoFile').on('change', function () {
+        if (this.files.length > 0) {
+            $('#videoSelectedName').text('🎥 ' + this.files[0].name);
+        } else {
+            $('#videoSelectedName').text('No video selected');
+        }
+    });
+</script>

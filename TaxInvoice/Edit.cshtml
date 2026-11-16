@@ -1,0 +1,3885 @@
+@model ERPEntities.TaxInvoice
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_SwipfeMaster.cshtml";
+}
+
+@*@if (Session["Username"] != null)
+    {
+
+    }
+    else
+    {
+        Session.Clear();
+        Session.Abandon();
+        //var s = window.location.toString().split('/Unit');
+        //window.location.href = s[0].toString() + '/QuotationReport.aspx';
+        <script>alert("Please Login");</script>
+        <script>
+                        //var s = window.location.toString().split('/');
+                        window.location.href = s[0].toString() + "/SwipfeHome/Login";</script>
+    }*@
+
+<style>
+    /*Adding some css for looks good*/
+    #label {
+        font-size: small;
+        color: #0077B3;
+    }
+
+
+    .button {
+        display: inline-block;
+        /*padding: 5px 6px;*/
+        /*font-size: 5px;*/
+        padding: 20px;
+        font-size: 16px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        outline: none;
+        /*color: #fff;*/
+        /*background-color: #4CAF50;*/
+        /*background-color: cyan;*/
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 9px #999;
+        height: 3px;
+        width: auto;
+        background-color: deepskyblue;
+        color: white;
+        margin: 4px 2px;
+    }
+
+        .button:hover {
+            /*background-color: #3e8e41*/
+            background-color: cyan;
+        }
+
+        .button:active {
+            background-color: cyan;
+            box-shadow: 0 5px #666;
+            transform: translateY(4px);
+        }
+
+    .button1 {
+        border-radius: 50%;
+        display: inline-block;
+        font-size: 16px;
+        text-align: center;
+        cursor: pointer;
+        color: white;
+        margin: 4px 2px;
+        background-color: deepskyblue;
+        /*outline-style:solid;*/
+        outline-color: cyan;
+    }
+
+    span.error {
+        display: block;
+        visibility: hidden;
+        color: red;
+        font-size: 60px;
+    }
+
+    .tablecontainer table {
+        width: 100%;
+        border-collapse: collapse;
+        border-top: 1px solid #BFAEAE;
+        border-right: 1px solid #BFAEAE;
+    }
+
+    .tablecontainer th {
+        border-bottom: 2px solid #BFAEAE !important;
+        background-color: lightcyan;
+        font-size: small;
+        text-align: center;
+        height: 30px;
+    }
+
+    .tablecontainer th, .tablecontainer td {
+        /*text-align: left;*/
+        border-left: 1px solid #BFAEAE;
+        padding: 5px;
+        border-bottom: 1px solid #BFAEAE;
+        font-size: small;
+    }
+
+    .ui-widget {
+        font-size: 12px !important;
+    }
+
+    .reqError {
+        color: #ff0000; /*Red Color*/
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .save-btn input:hover {
+        background-color: Highlight;
+        transform: scale(1.1);
+    }
+
+    .submit-btn {
+        display: inline-flex;
+        padding: 7px;
+    }
+</style>
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+<link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css"
+      rel="Stylesheet" type="text/css" />
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="Stylesheet" type="text/css" />
+@*AP external CSS*@
+<link href="~/Content/ERPStyle.css" rel="stylesheet" type="text/css" />
+
+<script>
+    var Status;
+    var orderItems = [];
+    $(window).load(function () {
+
+        var urlcurrent = $(location).attr('href');
+
+        urlcurrent = unescape(urlcurrent);
+        var i = urlcurrent.split("=");
+
+        $.ajax({
+
+
+            url: '@Url.Action("TIList")',
+            data: { "tino": i[1] },
+
+            type: "POST",
+            dataType: "json",
+            async: false,
+            success: function (resultso) {
+
+                if (resultso[0].SaleOrderNo == "" || resultso[0].SaleOrderNo == null) {
+
+                    $.ajax({
+
+                        url: '@Url.Action("TaxInvoicewithoueSalesOrder")',
+                        data: { "tino": i[1] },
+                        type: "POST",
+                        dataType: "json",
+                        success: function (result) {
+
+                            $('#orderItems').empty("");
+                            $("#LedgerID").val(result[0].LedgerID);
+                            GetCompanyInfo($("#LedgerID").val());
+
+                            $("#AddressTitle").val(result[0].AddressTitle);
+                            $("#Address").val(result[0].Address);
+                            $("#AddressTitleID").val(result[0].AddressTitleID);
+                            GetAddrCPInfo($("#AddressTitleID").val());
+                            Getcontactinfo(result[0].DesignationInfoID);
+                            $("#LandMark").val(result[0].LandMark);
+                            $("#Locality").val(result[0].Locality);
+                            $("#Taluka").val(result[0].Taluka);
+                            $("#District").val(result[0].District);
+                            $("#Pincode1").val(result[0].Pincode);
+                            $("#State").val(result[0].State);
+                            $("#Country").val(result[0].Country);
+                            $("#Note").val(result[0].Note);
+                            Status = result[0].StatusId;
+                            var mdate = new Date(parseInt(result[0].MaterialRequiredDate.substr(6)));
+
+                            $("#MaterialRequiredDate").val(convertDate(mdate));
+
+                            var mdate1 = new Date(parseInt(result[0].TaxInvoiceDate.substr(6)));
+
+                            $("#TaxInvoiceDate").val(convertDate(mdate1));
+
+                            $("#Discount").val(result[0].DiscountPercent);
+
+                            $("#PaymentTermID").val(result[0].PaymentTermID);
+
+                            $("#TermsOfDeliveryID").val(result[0].TermsOfDeliveryID);
+
+                            if (result[0].ShippingAddSameAsBillAdd == "Yes") {
+                                $("#shippAddress").hide();
+                                $('input:radio[name="SendType"]').filter('[value="Yes"]').attr('checked', true);
+
+                            }
+                            else if (result[0].ShippingAddSameAsBillAdd == "No") {
+                                $("#shippAddress").show();
+                                $('input:radio[name="ShippAdd"]').filter('[value="No"]').attr('checked', true);
+                                $("#ShippingAddress").val(result[0].ShippingAddress);
+                            }
+                            if (result[0].SendType == "By Hand") {
+                                $("#CourierName option:eq(0)").attr('selected', true)
+
+                                $('input:radio[name="SendType"]').filter('[value="By Hand"]').attr('checked', true);
+
+                            }
+                            else if (result[0].SendType == "By Courier") {
+                                $("#CourierID").val(result[0].CourierID);
+
+                                $("input:radio[name=RateType]").attr("disabled", false);
+
+                                $('input:radio[name="SendType"]').filter('[value="By Courier"]').attr('checked', true);
+
+                            }
+                            if (result[0].RateType == "" || result[0].RateType == null)
+                            { }
+                            else {
+                                if (result[0].RateType == "Air Rate") {
+
+                                    $('input:radio[name="RateType"]').filter('[value="Air Rate"]').attr('checked', true);
+
+                                }
+                                else if (result[0].RateType == "Surface Rate") {
+
+                                    $('input:radio[name="RateType"]').filter('[value="Surface Rate"]').attr('checked', true);
+
+                                }
+                            }
+
+                            initratetype = result[0].RateType;
+                            statename = result[0].State;
+                            cityname = result[0].Taluka;
+                            grate = result[0].pro[0].GSTRate;
+
+                            var i, TotalProductsWeight = 0.000;
+                            var prosubtotal = 0.00, apprate, amt;
+
+
+                            for (i = 0; i < result[0].pro.length; i++) {
+
+                                if ($("#Discount").val() == 0.00)
+
+
+                                    apprate = (result[0].pro[i].RatePerUnit).toFixed(2);
+                                else
+                                    apprate = (result[0].pro[i].RatePerUnit * (1 - $("#Discount").val() / 100)).toFixed(2);
+
+                                amt = (apprate * result[0].pro[i].Quantity).toFixed(2);
+
+
+                                orderItems.push({
+                                    SrNo: i + 1,
+                                    TaxInvoiceNo: $('#TaxInvoiceNo').val().trim(),
+                                    ItemID: result[0].pro[i].ItemID,
+                                    ItemName: result[0].pro[i].ItemName,
+
+                                    Quantity: result[0].pro[i].Quantity,
+                                    ItemCode: result[0].pro[i].ItemCode,
+                                    HSNCode: result[0].pro[i].HSNCode,
+                                    HSNClassification: result[0].pro[i].HSNClassification,
+                                    GSTRate: result[0].pro[i].GSTRate,
+                                    RatePerUnit: result[0].pro[i].RatePerUnit,
+                                    ApplicableRate: apprate,
+                                    Amount: amt,
+                                    WeightPerUnit: result[0].pro[i].WeightPerUnit,
+                                    WeightOfPackingBox: result[0].pro[i].WeightOfPackingBox,
+                                    EndSerailNo: result[0].pro[i].StartSerailNo,
+                                    EndSerialNo: result[0].pro[i].EndSerialNo
+
+                                });
+
+                            }
+
+                            GeneratedItemsTable();
+                            var subtot = 0;
+                            var weight;
+                            for (i = 0; i < orderItems.length; i++) {
+
+                                subtot = subtot + parseFloat(orderItems[i]["Amount"].toString());
+                            }
+                            $("#ProductSubTotal").attr("readonly", false);
+                            $("#ProductSubTotal").val(subtot);
+                            $("#ProductSubTotal").attr("readonly", true);
+                            GeneratedItemsTable();
+
+                            var ProductWeightPerUnit, TotalProductsWeight = 0;
+                            var WeightOfPackingBox;
+                            var Quantity;
+                            for (i = 0; i < orderItems.length; i++) {
+                                ProductWeightPerUnit = parseFloat(orderItems[i]["WeightPerUnit"].toString());
+                                WeightOfPackingBox = parseFloat(orderItems[i]["WeightOfPackingBox"].toString());
+                                Quantity = parseInt(orderItems[i]["Quantity"].toString());
+                                TotalProductsWeight = TotalProductsWeight + ((ProductWeightPerUnit + WeightOfPackingBox) * Quantity);///calculate total weight of courier
+                            }
+                            //TotalProductsWeight = Math.ceil(TotalProductsWeight);
+                            TotalProductsWeight = Math.round(TotalProductsWeight, 2);
+
+                            $("#TotalWeightInKg").attr("readonly", false);
+                            $("#TotalWeightInKg").val(TotalProductsWeight);
+                            $("#TotalWeightInKg").attr("readonly", true);
+
+                            checksendtype(result[0].SendType);
+                            OtherCourier();
+                            if ($("#CourierID").val() == 6)
+                                $("#FreightCharges").val(result[0].FreightCharges);
+                            calbyother();
+                            if (result[0].RateType == "" || result[0].RateType == null)
+                            { }
+                            else
+                            {
+
+                                checkratetype(result[0].RateType);
+                            }
+
+
+                        },
+                        error: function (reponse) {
+                            alert("error : " + reponse);
+                        }
+                    });
+                }
+                else {
+
+                    $.ajax({
+
+                        url: '@Url.Action("TaxInvoiceProductList")',
+                        data: { "tino": i[1] },
+                        type: "POST",
+                        dataType: "json",
+                        success: function (result) {
+
+                            if (result.d1.length > 0) {
+                                $('#orderItems').empty("");
+
+                                $("#LedgerID").val(result.d1[0].LedgerID);
+
+                                GetCompanyInfo($("#LedgerID").val());
+
+                                $("#AddressTitle").val(result.d1[0].AddressTitle);
+                                $("#Address").val(result.d1[0].Address);
+                                $("#AddressTitleID").val(result.d1[0].AddressTitleID);
+                                GetAddrCPInfo($("#AddressTitleID").val());
+                                Getcontactinfo(result.d1[0].DesignationInfoID);
+                                $("#LandMark").val(result.d1[0].LandMark);
+                                $("#Locality").val(result.d1[0].Locality);
+                                $("#Taluka").val(result.d1[0].Taluka);
+
+                                $("#District").val(result.d1[0].District);
+                                $("#Pincode1").val(result.d1[0].Pincode);
+                                $("#State").val(result.d1[0].State);
+                                $("#Country").val(result.d1[0].Country);
+                                Status = result.d1[0].StatusId;
+                                $("#MatReqPeriodID").val(result.d1[0].MatReqPeriodID);
+
+                                $("#Discount").val(result.d1[0].DiscountPercent);
+
+                                $("#PaymentTermID").val(result.d1[0].PaymentTermID);
+                                var mdate = new Date(parseInt(result.d1[0].MaterialRequiredDate.substr(6)));
+
+                                $("#MaterialRequiredDate").val(convertDate(mdate));
+
+                                var mdate1 = new Date(parseInt(result.d1[0].TaxInvoiceDate.substr(6)));
+
+                                $("#TaxInvoiceDate").val(convertDate(mdate1));
+
+
+                                $("#TermsOfDeliveryID").val(result.d1[0].TermsOfDeliveryID);
+                                if (result.d1[0].ShippingAddSameAsBillAdd == "Yes") {
+                                    $("#shippAddress").hide();
+                                    $('input:radio[name="SendType"]').filter('[value="Yes"]').attr('checked', true);
+
+                                }
+                                else if (result.d1[0].ShippingAddSameAsBillAdd == "No") {
+                                    $("#shippAddress").show();
+                                    $('input:radio[name="ShippAdd"]').filter('[value="No"]').attr('checked', true);
+                                    $("#ShippingAddress").val(result.d1[0].ShippingAddress);
+                                }
+                                if (result.d1[0].SendType == "By Hand") {
+                                    $("#CourierName option:eq(0)").attr('selected', true)
+
+                                    $('input:radio[name="SendType"]').filter('[value="By Hand"]').attr('checked', true);
+
+                                }
+
+                                else if (result.d1[0].SendType == "By Courier") {
+                                    $("#CourierID").val(result.d1[0].CourierID);
+
+                                    $("input:radio[name=RateType]").attr("disabled", false);
+
+                                    $('input:radio[name="SendType"]').filter('[value="By Courier"]').attr('checked', true);
+
+                                }
+                                if (result.d1[0].RateType == "" || result.d1[0].RateType == null)
+                                { }
+                                else {
+                                    if (result.d1[0].RateType == "Air Rate") {
+
+                                        $('input:radio[name="RateType"]').filter('[value="Air Rate"]').attr('checked', true);
+
+                                    }
+                                    else if (result.d1[0].RateType == "Surface Rate") {
+
+                                        $('input:radio[name="RateType"]').filter('[value="Surface Rate"]').attr('checked', true);
+
+                                    }
+                                }
+
+                                initratetype = result.d1[0].RateType;
+                                statename = result.d1[0].State;
+                                cityname = result.d1[0].Taluka;
+                                grate = result.d1[0].pro[0].GSTRate;
+
+                                var i, TotalProductsWeight = 0.000;
+                                var prosubtotal = 0.00, apprate, amt;
+
+
+                                for (i = 0; i < result.d1[0].pro.length; i++) {
+
+                                    //if ($("#Discount").val() == 0.00)
+                                    //
+                                    //
+                                    //    apprate = (result.d1[0].pro[i].RatePerUnit).toFixed(2);
+                                    //else
+                                    //    apprate = (result.d1[0].pro[i].RatePerUnit * (1 - $("#Discount").val() / 100)).toFixed(2);
+
+                                    amt = (result.d1[0].pro[i].ApplicableRate * result.d1[0].pro[i].Quantity).toFixed(2);
+
+                                    orderItems.push({
+                                        SrNo: i + 1,
+                                        TaxInvoiceNo: $('#TaxInvoiceNo').val().trim(),
+                                        ItemID: result.d1[0].pro[i].ItemID,
+                                        ItemName: result.d1[0].pro[i].ItemName,
+
+                                        Quantity: result.d1[0].pro[i].Quantity,
+                                        ItemCode: result.d1[0].pro[i].ItemCode,
+                                        HSNCode: result.d1[0].pro[i].HSNCode,
+                                        HSNClassification: result.d1[0].pro[i].HSNClassification,
+                                        GSTRate: result.d1[0].pro[i].GSTRate,
+                                        RatePerUnit: result.d1[0].pro[i].RatePerUnit,
+                                        ApplicableRate: result.d1[0].pro[i].ApplicableRate,
+                                        Amount: amt,
+                                        WeightPerUnit: result.d1[0].pro[i].WeightPerUnit,
+                                        WeightOfPackingBox: result.d1[0].pro[i].WeightOfPackingBox,
+                                        StartSerialNo: result.d1[0].pro[i].StartSerailNo,
+                                        EndSerialNo: result.d1[0].pro[i].EndSerialNo
+
+                                    });
+
+                                }
+
+                                GeneratedItemsTable();
+                                var subtot = 0;
+                                var weight;
+                                for (i = 0; i < orderItems.length; i++) {
+
+                                    subtot = subtot + parseFloat(orderItems[i]["Amount"].toString());
+                                }
+                                $("#ProductSubTotal").attr("readonly", false);
+                                $("#ProductSubTotal").val(subtot);
+                                $("#ProductSubTotal").attr("readonly", true);
+                                GeneratedItemsTable();
+
+                                var ProductWeightPerUnit, TotalProductsWeight = 0;
+                                var WeightOfPackingBox;
+                                var Quantity;
+                                for (i = 0; i < orderItems.length; i++) {
+                                    ProductWeightPerUnit = parseFloat(orderItems[i]["WeightPerUnit"].toString());
+                                    WeightOfPackingBox = parseFloat(orderItems[i]["WeightOfPackingBox"].toString());
+                                    Quantity = parseInt(orderItems[i]["Quantity"].toString());
+                                    TotalProductsWeight = TotalProductsWeight + ((ProductWeightPerUnit + WeightOfPackingBox) * Quantity);///calculate total weight of courier
+                                }
+                                //TotalProductsWeight = Math.ceil(TotalProductsWeight);
+                                TotalProductsWeight = Math.round(TotalProductsWeight, 2);
+
+                                $("#TotalWeightInKg").attr("readonly", false);
+                                $("#TotalWeightInKg").val(TotalProductsWeight);
+                                $("#TotalWeightInKg").attr("readonly", true);
+
+                                checksendtype(result.d1[0].SendType);
+                                OtherCourier();
+                                if ($("#CourierID").val() == 6)
+                                    $("#FreightCharges").val(result.d1[0].FreightCharges);
+                                calbyother();
+                                if (result.d1[0].RateType == "" || result.d1[0].RateType == null)
+                                { }
+                                else
+                                {
+
+                                    checkratetype(result.d1[0].RateType);
+                                }
+
+                            }
+                            else if (result.d1.length > 0)
+                            {
+
+                                $('#orderItems').empty("");
+
+                                $("#LedgerID").val(result.d1[0].LedgerID);
+
+                                GetCompanyInfo($("#LedgerID").val());
+
+                                $("#AddressTitle").val(result.d1[0].AddressTitle);
+                                $("#Address").val(result.d1[0].Address);
+                                $("#AddressTitleID").val(result.d1[0].AddressTitleID);
+                                GetAddrCPInfo($("#AddressTitleID").val());
+                                Getcontactinfo(result.d1[0].DesignationInfoID);
+                                $("#LandMark").val(result.d1[0].LandMark);
+                                $("#Locality").val(result.d1[0].Locality);
+                                $("#Taluka").val(result.d1[0].Taluka);
+
+                                $("#District").val(result.d1[0].District);
+                                $("#Pincode1").val(result.d1[0].Pincode);
+                                $("#State").val(result.d1[0].State);
+                                $("#Country").val(result.d1[0].Country);
+                                Status = result.d1[0].StatusId;
+                                $("#MatReqPeriodID").val(result.d1[0].MatReqPeriodID);
+
+                                $("#Discount").val(result.d1[0].DiscountPercent);
+
+                                $("#PaymentTermID").val(result.d1[0].PaymentTermID);
+                                var mdate = new Date(parseInt(result.d1[0].MaterialRequiredDate.substr(6)));
+
+                                $("#MaterialRequiredDate").val(convertDate(mdate));
+
+                                var mdate1 = new Date(parseInt(result.d1[0].TaxInvoiceDate.substr(6)));
+
+                                $("#TaxInvoiceDate").val(convertDate(mdate1));
+
+
+                                $("#TermsOfDeliveryID").val(result.d1[0].TermsOfDeliveryID);
+                                if (result.d1[0].ShippingAddSameAsBillAdd == "Yes") {
+                                    $("#shippAddress").hide();
+                                    $('input:radio[name="SendType"]').filter('[value="Yes"]').attr('checked', true);
+
+                                }
+                                else if (result.d1[0].ShippingAddSameAsBillAdd == "No") {
+                                    $("#shippAddress").show();
+                                    $('input:radio[name="ShippAdd"]').filter('[value="No"]').attr('checked', true);
+                                    $("#ShippingAddress").val(result.d1[0].ShippingAddress);
+                                }
+
+                                if (result.d1[0].SendType == "By Hand") {
+                                    $("#CourierName option:eq(0)").attr('selected', true)
+
+                                    $('input:radio[name="SendType"]').filter('[value="By Hand"]').attr('checked', true);
+
+                                }
+
+                                else if (result.d1[0].SendType == "By Courier") {
+                                    $("#CourierID").val(result.d1[0].CourierID);
+
+                                    $("input:radio[name=RateType]").attr("disabled", false);
+
+                                    $('input:radio[name="SendType"]').filter('[value="By Courier"]').attr('checked', true);
+
+                                }
+                                if (result.d1[0].RateType == "" || result.d1[0].RateType == null)
+                                { }
+                                else {
+                                    if (result.d1[0].RateType == "Air Rate") {
+
+                                        $('input:radio[name="RateType"]').filter('[value="Air Rate"]').attr('checked', true);
+
+                                    }
+                                    else if (result.d1[0].RateType == "Surface Rate") {
+
+                                        $('input:radio[name="RateType"]').filter('[value="Surface Rate"]').attr('checked', true);
+
+                                    }
+                                }
+
+                                initratetype = result.d1[0].RateType;
+                                statename = result.d1[0].State;
+                                cityname = result.d1[0].Taluka;
+                                grate = result.d1[0].pro[0].GSTRate;
+
+                                var i, TotalProductsWeight = 0.000;
+                                var prosubtotal = 0.00, apprate, amt;
+
+                                for (i = 0; i < result.d1[0].pro.length; i++) {
+
+                                    if ($("#Discount").val() == 0.00)
+
+
+                                        apprate = (result.d1[0].pro[i].RatePerUnit).toFixed(2);
+                                    else
+                                        apprate = (result.d1[0].pro[i].RatePerUnit * (1 - $("#Discount").val() / 100)).toFixed(2);
+
+                                    amt = (apprate * result.d1[0].pro[i].Quantity).toFixed(2);
+
+
+                                    orderItems.push({
+                                        SrNo: i + 1,
+                                        TaxInvoiceNo: $('#TaxInvoiceNo').val().trim(),
+                                        ItemID: result.d1[0].pro[i].ItemID,
+                                        ItemName: result.d1[0].pro[i].ItemName,
+
+                                        Quantity: result.d1[0].pro[i].Quantity,
+                                        ItemCode: result.d1[0].pro[i].ItemCode,
+                                        HSNCode: result.d1[0].pro[i].HSNCode,
+                                        HSNClassification: result.d1[0].pro[i].HSNClassification,
+                                        GSTRate: result.d1[0].pro[i].GSTRate,
+                                        RatePerUnit: result.d1[0].pro[i].RatePerUnit,
+                                        ApplicableRate: apprate,
+                                        Amount: amt,
+                                        WeightPerUnit: result.d1[0].pro[i].WeightPerUnit,
+                                        WeightOfPackingBox: result.d1[0].pro[i].WeightOfPackingBox,
+                                        StartSerialNo: result.d1[0].pro[i].StartSerailNo,
+                                        EndSerialNo: result.d1[0].pro[i].EndSerialNo
+
+                                    });
+
+                                }
+
+                                GeneratedItemsTable();
+                                var subtot = 0;
+                                var weight;
+                                for (i = 0; i < orderItems.length; i++) {
+
+                                    subtot = subtot + parseFloat(orderItems[i]["Amount"].toString());
+                                }
+                                $("#ProductSubTotal").attr("readonly", false);
+                                $("#ProductSubTotal").val(subtot);
+                                $("#ProductSubTotal").attr("readonly", true);
+                                GeneratedItemsTable();
+
+                                var ProductWeightPerUnit, TotalProductsWeight = 0;
+                                var WeightOfPackingBox;
+                                var Quantity;
+                                for (i = 0; i < orderItems.length; i++) {
+                                    ProductWeightPerUnit = parseFloat(orderItems[i]["WeightPerUnit"].toString());
+                                    WeightOfPackingBox = parseFloat(orderItems[i]["WeightOfPackingBox"].toString());
+                                    Quantity = parseInt(orderItems[i]["Quantity"].toString());
+                                    TotalProductsWeight = TotalProductsWeight + ((ProductWeightPerUnit + WeightOfPackingBox) * Quantity);///calculate total weight of courier
+                                }
+                                //TotalProductsWeight = Math.ceil(TotalProductsWeight);
+                                TotalProductsWeight = Math.round(TotalProductsWeight, 2);
+
+                                $("#TotalWeightInKg").attr("readonly", false);
+                                $("#TotalWeightInKg").val(TotalProductsWeight);
+                                $("#TotalWeightInKg").attr("readonly", true);
+
+                                checksendtype(result.d1[0].SendType);
+                                OtherCourier();
+                                if ($("#CourierID").val() == 6)
+                                    $("#FreightCharges").val(result.d1[0].FreightCharges);
+                                calbyother();
+                                if (result.d1[0].RateType == "" || result.d1[0].RateType == null)
+                                { }
+                                else
+                                {
+
+                                    checkratetype(result.d1[0].RateType);
+                                }
+                            }
+                        },
+
+                        error: function (reponse) {
+                            alert("error : " + reponse);
+                        }
+                    });
+                }
+            }
+        })
+    });
+
+    function Getcontactinfo(code) {
+        $.ajax({
+            url: '@Url.Action("GetCPInfoSelected")',
+            data: { "Desinfoid": code },
+            type: "POST",
+            dataType: "json",
+            async: false,
+
+            success: function (result) {
+
+    var vdata1 = result.d1;
+
+    if (!vdata1 || vdata1.length === 0) {
+        console.log("No contact person data found.");
+        $("#ContactPersonName").val("");
+        return;
+    }
+
+    var data = vdata1[0];
+
+    if (!data.MiddleName || data.MiddleName.trim() === "") {
+
+        $("#ContactPersonName")
+            .val(data.Title + " " + data.FirstName + " " + data.LastName)
+            .change();
+
+    } else {
+
+        $("#ContactPersonName")
+            .val(data.Title + " " + data.FirstName + " " + data.MiddleName + " " + data.LastName)
+            .change();
+    }
+}
+,
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+    }
+    function clear() {
+
+        $('#AddressTitleID').val("");
+        $('#Address').val("");
+        $('#LandMark').val("");
+        $('#Locality').val("");
+        $('#Taluka').val("");
+        $('#District').val("");
+        $('#Pincode1').val("");
+        $('#State').val("");
+        $('#Country').val("");
+        $('#LedgerID').val("");
+        $('#ContactPersonName').val("");
+        $('#OfficeMobileNo').val("");
+        $('#OfficeEmailId').val("");
+        //$('#PersonalMobileNo').val("");
+        //$('#PersonalEmailID').val("");
+        $('#TermsOfDeliveryID').val("Please Select");
+        $('#Discount').val("");
+        $('#PaymentTermID').val("Please Select");
+        $("#LedgerID").attr("disabled", false);
+
+    }
+
+
+    function GetCompanyInfo(code) {
+
+        $.ajax({
+            url: '@Url.Action("GetCompanyInfo")',
+            data: { "LedgerID": code },
+            type: "POST",
+            dataType: "json",
+            async: false,
+
+            success: function (result) {
+
+                $("#AddressTitleID").html("");
+
+                //$("#AddressTitleID").append('<option value="Please Select">Please Select</option>');
+                $.each(result.d1, function (i, data) {      // bind the dropdown list using json result
+                    $('<option>',
+                       {
+                           value: data.AddressTitleID,
+                           text: data.AddressTitleID
+                       }).html(data.AddressTitle).appendTo("#AddressTitleID");
+
+                });
+
+                var a = $("#AddressTitleID").val();
+
+                //fill item according to supplier
+                $.ajax({
+                    url: '@Url.Action("getAddressInfo")',
+                    data: '{add: "' + a + '"}',
+                    type: "POST",
+                    dataType: "json",
+                    async: false,
+                    contentType: "application/json; charset=utf-8",
+
+                    success: function (result1) {
+
+                        if (result1.length > 0) {
+
+                            var vdata = result1;
+
+                            $("#Address").val(vdata[0].Address);
+                            $("#State").val(vdata[0].State);
+                            $("#Pincode1").val(vdata[0].Pincode);
+
+                            $("#Locality").val(vdata[0].Locality);
+                            $("#Taluka").val(vdata[0].Taluka);
+                            $("#Country").val(vdata[0].Country);
+                            $("#District").val(vdata[0].District);
+                            GSTRegistrationId = vdata[0].GSTRegistrationId;
+
+                        }
+
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+
+                });
+
+                $.ajax({
+                    url: '@Url.Action("GetCPDetailsDirect")',
+                    data: { "LedgerID": $("#LedgerID").val(), "AddressTitleID": $("#AddressTitleID").val() },
+                    type: "POST",
+                    dataType: "json",
+                    async: false,
+
+                    success: function (result) {
+
+                        var vdata1 = result;
+
+                        $("#ContactPersonName").html("");
+                        $("#CountryCode1").val(vdata1[0].CountryCode);
+                        //$("#CountryCode2").val(vdata1[0].CountryCode);
+
+
+                        $.each(vdata1, function (i, data) {      // bind the dropdown list using json result
+                            if (data.MiddleName == null || data.MiddleName == "") {
+                                $('<option>',
+                                   {
+
+                                       value: data.Title + " " + data.FirstName + " " + data.LastName,
+                                       text: data.Title + " " + data.FirstName + " " + data.LastName
+                                   }).html(data.Title + " " + data.FirstName + " " + data.LastName).appendTo("#ContactPersonName");
+                            }
+                            else {
+                                $('<option>',
+                                   {
+
+                                       value: data.Title + " " + data.FirstName + " " + data.MiddleName + " " + data.LastName,
+                                       text: data.Title + " " + data.FirstName + " " + data.MiddleName + " " + data.LastName
+                                   }).html(data.Title + " " + data.FirstName + " " + data.MiddleName + " " + data.LastName).appendTo("#ContactPersonName");
+                            }
+
+                            if (data.OfficeMobileNo != null) {
+
+                                $('<option>',
+                                   {
+
+                                       value: data.OfficeMobileNo,
+                                       text: data.OfficeMobileNo
+                                   }).html(data.OfficeMobileNo).appendTo("#OfficeMobileNo");
+                            }
+                            if (data.OfficeEmailId != null) {
+                                $('<option>',
+                                   {
+
+                                       value: data.OfficeEmailId,
+                                       text: data.OfficeEmailId
+                                   }).html(data.OfficeEmailId).appendTo("#OfficeEmailId");
+                            }
+
+                            //if (data.PersonalMobileNo != null) {
+
+                            //    $('<option>',
+                            //       {
+
+                            //           value: data.PersonalMobileNo,
+                            //           text: data.PersonalMobileNo
+                            //       }).html(data.PersonalMobileNo).appendTo("#PersonalMobileNo");
+                            //}
+                            //if (data.PersonalEmailID != null) {
+                            //    $('<option>',
+                            //       {
+
+                            //           value: data.PersonalEmailID,
+                            //           text: data.PersonalEmailID
+                            //       }).html(data.PersonalEmailID).appendTo("#PersonalEmailID");
+                            //}
+
+                        });
+
+
+
+
+                        $.ajax({
+                            url: '@Url.Action("GetCPDetailsContact")',
+                            data: { "ContactPersonName": $("#ContactPersonName").val(), "LedgerID": $("#LedgerID").val(), "AddressTitleID": $("#AddressTitleID").val() },
+                            type: "POST",
+                            dataType: "json",
+                            async: false,
+
+                            success: function (result) {
+
+
+                                $("#OfficeMobileNo").val("Please Select");
+                                $("#OfficeEmailId").val("Please Select");
+                                //$("#PersonalMobileNo").val("Please Select");
+                               // $("#PersonalEmailID").val("Please Select");
+
+
+                                $("#OfficeMobileNo").val(result[0].OfficeMobileNo);
+
+
+                                $("#OfficeEmailId").val(result[0].OfficeEmailId);
+
+
+                                //$("#PersonalMobileNo").val(result[0].PersonalMobileNo);
+
+
+                                //$("#PersonalEmailID").val(result[0].PersonalEmailID);
+
+                                //$("#State").val(result[0].State);
+
+
+
+
+                            },
+                            error: function (reponse) {
+
+                                alert("error : " + reponse);
+                            }
+                        });
+
+
+                    },
+                    error: function (reponse) {
+
+                        alert("error : " + reponse);
+                    }
+                });
+
+                $("#TermsOfDeliveryID").val(result.d1[0].TermsOfDeliveryID);
+                //$("#TermsOfDeliveryID").attr("disabled", true);
+
+                $("#PaymentTermID").val(result.d1[0].PaymentTermID);
+                //$("#PaymentTermID").attr("disabled", true);
+
+                $("#Discount").val(result.d1[0].DiscountPercent);
+                $("#Discount").attr("disabled", true);
+
+
+                if (result.d1[0].SendType == "By Hand") {
+
+                    //$("#CourierName option:eq(0)").attr('selected', true)
+                    $("#CourierName option:eq(0)").attr('selected', true)
+
+                    $("#CourierID").val(9);
+                    $("#CourierID").attr("disabled", true);
+                    $('input:radio[name="SendType"]').filter('[value="By Hand"]').prop('checked', true);
+                    $('input:radio[name="RateType"]').filter('[value="Surface Rate"]').attr('checked', true);
+
+                    //$('input:radio[name="SendType"]').filter('[value="By Hand"]').attr('checked', true);
+
+                }
+                else {
+
+                    $("input:radio[name=RateType]").attr("disabled", false);
+                    //$(':radio[name=SendType][value="By Courier"]').prop('checked', true);
+                    $('input:radio[name="SendType"]').filter('[value="By Courier"]').prop('checked', true);
+                    $("#CourierID").val(result.d1[0].CourierID);
+                    $("#CourierID").attr("disabled", true);
+                    $('input:radio[name="RateType"]').filter('[value="Surface Rate"]').attr('checked', true);
+
+
+                }
+                //$("#CourierID").val(result.d1[0].CourierID);
+                // $("#CourierID").attr("disabled", true);
+
+
+
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+    }
+
+    function GetAddrCPInfo(code) {
+
+        var a = $("#AddressTitleID").val();
+
+        $.ajax({
+            url: '@Url.Action("getAddressInfo")',
+            data: '{add: "' + a + '"}',
+            type: "POST",
+            dataType: "json",
+            async: false,
+            contentType: "application/json; charset=utf-8",
+
+            success: function (result1) {
+
+                if (result1.length > 0) {
+
+                    var vdata = result1;
+
+                    $("#Address").val(vdata[0].Address);
+
+                    $("#AddressTitle").val(vdata[0].AddressTitle);
+                    $("#LandMark").val(vdata[0].LandMark);
+
+                    $("#Locality").val(vdata[0].Locality);
+
+                    $("#Taluka").val(vdata[0].Taluka);
+
+                    $("#District").val(vdata[0].District);
+                    $("#Pincode1").val(vdata[0].Pincode);
+
+
+                    $("#State").val(vdata[0].State);
+                    $("#Country").val(vdata[0].Country);
+                    GSTRegistrationId = vdata[0].GSTRegistrationId;
+                }
+
+            },
+            failure: function (response) {
+                alert(response.responseText);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+
+        });
+        //CP INFO
+
+
+
+        $.ajax({
+            url: '@Url.Action("GetCPInfoImp")',
+            data: { "AddressTitleID": code },
+            type: "POST",
+            dataType: "json",
+            async: false,
+
+            success: function (result) {
+
+
+                var vdata1 = result.d1;
+                var vdata2 = result.d2;
+                var vdata3 = result.d3;
+                //var vdata4 = result.d4;
+
+
+
+                $("#ContactPersonName").html("");
+                //$("#ContactPersonName").append('<option value="Please Select">Please Select</option>');
+
+
+                $.each(vdata1, function (i, data) {      // bind the dropdown list using json result
+                    if (data.MiddleName == null || data.MiddleName == "") {
+                        $('<option>',
+                           {
+
+                               value: data.Title + " " + data.FirstName + " " + data.LastName,
+                               text: data.Title + " " + data.FirstName + " " + data.LastName
+                           }).html(data.Title + " " + data.FirstName + " " + data.LastName).appendTo("#ContactPersonName");
+
+                    }
+                    else {
+                        $('<option>',
+                           {
+
+                               value: data.Title + " " + data.FirstName + " " + data.MiddleName + " " + data.LastName,
+                               text: data.Title + " " + data.FirstName + " " + data.MiddleName + " " + data.LastName
+                           }).html(data.Title + " " + data.FirstName + " " + data.MiddleName + " " + data.LastName).appendTo("#ContactPersonName");
+                    }
+                });
+
+                $("#CPDesignation").val(vdata1[0].CPDesignation);
+
+                //office mob email
+                $("#OfficeMobileNo").html("");
+                //$("#OfficeMobileNo").append('<option value="Please Select">Please Select</option>');
+
+                $("#OfficeEmailId").html("");
+                //$("#OfficeEmailId").append('<option value="Please Select">Please Select</option>');
+
+                for (var j = 0; j < vdata3.length; j++) {
+
+                    //alert(data3[0].OfficeMobileNo);
+                    if (vdata3[j].OfficeMobileNo != null) {
+                        $('<option>',
+                           {
+
+                               value: vdata3[j].OfficeMobileNo,
+                               text: vdata3[j].OfficeMobileNo
+                           }).html(vdata3[j].OfficeMobileNo).appendTo("#OfficeMobileNo");
+                    }
+                    if (vdata3[j].OfficeEmailId != null) {
+                        $('<option>',
+                          {
+
+                              value: vdata3[j].OfficeEmailId,
+                              text: vdata3[j].OfficeEmailId
+                          }).html(vdata3[j].OfficeEmailId).appendTo("#OfficeEmailId");
+                    }
+                }
+
+                ////Personal Email mob
+                //$("#PersonalMobileNo").html("");
+                ////$("#PersonalMobileNo").append('<option value="Please Select">Please Select</option>');
+
+                //$("#PersonalEmailID").html("");
+                ////$("#PersonalEmailID").append('<option value="Please Select">Please Select</option>');
+
+                //for (var j = 0; j < vdata4.length; j++) {
+
+                //    //alert(data3[0].OfficeMobileNo);
+                //    if (vdata4[j].PersonalMobileNo != null) {
+                //        $('<option>',
+                //           {
+
+                //               value: vdata3[j].PersonalMobileNo,
+                //               text: vdata4[j].PersonalMobileNo
+                //           }).html(vdata4[j].PersonalMobileNo).appendTo("#PersonalMobileNo");
+                //    }
+                //    if (vdata4[j].PersonalEmailID != null) {
+                //        $('<option>',
+                //          {
+
+                //              value: vdata4[j].PersonalEmailID,
+                //              text: vdata4[j].PersonalEmailID
+                //          }).html(vdata4[j].PersonalEmailID).appendTo("#PersonalEmailID");
+                //    }
+                //}
+
+                //$("#CPDesignation").val(result[0].CPDesignation);
+
+
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+
+
+
+    }
+    @*//for contact person detaisl
+    function GetCPInfo(code) {
+
+        $.ajax({
+            url: '@Url.Action("GetCPInfo1")',
+            data: { "AddressTitleID": code },
+            type: "POST",
+            dataType: "json",
+            async: false,
+
+            success: function (result) {
+
+
+                var vdata1 = result.d1;
+                var vdata2 = result.d2;
+                var vdata3 = result.d3;
+                var vdata4 = result.d4;
+
+                $("#Address").attr("disabled", false);
+                $("#Address").val(vdata2[0].Address);
+                $("#Address").attr("disabled", true);
+
+                $("#ContactPersonName").html("");
+                //$("#ContactPersonName").append('<option value="Please Select">Please Select</option>');
+
+
+                $.each(vdata1, function (i, data) {      // bind the dropdown list using json result
+                    if (data.MiddleName == null || data.MiddleName == "") {
+                        $('<option>',
+                           {
+
+                               value: data.Title + " " + data.FirstName + " " + data.LastName,
+                               text: data.Title + " " + data.FirstName + " " + data.LastName
+                           }).html(data.Title + " " + data.FirstName + " " + data.LastName).appendTo("#ContactPersonName");
+                    }
+                    else {
+                        $('<option>',
+                           {
+
+                               value: data.Title + " " + data.FirstName + " " + data.MiddleName + " " + data.LastName,
+                               text: data.Title + " " + data.FirstName + " " + data.MiddleName + " " + data.LastName
+                           }).html(data.Title + " " + data.FirstName + " " + data.MiddleName + " " + data.LastName).appendTo("#ContactPersonName");
+                    }
+                });
+
+                //office mob email
+                $("#OfficeMobileNo").html("");
+                //$("#OfficeMobileNo").append('<option value="Please Select">Please Select</option>');
+
+                $("#OfficeEmailId").html("");
+                //$("#OfficeEmailId").append('<option value="Please Select">Please Select</option>');
+
+                for (var j = 0; j < vdata3.length; j++) {
+
+                    //alert(data3[0].OfficeMobileNo);
+                    if (vdata3[j].OfficeMobileNo != null) {
+                        $('<option>',
+                           {
+
+                               value: vdata3[j].OfficeMobileNo,
+                               text: vdata3[j].OfficeMobileNo
+                           }).html(vdata3[j].OfficeMobileNo).appendTo("#OfficeMobileNo");
+                    }
+                    if (vdata3[j].OfficeEmailId != null) {
+                        $('<option>',
+                          {
+
+                              value: vdata3[j].OfficeEmailId,
+                              text: vdata3[j].OfficeEmailId
+                          }).html(vdata3[j].OfficeEmailId).appendTo("#OfficeEmailId");
+                    }
+                }
+
+                //Personal Email mob
+                $("#PersonalMobileNo").html("");
+                //$("#PersonalMobileNo").append('<option value="Please Select">Please Select</option>');
+
+                $("#PersonalEmailID").html("");
+                //$("#PersonalEmailID").append('<option value="Please Select">Please Select</option>');
+
+                for (var j = 0; j < vdata4.length; j++) {
+
+                    //alert(data3[0].OfficeMobileNo);
+                    if (vdata4[j].PersonalMobileNo != null) {
+                        $('<option>',
+                           {
+
+                               value: vdata3[j].PersonalMobileNo,
+                               text: vdata4[j].PersonalMobileNo
+                           }).html(vdata4[j].PersonalMobileNo).appendTo("#PersonalMobileNo");
+                    }
+                    if (vdata4[j].PersonalEmailID != null) {
+                        $('<option>',
+                          {
+
+                              value: vdata4[j].PersonalEmailID,
+                              text: vdata4[j].PersonalEmailID
+                          }).html(vdata4[j].PersonalEmailID).appendTo("#PersonalEmailID");
+                    }
+                }
+
+
+
+
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+    }*@
+
+    function GetCPDetails(code) {
+
+        $.ajax({
+            url: '@Url.Action("GetCPDetails")',
+            data: { "ContactPersonName": code, "LedgerID": $("#LedgerID").val(), "AddressTitleID": $("#AddressTitleID").val() },
+            type: "POST",
+            dataType: "json",
+            async: false,
+
+            success: function (result) {
+
+                $("#OfficeMobileNo").val("Please Select");
+                $("#OfficeEmailId").val("Please Select");
+                //$("#PersonalMobileNo").val("Please Select");
+                //$("#PersonalEmailID").val("Please Select");
+                $("#CountryCode1").val(result[0].CountryCode);
+                //$("#CountryCode2").val(result[0].CountryCode);
+
+
+                $("#OfficeMobileNo").val(result[0].OfficeMobileNo);
+
+
+                $("#OfficeEmailId").val(result[0].OfficeEmailId);
+
+
+                $("#PersonalMobileNo").val(result[0].PersonalMobileNo);
+
+
+                $("#PersonalEmailID").val(result[0].PersonalEmailID);
+
+                $("#CPDesignation").val(result[0].CPDesignation);
+
+
+            },
+            error: function (reponse) {
+
+                alert("error : " + reponse);
+            }
+        });
+    }
+
+    function GetCPDetailsByOffmobno(code) {
+
+        $.ajax({
+            url: '@Url.Action("GetCPDetailsByOffmobno")',
+            data: { "OffMobile": code },
+            type: "POST",
+            dataType: "json",
+            async: false,
+
+            success: function (result) {
+
+                $("#ContactPersonName").val("Please Select");
+                $("#OfficeEmailId").val("Please Select");
+                //$("#PersonalMobileNo").val("Please Select");
+                //$("#PersonalEmailID").val("Please Select");
+                if (result.d2 == true) {
+                    $("#CountryCode1").val(result.d1[0].CountryCode);
+                    //$("#CountryCode2").val(result.d1[0].CountryCode);
+                    $("#OfficeEmailId").val(result.d1[0].OfficeEmailId);
+
+
+                    if (result.d1[0].MiddleName == null || result.d1[0].MiddleName == '')
+                        $("#ContactPersonName").val(result.d1[0].Title + " " + result.d1[0].FirstName + " " + result.d1[0].LastName);
+                    else
+                        $("#ContactPersonName").val(result.d1[0].Title + " " + result.d1[0].FirstName + " " + result.d1[0].MiddleName + " " + result.d1[0].LastName);
+
+
+
+                    //$("#PersonalMobileNo").val(result.d1[0].PersonalMobileNo);
+
+
+                    //$("#PersonalEmailID").val(result.d1[0].PersonalEmailID);
+
+                }
+                else {
+                    $("#OfficeEmailId").val(result.d1[0].OfficeEmailId);
+
+                }
+                $("#CPDesignation").val(result[0].CPDesignation);
+
+            },
+            error: function (reponse) {
+
+                alert("error : " + reponse);
+            }
+        });
+    }
+    function GetCPDetailsByOffemail(code) {
+
+
+        $.ajax({
+            url: '@Url.Action("GetCPDetailsByOffemail")',
+            data: { "OffEmail": code },
+            type: "POST",
+            dataType: "json",
+
+            success: function (result) {
+
+                $("#ContactPersonName").val("Please Select");
+                $("#OfficeMobileNo").val("Please Select");
+                //$("#PersonalMobileNo").val("Please Select");
+                //$("#PersonalEmailID").val("Please Select");
+
+                if (result.d2 == true) {
+                    $("#CountryCode1").val(result.d1[0].CountryCode);
+                    //$("#CountryCode2").val(result.d1[0].CountryCode);
+                    if (result.d1[0].MiddleName == null || result.d1[0].MiddleName == '')
+                        $("#ContactPersonName").val(result.d1[0].Title + " " + result.d1[0].FirstName + " " + result.d1[0].LastName);
+                    else
+                        $("#ContactPersonName").val(result.d1[0].Title + " " + result.d1[0].FirstName + " " + result.d1[0].MiddleName + " " + result.d1[0].LastName);
+
+                    $("#OfficeMobileNo").val(result.d1[0].OfficeMobileNo);
+
+                    //$("#PersonalMobileNo").val(result.d1[0].PersonalMobileNo);
+                    //$("#PersonalEmailID").val(result.d1[0].PersonalEmailID);
+
+
+                }
+                else {
+
+                    $("#OfficeMobileNo").val(result.d1[0].OfficeMobileNo);
+
+
+                }
+                $("#CPDesignation").val(result[0].CPDesignation);
+
+            },
+            error: function (reponse) {
+
+                alert("error : " + reponse);
+            }
+        });
+    }
+
+
+    function GetCPDetailsByPermobno(code) {
+
+        $.ajax({
+            url: '@Url.Action("GetCPDetailsByPermobno")',
+            data: { "PerMobile": code },
+            type: "POST",
+            dataType: "json",
+
+            success: function (result) {
+
+                $("#ContactPersonName").val("Please Select");
+                $("#OfficeMobileNo").val("Please Select");
+                $("#OfficeEmailId").val("Please Select");
+                $("#PersonalEmailID").val("Please Select");
+                $("#CountryCode1").val(result[0].CountryCode);
+                //$("#CountryCode2").val(result[0].CountryCode);
+                if (result.d1[0].MiddleName == null || result.d1[0].MiddleName == '')
+                    $("#ContactPersonName").val(result.d1[0].Title + " " + result.d1[0].FirstName + " " + result.d1[0].LastName);
+                else
+                    $("#ContactPersonName").val(result.d1[0].Title + " " + result.d1[0].FirstName + " " + result.d1[0].MiddleName + " " + result.d1[0].LastName);
+
+                $("#OfficeMobileNo").val(result[0].OfficeMobileNo);
+
+
+                $("#OfficeEmailId").val(result[0].OfficeEmailId);
+
+
+
+                $("#PersonalEmailID").val(result[0].PersonalEmailID);
+                $("#CPDesignation").val(result[0].CPDesignation);
+
+            },
+            error: function (reponse) {
+
+                alert("error : " + reponse);
+            }
+        });
+    }
+
+    function GetCPDetailsByPeremail(code) {
+
+        $.ajax({
+            url: '@Url.Action("GetCPDetailsByPeremail")',
+            data: { "PerEmail": code },
+            type: "POST",
+            dataType: "json",
+            // contentType: "application/json; charset=utf-8",
+            success: function (result) {
+
+                $("#ContactPersonName").val("Please Select");
+                $("#OfficeMobileNo").val("Please Select");
+                $("#OfficeEmailId").val("Please Select");
+                //$("#PersonalMobileNo").val("Please Select");
+
+                $("#CountryCode1").val(result[0].CountryCode);
+                //$("#CountryCode2").val(result[0].CountryCode);
+                if (result.d1[0].MiddleName == null || result.d1[0].MiddleName == '')
+                    $("#ContactPersonName").val(result.d1[0].Title + " " + result.d1[0].FirstName + " " + result.d1[0].LastName);
+                else
+                    $("#ContactPersonName").val(result.d1[0].Title + " " + result.d1[0].FirstName + " " + result.d1[0].MiddleName + " " + result.d1[0].LastName);
+
+                $("#OfficeMobileNo").val(result[0].OfficeMobileNo);
+
+
+                $("#OfficeEmailId").val(result[0].OfficeEmailId);
+
+
+                //$("#PersonalMobileNo").val(result[0].PersonalMobileNo);
+
+                $("#CPDesignation").val(result[0].CPDesignation);
+
+            },
+            error: function (reponse) {
+
+                alert("error : " + reponse);
+            }
+        });
+    }
+
+    function convertDate(inputFormat) {
+        function pad(s) { return (s < 10) ? '0' + s : s; }
+        var d = new Date(inputFormat)
+        return [d.getFullYear(), pad(d.getMonth() + 1), pad(d.getDate())].join('-')
+    }
+
+   function GetCode(showPopup = true) {
+    $.ajax({
+        url: '@Url.Action("GetCode")',
+        data: {
+            ItemID: $("#ItemID").val().trim(),
+            legerid: $("#AddressTitleID").val().trim(),
+            SONo: $('#SaleOrderNo').val().trim()
+        },
+        type: "POST",
+        dataType: "json",
+        success: function (data) {
+
+            if (data.length > 0) {
+
+                var vdata = data[0];
+
+                $("#ItemCode").val(vdata.ItemCode)
+                              .prop("disabled", true);
+
+                if (showPopup) {
+                    LoadSerialPopup(vdata.SerialNumbers);
+                }
+            }
+        }
+    });
+}
+
+
+
+    //$("#btnSerialPopup").click(function () {
+
+    //    openModal('serialModal', 'serialModalOverlay');
+
+    //});
+
+    //$("#btnSerialPopup").click(function () {
+
+    //    $("#serialModal").modal("show");
+
+    //});
+
+    var SelectedSerialNumbers = [];
+
+    $(document).on("click", "#btnSaveSerial", function () {
+
+        SelectedSerialNumbers = [];
+
+        $(".serialChk:checked").each(function () {
+            SelectedSerialNumbers.push($(this).val());
+        });
+
+        $("#SerialNoText").val(SelectedSerialNumbers.join(", "));
+
+        closeModal("serialModal");
+    });
+
+    //$("#btnSaveSerial").click(function () {
+
+    //    var selected = [];
+
+    //    $(".serialChk:checked").each(function () {
+    //        selected.push($(this).val());
+    //    });
+
+    //    $("#SerialNoText").val(selected.join(", "));
+
+    //    $("#serialModal").modal("hide");
+
+    //});
+    function openModal(modalId, overlayId) {
+        document.getElementById(modalId).style.display = "block";
+        document.getElementById(overlayId).style.display = "block";
+    }
+
+    function AddProduct(nm, index = null) {
+
+    var itid = $('#ItemID').val().trim();
+    var itnm = $('#ItemID option:selected').text().trim();
+    var quan = parseInt($('#Quantity').val().trim());
+
+    var isAllValid = true;
+
+    // Validation
+    if (!itid) {
+        $('#ItemID').siblings('span.error').css('visibility', 'visible');
+        $("#reqitem").html('<span style="color:red">Item Name Required</span>').show();
+        isAllValid = false;
+    } else {
+        $('#ItemID').siblings('span.error').css('visibility', 'hidden');
+        $("#reqitem").hide();
+    }
+
+    if (!$('#Quantity').val().trim() || !/^\d+$/.test($('#Quantity').val().trim())) {
+        $('#Quantity').siblings('span.error').css('visibility', 'visible');
+        $("#regqty").html('<span style="color:red">Enter Valid Quantity</span>').show();
+        isAllValid = false;
+    } else {
+        $('#Quantity').siblings('span.error').css('visibility', 'hidden');
+        $("#regqty").hide();
+    }
+
+    // Duplicate check
+    if (nm === "Add" && isAllValid) {
+        for (var k = 0; k < orderItems.length; k++) {
+            if (orderItems[k].ItemID.toString() === itid) {
+                alert("Item already added!");
+                isAllValid = false;
+                break;
+            }
+        }
+    }
+
+    if (!isAllValid) return;
+
+    // Get selected serial validation for selection of serial no.
+    //var selectedSerial = $('#SerialNo').val();
+    //if (!selectedSerial) {
+    //    alert("Please select Serial Number");
+    //    return;
+    //}
+        var selectedSerials = [];
+
+        $(".serialChk:checked").each(function () {
+            selectedSerials.push($(this).val());
+        });
+
+    // AJAX for item details
+    $.ajax({
+        url: '@Url.Action("GetCode")',
+        data: { "ItemID": itid, "legerid": $('#AddressTitleID').val().trim() },
+        type: "POST",
+        dataType: "json",
+        success: function (data) {
+
+            if (data.length === 0) return;
+
+            var item = data[0];
+
+            var irate = item.RatePerUnit;
+            var discount = parseFloat($("#Discount").val()) || 0;
+
+            var apprate = item.hasPreferredItem
+                ? parseFloat(irate).toFixed(2)
+                : (discount > 0
+                    ? (parseFloat(irate) * (1 - discount / 100)).toFixed(2)
+                    : parseFloat(irate).toFixed(2));
+
+            var amt = (apprate * quan).toFixed(2);
+
+            // Serial logic
+            //var serialList = item.SerialNumbers.map(String);
+            //var startIndex = serialList.indexOf(selectedSerial);
+
+            ////if (startIndex === -1) {
+            ////    alert("Invalid Serial Selected");
+            ////    return;
+            ////}
+
+            //if ((startIndex + quan) > serialList.length) {
+            //    alert("Quantity exceeds available serial numbers.");
+            //    return;
+            //}
+
+            //var selectedSerials = serialList.slice(startIndex, startIndex + quan);
+
+            //var nonSequential = false;
+            //for (var j = 1; j < selectedSerials.length; j++) {
+            //    if (parseInt(selectedSerials[j]) !== parseInt(selectedSerials[j - 1]) + 1) {
+            //        nonSequential = true;
+            //        break;
+            //    }
+            //}
+
+
+
+            // Serial logic
+            var selectedSerials = [];
+
+            $(".serialChk:checked").each(function () {
+                selectedSerials.push($(this).val());
+            });
+
+            //if (selectedSerials.length === 0) {
+            //    alert("Please select at least one serial number.");
+             //   return;
+            //}
+
+            var nonSequential = false;
+
+            for (var j = 1; j < selectedSerials.length; j++) {
+
+                if (parseInt(selectedSerials[j]) !== parseInt(selectedSerials[j - 1]) + 1) {
+                    nonSequential = true;
+                    break;
+                }
+            }
+
+            if (nm === "Add") {
+
+                orderItems.push({
+                    SaleOrderNo: $('#SaleOrderNo').val().trim(),
+                    ItemID: parseInt(itid),
+                    ItemName: itnm,
+                    Quantity: quan,
+                    ItemCode: item.ItemCode,
+                    HSNCode: item.HSNCode,
+                    HSNClassification: item.HSNClassification,
+                    GSTRate: item.GSTRate,
+                    RatePerUnit: item.RatePerUnit,
+                    ApplicableRate: apprate,
+                    Amount: amt,
+                    WeightPerUnit: item.WeightPerUnit,
+                    WeightOfPackingBox: item.WeightOfPackingBox,
+                    StartSerialNo: selectedSerials[0],
+                    EndSerialNo: (parseInt(quan) === 1)
+                        ? selectedSerials[0]
+                        : selectedSerials[selectedSerials.length - 1],
+                    //StartSerialNo: selectedSerials[0],
+                    //EndSerialNo: selectedSerials[selectedSerials.length - 1],
+                    SerialNumbers: selectedSerials,
+                    NonSequential: nonSequential
+                });
+
+            } else if (nm === "Update") {
+                var idx = window.currentEditIndex;
+                if (idx === undefined) return;
+
+                orderItems[idx] = {
+                    ...orderItems[idx],
+                    ItemID: parseInt(itid),
+                    ItemName: itnm,
+                    Quantity: quan,
+                    ApplicableRate: apprate,
+                    Amount: amt,
+                    StartSerialNo: selectedSerials[0],
+                    EndSerialNo: (parseInt(quan) === 1)
+                        ? selectedSerials[0]
+                        : selectedSerials[selectedSerials.length - 1],
+                    //StartSerialNo: selectedSerials[0],
+                    //EndSerialNo: selectedSerials[selectedSerials.length - 1],
+                    SerialNumbers: selectedSerials,
+                    NonSequential: nonSequential
+                };
+
+                // Reset index
+                window.currentEditIndex = undefined;
+            }
+
+            // Subtotal
+            var subtot = orderItems.reduce((sum, x) => sum + parseFloat(x.Amount), 0);
+            $("#ProductSubTotal").val(subtot.toFixed(2));
+
+            // Weight
+            var totalWeight = orderItems.reduce((sum, x) =>
+                sum + (parseFloat(x.WeightPerUnit) + parseFloat(x.WeightOfPackingBox)) * parseInt(x.Quantity), 0);
+
+            $("#TotalWeightInKg").val(totalWeight.toFixed(2));
+
+            GeneratedItemsTable();
+
+            checksendtype($('input[name=SendType]:checked').val());
+            OtherCourier();
+            calbyother();
+            if (initratetype) checkratetype(initratetype);
+
+            // Reset
+            $("#add").val("Add");
+            $('#ItemID').val('');
+            $('#ItemCode').val('');
+            $('#Quantity').val(1);
+            $('#SerialNo').empty().append('<option value="">Select Serial No.</option>');
+        }
+    });
+    }
+
+    function GetSerialNumbers(item) {
+        if (!item) return;
+
+        var itemName = item.ItemName;
+        var quantity = item.Quantity;
+
+        // Use only the serials already selected for this item
+        var selectedSerials = item.SerialNumbers || [];
+
+        // Fill item info in modal
+        $('#SerialItemName').text(itemName);
+        $('#SerialItemQty').text(quantity);
+
+        // Fill serial numbers list
+        $('#SerialNumbersList').empty();
+        selectedSerials.forEach(function (sn, index) {
+            $('#SerialNumbersList').append(
+                '<li>' + (index + 1) + '. ' + sn + '</li>'
+            );
+        });
+
+
+        // Open modal
+        openModal('invoiceModal', 'purchaseModalOverlay');
+    }
+    // Function to open the modal
+    function openModal(modalId, overlayId) {
+        document.getElementById(modalId).style.display = "block";
+        document.getElementById(overlayId).style.display = "block";
+    }
+
+    // Function to close the modal
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = "none";
+        document.getElementById(modalId + "Overlay").style.display = "none";
+    }
+
+    function GeneratedItemsTable() {
+        if (orderItems.length === 0) {
+            $('#orderItems').html('');
+            return;
+        }
+
+        var k = 1;
+        var $table = $('<table/>').addClass('table table-bordered');
+        $table.append('<thead><tr><th>No.</th><th>Item Name</th><th>Start Serial No.</th><th>End Serial No.</th><th>Qty.</th><th>Item Code</th><th>HSN</th><th>GST</th><th>Rate</th><th>Appl. Rate</th><th>Amount</th><th>Actions</th></tr></thead>');
+        var $tbody = $('<tbody/>');
+
+        $.each(orderItems, function (i, val) {
+            var iname = val.ItemName;
+
+            // AJAX call to get Item Name
+            $.ajax({
+                url: '@Url.Action("GetIName")',
+                data: { "ItmID": val.ItemID },
+                type: "POST",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.length > 0) {
+                        iname = data[0].ItemName;
+                    }
+                }
+            });
+
+            // Create table row with data-index
+            var $row = $('<tr/>').attr('data-index', i);
+
+            $row.append($('<td style="text-align:center"/>').html(k));
+            $row.append($('<td style="text-align:left"/>').html(iname));
+
+            // Serial number handling
+            var $serialTdStart = $('<td style="text-align:right"/>');
+            var $serialTdEnd = $('<td style="text-align:right"/>');
+
+
+
+            if (val.SerialNumbers && val.SerialNumbers.length > 1) {
+                var isSequential = true;
+                for (var s = 1; s < val.SerialNumbers.length; s++) {
+                    if (parseInt(val.SerialNumbers[s]) !== parseInt(val.SerialNumbers[s - 1]) + 1) {
+                        isSequential = false;
+                        break;
+                    }
+                }
+
+                if (isSequential) {
+                    $serialTdStart.html(val.StartSerialNo);
+                    $serialTdEnd.html(val.EndSerialNo);
+                } else {
+                    $serialTdStart.html(val.StartSerialNo);
+                    $serialTdEnd.html(val.EndSerialNo);
+                    //var $btn = $('<a href="#" title="View All Serials"><i class="material-icons" style="color:blue">list_alt</i></a>');
+                    //$btn.click(function (e) {
+                    //    e.preventDefault();
+                    //    GetSerialNumbers(val.ItemID);
+                    //});
+                    //$serialTdStart.append(' ').append($btn);
+
+                    var $btn = $('<a href="#" title="View All Serials"><i class="material-icons" style="color:blue">list_alt</i></a>');
+                    $btn.click(function (e) {
+                        e.preventDefault();
+                        GetSerialNumbers(val); // pass the whole item object
+                    });
+                    $serialTdStart.append(' ').append($btn);
+                }
+            }
+            else if (val.SerialNumbers && val.SerialNumbers.length === 1) {
+                $serialTdStart.html(val.SerialNumbers[0]);
+                $serialTdEnd.html(val.SerialNumbers[0]);   // or val.EndSerialNo
+            }
+            //else if (val.SerialNumbers && val.SerialNumbers.length === 1) {
+            //    $serialTdStart.html(val.SerialNumbers[0]);
+            //    $serialTdEnd.html('');
+            //}
+            else {
+                $serialTdStart.html(val.StartSerialNo || '');
+                $serialTdEnd.html(val.EndSerialNo || '');
+            }
+
+            $row.append($serialTdStart);
+            $row.append($serialTdEnd);
+
+            $row.append($('<td style="text-align:center"/>').html(val.Quantity));
+            $row.append($('<td style="text-align:center"/>').html(val.ItemCode));
+            $row.append($('<td style="text-align:center"/>').html(val.HSNCode));
+            $row.append($('<td style="text-align:right"/>').html(val.GSTRate));
+            $row.append($('<td style="text-align:right"/>').html(val.RatePerUnit));
+            $row.append($('<td style="text-align:right"/>').html(val.ApplicableRate));
+            $row.append($('<td style="text-align:right"/>').html(val.Amount));
+
+            // Remove button
+            var $remove = $('<a href="#" title="Remove"><i class="material-icons text-danger">close</i></a>');
+            $remove.click(function (e) {
+                e.preventDefault();
+                orderItems.splice(i, 1);
+                GeneratedItemsTable();
+                RecalculateTotals();
+            });
+
+            // Edit button
+            var $Edit = $('<a href="#" title="Edit"><i class="material-icons">edit_note</i></a>');
+            $Edit.click(function (e) {
+                e.preventDefault();
+
+                var rowIndex = $(this).closest("tr").data("index");
+                var item = orderItems[rowIndex];
+                if (!item) return;
+
+                // Populate fields
+                $("#ItemID").val(item.ItemID);
+                $("#ItemCode").val(item.ItemCode).prop("disabled", true);
+                $("#Quantity").val(item.Quantity);
+
+                SelectedSerialNumbers = item.SerialNumbers || [];
+
+                $("#SerialNoText").val(SelectedSerialNumbers.join(", "));
+
+                $("#add").val("Update");
+                window.currentEditIndex = rowIndex;
+
+                // Open popup directly
+                LoadSerialPopup(item.SerialNumbers);
+            });
+
+
+            var $actionTd = $('<td style="text-align:center"/>').append($Edit).append(' ').append($remove);
+            $row.append($actionTd);
+
+            $tbody.append($row);
+            k++;
+        });
+
+        $table.append($tbody);
+        $('#orderItems').html($table);
+    }
+    function calbyotherkeyup() {
+        //if ($("#CourierID option:selected").text() == "Other") {
+
+        if ($("#CourierID").val() == 6) {
+
+            $("#FreightCharges").attr("readonly", false);
+            $("#GSTTotal").attr("readonly", false);
+            $("#SGST").attr("readonly", false);
+            $("#CGST").attr("readonly", false);
+            $("#IGST").attr("readonly", false);
+            $("#TotalAmount").attr("readonly", false);
+            $("#RoundOffAmount").attr("readonly", false);
+            $("#DocketCharges").attr("readonly", false);
+            $("#FuelCharges").attr("readonly", false);
+            $("#OtherCharges").attr("readonly", false);
+            $("#CODCharges").attr("readonly", false);
+            $("#FOV").attr("readonly", false);
+
+
+
+
+            var psubfr = parseFloat($("#ProductSubTotal").val()) + parseFloat($("#FreightCharges").val());
+
+            //alert(grate);//global variable
+
+            var GstAmount = ((psubfr * grate) / 100).toFixed(2);
+            $("#GSTTotal").val(GstAmount);
+            $("#GSTTotal").attr("readonly", true);
+
+            if (statename == "MAHARASHTRA") {
+
+                var SGST = (((psubfr * grate) / 100) / 2).toFixed(2);
+                $("#SGST").val(SGST);
+                $("#SGST").attr("readonly", true);
+
+                var CGST = (((psubfr * grate) / 100) / 2).toFixed(2);
+                $("#CGST").val(CGST);
+                $("#CGST").attr("readonly", true);
+
+                var IGST = 0.00;
+                $("#IGST").val(IGST);
+                $("#IGST").attr("readonly", true);
+
+
+            }
+            else {
+
+                var SGST = 0.00;
+                $("#SGST").val(SGST);
+                $("#SGST").attr("readonly", true);
+
+                var CGST = 0.00;
+                $("#CGST").val(CGST);
+                $("#CGST").attr("readonly", true);
+
+                var IGST = GstAmount;
+                $("#IGST").val(IGST);
+                $("#IGST").attr("readonly", true);
+
+            }
+
+            var TotalAmount = (parseFloat($("#ProductSubTotal").val()) + parseFloat(GstAmount) + parseFloat($("#FreightCharges").val())).toFixed(2);
+
+            var TotalAmountroundoff = (TotalAmount % 1 === 0.5)
+                ? (TotalAmount - 0.5).toFixed(2)   // keep .50 as is (round down)
+                : Math.round(TotalAmount).toFixed(2);
+            $("#TotalAmount").val(TotalAmountroundoff);
+            $("#TotalAmount").attr("readonly", true);
+
+            $("#RoundOffAmount").val(TotalAmountroundoff);
+            $("#RoundOffAmount").attr("readonly", true);
+
+
+            $("#DocketCharges").val(0);
+            $("#DocketCharges").attr("readonly", true);
+
+            $("#FuelCharges").val(0);
+            $("#FuelCharges").attr("readonly", true);
+
+            $("#OtherCharges").val(0);
+            $("#OtherCharges").attr("readonly", true);
+
+            $("#CODCharges").val(0);
+            $("#CODCharges").attr("readonly", true);
+
+            $("#FOV").val(0);
+            $("#FOV").attr("readonly", true);
+
+        }
+        else {
+
+            var psubfr = parseFloat($("#ProductSubTotal").val()) + parseFloat($("#FreightCharges").val());
+
+
+            var GstAmount = ((psubfr * grate) / 100).toFixed(2);
+
+            $("#GSTTotal").val(GstAmount);
+            $("#GSTTotal").attr("readonly", true);
+
+            if (statename == "MAHARASHTRA") {
+
+                var SGST = (((psubfr * 18) / 100) / 2).toFixed(2);
+                $("#SGST").val(SGST);
+                $("#SGST").attr("readonly", true);
+
+                var CGST = (((psubfr * 18) / 100) / 2).toFixed(2);
+                $("#CGST").val(CGST);
+                $("#CGST").attr("readonly", true);
+
+                var IGST = 0.00;
+                $("#IGST").val(IGST);
+                $("#IGST").attr("readonly", true);
+
+
+            }
+            else {
+
+                var SGST = 0.00;
+                $("#SGST").val(SGST);
+                $("#SGST").attr("readonly", true);
+
+                var CGST = 0.00;
+                $("#CGST").val(CGST);
+                $("#CGST").attr("readonly", true);
+
+                var IGST = GstAmount;
+                $("#IGST").val(IGST);
+                $("#IGST").attr("readonly", true);
+
+
+            }
+
+
+            //var TotalAmount = (parseFloat($("#ProductSubTotal").val()) + parseFloat(GstAmount) + parseFloat(RoundOffFreight)).toFixed(2);
+
+            var TotalAmount = (parseFloat($("#ProductSubTotal").val()) + parseFloat(GstAmount) + parseFloat($("#FreightCharges").val())).toFixed(2);
+
+            var TotalAmountroundoff = (TotalAmount % 1 === 0.5)
+                ? (TotalAmount - 0.5).toFixed(2)   // keep .50 as is (round down)
+                : Math.round(TotalAmount).toFixed(2);
+            $("#TotalAmount").val(TotalAmount);
+            $("#TotalAmount").attr("readonly", true);
+
+            $("#RoundOffAmount").val(TotalAmountroundoff);
+            $("#RoundOffAmount").attr("readonly", true);
+
+
+            $("#DocketCharges").val(Math.round(data[0].DocketCharges, 2));
+            $("#DocketCharges").attr("readonly", true);
+
+            $("#FuelCharges").val(Math.round(CourierFuelCharges, 2));
+            $("#FuelCharges").attr("readonly", true);
+
+            $("#OtherCharges").val(Math.round(data[0].OtherCharges, 2));
+            $("#OtherCharges").attr("readonly", true);
+
+            if ($("#TermsOfDelivery").val() == "COD")
+                $("#CODCharges").val(Math.round(data[0].CODCharges, 2));
+            else
+                $("#CODCharges").val(0);
+            $("#CODCharges").attr("readonly", true);
+
+            $("#FOV").val(Math.round(FOVCharges, 2));
+            $("#FOV").attr("readonly", true);
+        }
+
+
+    }
+
+
+    function GetCPDetails(code) {
+
+        $.ajax({
+            url: '@Url.Action("GetCPDetails")',
+            data: { "ContactPersonName": code, "LedgerID": $("#LedgerID").val(), "AddressTitleID": $("#AddressTitleID").val() },
+
+            type: "POST",
+            dataType: "json",
+            async:false,
+
+            success: function (result) {
+
+                $("#OfficeMobileNo").val("Please Select");
+                $("#OfficeEmailId").val("Please Select");
+                //$("#PersonalMobileNo").val("Please Select");
+                //$("#PersonalEmailID").val("Please Select");
+                $("#CPDesignation").val("");
+
+                $("#OfficeMobileNo").val(result[0].OfficeMobileNo);
+
+                $("#OfficeEmailId").val(result[0].OfficeEmailId);
+
+                //$("#PersonalMobileNo").val(result[0].PersonalMobileNo);
+
+                //$("#PersonalEmailID").val(result[0].PersonalEmailID);
+                $("#CPDesignation").val(result[0].Designation);
+
+            },
+            error: function (reponse) {
+
+                alert("error : " + reponse);
+            }
+        });
+    }
+
+
+    function OtherCourier(code) {
+
+        // if ($("#CourierID option:selected").text() == "Other") {
+        if ($("#CourierID").val() == 6) {
+
+
+            $("input:radio[name=RateType]").prop("checked", false);
+            $("input:radio[name=RateType]").attr("disabled", true);
+
+            $("input:radio[name=SendType]").prop("checked", false);
+            $("input:radio[name=SendType]").attr("disabled", true);
+
+            $("#FreightCharges").attr("readonly", false);
+            $("#FreightCharges").val(0);
+            calbyother();
+
+        }
+        else {
+            $("input:radio[name=RateType]").attr("disabled", false);
+            $("input:radio[name=SendType]").attr("disabled", false);
+        }
+
+    }
+    function calbyother() {
+
+        if ($("#CourierID").val() == 6) {
+
+            $("#FreightCharges").attr("readonly", false);
+            $("#GSTTotal").attr("readonly", false);
+            $("#SGST").attr("readonly", false);
+            $("#CGST").attr("readonly", false);
+            $("#IGST").attr("readonly", false);
+            $("#TotalAmount").attr("readonly", false);
+            $("#RoundOffAmount").attr("readonly", false);
+            $("#DocketCharges").attr("readonly", false);
+            $("#FuelCharges").attr("readonly", false);
+            $("#OtherCharges").attr("readonly", false);
+            $("#CODCharges").attr("readonly", false);
+            $("#FOV").attr("readonly", false);
+
+
+
+
+            var psubfr = parseFloat($("#ProductSubTotal").val()) + parseFloat($("#FreightCharges").val());
+
+            //alert(grate);//global variable
+
+            var GstAmount = ((psubfr * grate) / 100).toFixed(2);
+            $("#GSTTotal").val(GstAmount);
+            $("#GSTTotal").attr("readonly", true);
+
+
+            if (statename == "MAHARASHTRA") {
+
+                var SGST = (((psubfr * grate) / 100) / 2).toFixed(2);
+                $("#SGST").val(SGST);
+                $("#SGST").attr("readonly", true);
+
+                var CGST = (((psubfr * grate) / 100) / 2).toFixed(2);
+                $("#CGST").val(CGST);
+                $("#CGST").attr("readonly", true);
+
+                var IGST = 0.00;
+                $("#IGST").val(IGST);
+                $("#IGST").attr("readonly", true);
+
+
+            }
+            else {
+
+                var SGST = 0.00;
+                $("#SGST").val(SGST);
+                $("#SGST").attr("readonly", true);
+
+                var CGST = 0.00;
+                $("#CGST").val(CGST);
+                $("#CGST").attr("readonly", true);
+
+                var IGST = GstAmount;
+                $("#IGST").val(IGST);
+                $("#IGST").attr("readonly", true);
+
+            }
+
+            var TotalAmount = (parseFloat($("#ProductSubTotal").val()) + parseFloat(GstAmount) + parseFloat($("#FreightCharges").val())).toFixed(2);
+
+
+
+            var TotalAmountroundoff = (TotalAmount % 1 === 0.5)
+                ? (TotalAmount - 0.5).toFixed(2)   // keep .50 as is (round down)
+                : Math.round(TotalAmount).toFixed(2);
+            $("#TotalAmount").val(TotalAmount);
+            $("#TotalAmount").attr("readonly", true);
+
+            $("#RoundOffAmount").val(TotalAmountroundoff);
+            $("#RoundOffAmount").attr("readonly", true);
+
+
+            $("#DocketCharges").val(0);
+            $("#DocketCharges").attr("readonly", true);
+
+            $("#FuelCharges").val(0);
+            $("#FuelCharges").attr("readonly", true);
+
+            $("#OtherCharges").val(0);
+            $("#OtherCharges").attr("readonly", true);
+
+            $("#CODCharges").val(0);
+            $("#CODCharges").attr("readonly", true);
+
+            $("#FOV").val(0);
+            $("#FOV").attr("readonly", true);
+
+        }
+
+
+    }
+        //
+        function checksendtype(code) {
+        if (code == "By Hand") {
+           // $("#CourierID option:eq(0)").attr('selected', true)
+            $("#CourierID").val('');
+            $("#CourierID").attr("disabled", true);
+
+            $("input:radio[name=RateType]").prop("checked", false);
+            $("input:radio[name=RateType]").attr("disabled", true);
+            var RoundOffFreight = 0.0;
+            $("#FreightCharges").val(Math.round(RoundOffFreight, 2));
+            $("#FreightCharges").attr("readonly", false);
+            var psubfr = parseFloat($("#ProductSubTotal").val()) + parseFloat($("#FreightCharges").val());
+
+            // alert(grate);//global variable
+
+            var GstAmount = ((psubfr * grate) / 100).toFixed(2);
+            $("#GSTTotal").val(GstAmount);
+            $("#GSTTotal").attr("readonly", true);
+
+            if (statename == "MAHARASHTRA") {
+
+                var SGST = (((psubfr * 18) / 100) / 2).toFixed(2);
+                $("#SGST").val(SGST);
+                $("#SGST").attr("readonly", true);
+
+                var CGST = (((psubfr * 18) / 100) / 2).toFixed(2);
+                $("#CGST").val(CGST);
+                $("#CGST").attr("readonly", true);
+
+                var IGST = 0.00;
+                $("#IGST").val(IGST);
+                $("#IGST").attr("readonly", true);
+
+
+            }
+            else {
+
+                var SGST = 0.00;
+                $("#SGST").val(SGST);
+                $("#SGST").attr("readonly", true);
+
+                var CGST = 0.00;
+                $("#CGST").val(CGST);
+                $("#CGST").attr("readonly", true);
+
+                var IGST = GstAmount;
+                $("#IGST").val(IGST);
+                $("#IGST").attr("readonly", true);
+
+            }
+
+            var TotalAmount = (parseFloat($("#ProductSubTotal").val()) + parseFloat(GstAmount) + parseFloat(RoundOffFreight)).toFixed(2);
+
+
+            var TotalAmountroundoff = (TotalAmount % 1 === 0.5)
+                ? (TotalAmount - 0.5).toFixed(2)   // keep .50 as is (round down)
+                : Math.round(TotalAmount).toFixed(2);
+
+            $("#TotalAmount").val(TotalAmount);
+            $("#TotalAmount").attr("readonly", true);
+            $("#RoundOffAmount").val(TotalAmountroundoff);
+            $("#RoundOffAmount").attr("readonly", true);
+
+
+            $("#DocketCharges").val(0);
+            $("#DocketCharges").attr("readonly", true);
+
+            $("#FuelCharges").val(0);
+            $("#FuelCharges").attr("readonly", true);
+
+            $("#OtherCharges").val(0);
+            $("#OtherCharges").attr("readonly", true);
+
+            $("#CODCharges").val(0);
+            $("#CODCharges").attr("readonly", true);
+
+            $("#FOV").val(0);
+            $("#FOV").attr("readonly", true);
+
+        }
+        else if (code == "By Courier") {
+            $("#CourierID").attr("disabled", false);
+
+            $("input:radio[name=RateType]").attr("disabled", false);
+        }
+    }
+
+        //check rate
+
+    function checkratetype(code) {
+
+        $.ajax({
+            url: '@Url.Action("GetCourierDetails")',
+            data: '{CourierID: "' + $("#CourierID").val().trim() + '",Cityname: "' + cityname + '",Statename: "' + statename + '"}',
+            type: "POST",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            async:false,
+            success: function (r) {
+
+
+                var data = r.d1;
+                var RatePerKG = 0.0;
+                var RatePerKG1 = 0.0;
+                var RatePerKG2 = 0.0;
+
+                    var data2 = r.d2;
+
+                if(r.d2!="")
+                    RatePerKG = parseFloat(data2[0].RatePerKg);
+
+                    var data3 = r.d3;
+
+                if(r.d3!="")
+                    RatePerKG1 = parseFloat(data3[0].RatePerKg);
+
+                var data4 = r.d4;
+                if (r.d2 == "" && r.d3 == "")//select other rate
+                {
+                    RatePerKG2 = parseFloat(data4[0].RatePerKg);
+
+                }
+
+                if (data.length > 0) {
+
+                    var CourierAmount = 0.00;
+                    var NetAmountWithGST = 0.00;
+                    var TotalCourierAmount = 0.00;
+                    var CourierFuelCharges = 0.00;
+                    var FOVCharges = 0.00;
+                    var NetCourierAmount = 0.00;
+                    //var CourierGSTAmount = 0.00;
+                    var FinalCourierAmount = 0.00;
+                    var FreightCharges = 0.00;
+                    var RoundOffFreight = 0.00;
+                    $("#FreightCharges").attr("readonly", false);
+                    $("#GSTTotal").attr("readonly", false);
+                    $("#SGST").attr("readonly", false);
+                    $("#CGST").attr("readonly", false);
+                    $("#IGST").attr("readonly", false);
+                    $("#TotalAmount").attr("readonly", false);
+                    $("#RoundOffAmount").attr("readonly", false);
+                    $("#DocketCharges").attr("readonly", false);
+                    $("#FuelCharges").attr("readonly", false);
+                    $("#OtherCharges").attr("readonly", false);
+                    $("#CODCharges").attr("readonly", false);
+                    $("#FOV").attr("readonly", false);
+
+
+
+                    //if ($("#TermsOfDelivery").val() == "Free Delivery" || $("#TermsOfDelivery").val() == "To Pay") {
+                    if ($("#TermsOfDeliveryID").val() == 2 || $("#TermsOfDeliveryID").val() == 3) {
+
+                        RoundOffFreight = 0.00;
+
+
+                    }
+                    else if (code == "Air Rate") {
+
+                        $("#AirRate").val(data[0].AirRate);
+
+                        var w = $("#TotalWeightInKg").val();
+
+                        // Calculate basic air freight
+                        CourierAmount = parseFloat(w) * parseFloat(data[0].AirRate);
+
+                        // Add Docket Charges and Other Charges
+                        TotalCourierAmount = CourierAmount
+                            + parseFloat(data[0].DocketCharges)
+                            + parseFloat(data[0].OtherCharges);
+
+                        // Add COD Charges only for TermsOfDeliveryID = 4
+                        if ($("#TermsOfDeliveryID").val() == 4) {
+                            TotalCourierAmount = TotalCourierAmount
+                                + parseFloat(data[0].CODCharges);
+                        }
+
+                        // Fuel Charges (same as Surface Rate)
+                        CourierFuelCharges =
+                            (TotalCourierAmount * data[0].FuelCharges) / 100;
+
+                        // FOV Charges (same as Surface Rate)
+                        FOVCharges =
+                            (TotalCourierAmount * data[0].FOVPercent) / 100;
+
+                        // Net Courier Amount
+                        NetCourierAmount =
+                            TotalCourierAmount + CourierFuelCharges + FOVCharges;
+
+                        // Apply Minimum Amount
+                        if (NetCourierAmount < parseFloat(data[0].MinimumAmount)) {
+                            NetCourierAmount = parseFloat(data[0].MinimumAmount);
+                        }
+
+                        // Final Freight Charges
+                        FreightCharges = NetCourierAmount;
+
+                        // Apply existing Freight Round Off
+                        RoundOffFreight = FreightRoundOff(FreightCharges);
+                    }
+                else if (code == "Surface Rate")
+                {
+
+                    if (r.d2 == "" && r.d3 == "" && r.d4 == "" && $("#CourierID").val() != 6) {
+
+                        alert("Courier Rate Not Exist");
+                        return;
+                    }
+                        var w = $("#TotalWeightInKg").val();
+
+                        if (RatePerKG != 0)
+                            RatePerKG = RatePerKG;
+                        else if (RatePerKG1 != 0)
+                            RatePerKG = RatePerKG1;
+                        else
+                            RatePerKG = RatePerKG2;
+
+                        $("#SurfaceRate").val(RatePerKG);
+                        CourierAmount = parseFloat(w) * parseFloat(RatePerKG);
+
+                        var TotalCourierAmount = CourierAmount + data[0].DocketCharges + data[0].OtherCharges ;
+                    //if ($("#TermsOfDelivery").val() == "COD")
+                        if ($("#TermsOfDeliveryID").val() == 4)
+                        {
+                            TotalCourierAmount = TotalCourierAmount+ data[0].CODCharges;
+                        }
+
+                        var CourierFuelCharges = (TotalCourierAmount * data[0].FuelCharges) / 100;
+
+
+                        var FOVCharges = (TotalCourierAmount * data[0].FOVPercent) / 100;
+
+                        console.log('fov charges ', FOVCharges);
+
+                        var NetCourierAmount = TotalCourierAmount + CourierFuelCharges + FOVCharges;
+                        if (NetCourierAmount < parseFloat(data[0].MinimumAmount))
+                        {
+                            NetCourierAmount = parseFloat(data[0].MinimumAmount);
+
+                        }
+
+                      //  $("#CourierGSTRate").val(data[0].GSTRate);
+                      //  var CourierGSTAmount = (NetCourierAmount * data[0].GSTRate) / 100;
+
+
+
+                      //  var FinalCourierAmount = NetCourierAmount + CourierGSTAmount;
+
+                        var FreightCharges = NetCourierAmount;
+
+                        var RoundOffFreight = FreightRoundOff(FreightCharges);
+
+                    }
+
+
+                    $("#FreightCharges").val(Math.round(RoundOffFreight, 2));
+                    $("#FreightCharges").attr("readonly", false);
+
+                    var psubfr = parseFloat($("#ProductSubTotal").val()) + parseFloat($("#FreightCharges").val());
+
+                    // alert(grate);//global variable
+
+                    var GstAmount = ((psubfr * grate) / 100).toFixed(2);
+                    //$("#GSTTotal").val(GstAmount);
+                    $("#GSTTotal").attr("readonly", true);
+
+                    if (GSTRegistrationId === 6 || GSTRegistrationId === 7 || GSTRegistrationId === 8) {
+                        var SGST = 0.00;
+                        var CGST = 0.00;
+                        var IGST = 0.00;
+
+                        $("#CGST").val(CGST);
+                        $("#SGST").val(SGST);
+                        $("#IGST").val(IGST);
+
+                        console.log('gst registartion Id' + GSTRegistrationId);
+                    }
+
+
+                    else if (statename == "MAHARASHTRA") {
+
+                        var SGST = (((psubfr * 18) / 100) / 2).toFixed(2);
+                        $("#SGST").val(SGST);
+                        $("#SGST").attr("readonly", true);
+
+                        var CGST = (((psubfr * 18) / 100) / 2).toFixed(2);
+                        $("#CGST").val(CGST);
+                        $("#CGST").attr("readonly", true);
+
+                        var IGST = 0.00;
+                        $("#IGST").val(IGST);
+                        $("#IGST").attr("readonly", true);
+
+
+                    }
+                    else {
+
+                        var SGST = 0.00;
+                        $("#SGST").val(SGST);
+                        $("#SGST").attr("readonly", true);
+
+                        var CGST = 0.00;
+                        $("#CGST").val(CGST);
+                        $("#CGST").attr("readonly", true);
+
+                        var IGST = GstAmount;
+                        $("#IGST").val(IGST);
+                        $("#IGST").attr("readonly", true);
+
+
+                    }
+
+                    var GstAmount = parseFloat(SGST) + parseFloat(CGST) + parseFloat(IGST);
+                    console.log(GstAmount);
+                    $("#GSTTotal").val(GstAmount);
+
+                    var TotalAmount = (parseFloat($("#ProductSubTotal").val()) + GstAmount + parseFloat(RoundOffFreight)).toFixed(2);
+
+
+
+                    var TotalAmountroundoff = (TotalAmount % 1 === 0.5)
+                        ? (TotalAmount - 0.5).toFixed(2)   // keep .50 as is (round down)
+                        : Math.round(TotalAmount).toFixed(2);
+                    $("#TotalAmount").val(TotalAmount);
+                    $("#TotalAmount").attr("readonly", true);
+
+                    $("#RoundOffAmount").val(TotalAmountroundoff);
+                    $("#RoundOffAmount").attr("readonly", true);
+
+
+                    $("#DocketCharges").val(Math.round(data[0].DocketCharges, 2));
+                    $("#DocketCharges").attr("readonly", true);
+
+                    $("#FuelCharges").val(Math.round(CourierFuelCharges, 2));
+                    $("#FuelCharges").attr("readonly", true);
+
+                    $("#OtherCharges").val(Math.round(data[0].OtherCharges, 2));
+                    $("#OtherCharges").attr("readonly", true);
+
+                    if ($("#TermsOfDelivery").val() == "COD")
+                        $("#CODCharges").val(Math.round(data[0].CODCharges, 2));
+                    else
+                        $("#CODCharges").val(0);
+                    $("#CODCharges").attr("readonly", true);
+
+                    $("#FOV").val(Math.round(FOVCharges, 2));
+                    $("#FOV").attr("readonly", true);
+
+
+                }
+            }
+        });
+
+
+    }
+
+
+        function FreightRoundOff(freight) {
+
+            freight = Math.trunc(freight);
+            var freightCharge = parseInt(freight);
+            var freightMOD = freightCharge % 100;
+
+            freightCharge = parseInt(freightCharge / 100);
+
+            if (freightMOD == 0)
+                freightCharge = freightCharge * 100;
+            else if (freightMOD <= 25)
+                freightCharge = (freightCharge * 100) + 25;
+            else if (freightMOD <= 50)
+                freightCharge = (freightCharge * 100) + 50;
+            else if (freightMOD <= 75)
+                freightCharge = (freightCharge * 100) + 75;
+            else if (freightMOD <= 100)
+                freightCharge = (freightCharge * 100) + 100;
+
+            return freightCharge;
+        }
+
+        function UpdateTaxInvoice() {
+
+            //$('#submit').click(function () {
+
+            //validation of order
+            var isAllValid = true;
+
+            if (orderItems.length == 0) {
+                $('#orderItems').html('<span style="color:red;">Please add order items</span>');
+                isAllValid = false;
+
+            }
+            if ($('input[name=ShippAdd]:checked').val() == "No") {
+
+                if ($('#ShippingAddress').val().trim() == "") {
+
+                    $('#ShippingAddress').siblings('span.error').css('visibility', 'visible');
+                    isAllValid = false;
+                    $('#ShippingAddress').focus();
+                    $("#ShipAdd").html('<span style="color:red">Enter Shipping Address</span>');
+                    $("#ShipAdd").show();
+
+                }
+                else {
+
+                    $('#ShippingAddress').siblings('span.error').css('visibility', 'hidden');
+
+                    $("#ShipAdd").html("");
+                    $("#ShipAdd").hide();
+                }
+
+            }
+
+            //
+            if ($('#MaterialRequiredDate').val().trim() == '') {
+                $('#MaterialRequiredDate').siblings('span.error').css('visibility', 'visible');
+                $('#MaterialRequiredDate').focus();
+                isAllValid = false;
+                $("#reqmrd").html('<span style="color:red">Material Required Date Required</span>');
+                $("#reqmrd").show();
+
+
+            }
+            else {
+                $('#MaterialRequiredDate').siblings('span.error').css('visibility', 'hidden');
+                $("#reqmrd").html("");
+                $("#reqmrd").hide();
+            }
+            //alert($('#LedgerID').val());
+            if ($('#LedgerID').val().trim() == '') {
+                $('#LedgerID').siblings('span.error').css('visibility', 'visible');
+                $('#LedgerID').focus();
+                isAllValid = false;
+                $("#reqcomp").html('<span style="color:red">Company Name Required</span>');
+                $("#reqcomp").show();
+
+
+            }
+            else {
+                $('#LedgerID').siblings('span.error').css('visibility', 'hidden');
+                $("#reqcomp").html("");
+                $("#reqcomp").hide();
+            }
+
+            if ($('#AddressTitleID').val().trim() == '') {
+                $('#AddressTitleID').siblings('span.error').css('visibility', 'visible');
+                $('#AddressTitleID').focus();
+                isAllValid = false;
+                $("#reqaddr").html('<span style="color:red">Adrress Title Required</span>');
+                $("#reqaddr").show();
+
+
+            }
+            else {
+                $('#AddressTitleID').siblings('span.error').css('visibility', 'hidden');
+                $("#reqcomp").html("");
+                $("#reqaddr").hide();
+            }
+
+
+            if ($('#TaxInvoiceDate').val().trim() == '') {
+                $('#TaxInvoiceDate').siblings('span.error').css('visibility', 'visible');
+                $('#TaxInvoiceDate').focus();
+                isAllValid = false;
+                $("#Regdate").html('<span style="color:red">Date Required</span>');
+                $("#Regdate").show();
+
+
+            }
+            else {
+                $('#TaxInvoiceDate').siblings('span.error').css('visibility', 'hidden');
+                $("#Regdate").html("");
+                $("#Regdate").hide();
+            }
+            if (($('#ContactPersonName').val().trim() == "Please Select") || ($('#ContactPersonName').val().trim() == "")) {
+                $('#ContactPersonName').siblings('span.error').css('visibility', 'visible');
+                $('#ContactPersonName').focus();
+                isAllValid = false;
+                $("#reqcon").html('<span style="color:red">Select Contact Person</span>');
+                $("#reqcon").show();
+
+
+            }
+            else {
+                $('#ContactPersonName').siblings('span.error').css('visibility', 'hidden');
+                $("#reqcon").html("");
+                $("#reqcon").hide();
+            }
+
+            //if ((($('#OfficeMobileNo').val().trim() == "Please Select") && ($('#PersonalMobileNo').val().trim() == "Please Select")) || (($('#OfficeMobileNo').val().trim() == "") && ($('#PersonalMobileNo').val().trim() == ""))) {
+            //    $('#OfficeMobileNo').siblings('span.error').css('visibility', 'visible');
+            //    $('#OfficeMobileNo').focus();
+            //    isAllValid = false;
+            //    $("#reqmob").html('<span style="color:red">select personalMob or OfficeMob</span>');
+            //    $("#reqmob").show();
+
+
+            //}
+            //else {
+            //    $('#OfficeMobileNo').siblings('span.error').css('visibility', 'hidden');
+            //    $("#reqmob").html("");
+            //    $("#reqmob").hide();
+            //}
+            if (/*$('#PersonalMobileNo').val().trim() == "" &&*/ $('#OfficeMobileNo').val().trim() == "") {
+                $('#OfficeMobileNo').siblings('span.error').css('visibility', 'visible');
+
+                isAllValid = false;
+                $('#OfficeMobileNo').focus();
+                $("#errorPMobile11").html('<span style="color:red">Enter Personal/Office MobileNo</span>');
+                $("#errorPMobile11").show();
+
+            }
+            else //{
+                //if ($('#PersonalMobileNo').val().trim() != "") {
+
+                //    $('#PersonalMobileNo').siblings('span.error').css('visibility', 'hidden');
+                //    $("#errorPMobile11").html("");
+                //    $("#errorPMobile11").hide();
+
+                //    var PMobile = /^([+][9][1])([0-9]{10})$/;
+                //    var oMobile = $('#CountryCode1').val();
+                //    var pMobiles = $('#PersonalMobileNo').val();
+
+                //    var oncat = oMobile + pMobiles;
+
+                //    if (oncat.match(PMobile)) {
+                //        $('#PersonalMobileNo').siblings('span.error').css('visibility', 'hidden');
+                //        $("#emailerrorPMobile11").html("");
+                //        $("#emailerrorPMobile11").hide();
+                //        $("#errorPMobile11").html("");
+                //        $("#errorPMobile11").hide();
+
+
+                //    }
+
+                //    else if ($('#PersonalMobileNo').val().trim() != "") {
+
+                //        $('#PersonalMobileNo').siblings('span.error').css('visibility', 'visible');
+
+                //        $("#emailerrorPMobile11").html('<span style="color:red">Enter Valid MobileNo1</span>');
+                //        isAllValid = false;
+
+                //        $("#emailerrorPMobile11").show();
+                //        $("#errorPMobile11").html("");
+                //        $("#errorPMobile11").hide();
+
+
+                //        //$("#emailerrorOMobile1").html();
+                //        //$("#emailerrorOMobile1").show();
+                //        if ($('#OfficeMobileNo').val().trim() == "") {
+                //            $("#emailerrorOMobile11").html("");
+                //            $("#emailerrorOMobile11").hide();
+                //        }
+
+                //    }
+                //}
+
+                if ($('#OfficeMobileNo').val().trim() != "") {
+
+                    $('#OfficeMobileNo').siblings('span.error').css('visibility', 'hidden');
+                    $("#errorOMobile11").html("");
+                    $("#errorOMobile11").hide();
+                    $("#errorPMobile11").html("");
+                    $("#errorPMobile11").hide();
+
+                    var PMobile = /^([+][9][1])([0-9]{10})$/;
+                    var oMobile = $('#CountryCode2').val();
+                    var pMobiles = $('#OfficeMobileNo').val();
+
+                    var oncat = oMobile + pMobiles;
+                    if (oncat.match(PMobile)) {
+
+                        $('#OfficeMobileNo').siblings('span.error').css('visibility', 'hidden');
+                        $("#emailerrorOMobile11").html("");
+                        $("#emailerrorOMobile11").hide();
+
+
+                    }
+                    //else if ($('#OfficeMobileNo').val().trim() != "") {
+
+                    //    $('#OfficeMobileNo').siblings('span.error').css('visibility', 'visible');
+                    //    //$("#EmailID").siblings().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter Correct Email</div>");
+                    //    $("#emailerrorOMobile11").html('<span style="color:red">Enter Valid MobileNo2</span>');
+                    //    isAllValid = false;
+                    //    //$result.css("color", "red");
+
+                    //    $("#emailerrorOMobile11").show();
+                    //    $("#errorOMobile11").html("");
+                    //    $("#errorOMobile11").hide();
+
+                    //    //if ($('#PersonalMobileNo').val().trim() == "") {
+
+                    //    //    $("#emailerrorPMobile11").html("");
+                    //    //    $("#emailerrorPMobile11").hide();
+                    //    //}
+
+                    //}
+
+                }
+            //}
+
+            if (($('#OfficeEmailId').val().trim() == "Please Select") /*&& ($('#PersonalEmailID').val().trim() == "Please Select"))*/ || (($('#OfficeEmailId').val().trim() == "") /*&& ($('#PersonalEmailID').val().trim() == "")*/)) {
+                $('#OfficeEmailId').siblings('span.error').css('visibility', 'visible');
+                $('#OfficeEmailId').focus();
+                isAllValid = false;
+                $("#reqEm").html('<span style="color:red">select OfficeEmailId or PersonalEmailID</span>');
+                $("#reqEm").show();
+
+
+            }
+            else {
+                $('#OfficeEmailId').siblings('span.error').css('visibility', 'hidden');
+                $("#reqEm").html("");
+                $("#reqEm").hide();
+            }
+
+
+
+            //Save if valid
+            if (isAllValid) {
+
+                var TIItems = [];
+              //  alert(orderItems.length);
+                for (i = 0; i < orderItems.length; i++) {
+                    TIItems.push({
+                        VoucherNo: $('#TaxInvoiceNo').val().trim(),
+                        ItemId: orderItems[i]["ItemID"],
+                        ItemName: orderItems[i]["ItemName"],
+                        OutQty: orderItems[i]["Quantity"].toString(),
+                        ApplicableRate: orderItems[i]["ApplicableRate"],
+                        Amount: orderItems[i]["Amount"].toString(),
+                        ItemCode: orderItems[i]["ItemCode"].toString(),
+                        HSNCode: orderItems[i]["HSNCode"].toString(),
+                        HSNClassification: orderItems[i]["HSNClassification"].toString(),
+                        RatePerUnit: orderItems[i]["RatePerUnit"].toString(),
+                        WeightPerUnit: orderItems[i]["WeightPerUnit"].toString(),
+                        WeightOfPackingBox: orderItems[i]["WeightOfPackingBox"].toString(),
+                        GSTRate: orderItems[i]["GSTRate"].toString(),
+                        StartSerialNo: orderItems[i]["StartSerialNo"],
+                        EndSerialNo: orderItems[i]["EndSerialNo"],
+
+
+                    });
+                }
+
+                //alert($('#SaleID').val().trim() + " " + $('#SaleOrderNo').val().trim() + " " + $('#SaleOrderDate').val().trim() + " " + $('#QuotationNo').val().trim() + " " + $('#PurchaseOrderNo').val().trim() + " " + $('#PurchaseOrderDate').val().trim() + " " + $('#CourierName').val().trim() + " " + $('#TotalWeightInKg').val().trim() + " " + SOItems);
+                var stype, rtype, counm, couid;
+
+                stype = ($('input[name=SendType]:checked').val() || "").trim();
+                //var stype = ($('input[name=SendType]:checked').val() || "").trim();
+
+                if (stype == "By Hand") {
+                    rtype = "";
+                    counm = "";
+                    couid = "";
+                }
+                else {
+
+                    counm = $('#CourierID option:selected').text().trim();
+                    couid = $('#CourierID').val().trim();
+                    if (couid == 6)
+                        rtype = "";
+                    else
+                        rtype = $('input[name=RateType]:checked').val().trim();
+
+                }
+
+
+                    var designinfoid;
+                    $.ajax({
+                        url: '@Url.Action("GetDesignInfoId")',
+                        data: { "contactPerson": $('#ContactPersonName').val(), "officeEmail": $('#OfficeEmailId').val(), "officeMobile": $('#OfficeMobileNo').val(), "Lid": $('#LedgerID').val(), "AddID": $('#AddressTitleID').val() },
+                        type: "POST",
+                        dataType: "json",
+                        async:false,
+                        success: function (data) {
+
+                            if (data.length > 0) {
+
+                                designinfoid = data[0].DesignationInfoID;
+
+                            }
+                        }
+                    });
+
+
+                //alert("lid=" + $('#LedgerID').val().trim() + "AddressTitleID=" + $('#AddressTitleID').val().trim() + "DesignationInfoID=" + designinfoid + "EnquiryModeId=" + $('#EnquiryModeId').val().trim());
+                var tdate = new Date();
+                var data = {
+                    TaxInvoiceId: $('#TaxInvoiceId').val().trim(),
+                    TaxInvoiceNo: $('#TaxInvoiceNo').val().trim(),
+                    //TaxInvoiceDate:  tdate.toDateString(),
+                    TaxInvoiceDate: $('#TaxInvoiceDate').val().trim(),
+                    SaleOrderNo: $('#SaleOrderNo').val().trim(),
+                    TransporterName: counm,
+                    TotalWeightInKg: $('#TotalWeightInKg').val().trim(),
+                    SendType: stype,
+                    RateType: rtype,
+                    TotalAmount: $('#TotalAmount').val().trim(),
+                    ProductSubTotal: $('#ProductSubTotal').val().trim(),
+                    FreightCharges: $('#FreightCharges').val().trim(),
+                    GSTTotal: $('#GSTTotal').val().trim(),
+                    SGST: $('#SGST').val().trim(),
+                    CGST: $('#CGST').val().trim(),
+                    IGST: $('#IGST').val().trim(),
+                    DocketCharges: $('#DocketCharges').val().trim(),
+                    FuelCharges: $('#FuelCharges').val().trim(),
+                    OtherCharges: $('#OtherCharges').val().trim(),
+                    CODCharges: $('#CODCharges').val().trim(),
+                    FOV: $('#FOV').val().trim(),
+                    MaterialRequiredDate: $('#MaterialRequiredDate').val().trim(),
+                    EntityName: $('#LedgerID option:selected').text().trim(),
+                    ContactPersonName: $('#ContactPersonName option:selected').text(),
+                    StatusId: Status,
+
+                    AddressTitle: $('#AddressTitleID option:selected').text(),
+                    Address: $('#Address').val().trim(),
+                    LandMark: $('#LandMark').val().trim(),
+                    Locality: $('#Locality').val().trim(),
+                    Taluka: $('#Taluka').val().trim(),
+                    District: $('#District').val().trim(),
+                    Pincode: $('#Pincode1').val().trim(),
+                    State: $('#State').val().trim(),
+                    Country: $('#Country').val().trim(),
+                    TermsOfDelivery: $('#TermsOfDeliveryID option:selected').text().trim(),
+                    TermsOfDeliveryId: $('#TermsOfDeliveryID').val().trim(),
+                    DiscountPercent: $('#Discount').val().trim(),
+                    PaymentTerm: $('#PaymentTermID option:selected').text().trim(),
+                    OfficeMobileNo: $('#OfficeMobileNo option:selected').text(),
+                    OfficeEmailId: $('#OfficeEmailId option:selected').text(),
+                    //PersonalMobileNo: $('#PersonalMobileNo option:selected').text(),
+                    //PersonalEmailID: $('#PersonalEmailID option:selected').text(),
+                    //CourierGSTRate: $('#CourierGSTRate').val().trim(),
+                    AirRate: $('#AirRate').val().trim(),
+                    SurfaceRate: $('#SurfaceRate').val().trim(),
+                    RoundOffTotalAmount: $('#RoundOffAmount').val().trim(),
+                    UserId: $('#UserId').val().trim(),
+
+                    TransporterId: couid,
+                    CPDesignation: $('#CPDesignation').val().trim(),
+
+                    //LedgerID:$('#LedgerID').val().trim(),
+                    BusinessAddressId:$('#AddressTitleID').val().trim(),
+                    DesignationInfoId: designinfoid,
+                    //EnquiryModeId: $('#EnquiryModeId').val().trim(),
+                    PaymentTermId: $('#PaymentTermID').val().trim(),
+                    Note: $('#Note').val().trim(),
+                    //StatusId: 4,
+                    CountryCode: $('#CountryCode1').val().trim(),
+                    ShippingAddSameAsBillAdd: $('input[name=ShippAdd]:checked').val().trim(),
+                    ShippingAddress: $('#ShippingAddress').val().trim(),
+
+                    TIItemDetails: TIItems
+                }
+
+                console.log('data are ' + data);
+
+
+                $(this).val('Please wait...');
+
+                $.ajax({
+                    url: '/TaxInvoice/UpdateTaxinvoice',
+                    type: "POST",
+                    data: JSON.stringify(data),
+                    dataType: "JSON",
+                    contentType: "application/json",
+                    success: function (d) {
+
+                        //check is successfully save to database
+                       if (d.status == true) {
+                            //will send status from server side
+                            alert('Successfully done');
+                            //clear form
+                            SOItems = [];
+                            orderItems = [];
+                            $('#TaxInvoiceId').val('');
+                            $('#TaxInvoiceNo').val('');
+                            $('#TaxInvoiceDate').val('');
+                            $('#SaleOrderNo').val('');
+
+                            $('#AddressTitle').val();
+                            $('#Address').val();
+                            $('#LandMark').val();
+                            $('#Locality').val();
+                            $('#Taluka').val();
+                            $('#District').val();
+                            $('#Pincode1').val();
+                            $('#State').val();
+                            $('#Country').val();
+
+
+                            $('#TermsOfDeliveryID').val("Please Select");
+
+                            $('#Discount').val("");
+                            $('#PaymentTermID').val("Please Select");
+                            $('#ContactPersonName').val("");
+                            $('#OfficeMobileNo').val("");
+                            $('#OfficeEmailId').val("");
+                            //$('#PersonalMobileNo').val("");
+                            //$('#PersonalEmailID').val("");
+
+
+                            $('#TotalWeightInKg').val("");
+
+                            $('#AirRate').val("");
+                            $('#SurfaceRate').val("");
+
+
+                            $('#CourierID').val("Please Select");
+                            $('#TotalWeightInKg').val('');
+                            $('#SendType').val('');
+                            $('#RateType').val('');
+
+                            $('#TotalAmount').val('');
+                            $('#RoundOffAmount').val("");
+                            $('#ProductSubTotal').val('');
+                            $('#FreightCharges').val('');
+
+                            $('#GSTTotal').val('');
+                            $('#SGST').val('');
+                            $('#CGST').val('');
+                            $('#IGST').val('');
+                            $('#DocketCharges').val('');
+                            $('#FuelCharges').val('');
+                            $('#OtherCharges').val('');
+                            $('#CODCharges').val('');
+                            $('#FOV').val('');
+                            $('#Note').val('');
+
+
+                            $('#UserId').val("");
+
+                            $('#CPDesignation').val("");
+
+                            $('#orderItems').empty("");
+
+                            TIItems = null;
+                            window.location.href = '/TaxInvoiceReport.aspx';
+                        }
+
+                        else if (d.responseText == "Failed") {
+                            alert("Failed");
+                        }
+                        $('#submit').val('Save');
+                    },
+                    error: function () {
+                        alert('Error. Please try again.');
+                        $('#submit').val('Save');
+                    }
+                });
+
+            }
+        }
+
+    function checkAdd(code) {
+        if (code == "No") {
+            $("#shippAddress").show();
+        }
+        else {
+            $("#ShippingAddress").val('');
+            $("#shippAddress").hide();
+        }
+
+    }
+
+    /////punchuation marks after space and before remove space
+    $(document).ready(function () {
+        $('#ShippingAddress').keyup(function () {
+            str = this.value.replace(/(?=\S)[,.!?:;)](?=\S)/g, '$& ');
+
+            str1 = this.value.replace(/\s+([,.!?:;)])/g, "$1");
+            str2 = this.value.replace(/(?=\S)[&](?=\S)/g, ' & ', '$& ');
+            str3 = this.value.replace(/\b[(]/g, ' (', "(");
+            str4 = this.value.replace(/(?=\S)[-](?=\S)/g, ' - ', '$& ');
+            str5 = this.value.replace(/(?=\S)[/](?=\S)/g, ' / ', '$& ');
+
+
+            if (str != this.value) this.value = str;
+            else
+                if (str1 != this.value) this.value = str1;
+                else
+                    if (str2 != this.value) this.value = str2;
+                    else
+                        if (str3 != this.value) this.value = str3;
+                        else
+                            if (str4 != this.value) this.value = str4;
+                            else
+                                if (str5 != this.value) this.value = str5;
+
+        });
+    });
+
+
+
+    $(document).ready(function () {
+        $('#ShippingAddress').change(function () {
+
+            var a = $(this).val();
+
+            this.value = this.value.replace(/\w\S*/g, function (a) { return a.charAt(0).toUpperCase() + a.substr(1).toLowerCase(); });
+
+        });
+    });
+
+
+    ///textbox starting remove blank space
+    $(function () {
+        $('#ShippingAddress').blur(function () {
+            $(this).val(
+                $.trim($(this).val())
+            );
+        });
+    });
+
+
+    function LoadSerialPopup(serialList) {
+
+        $("#serialTableBody").empty();
+
+        $.each(serialList, function (i, sn) {
+
+            var checked = SelectedSerialNumbers.includes(sn.toString()) ? "checked" : "";
+
+            $("#serialTableBody").append(`
+            <label style="width:180px;border:1px solid #ccc;padding:8px;margin:5px;display:inline-block;">
+                <input type="checkbox"
+                       class="serialChk"
+                       value="${sn}"
+                       ${checked}>
+                ${sn}
+            </label>
+        `);
+        });
+
+        openModal('serialModal', 'serialModalOverlay');
+    }
+
+    $(document).on("click", "#btnSerialPopup", function () {
+
+        GetCode(true);
+        openModal("serialModal", "serialModalOverlay");
+
+    });
+
+</script>
+<style>
+    /*Adding some css for looks good*/
+    #label {
+        font-size: 15px;
+        color: #0077B3;
+        font-weight: 500
+    }
+
+    h4 {
+        font-size: 18px;
+        padding: 10px 0;
+        font-weight: 600;
+    }
+
+    .form-head h4 {
+        padding: 10px 10px;
+        font-size: 16px;
+        font-weight: 600;
+        background-color: #C1D5BD;
+    }
+
+
+    .body-panel {
+        border: 1px solid black;
+        /*background-color: whitesmoke;*/
+        margin-top: -10px;
+        border-radius: 5px;
+        background-color: floralwhite;
+    }
+
+    .submit-btn {
+        display: inline-flex;
+        padding: 7px;
+    }
+
+
+        .submit-btn button {
+            border-radius: 30px;
+            padding: 5px 5px;
+        }
+
+
+
+    .save-btn input {
+        /*border-radius: 30px;*/
+        font-size: 14px;
+    }
+
+    .tablecontainer table {
+        width: 100%;
+        border-collapse: collapse;
+        border-top: 1px solid #fff;
+        border-right: 1px solid #fff;
+        background-color: #fff
+    }
+
+    .tablecontainer th {
+        border-bottom: 2px solid #fff !important;
+        background-color: lightblue;
+        font-size: small;
+        font-weight: normal;
+        color: midnightblue;
+        text-align: center;
+        height: 30px;
+    }
+
+    .tablecontainer th, .tablecontainer td {
+        /*text-align: left;*/
+        border-left: 2px solid #fff;
+        padding: 5px;
+        border-bottom: 2px solid #fff;
+        font-size: small;
+    }
+
+
+    fieldset {
+        border: 1px solid #ddd !important;
+        margin: 10px;
+        /*max-width:0;*/
+        padding: 5px;
+        /* position:relative;*/
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        /*background-color: whitesmoke;*/
+        /* background-color: white;*/
+        background-color: white;
+    }
+
+
+    .button {
+        display: inline-block;
+        /*padding: 5px 6px;*/
+        /*font-size: 5px;*/
+        padding: 20px;
+        font-size: 16px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        outline: none;
+        border: none;
+        box-shadow: 0 9px #999;
+        height: 3px;
+        width: auto;
+        margin: 4px 2px;
+    }
+
+        .button:hover {
+            /*background-color: #3e8e41*/
+            background-color: cyan;
+        }
+
+        .button:active {
+            background-color: cyan;
+            box-shadow: 0 5px #666;
+            transform: translateY(4px);
+        }
+
+    .button1 {
+        border-radius: 50%;
+    }
+
+    span.error {
+        display: block;
+        visibility: hidden;
+        color: red;
+        font-size: 60px;
+    }
+
+
+    .ui-widget {
+        font-size: 12px !important;
+    }
+
+    .reqError {
+        color: #ff0000; /*Red Color*/
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .backsubmitbtn {
+        background-image: linear-gradient(to right,#35d3e1,midnightblue);
+        padding: 5px 20px 5px 20px;
+        color: white;
+        font-family: Helvetica;
+        box-shadow: -4px -4px 8px rgba(255, 255, 255, 0.7), 4px 4px 8px rgba(128, 128, 128, 0.7);
+        outline-style: none;
+        border: none
+    }
+
+    .dshapefieldset {
+        background-color: #e5e6e7;
+        border: 2px solid #ddd;
+        border-radius: 0px 25px 25px 0px;
+        margin-bottom: 20px
+    }
+
+    .field-heading {
+        font-size: 18px;
+        color: midnightblue;
+        font-family: Helvetica;
+        font-weight: bold;
+        display: flex
+    }
+
+    .route-path1 {
+        clip-path: polygon(0% 0%, 90% 0%, 100% 50%, 90% 100%, 0% 100%);
+        background-color: #003399;
+        color: white;
+        padding: 5px 15px 5px 5px
+    }
+
+    .route-path2 {
+        cursor: pointer;
+        color: white;
+        clip-path: polygon(93% 0%, 100% 50%, 93% 100%, 0% 100%, 7% 50%, 0% 0%);
+        background-color: #003399;
+        padding: 5px 15px 5px 15px;
+    }
+
+    .route-path3 {
+        cursor: pointer;
+        color: white;
+        clip-path: polygon(88% 0%, 100% 50%, 88% 100%, 0% 100%, 12% 50%, 0% 0%);
+        background-color: #003399;
+        padding: 5px 15px 5px 15px;
+    }
+
+    .cross-btn {
+        font-size: 30px;
+        cursor: pointer;
+        color: midnightblue;
+        position: absolute;
+        top: 35px;
+        right: 15px;
+    }
+
+    .info-badge {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        font-size: 11px;
+        font-weight: 600;
+        background-color: #6c757d; /* grey */
+        color: white;
+        cursor: pointer;
+        margin-left: 6px;
+    }
+
+        .info-badge:hover {
+            background-color: #cfcfcf;
+        }
+</style>
+
+
+@using (Html.BeginForm("Edit", "TaxInvoice", FormMethod.Post))
+{
+    <form id="TypeValidation" class="form-horizontal" action="#" method="">
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="d-flex" style="margin-top:-20px">
+                    <h4 class="route-path1" onclick="location.href='@Url.Action("Index","AccountInfo")'">Accounts </h4>
+                    <h4 class="route-path2" onclick="location.href='@Url.Action("Index","TaxInvoice")'">Tax Invoice</h4>
+                    <h4 class="route-path3" onclick="location.reload()">Edit</h4>
+                </div>
+                <br />
+
+                <div class="panel panel-default outer-main-container">
+                    <div class=" main-heading">
+                        <div class=" d-flex ">
+                            <i class="material-icons" style="font-size: 32px; margin-right: 10px;">edit_note</i>
+                            Tax Invoice Edit
+                            <i class="material-icons cross-btn" onclick="history.back()">cancel</i>
+                        </div>
+                    </div>
+                    <div class="" style="padding-inline:20px">
+                        @Html.HiddenFor(model => model.TaxInvoiceId)
+                        @Html.HiddenFor(model => model.AddressTitle)
+                        @Html.HiddenFor(model => model.LandMark)
+                        @Html.HiddenFor(model => model.AirRate)
+                        @Html.HiddenFor(model => model.SurfaceRate)
+                        @Html.HiddenFor(model => model.CPDesignation)
+                        @Html.EditorFor(model => model.UserId, new { htmlAttributes = new { @class = "form-control", style = "display: none;" } })
+
+                        @*//Sales Order Details Panel//*@
+                        <fieldset class="dshapefieldset">
+                            <p class="field-heading pt-3">
+                                <i class="material-icons">double_arrow</i>
+                                Tax Invoice Details
+                            </p>
+                            <div class="form-group row " style="margin-top:-10px">
+                                <div class="col-lg-3 col-sm-6 ">
+                                    <label id="label">Tax Invoice No. :</label>
+                                    @Html.EditorFor(model => model.TaxInvoiceNo, new { htmlAttributes = new { @class = "form-control bg-light fs-4 pl-3 input-text-box", style = "height:35px", @readonly = "readonly" } })
+                                    @Html.ValidationMessageFor(model => model.TaxInvoiceNo, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-3 col-sm-6 ">
+                                    <label id="label">Tax Invoice Date :</label>
+                                    @Html.EditorFor(model => model.TaxInvoiceDate, "{0:dd/MM/yyyy}", new { htmlAttributes = new { @class = "form-control fs-4 pl-3 dropdown-textbox", style = "height:35px", @type = "date" } })
+                                    <span id="Regdate"></span>
+                                </div>
+                                <div class="col-lg-3 col-sm-6 ">
+                                    <label id="label">Sale Order No. :</label>
+                                    @Html.EditorFor(model => model.SaleOrderNo, new { htmlAttributes = new { @class = "form-control bg-light fs-4 pl-3 input-text-box", style = "height:35px", @disabled = "true" } })
+                                    <span id="Regdate"></span>
+                                </div>
+                                <div class="col-lg-3 col-sm-6 ">
+                                    <label id="label">Material Req. Period :</label>
+                                    @Html.EditorFor(model => model.MaterialRequiredDate, new { htmlAttributes = new { @class = "form-control fs-4 pl-3 dropdown-textbox", style = "height:35px", @type = "date" } })
+                                    <span id="reqmrd"></span>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        @*//******Company Details Panel***//*@
+                        <fieldset class="dshapefieldset">
+                            <p class="field-heading pt-3">
+                                <i class="material-icons">double_arrow</i>
+                                Company Details
+                            </p>
+                            <div class="form-group row" style="margin-top:-15px">
+                                <div class="col-lg-5 col-sm-9 py-3 py-lg-0">
+                                    <label id="label">Company Name :</label>
+                                    <div class="form-group row ">
+                                        @Html.DropDownList("LedgerID", (IEnumerable<SelectListItem>)ViewBag.BusinessEntityId, "Please Select", new { @style = "height:35px;margin-top:-2px", @class = "form-control dropdown-textbox fs-4 pl-3 bg-light", @onchange = "GetCompanyInfo(this.value);" })
+                                    </div>
+                                    <span id="reqcomp"></span>
+                                </div>
+                                <div class="col-lg-2 col-sm-3 py-3 py-lg-0">
+                                    <label id="label">Add. Title : </label>
+                                    <div class="form-group row mt-2">
+                                        <select class="form-control fs-4 pl-4 dropdown-textbox" style="height:35px;" id="AddressTitleID" name="AddressTitleID" onchange="GetAddrCPInfo(this.value);">
+                                            <option value="">Please Select</option>
+                                        </select>
+                                    </div><br />
+                                    <span id="reqaddr"></span>
+                                </div>
+                                <div class="col-lg-5 col-sm-12">
+                                    <label id="label"> Address :</label>
+                                    <textarea id="Address" rows="2" cols="30" maxlength="150" class="form-control fs-4 pl-3 input-text-box bg-light" onkeyup="myFunction(this.id)"></textarea>
+                                    <span class="error">Address Required</span>
+                                </div>
+                                <div class="col-lg-3 col-sm-6 ">
+                                    <label id="label">Locality / Village :</label>
+                                    @Html.TextBox("Locality", null, new { @class = "form-control bg-light fs-4 pl-3 input-text-box", style = "height:35px", @disabled = "true" })
+                                </div>
+                                <div class="col-lg-2 col-sm-6 ">
+                                    <label id="label">Taluka :</label>
+                                    @Html.TextBox("Taluka", null, new { @class = "form-control bg-light fs-4 pl-3 input-text-box", style = "height:35px", @disabled = "true" })
+                                </div>
+                                <div class="col-lg-2 col-sm-6">
+                                    <label id="label">Pincode :</label>
+                                    @Html.TextBox("Pincode1", null, new { @class = "form-control bg-light fs-4 pl-3 input-text-box", style = "height:35px", @disabled = "true" })
+                                </div>
+                                <div class="col-lg-2 col-sm-6 ">
+                                    <label id="label">District :</label>
+                                    @Html.TextBox("District", null, new { @class = "form-control bg-light fs-4 pl-3 input-text-box", style = "height:35px", @disabled = "true" })
+                                </div>
+                                <div class="col-lg-3 col-sm-6 ">
+                                    <label id="label">State :</label>
+                                    @Html.TextBox("State", null, new { @class = "form-control bg-light fs-4 pl-3 input-text-box", style = "height:35px", @disabled = "true" })
+                                </div>
+                                <div class="col-lg-3 col-sm-6 ">
+                                    <label id="label"> Country :</label>
+                                    @Html.TextBox("Country", null, new { @class = "form-control bg-light fs-4 pl-3 input-text-box", style = "height:35px", @disabled = "true" })
+                                </div>
+                                <div class="col-lg-4 col-md-6 pb-2">
+                                    <label id="label">Contact Person Name :</label>
+                                    <div class="form-group row">
+                                        <select class="form-control fs-4 pl-3 dropdown-textbox" style="height:35px" id="ContactPersonName" name="ContactPersonName" onchange="GetCPDetails(this.value);">
+                                        </select>
+
+                                    </div>
+                                    <br />
+                                    <span id="reqcon"></span>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-3 ">
+                                    <label id="label">Code </label>
+                                    @Html.TextBox("CountryCode1", null, new { style = "height:35px;margin-top:1px", @class = "form-control fs-4 pl-3 input-text-box mt-1", disabled = "true" })
+                                </div>
+                                <div class="col-lg-3 col-md-4 col-sm-9 pb-2">
+                                    <label id="label">Office Contact :</label>
+                                    <div class="form-group row">
+                                        <select class="form-control fs-4 pl-3 dropdown-textbox" id="OfficeMobileNo" name="OfficeMobileNo" onchange="GetCPDetailsByOffmobno(this.value);" style="height:35px;">
+                                            <option value="Please Select">Please Select</option>
+                                        </select>
+                                    </div>
+                                    <br />
+                                    <span id="errorOMobile"></span>
+                                    <span id="emailerrorOMobile"></span>
+                                    <span id="errorPMobile11"></span>
+                                    <span id="emailerrorOMobile11"></span>
+                                </div>
+                                <div class="col-lg-5 col-md-6 pb-2">
+                                    <label id="label">Office Email :</label>
+                                    <div class="form-group row">
+                                        <select class="form-control fs-4 pl-3 dropdown-textbox" style="height:35px" id="OfficeEmailId" name="OfficeEmailId" onchange="GetCPDetailsByOffemail(this.value);">
+                                            <option value="Please Select">Please Select</option>
+                                        </select>
+                                    </div>
+                                    <br />
+                                    <span id="reqEm"></span>
+                                </div>
+                                <div class="col-lg-3 col-sm-6 ">
+                                    <label id="label">Discount :</label>
+                                    @Html.TextBox("Discount", null, new { @class = "form-control fs-4 pl-3 input-text-box bg-light", @disabled = "true", style = "height:35px;text-align:right" })
+                                </div>
+                                <div class="col-lg-4 col-sm-6 pb-5">
+                                    <label id="label">Terms Of Delivery :</label>
+                                    <div class="form-group row mt-2">
+                                        @Html.DropDownList("TermsOfDeliveryID", (IEnumerable<SelectListItem>)ViewBag.TermsOfDeliveryID, "Please Select", new { @style = "height:35px;", @class = "fs-4 pl-3 dropdown-textbox form-control bg-light" })
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-sm-6 pb-3">
+                                    <label id="label">Payment Term :</label>
+                                    <div class="form-group row mt-2">
+                                        @Html.DropDownList("PaymentTermID", (IEnumerable<SelectListItem>)ViewBag.PaymentTermID, "Please Select", new { @style = "height:35px;", @class = "form-control fs-4 pl-3 dropdown-textbox bg-light" })
+                                        <span class="error">Payment Term Required</span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-6 ">
+                                    <label id="label">Shipping Address Same As Billing Address :</label>
+                                    <div class="form-check pl-0">
+                                        <label class="form-check-label" style="color: #0077B3; font-size: small">
+                                            <input class="form-check-input" checked type="radio" name="ShippAdd" value="Yes" id="ShippAddYes" onchange="checkAdd(this.value);"> Yes
+                                            <span class="circle bg-light">
+                                                <span class="check"></span>
+                                            </span>
+                                        </label>
+                                        <label class="form-check-label" style="color: #0077B3; font-size: small">
+                                            <input class="form-check-input" type="radio" name="ShippAdd" value="No" id="ShippAddNo" onchange="checkAdd(this.value);"> No
+                                            <span class="circle bg-light">
+                                                <span class="check"></span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-8" id="shippAddress">
+                                    <label id="label"> Shipping Address :</label>
+                                    @Html.EditorFor(model => model.ShippingAddress, new { htmlAttributes = new { placeholder = "Shipping Address", @onkeyup = "myFunction(this.id)", @class = "form-control fs-4 pl-3 input-text-box", style = "height:35px" } })
+                                    <span id="ShipAdd"></span>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        @*//Item Details Panel//*@
+                        <fieldset class="dshapefieldset">
+                            <p class="field-heading pt-3">
+                                <i class="material-icons">double_arrow</i>
+                                Item Details
+                            </p>
+                            <div class="form-group row">
+                                <div class="col-lg-5 p-3">
+                                    <label id="label">Item Name :</label>
+                                    <div class="form-group row">
+                                        @Html.DropDownList(
+                                        "ItemID",
+                                        (IEnumerable<SelectListItem>)ViewBag.ItemID,
+                                        "Please Select",
+                                        new
+                                        {
+                                            style = "height:35px",
+                                            @onchange = "GetCode(this.value); ",
+                                            @class = "form-control fs-4 pl-3 dropdown-textbox"
+                                        })
+
+                                    </div>
+                                    <span id="reqitem" class="fs-5"></span>
+                                </div>
+                                <div class="col-lg-2 col-sm-5 p-3">
+                                    <label id="label">ItemCode :</label>
+                                    @Html.TextBox("ItemCode", null, new { @class = "form-control fs-4 pl-3 input-text-box bg-light", style = "height:55%" })
+                                    <span class="error">Item name required</span>
+                                </div>
+                                <!-- Serial Number -->
+                                <div class="col-lg-2 col-sm-5 p-3">
+                                    <label id="label">Serial No. :</label>
+
+                                    <div class="input-group">
+                                        <input type="text" id="SerialNoText" class="form-control" readonly placeholder="Select Serial No">
+                                        <button type="button" class="btn btn-primary" id="btnSerialPopup">
+                                            Select
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-sm-5 p-3">
+                                    <label id="label">Qty. :</label>
+                                    @Html.TextBox("Quantity", null, new { @type = "number", @class = "form-control fs-4  input-text-box", @Value = "1" })
+                                    <span id="reqqty"></span>
+                                    <span id="regqty"></span>
+                                </div>
+                                <div class="col-lg-1 col-sm-5 pt-3">
+                                    <div class="form-group">
+                                        &nbsp;
+                                        <input type="button" id="add" value="Add" name="add" class="btn btn-success btn-round create-bttn custo-inner" style="outline-style:none;border:none;" onclick="AddProduct(this.value);" />
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="">
+                                <div id="orderItems" class="tablecontainer table-responsive" style="background-color:#fff">
+                                </div>
+                                <label>  </label>
+                            </div>
+                        </fieldset>
+
+                        @*//Courier Services Panel//*@
+                        <fieldset class="dshapefieldset">
+                            <p class="field-heading pt-3">
+                                <i class="material-icons">double_arrow</i>
+                                Courier Services
+                            </p>
+                            <div class="form-group row">
+                                <div class="col-md-4 pb-5">
+                                    <label id="label">Courier Name :</label>
+                                    <div class="form-group">
+                                        @Html.DropDownList("CourierID", (IEnumerable<SelectListItem>)ViewBag.CourierID, "Please Select", new
+                                   { @class = "form-control fs-4 pl-3 dropdown-textbox", @onchange = "OtherCourier(this.value);", style = "height:35px" })
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-6">
+                                    <label id="label">Dispatch Mode :</label>
+                                    <div class="form-check pl-0">
+                                        <label class="form-check-label" id="label">
+                                            <input class="form-check-input" type="radio" name="SendType" value="By Hand" id="ByHand" onchange="checksendtype(this.value);"> By Hand
+                                            <span class="circle bg-light">
+                                                <span class="check"></span>
+                                            </span>
+                                        </label>
+                                        <label class="form-check-label" id="label">
+                                            <input class="form-check-input" type="radio" name="SendType" value="By Courier" id="ByCourier" onchange="checksendtype(this.value);"> By Courier
+                                            <span class="circle bg-light">
+                                                <span class="check"></span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-6">
+                                    <label id="label">Transport Mode :</label>
+                                    <div class="form-check pl-0">
+                                        <label class="form-check-label" id="label">
+                                            <input class="form-check-input" type="radio" name="RateType" value="Air Rate" id="AirRate" onchange="checkratetype(this.value);">By Air
+                                            <span class="circle">
+                                                <span class="check"></span>
+                                            </span>
+                                        </label>
+
+                                        <label class="form-check-label" id="label">
+                                            <input class="form-check-input" type="radio" name="RateType" value="Surface Rate" id="SurfaceRate" onchange="checkratetype(this.value);">By Surface
+                                            <span class="circle">
+                                                <span class="check"></span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-2 col-sm-6 col-md-4">
+                                    <label id="label">Total Weight<br /> In Kg :</label>
+                                    @Html.EditorFor(model => model.TotalWeightInKg, new { htmlAttributes = new { @class = "form-control bg-light fs-4 pl-3 input-text-box text-end", @type = "number", style = "height:35px" } })
+                                    @Html.ValidationMessageFor(model => model.TotalWeightInKg, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-2 col-sm-6 col-md-4">
+                                    <label id="label">Docket <br />Charges :</label>
+                                    @Html.EditorFor(model => model.DocketCharges, new { htmlAttributes = new { @class = "form-control bg-light fs-4 pl-3 input-text-box text-end", @type = "number", style = "height:35px" } })
+                                    @Html.ValidationMessageFor(model => model.DocketCharges, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-2 col-sm-6 col-md-4">
+                                    <label id="label">Fuel <br />Charges :</label>
+                                    @Html.EditorFor(model => model.FuelCharges, new { htmlAttributes = new { @class = "form-control bg-light fs-4 pl-3 input-text-box text-end", @type = "number", style = "height:35px" } })
+                                    @Html.ValidationMessageFor(model => model.FuelCharges, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-2 col-sm-6 col-md-4">
+                                    <label id="label">Other<br /> Charges :</label>
+                                    @Html.EditorFor(model => model.OtherCharges, new { htmlAttributes = new { @class = "form-control bg-light fs-4 pl-3 input-text-box text-end", @type = "number", style = "height:35px" } })
+                                    @Html.ValidationMessageFor(model => model.OtherCharges, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-2 col-sm-6 col-md-4">
+                                    <label id="label">COD <br />Charges :</label>
+                                    @Html.EditorFor(model => model.CODCharges, new { htmlAttributes = new { @class = "form-control bg-light fs-4 pl-3 input-text-box text-end", @type = "number", style = "height:35px" } })
+                                    @Html.ValidationMessageFor(model => model.CODCharges, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-2 col-sm-6 col-md-4">
+                                    <label id="label">FOV <br />Charges :</label>
+                                    @Html.EditorFor(model => model.FOV, new { htmlAttributes = new { @class = "form-control bg-light fs-4 pl-3 input-text-box text-end", @type = "number", style = "height:35px" } })
+                                    @Html.ValidationMessageFor(model => model.FOV, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="dshapefieldset">
+                            <div class="form-group row">
+                                <div class="col-lg-2 col-sm-6 col-md-4">
+                                    <label id="label">Product Sub Total :</label>
+                                    @Html.EditorFor(model => model.ProductSubTotal, new { htmlAttributes = new { @class = "form-control bg-light fs-4 pl-3 input-text-box text-end", @type = "number", style = "height:35px" } })
+                                    @Html.ValidationMessageFor(model => model.ProductSubTotal, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-2 col-sm-6 col-md-4">
+                                    <label id="label">Freight Charges :</label>
+                                    @Html.EditorFor(model => model.FreightCharges, new { htmlAttributes = new { @class = "form-control bg-light fs-4 pl-3 input-text-box text-end", @type = "number", style = "height:35px", @onchange = "calbyother();", @onkeyup = "calbyotherkeyup();" } })
+                                    @Html.ValidationMessageFor(model => model.FreightCharges, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-2 col-sm-6 col-md-4">
+                                    <label id="label">IGST Charges :</label>
+                                    @Html.EditorFor(model => model.IGST, new { htmlAttributes = new { @class = "form-control bg-light fs-4 pl-3 input-text-box text-end", @type = "number", style = "height:35px" } })
+                                    @Html.ValidationMessageFor(model => model.IGST, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-2 col-sm-6 col-md-4">
+                                    <label id="label">CGST Charges :</label>
+                                    @Html.EditorFor(model => model.CGST, new { htmlAttributes = new { @class = "form-control bg-light fs-4 pl-3 input-text-box text-end", @type = "number", style = "height:35px" } })
+                                    @Html.ValidationMessageFor(model => model.CGST, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-2 col-sm-6 col-md-4">
+                                    <label id="label">SGST Charges :</label>
+                                    @Html.EditorFor(model => model.SGST, new { htmlAttributes = new { @class = "form-control bg-light fs-4 pl-3 input-text-box text-end", @type = "number", style = "height:35px" } })
+                                    @Html.ValidationMessageFor(model => model.SGST, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-2 col-sm-6 col-md-4">
+                                    <label id="label">Total Amount :</label>
+                                    @Html.TextBox("RoundOffAmount", null, new { @class = "form-control bg-light fs-4 pl-3 input-text-box text-end", @type = "number", style = "height:35px", @readonly = "readonly" })
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="dshapefieldset">
+                            @*<label id="label">Specific Instructions by Customer :</label>*@
+                            <label id="label">
+                                Specific Instructions by Customer
+                                <span class="info-badge" title="Mention any special requirements like customization, delivery needs, or extra details.">i</span>
+                            </label>
+                            <div class="form-group row ">
+                                <div class="col-lg-12">
+                                    @Html.TextAreaFor(model => model.Note, new { rows = 2, cols = 120, @class = "form-control fs-4 pl-3 input-text-box" })
+                                    @Html.ValidationMessageFor(model => model.Note, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-2">
+                                    @Html.EditorFor(model => model.GSTTotal, new { htmlAttributes = new { @class = "form-control", style = "display: none;" } })
+                                    @Html.ValidationMessageFor(model => model.GSTTotal, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-lg-2">
+                                    @Html.TextBox("TotalAmount", null, new { @class = "form-control", style = "display: none;" })
+
+                                </div>
+                            </div>
+                        </fieldset>
+                        <div class="form-group row ">
+                            <div class="col-md-2 col-lg-2 col-sm-4 px-2">
+                                <input type="button" id="submit" value="Update" class=" btn btn-success btn-round create-bttn custo-inner" style="outline:none" onclick="UpdateTaxInvoice();" />
+                            </div>
+                            <div class="col-md-2 col-lg-2 col-sm-4 px-2">
+                                <input type="button" value="Close" class=" btn btn-success btn-round create-bttn custo-inner" style="outline:none" onclick="history.back();" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Serial Numbers Modal -->
+        <div class="modalOverlay" id="purchaseModalOverlay" onclick="closeModal('invoiceModal')"></div>
+
+        <div class="modal" id="invoiceModal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="SerialsModalLabel">Serial Numbers</h5>
+                        <i class="material-icons" data-dismiss="modal" aria-label="Close" onclick="closeModal('invoiceModal')"
+                           style="color: midnightblue; font-size: 30px; cursor: pointer;margin-top:-15px">cancel</i>
+                    </div>
+                    <div class="modal-body">
+                        <p id="SerialsItemInfo"><strong>Item:</strong> <span id="SerialItemName"></span> | <strong>Quantity:</strong> <span id="SerialItemQty"></span></p>
+                        <div style="max-height:300px; overflow-y:auto; border:1px solid #ccc; padding:10px;">
+                            <ul id="SerialNumbersList" style="list-style-type:none; padding-left:0;"></ul>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success btn-round custo-inner" onclick="closeModal('invoiceModal')" style=" background-image: linear-gradient(to right,#35d3e1,midnightblue); color: white; font-family: Helvetica; box-shadow: -4px -4px 8px rgba(255, 255, 255, 0.7), 4px 4px 8px rgba(128, 128, 128, 0.7); outline-style: none; border: none; padding: 5px 20px 5px 20px;">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overlay -->
+        <div class="modalOverlay" id="serialModalOverlay"
+             onclick="closeModal('serialModal')"></div>
+
+        <!-- Serial Modal -->
+        <div class="modal" id="serialModal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5>Select Serial Numbers</h5>
+
+                        <i class="material-icons"
+                           onclick="closeModal('serialModal')"
+                           style="color:midnightblue;font-size:30px;cursor:pointer;">
+                            cancel
+                        </i>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <div id="serialTableBody"
+                             style="display:flex;
+                         flex-wrap:wrap;
+                         gap:10px;
+                         max-height:350px;
+                         overflow-y:auto;">
+
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <button type="button"
+                                class="btn btn-success"
+                                id="btnSaveSerial">
+                            OK
+                        </button>
+
+                        <button type="button"
+                                class="btn btn-danger"
+                                onclick="closeModal('serialModal')">
+                            Cancel
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+}

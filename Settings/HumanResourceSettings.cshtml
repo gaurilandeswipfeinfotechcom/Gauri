@@ -1,0 +1,2322 @@
+﻿@model ERPEntities.ValidationsSettingDetails
+@{
+    ViewBag.Title = "HumanResourceSettings";
+    Layout = "~/Views/Shared/_SwipfeMaster.cshtml";
+}
+
+<style>
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 45px;
+        height: 22px;
+    }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #ccc;
+        transition: .4s;
+        border-radius: 34px;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 2px;
+            bottom: 2px;
+            background: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+    input:checked + .slider {
+        background: #4376c0;
+    }
+
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+
+    .settings-container {
+        display: flex;
+        background: white;
+        border: 1px solid #ccc;
+        min-height: 600px;
+    }
+
+    h4 {
+        font-size: 18px;
+        color: #00209cde;
+        margin-top: -1%;
+    }
+
+    .left-menu {
+        width: 250px;
+        background: #f7f7f7;
+        border-right: 1px solid #ddd;
+        color: #000000;
+    }
+
+        .left-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .left-menu li {
+            padding: 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #ddd;
+        }
+
+            .left-menu li:hover {
+                background: #e9f0ff;
+            }
+
+    .menu-list {
+        list-style: none;
+        padding: 15px;
+        margin: 0;
+    }
+
+        .menu-list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            color: #444;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+            .menu-list li i {
+                color: #4376c0;
+                font-size: 16px;
+                width: 20px;
+            }
+
+            .menu-list li:hover {
+                background: #eef4ff;
+                transform: translateX(4px);
+            }
+
+            .menu-list li.active {
+                background: linear-gradient(90deg, #052a5f,#83cdc6 /*#4a90ff*/ );
+                color: white;
+                box-shadow: 0px 4px 10px rgba(13,110,253,0.2);
+            }
+
+                .menu-list li.active i {
+                    color: white;
+                }
+
+    .right-panel {
+        flex: 1;
+        padding: 20px;
+    }
+
+    .setting-row {
+        display: grid;
+        grid-template-columns: 70% 30%;
+        margin-bottom: 10px;
+        align-items: center;
+    }
+
+        .setting-row label {
+            font-size: 13px;
+        }
+
+        .setting-row select,
+        .setting-row input {
+            height: 30px;
+            padding: 5px;
+        }
+
+    .settings-section {
+        display: none;
+    }
+
+    .active-section {
+        display: block;
+    }
+
+    .preview-box {
+        background: #f2f6ff;
+        padding: 10px;
+        margin-top: 15px;
+    }
+
+    /*.save-btn {
+        margin-top: 20px;
+        width: 100%;
+        height: 40px;
+        background: linear-gradient(90deg, #052a5f,#83cdc6*/ /*#4a90ff*/ /*);
+        color: white;
+        border: none;
+    }*/
+
+    label {
+        color: #000000;
+    }
+
+    select {
+        color: #000000;
+    }
+
+    .setting-label i {
+        color: #4376c0; /* blue icons */
+        margin-right: 8px;
+        font-size: 14px;
+    }
+
+    .setting-row label i,
+    h4 i {
+        color: #4376c0 !important;
+        margin-right: 8px;
+    }
+
+    .toggle-wrapper {
+        display: flex;
+        align-items: flex-start; /* moves Yes/No slightly upward */
+        gap: 8px;
+        margin-top: -2px;
+    }
+
+    .toggle-text {
+        font-size: 13px;
+        font-weight: 600;
+        color: #555;
+        min-width: 25px;
+    }
+
+    select {
+        width: 41%;
+    }
+
+    /* =========================================================
+   SETTINGS ROUTE PATH
+   ========================================================= */
+
+    .route-path1 {
+        clip-path: polygon( 0% 0%, 85% 0%, 100% 50%, 85% 100%, 0% 100% );
+        background-color: #003399;
+        color: white;
+        padding: 5px 13px 5px 5px;
+        margin: 0;
+        font-size: 18px;
+    }
+
+    .route-path2 {
+        cursor: pointer;
+        color: white;
+        clip-path: polygon( 89% 0%, 100% 50%, 89% 100%, 0% 100%, 11% 50%, 0% 0% );
+        background-color: #003399;
+        padding: 5px 15px;
+        margin: 0;
+        font-size: 18px;
+    }
+
+    .route-path3 {
+        color: white;
+        clip-path: polygon( 89% 0%, 100% 50%, 89% 100%, 0% 100%, 11% 50%, 0% 0% );
+        background-color: #003399;
+        padding: 5px 15px;
+        margin: 0;
+        font-size: 18px;
+    }
+
+</style>
+
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pagefix">
+
+    <div class="d-flex">
+
+        <h4 class="route-path1">
+            Admin
+        </h4>
+
+        <h4 class="route-path2"
+            onclick="location.href='@Url.Action("Index","Settings")'">
+            Setting
+        </h4>
+
+        <h4 class="route-path3">
+            Human Resources
+        </h4>
+
+    </div>
+
+    <br />
+
+</div>
+
+<!--<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+<!-- Bootstrap JS -->
+@*<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>*@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="Stylesheet" type="text/css" />
+@*AP external CSS*@
+@*<link href="~/Content/ERPStyle.css" rel="stylesheet" />-->*@
+
+@using (Html.BeginForm("HumanResourceSettings", "Settings", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+<form id="TypeValidation" action="#" method="post">
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+           
+
+
+            <div class="panel panel-default outer-main-container">
+            
+                              
+
+
+
+                <div style="padding-inline:0px">
+                    @Html.HiddenFor(model => model.SettingDetailID)
+
+                    <div class="settings-container">
+
+                        <!-- LEFT MENU -->
+                        <div class="left-menu">
+
+                            <ul class="menu-list">
+
+                                <li class="active" onclick="showSection('pf',this)">
+                                    <i class="fa fa-building"></i>
+                                    Statutary deduction
+                                </li>
+
+                                <li onclick="showSection('esic',this)">
+                                    <i class="fa fa-briefcase"></i>
+                                    Salary Head
+                                </li>
+
+                                @*<li onclick="showSection('pt',this)">
+                                        <i class="fa fa-inr"></i>
+                                        PT
+                                    </li>*@
+
+                            </ul>
+
+                        </div>
+
+                        <!-- RIGHT PANEL -->
+                        <div class="right-panel">
+
+
+                            <div id="pf" class="settings-section active-section">
+
+                                <h4>
+                                    <i class="fa fa-building"></i>
+                                    Statutary deduction
+                                </h4>
+                                <div class="settings-form">
+                                    <div class="d-flex justify-content-between align-items-start gap-2">
+                                        <!-- PF Section -->
+                                        <div style="flex:1;">
+                                            <div class="hr-card pf-card">
+                                                <div class="hr-card-header">
+                                                    <i class="material-icons">account_balance</i>
+                                                    <h5>Provident Fund (PF)</h5>
+                                                </div>
+
+                                                <div class="hr-card-body">
+                                                    <div class="row gx-1 gy-0">
+
+
+
+                                                        <div class="col-12 col-md-6">
+                                                            <label class="form-label d-block">Is PF Applicable</label>
+
+                                                            <label class="switch">
+                                                                <input type="checkbox"
+                                                                       id="chkPF"
+                                                                       @(Model.IsPFApplicable == "True" ? "checked" : "") />
+                                                                <span class="slider"></span>
+                                                            </label>
+
+                                                            @Html.HiddenFor(m => m.IsPFApplicable)
+                                                        </div>
+
+
+                                                        <div class="col-12 col-md-6">
+                                                            <label class="form-label">PF Registration No.</label>
+                                                            @Html.TextBoxFor(model => model.PFRegistrationNo, new { @class = "form-control", maxlength = "25" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-6">
+                                                        <label class="form-label">Employee %</label>
+                                                        @Html.TextBoxFor(model => model.PFEmployeePercent, new { @class = "form-control text-end" })
+                                                    </div>
+
+                                                    <div class="col-12 col-md-6">
+                                                        <label class="form-label">Employer %</label>
+                                                        @Html.TextBoxFor(model => model.PFEmployerPercent, new { @class = "form-control text-end" })
+                                                    </div>
+
+                                                    <div class="col-12">
+                                                        <label class="form-label">PF Amount Limit</label>
+                                                        @Html.TextBoxFor(model => model.PFLimitAmount, new { @class = "form-control text-end" })
+                                                    </div>
+
+                                                    <div class="col-12 save-btn-container">
+                                                        <button type="submit" name="submitType" value="pf" class="save-btn-modern">
+                                                            <i class="material-icons">save</i>
+                                                            Save PF
+                                                        </button>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div style="flex:1;">
+                                            <div class="hr-card esic-card">
+                                                <div class="hr-card-header">
+                                                    <i class="material-icons">health_and_safety</i>
+                                                    <h5>Employee State Insurance (ESIC)</h5>
+                                                </div>
+
+                                                <div class="hr-card-body">
+                                                    <div class="row gx-1 gy-0">
+
+                                                        @*<div class="col-12 col-md-6">
+                                        <label class="form-label">Is ESIC Applicable</label>
+                                        @Html.DropDownListFor(model => model.IsESICApplicable,
+                                            new SelectList(new[] {
+                                                new { Value = true, Text = "Yes" },
+                                                new { Value = false, Text = "No" }
+                                            }, "Value", "Text", Model.IsESICApplicable),
+                                            "Select",
+                                            new { @class = "form-select" })
+                                    </div>*@
+
+                                                        <div class="col-12 col-md-6">
+                                                            <label class="form-label d-block">Is ESIC Applicable</label>
+
+                                                            <label class="switch">
+                                                                <input type="checkbox"
+                                                                       id="chkESIC"
+                                                                       @(Model.IsESICApplicable.ToString() == "True" ? "checked" : "") />
+                                                                <span class="slider"></span>
+                                                            </label>
+
+                                                            @Html.HiddenFor(m => m.IsESICApplicable)
+                                                        </div>
+
+                                                        <div class="col-12 col-md-6">
+                                                            <label class="form-label">ESIC Registration No.</label>
+                                                            @Html.TextBoxFor(model => model.ESICRegistrationNo, new { @class = "form-control", maxlength = "25" })
+                                                        </div>
+
+                                                        <div class="col-12 col-md-6">
+                                                            <label class="form-label">Employee %</label>
+                                                            @Html.TextBoxFor(model => model.ESICEmployeePercent, new { @class = "form-control text-end" })
+                                                        </div>
+
+                                                        <div class="col-12 col-md-6">
+                                                            <label class="form-label">Employer %</label>
+                                                            @Html.TextBoxFor(model => model.ESICEmployerPercent, new { @class = "form-control text-end" })
+                                                        </div>
+
+                                                        <div class="col-12">
+                                                            <label class="form-label">ESIC Amount Limit</label>
+                                                            @Html.TextBoxFor(model => model.ESICLimitAmount, new { @class = "form-control text-end" })
+                                                        </div>
+
+                                                        <div class="col-12 text-center mt-3">
+                                                            <button type="submit" name="submitType" value="esic" class="save-btn-esic">
+                                                                <i class="material-icons">save</i>
+                                                                Save ESIC
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div style="flex:1;">
+                                            <div class="hr-card pt-card">
+                                                <div class="hr-card-header">
+                                                    <i class="material-icons">receipt_long</i>
+                                                    <h5>Professional Tax (PT)</h5>
+                                                </div>
+
+                                                <div class="hr-card-body">
+                                                    <div class="row gx-0 gy-0">
+
+                                                        <div class="col-12 col-md-4">
+                                                            <label class="form-label">PT Registration<br /> No.</label>
+                                                            @Html.TextBoxFor(model => model.PTRegistrationNo, new { @class = "form-control", maxlength = "25" })
+                                                        </div>
+
+                                                        <div class="col-12 col-md-4">
+                                                            <label class="form-label">Amount Limit <br />Below</label>
+                                                            @Html.TextBoxFor(model => model.PTLimitAmountBelow, new { @class = "form-control text-end" })
+                                                        </div>
+
+                                                        <div class="col-12 col-md-4">
+                                                            <label class="form-label">Deduct Amount Below</label>
+                                                            @Html.TextBoxFor(model => model.PTDeductAmountBelow, new { @class = "form-control text-end" })
+                                                        </div>
+
+                                                        <!-- MEN -->
+                                                        <div class="table-responsive">
+                                                            <table class="table table-borderless align-middle pt-table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Category</th>
+                                                                        <th>Start (₹)</th>
+                                                                        <th>End (₹)</th>
+                                                                        <th>Deduct (₹)</th>
+                                                                    </tr>
+                                                                </thead>
+
+                                                                <tbody>
+
+                                                                    <tr>
+                                                                        <td><span class="pt-men">MEN</span></td>
+
+                                                                        <td>
+                                                                            @Html.TextBoxFor(m => m.PTStartLimitAmountforMen,
+                                                                                new { @class = "form-control text-end" })
+                                                                        </td>
+
+                                                                        <td>
+                                                                            @Html.TextBoxFor(m => m.PTEndLimitAmountforMen,
+                                                                                new { @class = "form-control text-end" })
+                                                                        </td>
+
+                                                                        <td>
+                                                                            @Html.TextBoxFor(m => m.PTDeductAmountforMen,
+                                                                                new { @class = "form-control text-end" })
+                                                                        </td>
+                                                                    </tr>
+
+                                                                    <tr>
+                                                                        <td><span class="pt-women">WOMEN</span></td>
+
+                                                                        <td>
+                                                                            @Html.TextBoxFor(m => m.PTStartLimitAmountforWomen,
+                                                                                new { @class = "form-control text-end" })
+                                                                        </td>
+
+                                                                        <td>
+                                                                            @Html.TextBoxFor(m => m.PTEndLimitAmountforWomen,
+                                                                                new { @class = "form-control text-end" })
+                                                                        </td>
+
+                                                                        <td>
+                                                                            @Html.TextBoxFor(m => m.PTDeductAmountforWomen,
+                                                                                new { @class = "form-control text-end" })
+                                                                        </td>
+                                                                    </tr>
+
+                                                                    <tr>
+                                                                        <td><span class="pt-both">BOTH</span></td>
+
+                                                                        <td>
+                                                                            @Html.TextBoxFor(m => m.PTStartLimitAmountforBoth,
+                                                                                new { @class = "form-control text-end" })
+                                                                        </td>
+
+                                                                        <td>
+                                                                            @Html.TextBoxFor(m => m.PTEndLimitAmountforBoth,
+                                                                                new { @class = "form-control text-end" })
+                                                                        </td>
+
+                                                                        <td>
+                                                                            @Html.TextBoxFor(m => m.PTDeductAmountforBoth,
+                                                                                new { @class = "form-control text-end" })
+                                                                        </td>
+                                                                    </tr>
+
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="col-12 text-center mt-1">
+                                                        <button type="submit" name="submitType" value="pt" class="save-btn-pt">
+                                                            <i class="material-icons">save</i>
+                                                            Save PT
+                                                        </button>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="button-container">
+                                            <input type="submit"
+                                                   name="submitType"
+                                                   value="Submit"
+                                                   class="backsubmitbtn" />
+
+                                            <input type="button"
+                                                   value="Close"
+                                                   class="backsubmitbtn"
+                                                   onclick="location.href='@Url.Action("Index")'" />
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+
+
+
+
+                            <!-- Salary Head -->
+                            <div id="esic" class="settings-section">
+
+                                <h4>
+                                    <i class="fa fa-cog"></i>
+                                    Salary Head
+                                </h4>
+                                <div class="settings-form">
+
+
+
+                                    <div class="row">
+                                        <div class="col-lg-12 ">
+                                            <div class="hr-card">
+                                                <div class="hr-card-header d-flex align-items-center">
+                                                    <i class="material-icons">payments</i>
+
+                                                    <h5 class="mb-0">Salary Head</h5>
+
+                                                   
+                                                </div>
+
+
+                                                <div class="hr-card-body">
+                                                    <div class="row gx-0 gy-0 align-items-end">
+
+                                                        <div class="col-lg-3 d-flex align-items-center">
+                                                            <label for="SalaryHeadName" class="form-label mb-0 me-2 text-nowrap">
+                                                                Salary Head Name
+                                                            </label>
+                                                            <input type="text" id="SalaryHeadName" class="form-control" />
+                                                        </div>
+
+                                                        <div class="col-lg-2">
+                                                            <label class="form-label">Type</label>
+                                                            <select id="Type" class="form-select type-dropdown">
+                                                                <option value="">Select</option>
+                                                                <option value="Fixed">Fixed</option>
+                                                                <option value="Variable">Variable</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="col-lg-2">
+                                                            <label class="form-label">Category</label>
+                                                            <select id="Category" class="form-select">
+                                                                <option value="">Select</option>
+                                                                <option value="Earning">Earning</option>
+                                                                <option value="Deduction">Deduction</option>
+                                                                <option value="Statutory">Statutory</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-lg-3 d-flex align-items-center">
+                                                            <label for="CalculationType" class="form-label mb-0 me-2 text-nowrap">
+                                                                Calculation Type
+                                                            </label>
+
+                                                            <select id="CalculationType" class="form-select">
+                                                                <option value="">Select</option>
+                                                                <option value="Manual">Manual</option>
+                                                                <option value="Formula">Formula</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="col-lg-2 d-flex justify-content-end">
+                                                            <button type="button" id="btnAdd" class="btn btn-primary add-btn btn-sm mr-2">
+                                                                <i class="material-icons" style="font-size:12px;">add</i>
+                                                                Add
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-lg-3" id="formulaSection" style="display:none;">
+                                                            <label class="form-label">Formula</label>
+                                                            <select id="Formula" class="form-select"></select>
+                                                        </div>
+
+
+
+                                                        <div class="col-12 ">
+                                                            <div class="table-responsive">
+                                                                <table class="table table-hover align-middle mb-0" id="salaryHeadTable">
+                                                                    <thead class="salary-table-head">
+                                                                        <tr>
+                                                                            <th>Salary Head Name</th>
+                                                                            <th>Type</th>
+                                                                            <th>Category</th>
+                                                                            <th>Calculation Type</th>
+                                                                            <th>Formula</th>
+                                                                            <th width="90">Action</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class=" pr-2 pl-3 row">
+                                        <div class="button-container">
+                                            <input type="submit"
+                                                   name="submitType"
+                                                   value="Submit"
+                                                   class="backsubmitbtn" />
+
+                                            <input type="button"
+                                                   value="Close"
+                                                   class="backsubmitbtn"
+                                                   onclick="location.href='@Url.Action("Index")'" />
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                </div>
+
+
+
+               
+            </div>
+
+        </div>
+
+
+
+     
+        <!-- PT -->
+            <div id="pt" class="settings-section">
+
+                <h4>
+                    <i class="fa fa-calculator"></i>
+                    Professional Tax (PT)
+                </h4>
+
+                <div class="settings-form">
+
+                    <!-- PT REGISTRATION -->
+                    <div class="setting-row">
+
+                        <label>
+                            <i class="fa fa-id-card"></i>
+                            Registration No
+                        </label>
+
+                        @Html.TextBoxFor(model => model.PTRegistrationNo,
+
+                        new
+                        {
+
+                            @class = "form-control",
+
+                            maxlength = "25",
+                            style = "width: 100px;"
+
+                        })
+
+                    </div>
+
+                    <!-- LIMIT BELOW -->
+                    <div class="setting-row">
+
+                        <label>
+                            <i class="fa fa-arrow-down"></i>
+                            PT Amount Limit Below
+                        </label>
+
+
+                        @Html.TextBoxFor(model => model.PTLimitAmountBelow,
+
+                        new
+                        {
+
+                            @class = "form-control text-end",
+                            style = "width: 100px;"
+
+                        })
+
+                    </div>
+
+                    <!-- DEDUCT BELOW -->
+                    <div class="setting-row">
+
+                        <label>
+                            <i class="fa fa-minus-circle"></i>
+                            PT Amount Deduct Below
+                        </label>
+
+                        @Html.TextBoxFor(model => model.PTDeductAmountBelow,
+
+                        new
+                        {
+
+                            @class = "form-control text-end",
+                            style = "width: 100px;"
+
+                        })
+
+                    </div>
+
+                    <!-- MEN START -->
+                    <div class="setting-row">
+
+                        <label>
+                            <i class="fa fa-male"></i>
+                            PT Men Start Limit
+                        </label>
+
+                        @Html.TextBoxFor(model => model.PTStartLimitAmountforMen,
+
+                        null,
+
+                        new
+                        {
+
+                            @class = "form-control text-end",
+                            style = "width: 100px;"
+
+                        })
+
+                    </div>
+
+                    <!-- MEN END -->
+                    <div class="setting-row">
+
+                        <label>
+                            <i class="fa fa-male"></i>
+                            PT Men End Limit
+                        </label>
+
+                        @Html.TextBoxFor(model => model.PTEndLimitAmountforMen,
+
+                        null,
+
+                        new
+                        {
+
+                            @class = "form-control text-end",
+                            style = "width: 100px;"
+
+                        })
+
+                    </div>
+
+                    <!-- MEN DEDUCT -->
+                    <div class="setting-row">
+
+                        <label>
+                            <i class="fa fa-money"></i>
+                            PT Deduct for Men
+                        </label>
+
+                        @Html.TextBoxFor(model => model.PTDeductAmountforMen,
+
+                        new
+                        {
+
+                            @class = "form-control text-end",
+                            style = "width: 100px;"
+
+                        })
+
+                    </div>
+
+                    <!-- WOMEN START -->
+                    <div class="setting-row">
+
+                        <label>
+                            <i class="fa fa-female"></i>
+                            PT Women Start Limit
+                        </label>
+                        @Html.TextBoxFor(model => model.PTStartLimitAmountforWomen,
+
+                        null,
+
+                        new
+                        {
+
+                            @class = "form-control text-end",
+                            style = "width: 100px;"
+
+                        })
+
+                    </div>
+
+                    <!-- WOMEN END -->
+                    <div class="setting-row">
+
+                        <label>
+                            <i class="fa fa-female"></i>
+                            PT Women End Limit
+                        </label>
+
+                        @Html.TextBoxFor(model => model.PTEndLimitAmountforWomen,
+
+                        null,
+
+                        new
+                        {
+
+                            @class = "form-control text-end",
+                            style = "width: 100px;"
+
+                        })
+
+                    </div>
+
+                    <!-- WOMEN DEDUCT -->
+                    <div class="setting-row">
+
+                        <label>
+                            <i class="fa fa-money"></i>
+                            PT Deduct for Women
+                        </label>
+
+                        @Html.TextBoxFor(model => model.PTDeductAmountforWomen,
+
+                        new
+                        {
+
+                            @class = "form-control text-end",
+                            style = "width: 100px;"
+
+                        })
+
+                    </div>
+
+                    <!-- BOTH START -->
+                    <div class="setting-row">
+
+                        <label>
+                            <i class="fa fa-users"></i>
+                            PT Both Start Limit
+                        </label>
+
+                        @Html.TextBoxFor(model => model.PTStartLimitAmountforBoth,
+
+                        null,
+
+                        new
+                        {
+
+                            @class = "form-control text-end",
+                        style = "width: 100px;"
+
+                        })
+
+                    </div>
+
+                    <!-- BOTH END -->
+                    <div class="setting-row">
+
+                        <label>
+                            <i class="fa fa-users"></i>
+                            PT Both End Limit
+                        </label>
+
+                        @Html.TextBoxFor(model => model.PTEndLimitAmountforBoth,
+
+                        null,
+
+                        new
+                        {
+
+                            @class = "form-control text-end",
+                            style = "width: 100px;"
+
+                        })
+
+                    </div>
+
+                    <!-- BOTH DEDUCT -->
+                    <div class="setting-row">
+
+                        <label>
+                            <i class="fa fa-money"></i>
+                            PT Deduct for Both
+                        </label>
+
+                        @Html.TextBoxFor(model => model.PTDeductAmountforBoth,
+
+                        new
+                        {
+
+                            @class = "form-control text-end",
+                            style = "width: 100px;"
+
+                        })
+
+                    </div>
+
+                    <!-- SAVE -->
+                    <div class="pt-3">
+
+                        <input type="submit"
+                               name="submitType"
+                               value="pt"
+                               class="btn btn-success btn-round create-bttn custo-inner"
+                               style="outline:none" />
+
+                    </div>
+
+                </div>
+
+            </div>
+    </div>
+  </div>
+
+</form>
+}
+
+<script>
+    $(document).ready(function () {
+
+        /*module button*/
+        $.ajax({
+            url: '/Settings/GetAllColors',
+            type: 'GET',
+            success: function (colors) {
+                // Example: Apply Inner Button colors
+                var bgColor5 = colors.InnerButtonColor; // inner
+                var fontColor5 = colors.InnerButtonFontColor; // inner text
+
+                // Example for all preview boxes (optional)
+                $('.custo-inner').css('background', bgColor5);//  inner
+                $('.custo-inner').css('color', fontColor5);// inner text
+            },
+            error: function () {
+                console.error("Failed to load color settings.");
+            }
+        });
+
+    });
+</script>
+<script>
+
+    var salaryHeads = [];
+
+    $("#btnAdd").click(function () {
+
+        var salaryHead = $("#SalaryHeadName").val();
+        var type = $("#Type").val();
+        var category = $("#Category").val();
+        var calcType = $("#CalculationType").val();
+        var formula = $("#Formula").val();
+
+        // Add current salary head to array
+        if (salaryHead != "") {
+            salaryHeads.push(salaryHead);
+        }
+
+        $("#salaryHeadTable tbody").append(
+            "<tr>" +
+            "<td>" + salaryHead + "</td>" +
+            "<td>" + type + "</td>" +
+            "<td>" + category + "</td>" +
+            "<td>" + calcType + "</td>" +
+            "<td>" + formula + "</td>" +
+            "<td><button class='btn btn-danger btnDelete'>Delete</button></td>" +
+            "</tr>"
+        );
+
+        $("#SalaryHeadName").val("");
+        $("#Type").val("");
+        $("#Category").val("");
+        $("#CalculationType").val("");
+        $("#Formula").empty();
+        $("#formulaSection").hide();
+
+    });
+
+    $("#CalculationType").change(function () {
+
+        if ($(this).val() == "Formula") {
+
+            $("#formulaSection").show();
+
+            $("#Formula").empty();
+
+            $("#Formula").append('<option value="">Select</option>');
+
+            $.each(salaryHeads, function (i, item) {
+
+                $("#Formula").append(
+                    '<option value="' + item + '">' + item + '</option>'
+                );
+
+            });
+
+        }
+        else {
+            $("#formulaSection").hide();
+        }
+
+    });
+    $(document).on("click", ".btnDelete", function () {
+        $(this).closest("tr").remove();
+    });
+</script>
+
+@*chanchal*@
+
+<script>
+
+    function showSection(sectionId, element) {
+
+        // Hide all sections
+        document.querySelectorAll(".settings-section")
+            .forEach(function (section) {
+                section.style.display = "none";
+            });
+
+        // Show selected section
+        document.getElementById(sectionId)
+            .style.display = "block";
+
+        // Remove active class
+        document.querySelectorAll(".menu-list li")
+            .forEach(function (item) {
+                item.classList.remove("active");
+            });
+
+        // Add active class
+        element.classList.add("active");
+    }
+
+    // default load
+    document.addEventListener("DOMContentLoaded", function () {
+
+        document.querySelectorAll(".settings-section")
+            .forEach(function (section) {
+                section.style.display = "none";
+            });
+
+        document.getElementById("pf").style.display = "block";
+
+    });
+    $(document).ready(function () {
+
+        // Set hidden field on page load
+        $("#IsPFApplicable").val($("#chkPF").is(":checked") ? "True" : "False");
+
+
+        // Update hidden field whenever switch changes
+        $("#chkPF").change(function () {
+            $("#IsPFApplicable").val($(this).is(":checked") ? "True" : "False");
+        });
+        $('#chkESIC').change(function () {
+            $('#IsESICApplicable').val($(this).is(':checked'));
+        });
+    });
+
+</script>
+
+@*<script>
+
+    function updateToggleText(toggle) {
+
+        let text = toggle.closest(".toggle-wrapper")
+            .querySelector(".toggle-text");
+
+        text.innerText = toggle.checked ? "Yes" : "No";
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        document.querySelectorAll(".switch input").forEach(function (toggle) {
+
+            updateToggleText(toggle);
+
+            toggle.addEventListener("change", function () {
+                updateToggleText(this);
+            });
+
+        });
+
+    });
+
+</script>*@
+
+<script>
+
+    function updateToggleText(toggle) {
+
+        let text = toggle.closest(".toggle-wrapper")
+            .querySelector(".toggle-text");
+
+        text.innerText = toggle.checked ? "Yes" : "No";
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        document.querySelectorAll(".switch input").forEach(function (toggle) {
+
+            updateToggleText(toggle);
+
+            toggle.addEventListener("change", function () {
+
+                updateToggleText(this);
+
+                // ESIC hidden field update
+                if (this.id === "esicToggle") {
+
+                    document.getElementById("IsESICApplicable").value =
+                        this.checked ? "true" : "false";
+                }
+
+                // PF hidden field update (if using same toggle for PF)
+                if (this.id === "pfToggle") {
+
+                    document.getElementById("IsPFApplicable").value =
+                        this.checked ? "true" : "false";
+                }
+
+            });
+
+        });
+
+    });
+
+</script>
+<style>
+    /* Adding some css for looks good */
+    #label {
+        font-size: 15px;
+        color: #0077B3;
+        font-weight: 500;
+    }
+
+    h4 {
+        font-size: 18px;
+        padding: 10px 0;
+        font-weight: 600;
+    }
+
+    .form-head h4 {
+        padding: 10px 10px;
+        font-size: 16px;
+        font-weight: 600;
+        background-color: #C1D5BD;
+    }
+
+    .button-container {
+        position: absolute;
+        bottom: 0px;
+        left: 60%;
+        transform: translateX(-50%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        width: max-content;
+        min-height: 100px;
+    }
+    /* Center Submit & Close buttons in Salary Head */
+    /* Salary Head - keep common buttons at bottom center */
+    #esic {
+        position: relative;
+        min-height: 600px;
+    }
+
+        #esic .button-container {
+            position: absolute;
+            bottom: 0px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            width: max-content;
+            min-height: 1px;
+        }
+
+    .body-panel {
+        border: 1px solid black;
+        margin-top: -10px;
+        border-radius: 5px;
+        background-color: floralwhite;
+        position: relative;
+        min-height: 600px; /* or your existing height */
+    }
+
+    .submit-btn {
+        display: inline-flex;
+        padding: 7px;
+    }
+
+        .submit-btn button {
+            border-radius: 30px;
+            padding: 5px 5px;
+        }
+
+    .save-btn input {
+        font-size: 14px;
+    }
+
+    fieldset {
+        border: 1px solid #ddd !important;
+        margin: 10px;
+        padding: 5px;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        background-color: white;
+    }
+
+    .button {
+        padding: 20px;
+        font-size: 16px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        outline: none;
+        border: none;
+        box-shadow: 0 9px #999;
+        height: 3px;
+        margin: 4px 2px;
+    }
+
+        .button:hover {
+            background-color: cyan;
+        }
+
+        .button:active {
+            background-color: cyan;
+            box-shadow: 0 5px #666;
+            transform: translateY(4px);
+        }
+
+    .button1 {
+        border-radius: 50%;
+    }
+
+    span.error {
+        display: block;
+        visibility: hidden;
+        color: red;
+        font-size: 60px;
+    }
+
+    .tablecontainer table {
+        width: 100%;
+        border-collapse: collapse;
+        border-top: 1px solid #fff;
+        border-right: 1px solid #fff;
+    }
+
+    .tablecontainer th {
+        border-bottom: 2px solid #fff !important;
+        background-color: lightblue;
+        font-size: small;
+        color: midnightblue;
+        text-align: center;
+        height: 30px;
+    }
+
+    .tablecontainer th, .tablecontainer td {
+        border-left: 2px solid #fff;
+        padding: 5px;
+        border-bottom: 2px solid #fff;
+        font-size: small;
+    }
+
+    .ui-widget {
+        font-size: 12px !important;
+    }
+
+    .reqError {
+        color: #ff0000; /*Red Color*/
+        font-weight: bold;
+        font-size: 16px;
+    }
+    .backsubmitbtn {
+        background-image: linear-gradient(to right, #35d3e1, midnightblue);
+        color: white !important;
+        font-family: Helvetica, Arial, sans-serif;
+        border: none;
+        border-radius: 30px;
+        padding: 8px 30px;
+        min-width: 120px;
+        box-shadow: -4px -4px 8px rgba(255,255,255,0.7), 4px 4px 8px rgba(128,128,128,0.7);
+        transition: all .3s ease;
+    }
+
+        .backsubmitbtn:hover {
+            transform: translateY(-2px);
+        }
+
+        .backsubmitbtn:focus {
+            outline: none;
+            box-shadow: -4px -4px 8px rgba(255,255,255,0.7), 4px 4px 8px rgba(128,128,128,0.7);
+        }
+
+    .dshapefieldset {
+        background-color: #e5e6e7;
+        border: 2px solid #ddd;
+        border-radius: 0px 25px 25px 0px;
+        margin-bottom: 25px;
+    }
+
+    .field-heading {
+        font-size: 18px;
+        color: midnightblue;
+        font-family: Helvetica;
+        font-weight: bold;
+        display: flex;
+    }
+
+    .route-path1 {
+        clip-path: polygon(0% 0%, 90% 0%, 100% 50%, 90% 100%, 0% 100%);
+        background-color: #003399;
+        color: white;
+        padding: 5px 15px 5px 5px
+    }
+
+    .route-path2 {
+        cursor: pointer;
+        color: white;
+        clip-path: polygon(93% 0%, 100% 50%, 93% 100%, 0% 100%, 7% 50%, 0% 0%);
+        background-color: #003399;
+        padding: 5px 15px 5px 15px;
+    }
+
+    .route-path3 {
+        cursor: pointer;
+        color: white;
+        clip-path: polygon(94% 0%, 100% 50%, 94% 100%, 0% 100%, 5% 50%, 0% 0%);
+        background-color: #003399;
+        padding: 5px 15px 5px 15px;
+    }
+
+    .cross-btn {
+        font-size: 30px;
+        cursor: pointer;
+        color: midnightblue;
+        position: absolute;
+        top: 35px;
+        right: 15px
+    }
+    /* ===========================
+       HR Settings Card Design
+    ===========================*/
+
+    .hr-card {
+        display: flex;
+        flex-direction: column;
+        background: #ffffff;
+        border-radius: 1px;
+        border: 1px solid #e9eef5;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+        overflow: hidden;
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+
+        .hr-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 36px rgba(15, 23, 42, 0.12);
+        }
+
+    .hr-card-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 5px 7px;
+        background: #fff;
+        border-bottom: 1px solid #eef2f7;
+    }
+
+        .hr-card-header i {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #e8f1ff;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .hr-card-header h5 {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E2F8A;
+            line-height: 1.2;
+        }
+
+    .form-label {
+        white-space: nowrap;
+        font-size: 10px;
+        font-weight: 600;
+        color: #374151;
+       /* margin-bottom: 0 !important;*/
+        letter-spacing: 0.2px;
+       /* line-height: 1 !important;*/
+    }
+    .salary-head-label {
+        white-space: nowrap;
+    }
+    .hr-card:hover .hr-card-header i {
+        transform: scale(1.08);
+    }
+
+    .hr-card-body {
+        padding: 4px 8px;
+        flex: 1;
+    }
+
+    .hr-card .form-label {
+        font-weight: 600;
+        color: #344054;
+        margin-bottom: 1px;
+        font-size: 12px;
+    }
+
+
+    .hr-card .form-control:focus,
+    .hr-card .form-select:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 .15rem rgba(37,99,235,.15);
+        height: 40px;
+        font-size: 14px;
+        border-radius: 8px;
+    }
+    .hr-card-body .form-select {
+        min-width: 120px;
+    }
+    .form-control,
+    .form-select {
+        height: 20px;
+        border: 1px solid #D9E2EF;
+        border-radius: 8px;
+        background: #FFFFFF;
+        font-size: 10px;
+        transition: all .3s ease;
+        box-shadow: none;
+        padding: 2px 4px;
+    }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #2563EB;
+            box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+        }
+
+        .form-control::placeholder {
+            color: #9CA3AF;
+        }
+
+    .hr-card-body .col-12,
+    .hr-card-body .col-md-6 {
+        margin-bottom: 2px;
+    }
+    /* Professional compact PT card */
+    .pt-card {
+        min-height: 262px !important;
+        height: 262px !important;
+        background: #fff;
+        border: 1px solid #E8EDF5;
+        border-radius: 14px;
+        box-shadow: 0 6px 18px rgba(0,0,0,.08);
+        transition: .3s;
+    }
+        .pt-card .form-label {
+            font-size: 10px;
+        }
+        .pt-card:hover {
+            box-shadow: 0 10px 24px rgba(0,0,0,.12);
+        }
+        .pt-card .form-label {
+            display: block;
+            line-height: 1.3;
+            margin-bottom: 6px;
+            white-space: normal;
+            word-break: break-word;
+        }
+        .pt-card .col-12,
+        .pt-card .col-md-6,
+        .pt-card .col-lg-6 {
+            margin-bottom: 12px;
+        }
+        .pt-card .form-control,
+        .pt-card .form-select {
+            border: 1px solid #D7DFEA;
+            border-radius: 8px;
+            box-shadow: none;
+            transition: .25s;
+        }
+            .pt-card .form-control:focus,
+            .pt-card .form-select:focus {
+                border-color: #F97316;
+                box-shadow: 0 0 0 3px rgba(249,115,22,.12);
+            }
+
+        .pt-card .row {
+            margin-bottom: 1px;
+            --bs-gutter-x: .35rem;
+            --bs-gutter-y: .0rem;
+        }
+
+        .pt-card .pt-section {
+            padding-top: 2px;
+            padding-bottom: 2px;
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+            border-top: 1px solid #ececec;
+        }
+
+        .pt-card h6 {
+            margin: 0;
+            padding-bottom: 2px 0;
+            font-size: 10px;
+            line-height: 1;
+            font-size: 10px;
+        }
+
+    .pt-section {
+        border-top: 1px solid #e5e7eb;
+        padding-top: 2px;
+        margin-top: 0px;
+        margin-bottom: 0;
+    }
+
+    .pt-card .hr-card-header {
+        background: #fff;
+        border-bottom: 1px solid #EDF2F7;
+    }
+/*
+    .pt-card .save-btn-pt {
+        height: 28px;
+        font-size: 12px;
+        margin-top: 2px;
+    }*/
+    .save-btn-pt {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        width: 100px;
+        height: 32px;
+        background-image: linear-gradient(to right, #35d3e1, midnightblue);
+        box-shadow: -4px -4px 8px rgba(255,255,255,0.7), 4px 4px 8px rgba(128,128,128,0.7);
+        border: none;
+        border-radius: 8px;
+        color: #fff;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 3px 8px rgba(249,115,22,.25);
+        transition: .3s;
+    }
+
+        .save-btn-pt i {
+            font-size: 12px;
+            color: #fff;
+        }
+
+        .save-btn-pt:hover {
+           
+            transform: translateY(-1px);
+        }
+    .hr-card-body hr {
+        margin: 10px 0;
+    }
+
+   /* .pt-box {
+        border: 1px solid #F3D7DE;
+        border-radius: 12px;
+        padding: 12px;
+        background: #FFF9FB;
+        height: 100%;
+    }*/
+    
+    .pt-table {
+        margin-bottom: 0;
+        --bs-table-bg: transparent;
+        --bs-table-accent-bg: transparent;
+        --bs-table-striped-bg: transparent;
+        --bs-table-hover-bg: transparent;
+        border-collapse: collapse;
+    }
+        .pt-table th,
+        .pt-table td {
+            border: 0 !important;
+            box-shadow: none !important;
+            padding: 3px 4px !important;
+            vertical-align: middle;
+        }
+        .pt-table tbody tr {
+            border: none !important;
+        }
+
+        .pt-table > :not(caption) > * > * {
+            border-bottom-width: 0 !important;
+        }
+
+        .pt-table thead th {
+            font-weight: 700 !important;
+            background: #f8f9fc;
+            color: #1f3b7a;
+            font-weight: 600;
+            border: none;
+            text-align: center;
+            padding: 1px 2px;
+            font-size: 10px;
+        }
+
+    .pt-table tbody td {
+        border: none;
+        vertical-align: middle;
+        padding: 0px;
+    }
+
+    .pt-table .form-control {
+        border-radius: 6px;
+        height: 15px;
+    }
+
+    .pt-men {
+        background: #edf3ff;
+        color: #2563eb;
+    }
+
+    .pt-women {
+        background: #fff0f6;
+        color: #ec4899;
+    }
+
+    .pt-both {
+        background: #ecfdf3;
+        color: #16a34a;
+    }
+    .pt-men,
+    .pt-women,
+    .pt-both {
+        display: inline-block;
+        width: 35px;
+        text-align: center;
+        padding: 1px 0;
+        border-radius: 3px;
+        font-weight: 600;
+        font-size: 8px;
+    }
+    /* PT top fields */
+    .pt-top-fields .form-label {
+        margin-bottom: 1px !important;
+        line-height: 1.1;
+        font-size: 12px;
+    }
+
+    .pt-top-fields .form-control {
+        height: 28px;
+        min-height: 28px;
+        padding: 2px 8px;
+    }
+
+    .pt-top-fields .col-md-4 {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+
+    .pt-top-fields {
+        margin-bottom: 2px;
+    }
+    .save-btn-esic {
+        border: none !important;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        width: 100px;
+        height: 34px;
+        background-image: linear-gradient(to right, #35d3e1, midnightblue);
+        box-shadow: -4px -4px 8px rgba(255,255,255,0.7), 4px 4px 8px rgba(128,128,128,0.7);
+        border-radius: 8px;
+        color: #fff;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 3px 8px rgba(24, 169, 87, 0.25);
+        transition: all 0.3s ease;
+    }
+
+        .save-btn-esic i {
+            font-size: 12px;
+            color: #fff;
+        }
+
+        .save-btn-esic:hover {
+           /* background: linear-gradient(135deg, #C084FC, #A855F7);*/
+            transform: translateY(-1px);
+           /* box-shadow: 0 6px 14px rgba(168, 85, 247, 0.30);*/
+        }
+    .esic-card .form-label {
+        font-size: 11px;
+        white-space: nowrap;
+    }
+   
+
+    #salaryHeadTable th {
+        background: #F8FAF6;
+        color: #374151;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 12px;
+    }
+
+    #salaryHeadTable td {
+        padding: 12px;
+        border-top: 1px solid #EEF2F7;
+    }
+
+    #salaryHeadTable {
+        border: 1px solid #E5E7EB;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .add-btn {
+        background-image: linear-gradient(to right, #35d3e1, midnightblue);
+        box-shadow: -4px -4px 8px rgba(255,255,255,0.7), 4px 4px 8px rgba(128,128,128,0.7);
+        color: #22C55E;
+       
+        border-radius: 10px;
+        padding: 4px 10px;
+        font-weight: 600;
+        font-size: 20px;
+    }
+        .add-btn i {
+            font-size: 10px !important;
+            vertical-align: middle;
+        }
+        
+
+    .empty-table {
+        text-align: center;
+        color: #6B7280;
+        padding: 40px 0;
+    }
+    .pf-card {
+        background: #fff;
+        border: 1px solid #E8EDF5;
+        border-radius: 14px;
+        box-shadow: 0 6px 18px rgba(0,0,0,.08);
+        transition: .3s;
+    }
+
+        .pf-card .hr-card-header {
+            background: #fff;
+            border-bottom: 1px solid #EDF2F7;
+        }
+
+            .pf-card .hr-card-header i {
+                background: #EEF5FF;
+                color: #2563EB;
+                border-radius: 50%;
+            }
+    .form-switch .form-check-input {
+        width: 2.8em !important;
+        height: 1.4em !important;
+    }
+    .pf-switch {
+        width: 3rem;
+        height: 1.6rem;
+        cursor: pointer;
+    }
+
+        .pf-switch:checked {
+            background-color: #4F6BFF;
+            border-color: #4F6BFF;
+        }
+
+        .pf-switch:focus {
+            box-shadow: none;
+        }
+
+    .esic-card {
+        background: #fff;
+        border: 1px solid #E8EDF5;
+        border-radius: 14px;
+        box-shadow: 0 6px 18px rgba(0,0,0,.08);
+    }
+
+        .esic-card .hr-card-header {
+            background: #fff;
+            border-bottom: 1px solid #EDF2F7;
+        }
+
+            .esic-card .hr-card-header i {
+                background: #EEF5FF;
+                color: #2563EB;
+                border-radius: 50%;
+            }
+    .hr-card.pf-card,
+    .hr-card.esic-card
+    {
+        height: 260px;
+    }
+    .pf-card input,
+    .pf-card select {
+        border: 1px solid #D7DFEA;
+        border-radius: 8px;
+        transition: .25s;
+    }
+
+        .pf-card input:focus,
+        .pf-card select:focus {
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,.12);
+        }
+    .pf-card .save-btn-modern {
+        border-radius: 10px;
+        background-image: linear-gradient(to right, #35d3e1, midnightblue);
+        box-shadow: -4px -4px 8px rgba(255,255,255,0.7), 4px 4px 8px rgba(128,128,128,0.7);
+    }
+    .pf-card:hover {
+        transform: translateY(-2px);
+    }
+    .hr-card.esic .hr-card-header i {
+        background: #ede9fe;
+        color: #7c3aed;
+    }
+
+    .pt-table {
+        margin-bottom: 0;
+        --bs-table-bg: transparent;
+        --bs-table-accent-bg: transparent;
+        --bs-table-striped-bg: transparent;
+        --bs-table-hover-bg: transparent;
+        border-collapse: collapse;
+    }
+
+        .pt-table th,
+        .pt-table td {
+            border: 0 !important;
+            box-shadow: none !important;
+            padding: 3px 4px !important;
+            vertical-align: middle;
+        }
+
+        .pt-table tbody tr {
+            border: none !important;
+        }
+
+        .pt-table > :not(caption) > * > * {
+            border-bottom-width: 0 !important;
+        }
+
+        .pt-table thead th {
+            background: #f8f9fc;
+            color: #1f3b7a;
+            font-weight: 600;
+            border: none;
+            text-align: center;
+            padding: 1px 2px;
+            font-size: 10px;
+        }
+
+        .pt-table tbody td {
+            border: none;
+            vertical-align: middle;
+            padding: 0px;
+        }
+
+        .pt-table .form-control {
+            border-radius: 6px;
+            height: 15px;
+        }
+
+    .pt-men {
+        background: #edf3ff;
+        color: #2563eb;
+    }
+
+    .pt-women {
+        background: #fff0f6;
+        color: #ec4899;
+    }
+
+    .pt-both {
+        background: #ecfdf3;
+        color: #16a34a;
+    }
+
+    .pt-men,
+    .pt-women,
+    .pt-both {
+        display: inline-block;
+        width: 35px;
+        text-align: center;
+        padding: 1px 0;
+        border-radius: 3px;
+        font-weight: 600;
+        font-size: 8px;
+    }
+    /* PT top fields */
+    .pt-top-fields .form-label {
+        margin-bottom: 1px !important;
+        line-height: 1.1;
+        font-size: 12px;
+    }
+
+    .pt-top-fields .form-control {
+        height: 28px;
+        min-height: 28px;
+        padding: 2px 8px;
+    }
+
+    .pt-top-fields .col-md-4 {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+
+    .pt-top-fields {
+        margin-bottom: 2px;
+    }
+
+    .salary-card {
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(15,23,42,.08);
+        border: 1px solid #e9eef5;
+    }
+
+        .salary-card .hr-card-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid #eef2f7;
+        }
+
+        .salary-card .hr-card-body {
+            padding: 4px 8px;
+        }
+
+        .salary-card .hr-card-header i {
+            background: #E8F7E8;
+            color: #43A047;
+        }
+    /* Common Button Style */
+    .submit-close-section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        margin-top: 12px; /* Reduce this to move them up */
+    }
+     
+    .save-btn-salary {
+        width: 100%;
+        height: 20px;
+        border: none;
+        border-radius: 10px;
+        color: #fff;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all .3s ease;
+        box-shadow: 0 6px 16px rgba(0,0,0,.12);
+    }
+    .save-btn-modern {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-width: 100px;
+        height: 34px;
+        padding: 0 20px;
+        border: none;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #3B82F6, #1E3A8A);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(30, 99, 233, 0.25);
+        transition: all .25s ease;
+    }
+
+        .save-btn-modern i {
+            font-size: 12px;
+            color: #fff;
+            line-height: 1;
+        }
+        .save-btn-modern span {
+            color: #fff;
+            line-height: 1;
+        }
+        .save-btn-modern:hover {
+            
+            transform: translateY(-1px);
+        }
+
+        .save-btn-modern:active {
+            transform: translateY(0);
+        }
+
+        .save-btn-modern:focus {
+            outline: none;
+        }
+   /* .save-btn-esic {
+        background: linear-gradient(135deg, #7C3AED, #5B21B6);
+        border: 1px solid #159A63;
+        box-shadow: 0 6px 14px rgba(16,148,92,.28);
+    }*/
+    .save-btn-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 15px;
+    }
+
+        .save-btn-modern:hover,
+        .save-btn-esic:hover,
+        .save-btn-pt:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.05);
+        }*/
+
+    .save-btn-salary {
+        background: linear-gradient(135deg,#8B5CF6,#7C3AED);
+    }
+
+        /*.save-btn-modern:hover,
+        .save-btn-esic:hover,
+        .save-btn-pt:hover,
+        .save-btn-salary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(0,0,0,.18);
+        }*/
+
+        .save-btn-modern:active,
+        .save-btn-esic:active,
+        .save-btn-pt:active,
+        .save-btn-salary:active {
+            transform: scale(.98);
+        }
+
+    .settings-sidebar {
+        background: #fff;
+        border-radius: 16px;
+        border: 1px solid #e8edf5;
+        box-shadow: 0 8px 24px rgba(0,0,0,.08);
+        overflow: hidden;
+        position: sticky;
+        top: 20px;
+    }
+
+    .settings-sidebar-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 18px 20px;
+        font-size: 17px;
+        font-weight: 600;
+        color: #173E8F;
+        background: #f8fbff;
+        border-bottom: 1px solid #e8edf5;
+    }
+
+        .settings-sidebar-header i {
+            font-size: 22px;
+        }
+
+    .settings-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 15px 20px;
+        text-decoration: none;
+        color: #4b5563;
+        font-size: 14px;
+        font-weight: 500;
+        transition: .25s;
+        border-left: 4px solid transparent;
+    }
+
+        .settings-link i {
+            font-size: 20px;
+            color: #6b7280;
+            transition: .25s;
+        }
+
+        .settings-link:hover {
+            background: #f5f9ff;
+            color: #173E8F;
+        }
+
+            .settings-link:hover i {
+                color: #173E8F;
+            }
+
+        .settings-link.active {
+            background: linear-gradient(90deg,#1e4db7,#29b6c8);
+            color: #fff;
+            border-left: 4px solid #0d2d7d;
+        }
+
+            .settings-link.active i {
+                color: #fff;
+            }
+
+        .settings-link + .settings-link {
+            border-top: 1px solid #f1f3f7;
+        }
+
+    .btn-add-head {
+        background: #fff;
+        color: #22b573;
+        border: 2px solid #22b573;
+        border-radius: 10px;
+        padding: 8px 18px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+        .btn-add-head:hover {
+            background: #22b573;
+            color: #fff;
+        }
+
+    .salary-table-head {
+        background: #f5f1ff;
+    }
+
+        .salary-table-head th {
+            color: #233a8b;
+            font-weight: 600;
+            border: none;
+        }
+
+    .empty-state i {
+        font-size: 30px;
+        color: #9ca3af;
+        margin-bottom: 4px;
+    }
+
+
+    .empty-state {
+        height: 90px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .empty-state i {
+            font-size: 36px;
+            color: #9ca3af;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            margin: 0;
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+    .empty-row td {
+        height: 50px;
+        padding: 5px 0 !important;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .empty-row i {
+        font-size: 15px;
+        margin-bottom: 2px;
+    }
+
+    .empty-row p {
+        margin: 0;
+    }
+
+    #salaryHeadTable {
+        border-collapse: separate !important;
+        border-spacing: 0;
+        width: 100%;
+    }
+
+        #salaryHeadTable thead tr {
+            background: #f7f3ff;
+        }
+
+        #salaryHeadTable thead th {
+            background: #f7f3ff !important;
+            color: #243b7b !important;
+            font-weight: 600;
+            font-size: 10px;
+            padding: 8px 9px;
+            border: none !important;
+        }
+
+            #salaryHeadTable thead th:first-child {
+                border-top-left-radius: 12px;
+            }
+
+            #salaryHeadTable thead th:last-child {
+                border-top-right-radius: 12px;
+            }
+
+        #salaryHeadTable tbody td {
+            border-top: none !important;
+        }
+    .create-bttn {
+        min-width: 110px;
+    }
+
+    .d-flex.gap-3 {
+        gap: 15px !important;
+    }
+    #btnAdd{
+    margin-right: -12px; /* Adjust as needed */
+}
+    .pf-card,
+    .esic-card,
+    .pt-card,
+    .salary-table-head {
+        box-shadow: 0 0 12px rgba(196, 166, 235, 0.45), inset 0 0 8px rgba(196, 166, 235, 0.12);
+    }
+    .btn-sm {
+        padding: 4px 12px !important;
+        font-size: 12px !important;
+        border-radius: 10px;
+    }
+</style>
